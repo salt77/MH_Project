@@ -193,6 +193,7 @@
     <ClInclude Include="..\Codes\CollisionTool.h" />
     <ClInclude Include="..\Codes\Form.h" />
     <ClInclude Include="..\Codes\MFC_Camera.h" />
+    <ClInclude Include="..\Codes\MFC_Player.h" />
     <ClInclude Include="..\Codes\MFC_Terrain.h" />
     <ClInclude Include="..\Codes\NavmeshTool.h" />
     <ClInclude Include="..\Codes\ObjectTool.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="..\Codes\CollisionTool.cpp" />
     <ClCompile Include="..\Codes\Form.cpp" />
     <ClCompile Include="..\Codes\MFC_Camera.cpp" />
+    <ClCompile Include="..\Codes\MFC_Player.cpp" />
     <ClCompile Include="..\Codes\MFC_Terrain.cpp" />
     <ClCompile Include="..\Codes\NavmeshTool.cpp" />
     <ClCompile Include="..\Codes\ObjectTool.cpp" />

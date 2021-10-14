@@ -14,6 +14,7 @@ private:
 	virtual ~CManagement(void);
 public:
 	HRESULT			AddGameObjectInManager(const _tchar* LayerTag, CLayer* pLayer);
+	HRESULT			DeleteGameObjectInManager(const _tchar* LayerTag);
 	CGameObject*	Get_MFCGameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
 	CGameObject*	Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
 	CComponent*		Get_Component(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID);

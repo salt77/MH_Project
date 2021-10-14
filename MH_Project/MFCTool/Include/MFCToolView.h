@@ -7,9 +7,12 @@
 class CMFCToolDoc;
 class CMFC_Camera;
 class CMFC_Terrain;
+class CMFC_Player;
 
 BEGIN(Engine)
+
 class CLayer;
+
 END
 
 class CMFCToolView : public CScrollView
@@ -32,11 +35,17 @@ public:
 
 	HRESULT Add_NewTerrain(_uint iRowX, _uint iColZ, _uint iInterval);
 
+	HRESULT	Add_Object(OBJECTADD_MFC _eObjectType);
+	HRESULT	Delete_Object(OBJECTADD_MFC _eObjectType);
+
+	HRESULT Add_Collider(_float fRadius);
+
 private:
 	CGraphicDev*		m_pDeviceClass = nullptr;
 	LPDIRECT3DDEVICE9	m_pGraphicDev = nullptr;
 	CMFC_Camera*		m_pCamera = nullptr;
 	CMFC_Terrain*		m_pTerrain = nullptr;
+	CMFC_Player*		m_pPlayer = nullptr;
 	CLayer*				m_pLayer = nullptr;
 
 	_uint		m_iRenderTerrain = 0;

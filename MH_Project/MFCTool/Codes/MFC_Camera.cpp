@@ -94,7 +94,7 @@ void CMFC_Camera::Key_Input(const _float & fTimeDelta)
 		memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
 		D3DXVec3Normalize(&vRight, &vRight);
 		
-		m_vAt -= vRight * 0.0035f;
+		m_vAt -= vRight * 0.01f;
 	}
 	if (GetAsyncKeyState('E') & 0x8000)
 	{
@@ -102,7 +102,7 @@ void CMFC_Camera::Key_Input(const _float & fTimeDelta)
 		memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
 		D3DXVec3Normalize(&vRight, &vRight);
 
-		m_vAt += vRight * 0.0035f;
+		m_vAt += vRight * 0.01f;
 	}
 
 	if (GetAsyncKeyState('R') & 0x8000)
@@ -111,7 +111,7 @@ void CMFC_Camera::Key_Input(const _float & fTimeDelta)
 		memcpy(&vUp, &matWorld.m[1][0], sizeof(_vec3));
 		D3DXVec3Normalize(&vUp, &vUp);
 
-		m_vAt += vUp * 0.0035f;
+		m_vAt += vUp * 0.01f;
 	}
 	if (GetAsyncKeyState('F') & 0x8000)
 	{
@@ -119,7 +119,7 @@ void CMFC_Camera::Key_Input(const _float & fTimeDelta)
 		memcpy(&vUp, &matWorld.m[1][0], sizeof(_vec3));
 		D3DXVec3Normalize(&vUp, &vUp);
 
-		m_vAt -= vUp * 0.0035f;
+		m_vAt -= vUp * 0.01f;
 	}
 }
 

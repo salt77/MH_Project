@@ -51,6 +51,24 @@ HRESULT CMFC_ObjectManager::AddGameObjectInManager(const _tchar * LayerTag, CLay
 	return S_OK;
 }
 
+HRESULT CMFC_ObjectManager::DeleteGameObjectInManager(const _tchar * LayerTag)
+{
+	map<const _tchar*, CLayer*>::iterator	iter = m_mapMFCLayer.begin();
+
+	for (; iter != m_mapMFCLayer.end(); )
+	{
+		if (iter->first == LayerTag)
+		{
+			Safe_Release(iter->second);
+			m_mapMFCLayer.erase(LayerTag);
+		}
+		else
+			++iter;
+	}
+
+	return S_OK;
+}
+
 void CMFC_ObjectManager::Free()
 {
 	for_each(m_mapMFCLayer.begin(), m_mapMFCLayer.end(), CDeleteMap());

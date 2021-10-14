@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\Headers\Export_Utility.h" />
     <ClInclude Include="..\Codes\Calculator.h" />
     <ClInclude Include="..\Codes\Camera.h" />
+    <ClInclude Include="..\Codes\Collider.h" />
     <ClInclude Include="..\Codes\Component.h" />
     <ClInclude Include="..\Codes\CubeTex.h" />
     <ClInclude Include="..\Codes\GameObject.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="..\Codes\RcTex.h" />
     <ClInclude Include="..\Codes\Renderer.h" />
     <ClInclude Include="..\Codes\Scene.h" />
+    <ClInclude Include="..\Codes\StaticMesh.h" />
     <ClInclude Include="..\Codes\TerrainTex.h" />
     <ClInclude Include="..\Codes\Texture.h" />
     <ClInclude Include="..\Codes\Transform.h" />
@@ -44,6 +46,7 @@
   <ItemGroup>
     <ClCompile Include="..\Codes\Calculator.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
+    <ClCompile Include="..\Codes\Collider.cpp" />
     <ClCompile Include="..\Codes\Component.cpp" />
     <ClCompile Include="..\Codes\CubeTex.cpp" />
     <ClCompile Include="..\Codes\GameObject.cpp" />
@@ -54,6 +57,7 @@
     <ClCompile Include="..\Codes\RcTex.cpp" />
     <ClCompile Include="..\Codes\Renderer.cpp" />
     <ClCompile Include="..\Codes\Scene.cpp" />
+    <ClCompile Include="..\Codes\StaticMesh.cpp" />
     <ClCompile Include="..\Codes\TerrainTex.cpp" />
     <ClCompile Include="..\Codes\Texture.cpp" />
     <ClCompile Include="..\Codes\Transform.cpp" />

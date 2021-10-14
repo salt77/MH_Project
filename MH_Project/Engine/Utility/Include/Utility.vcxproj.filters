@@ -55,6 +55,15 @@
     <Filter Include="03.GameObject\Manager">
       <UniqueIdentifier>{0748bd57-ca62-4823-a451-12230c4ca53d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Component\05.StaticMesh">
+      <UniqueIdentifier>{b0fe5b77-2c12-475a-8646-cf4b38675cdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\06.DynamicMesh">
+      <UniqueIdentifier>{4af50d09-7279-4110-acdb-1dbf827b2b47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\07.Collider">
+      <UniqueIdentifier>{de013b91-86c6-4316-93dd-7dd0d51f2d53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Headers\Export_Utility.h">
@@ -110,6 +119,12 @@
     </ClInclude>
     <ClInclude Include="..\Codes\MFC_ObjectManager.h">
       <Filter>03.GameObject\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\StaticMesh.h">
+      <Filter>04.Component\05.StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Collider.h">
+      <Filter>04.Component\07.Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +183,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_ObjectManager.cpp">
       <Filter>03.GameObject\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\StaticMesh.cpp">
+      <Filter>04.Component\05.StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Collider.cpp">
+      <Filter>04.Component\07.Collider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

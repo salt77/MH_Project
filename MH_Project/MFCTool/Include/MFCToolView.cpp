@@ -14,6 +14,7 @@
 #include "MFCToolView.h"
 #include "MFC_Camera.h"
 #include "MFC_Terrain.h"
+#include "MFC_Player.h"
 #include "Layer.h"
 
 #ifdef _DEBUG
@@ -21,6 +22,8 @@
 #endif
 
 // CMFCToolView
+
+USING(Engine)
 
 IMPLEMENT_DYNCREATE(CMFCToolView, CScrollView)
 
@@ -65,9 +68,10 @@ HRESULT CMFCToolView::Add_Prototype()
 
 	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 
-	Ready_Prototype(L"Proto_Transform", CTransform::Create(m_pGraphicDev));
-	Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 32, 32));
-	Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", TEX_NORMAL, 2));
+	Engine::Ready_Prototype(L"Proto_Transform", CTransform::Create(m_pGraphicDev));
+	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 32, 32));
+	Engine::Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", TEX_NORMAL, 2));
+	Engine::Ready_Prototype(L"Proto_StaticMesh_Player", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Lethita/", L"Lethita.X"));
 
 	return S_OK;
 }
@@ -82,15 +86,16 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 
 	CGameObject* pObj = nullptr;
 
+	// Terrain 추가
 	pObj = CMFC_Terrain::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pObj, E_FAIL);
 	m_pLayer->Add_GameObject(L"MFC_Terrain", pObj);
 
-	AddGameObjectInManager(L"GameLogic", m_pLayer);
+	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
-	m_pTerrain = dynamic_cast<CMFC_Terrain*>(Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
+	m_pTerrain = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
 
-
+	// Camera 추가 
 	pObj = CMFC_Camera::Create(m_pGraphicDev,
 		&_vec3(0.f, 3.f, -5.f),
 		&_vec3(0.f, 0.f, 1.f),
@@ -100,9 +105,19 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 	NULL_CHECK_RETURN(pObj, E_FAIL);
 	m_pLayer->Add_GameObject(L"MFC_Camera", pObj);
 
-	AddGameObjectInManager(L"GameLogic", m_pLayer);
+	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
-	m_pCamera = dynamic_cast<CMFC_Camera*>(Get_MFCGameObject(L"GameLogic", L"MFC_Camera"));
+	m_pCamera = dynamic_cast<CMFC_Camera*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Camera"));
+
+	//// Player 추가
+	//pObj = CMFC_Player::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pObj, E_FAIL);
+	//m_pLayer->Add_GameObject(L"MFC_Player", pObj);
+
+	//AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+	//m_pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
+
 
 	Ready_Timer(L"Timer_Immediate");
 
@@ -111,11 +126,11 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 
 HRESULT CMFCToolView::Add_NewTerrain(_uint iRowX, _uint iColZ, _uint iInterval)
 {
-	Delete_Prototype(L"Proto_Buffer_TerrainTex");
+	Engine::Delete_Prototype(L"Proto_Buffer_TerrainTex");
 	m_pLayer->Delete_Layer(L"MFC_Terrain");
 
 	// 프로토타입 생성
-	Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, iRowX, iColZ, iInterval));
+	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, iRowX, iColZ, iInterval));
 
 	// Layer 삽입
 	NULL_CHECK_RETURN(m_pLayer, E_FAIL);
@@ -124,11 +139,61 @@ HRESULT CMFCToolView::Add_NewTerrain(_uint iRowX, _uint iColZ, _uint iInterval)
 
 	pObj = CMFC_Terrain::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pObj, E_FAIL);
+	NULL_CHECK_RETURN(m_pLayer, E_FAIL);
 	m_pLayer->Add_GameObject(L"MFC_Terrain", pObj);
 
-	AddGameObjectInManager(L"GameLogic", m_pLayer);
+	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
-	m_pTerrain = dynamic_cast<CMFC_Terrain*>(Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
+	m_pTerrain = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
+
+	return S_OK;
+}
+
+HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType)
+{
+	CGameObject* pObj = nullptr;
+
+	switch (_eObjectType)
+	{
+	case OBJECTADD_MFC_PLAYER:
+		pObj = CMFC_Player::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pObj, E_FAIL);
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Add_GameObject(L"MFC_Player", pObj);
+		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+		m_pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
+		break;
+	case OBJECTADD_MFC_AHGLAN:
+		break;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMFCToolView::Delete_Object(OBJECTADD_MFC _eObjectType)
+{
+	//switch (_eObjectType)
+	//{
+	//case OBJECTADD_MFC_PLAYER:
+	//	NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+	//	m_pLayer->Delete_Layer(L"MFC_Player");
+	//	m_pPlayer = nullptr;
+	//	Engine::DeleteGameObjectInManager(L"Player");
+	//	break;
+	//case OBJECTADD_MFC_AHGLAN:
+	//	break;
+	//}
+
+	return S_OK;
+}
+
+HRESULT CMFCToolView::Add_Collider(_float fRadius)
+{
+	// Collider는 프로토타입 생성 안 함
+	//Engine::Ready_Prototype(L"Proto_Collider", CCollider::Create(m_pGraphicDev, fRadius));
+	if (m_pPlayer)
+		m_pPlayer->Add_Collider(fRadius);
 
 	return S_OK;
 }
@@ -140,26 +205,32 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 	if (!pDoc)
 		return;
 
+	Engine::Render_GameObject(m_pGraphicDev);
+	if (m_pTerrain)
+		m_pTerrain->Update_Object(0);
+	if (m_pPlayer)
+		m_pPlayer->Update_Object(0);
+
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	Render_Begin(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f));
 
-	CMFC_Terrain* pTerrain = pTerrain = static_cast<CMFC_Terrain*>(Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
+	//CMFC_Terrain* pTerrain = static_cast<CMFC_Terrain*>(Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
 	if (m_pTerrain)
 	{
 		switch (m_iRenderTerrain)
 		{
 		case 0:
-			pTerrain->Set_RenderType(RENDERTYPE_MFC_SOLID);
 			m_pTerrain->Render_Object();
 			break;
 		case 2:
 			break;
 		default:
-			pTerrain->Set_RenderType(RENDERTYPE_MFC_WIREFRAME);
 			m_pTerrain->Render_Object();
 			break;
 		}
 	}
+	if (m_pPlayer)
+		m_pPlayer->Render_Object();
 
 	Render_End();
 
@@ -241,8 +312,8 @@ BOOL CMFCToolView::PreTranslateMessage(MSG* pMsg)
 	_float fDeltaTime = Get_TimeDelta(L"Timer_Immediate");
 
 	m_pCamera->Update_Object(fDeltaTime);
-	if (m_pTerrain)
-		m_pTerrain->Update_Object(fDeltaTime);
+	//if (m_pTerrain)
+	//	m_pTerrain->Update_Object(fDeltaTime);
 
 	Invalidate(FALSE);
 

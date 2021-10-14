@@ -114,7 +114,7 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	m_tMainSplitter.CreateView(0, 1, RUNTIME_CLASS(CMFCToolView), CSize(800, 600), pContext);
 	m_tMainSplitter.CreateView(0, 0, RUNTIME_CLASS(CForm), CSize(300, 450), pContext);
 	//m_tSecondSplitter.CreateView(1, 0, RUNTIME_CLASS(CMFCToolView), CSize(300, 300), pContext);
-	m_tMainSplitter.SetColumnInfo(0, 350, 300);
+	m_tMainSplitter.SetColumnInfo(0, 500, 300);
 
 	g_hWnd = m_tMainSplitter.GetPane(0, 1)->GetSafeHwnd();
 

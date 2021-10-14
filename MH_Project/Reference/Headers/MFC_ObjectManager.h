@@ -27,6 +27,7 @@ public:
 
 public:
 	HRESULT	AddGameObjectInManager(const _tchar* LayerTag, CLayer* pLayer);
+	HRESULT	DeleteGameObjectInManager(const _tchar* LayerTag);
 
 public:
 	virtual void Free();

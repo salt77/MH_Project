@@ -5,6 +5,12 @@ inline HRESULT AddGameObjectInManager(const _tchar * LayerTag, CLayer * pLayer)
 
 	return S_OK;
 }
+inline HRESULT DeleteGameObjectInManager(const _tchar * LayerTag)
+{
+	CManagement::GetInstance()->DeleteGameObjectInManager(LayerTag);
+
+	return S_OK;
+}
 inline CGameObject * Get_MFCGameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
 {
 	return CManagement::GetInstance()->Get_MFCGameObject(pLayerTag, pObjTag);

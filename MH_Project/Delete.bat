@@ -6,6 +6,10 @@ rmdir /s /q .\Client\Include\Debug
 rmdir /s /q .\Client\Include\ipch
 rmdir /s /q .\Client\Include\Release
 rmdir /s /q .\Client\Include\x64
+rmdir /s /q .\MFCTool\Include\Debug
+rmdir /s /q .\MFCTool\Include\ipch
+rmdir /s /q .\MFCTool\Include\Release
+rmdir /s /q .\MFCTool\Include\x64
 
 rmdir /s /q .\Engine\System\Include\Debug
 rmdir /s /q .\Engine\Utility\Include\Debug
@@ -13,4 +17,8 @@ rmdir /s /q .\Engine\Utility\Include\Debug
 del /f /q .\Client\Bin\Client.exe
 del /f /q .\Client\Bin\Client.ilk
 del /f /q .\Client\Bin\Client.pdb
+del /f /q .\MFCTool\Bin\MFCTool.exe
+del /f /q .\MFCTool\Bin\MFCTool.ilk
+del /f /q .\MFCTool\Bin\MFCTool.pdb
+
 del /f /q Frame117.VC.db

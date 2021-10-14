@@ -46,6 +46,9 @@
     <Filter Include="03.SyncManager">
       <UniqueIdentifier>{d4b2c913-94bc-43fd-99cc-caa331ded971}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.MFC_Player">
+      <UniqueIdentifier>{a5661fbd-ec28-4072-9dd0-dffe66276db5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -99,6 +102,9 @@
     <ClInclude Include="..\Codes\SyncManager.h">
       <Filter>03.SyncManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Player.h">
+      <Filter>02.GameObject\02.MFC_Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -142,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SyncManager.cpp">
       <Filter>03.SyncManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Player.cpp">
+      <Filter>02.GameObject\02.MFC_Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

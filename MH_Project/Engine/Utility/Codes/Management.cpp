@@ -58,6 +58,13 @@ HRESULT CManagement::AddGameObjectInManager(const _tchar * LayerTag, CLayer * pL
 	return S_OK;
 }
 
+HRESULT CManagement::DeleteGameObjectInManager(const _tchar * LayerTag)
+{
+	CMFC_ObjectManager::GetInstance()->DeleteGameObjectInManager(LayerTag);
+
+	return S_OK;
+}
+
 CGameObject * CManagement::Get_MFCGameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
 {
 	return CMFC_ObjectManager::GetInstance()->Get_MFCGameObject(pLayerTag, pObjTag);

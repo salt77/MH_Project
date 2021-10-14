@@ -29,7 +29,7 @@ _int CMFC_Terrain::Update_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
 
-	Add_RenderGroup(RENDER_PRIORITY, this);
+	Add_RenderGroup(RENDER_NONALPHA, this);
 
 	return iExit;
 }

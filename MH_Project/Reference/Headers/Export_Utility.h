@@ -13,6 +13,8 @@
 #include "Transform.h"
 #include "Renderer.h"
 #include "Calculator.h"
+#include "StaticMesh.h"
+#include "Collider.h"
 
 #include "Camera.h"
 
@@ -21,6 +23,7 @@ BEGIN(Engine)
 
 // Management
 inline HRESULT		AddGameObjectInManager(const _tchar* LayerTag, CLayer* pLayer);
+inline HRESULT		DeleteGameObjectInManager(const _tchar* LayerTag);
 inline CGameObject*	Get_MFCGameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
 inline CGameObject*	Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
 inline CComponent*	Get_Component(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID);

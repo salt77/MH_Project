@@ -7,6 +7,7 @@
 #include "MFCToolView.h"
 #include "../Codes/TerrainTool.h"
 #include "afxdialogex.h"
+#include "MFC_Terrain.h"
 
 
 // CTerrainTool 대화 상자입니다.
@@ -88,4 +89,19 @@ void CTerrainTool::OnBnClickedApplyRenderType()
 	CMFCToolView* pToolView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
 
 	pToolView->Set_RenderTerrain(m_iRenderType);
+
+	CMFC_Terrain* pTerrain = static_cast<CMFC_Terrain*>(Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
+
+	switch (m_iRenderType)
+	{
+	case 0:
+		pTerrain->Set_RenderType(RENDERTYPE_MFC_SOLID);
+		break;
+	case 1:
+		pTerrain->Set_RenderType(RENDERTYPE_MFC_WIREFRAME);
+		break;
+	case 2:
+		pTerrain->Set_RenderType(RENDERTYPE_MFC_NONE);
+		break;
+	}
 }
