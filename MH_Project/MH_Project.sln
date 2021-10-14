@@ -1,0 +1,102 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Client", "00.Client", "{18FCBE04-BFF6-4AD3-8935-1AD205C640DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.Engine", "01.Engine", "{D3750410-AE91-453F-9B0B-6FA0ACDA2351}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Base", "02.Base", "{12B54D98-3C56-4DB4-979E-B790A9DE1B48}"
+	ProjectSection(SolutionItems) = preProject
+		Base\Base.h = Base\Base.h
+		Base\Base.inl = Base\Base.inl
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Include\Client.vcxproj", "{0567471D-7B46-47B5-BAC5-E00AC7518F1F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3EE30CCD-3A0D-4D6C-9265-01740CDE4783} = {3EE30CCD-3A0D-4D6C-9265-01740CDE4783}
+		{990A87DB-A031-45FB-9698-FAA6358EB9E4} = {990A87DB-A031-45FB-9698-FAA6358EB9E4}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.System", "00.System", "{D11A8588-AC1A-4DB1-8AAB-6D2C9C87FB82}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.Utility", "01.Utility", "{0E1EBF79-3184-4F6C-9D50-FF0DA6CC11F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Headers", "02.Headers", "{FA7E5D00-EF11-40AB-8C5E-073254571DEB}"
+	ProjectSection(SolutionItems) = preProject
+		Engine\Headers\Engine_Define.h = Engine\Headers\Engine_Define.h
+		Engine\Headers\Engine_Enum.h = Engine\Headers\Engine_Enum.h
+		Engine\Headers\Engine_Function.h = Engine\Headers\Engine_Function.h
+		Engine\Headers\Engine_Macro.h = Engine\Headers\Engine_Macro.h
+		Engine\Headers\Engine_Struct.h = Engine\Headers\Engine_Struct.h
+		Engine\Headers\Engine_Typedef.h = Engine\Headers\Engine_Typedef.h
+		Engine\Headers\Export_Function.h = Engine\Headers\Export_Function.h
+		Engine\Headers\Export_System.h = Engine\Headers\Export_System.h
+		Engine\Headers\Export_System.inl = Engine\Headers\Export_System.inl
+		Engine\Headers\Export_Utility.h = Engine\Headers\Export_Utility.h
+		Engine\Headers\Export_Utility.inl = Engine\Headers\Export_Utility.inl
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "System", "Engine\System\Include\System.vcxproj", "{990A87DB-A031-45FB-9698-FAA6358EB9E4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utility", "Engine\Utility\Include\Utility.vcxproj", "{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.MFCTool", "03.MFCTool", "{CD47174A-27F6-4254-8994-3EBCCF15BE24}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCTool", "MFCTool\Include\MFCTool.vcxproj", "{822357DC-5398-4B6B-B123-B66D417938E9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0567471D-7B46-47B5-BAC5-E00AC7518F1F}.Debug|x64.ActiveCfg = Debug|x64
+		{0567471D-7B46-47B5-BAC5-E00AC7518F1F}.Debug|x64.Build.0 = Debug|x64
+		{0567471D-7B46-47B5-BAC5-E00AC7518F1F}.Debug|x86.ActiveCfg = Debug|Win32
+		{0567471D-7B46-47B5-BAC5-E00AC7518F1F}.Debug|x86.Build.0 = Debug|Win32
+		{0567471D-7B46-47B5-BAC5-E00AC7518F1F}.Release|x64.ActiveCfg = Release|x64
+		{0567471D-7B46-47B5-BAC5-E00AC7518F1F}.Release|x64.Build.0 = Release|x64
+		{0567471D-7B46-47B5-BAC5-E00AC7518F1F}.Release|x86.ActiveCfg = Release|Win32
+		{0567471D-7B46-47B5-BAC5-E00AC7518F1F}.Release|x86.Build.0 = Release|Win32
+		{990A87DB-A031-45FB-9698-FAA6358EB9E4}.Debug|x64.ActiveCfg = Debug|x64
+		{990A87DB-A031-45FB-9698-FAA6358EB9E4}.Debug|x64.Build.0 = Debug|x64
+		{990A87DB-A031-45FB-9698-FAA6358EB9E4}.Debug|x86.ActiveCfg = Debug|Win32
+		{990A87DB-A031-45FB-9698-FAA6358EB9E4}.Debug|x86.Build.0 = Debug|Win32
+		{990A87DB-A031-45FB-9698-FAA6358EB9E4}.Release|x64.ActiveCfg = Release|x64
+		{990A87DB-A031-45FB-9698-FAA6358EB9E4}.Release|x64.Build.0 = Release|x64
+		{990A87DB-A031-45FB-9698-FAA6358EB9E4}.Release|x86.ActiveCfg = Release|Win32
+		{990A87DB-A031-45FB-9698-FAA6358EB9E4}.Release|x86.Build.0 = Release|Win32
+		{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}.Debug|x64.ActiveCfg = Debug|x64
+		{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}.Debug|x64.Build.0 = Debug|x64
+		{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}.Debug|x86.ActiveCfg = Debug|Win32
+		{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}.Debug|x86.Build.0 = Debug|Win32
+		{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}.Release|x64.ActiveCfg = Release|x64
+		{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}.Release|x64.Build.0 = Release|x64
+		{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}.Release|x86.ActiveCfg = Release|Win32
+		{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}.Release|x86.Build.0 = Release|Win32
+		{822357DC-5398-4B6B-B123-B66D417938E9}.Debug|x64.ActiveCfg = Debug|x64
+		{822357DC-5398-4B6B-B123-B66D417938E9}.Debug|x64.Build.0 = Debug|x64
+		{822357DC-5398-4B6B-B123-B66D417938E9}.Debug|x86.ActiveCfg = Debug|Win32
+		{822357DC-5398-4B6B-B123-B66D417938E9}.Debug|x86.Build.0 = Debug|Win32
+		{822357DC-5398-4B6B-B123-B66D417938E9}.Release|x64.ActiveCfg = Release|x64
+		{822357DC-5398-4B6B-B123-B66D417938E9}.Release|x64.Build.0 = Release|x64
+		{822357DC-5398-4B6B-B123-B66D417938E9}.Release|x86.ActiveCfg = Release|Win32
+		{822357DC-5398-4B6B-B123-B66D417938E9}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0567471D-7B46-47B5-BAC5-E00AC7518F1F} = {18FCBE04-BFF6-4AD3-8935-1AD205C640DE}
+		{D11A8588-AC1A-4DB1-8AAB-6D2C9C87FB82} = {D3750410-AE91-453F-9B0B-6FA0ACDA2351}
+		{0E1EBF79-3184-4F6C-9D50-FF0DA6CC11F3} = {D3750410-AE91-453F-9B0B-6FA0ACDA2351}
+		{FA7E5D00-EF11-40AB-8C5E-073254571DEB} = {D3750410-AE91-453F-9B0B-6FA0ACDA2351}
+		{990A87DB-A031-45FB-9698-FAA6358EB9E4} = {D11A8588-AC1A-4DB1-8AAB-6D2C9C87FB82}
+		{3EE30CCD-3A0D-4D6C-9265-01740CDE4783} = {0E1EBF79-3184-4F6C-9D50-FF0DA6CC11F3}
+		{822357DC-5398-4B6B-B123-B66D417938E9} = {CD47174A-27F6-4254-8994-3EBCCF15BE24}
+	EndGlobalSection
+EndGlobal

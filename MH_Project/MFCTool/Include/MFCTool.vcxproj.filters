@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00.MainFrm">
+      <UniqueIdentifier>{59dd6577-cc4e-400a-a120-08e342f0616a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.View">
+      <UniqueIdentifier>{0c49aee2-daca-4204-bfb3-0deb9230f3d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Headers">
+      <UniqueIdentifier>{2a1df2fb-bf04-41c0-8617-122e641e8d16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Defaults">
+      <UniqueIdentifier>{ce25b1cf-934d-4dea-be73-6bb96e64b457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Document">
+      <UniqueIdentifier>{d16d9aae-0c87-4376-8f12-99b764ade2f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.View\00.Form">
+      <UniqueIdentifier>{8cb5769d-29de-4fed-a64c-3cbc6530e9ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.View\00.Form\00.TerrainTool">
+      <UniqueIdentifier>{7defac07-f13b-42da-a6db-84b8622648ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.View\00.Form\01.ObjectTool">
+      <UniqueIdentifier>{7743f22d-22bd-44d6-86e6-9c30841fa68e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.View\00.Form\02.NavmeshTool">
+      <UniqueIdentifier>{0cdbea26-da54-44ea-8b3f-285bbc872ba4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.View\00.Form\03.CameraTool">
+      <UniqueIdentifier>{a3edc0b8-c227-4c87-a79d-d42ef61e855e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.View\00.Form\04.CollisionTool">
+      <UniqueIdentifier>{996882c4-0318-4007-bcd2-b3b0faa37a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject">
+      <UniqueIdentifier>{465366c0-54fd-4dd5-9a80-8f966e5f4d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00.MFC_Camera">
+      <UniqueIdentifier>{a6b7f68c-ae57-4fdc-866d-3de703cdfb64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.Terrain">
+      <UniqueIdentifier>{78677be9-bb85-4e1d-94e2-a59582478f1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.SyncManager">
+      <UniqueIdentifier>{d4b2c913-94bc-43fd-99cc-caa331ded971}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainFrm.h">
+      <Filter>00.MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCToolView.h">
+      <Filter>01.View</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCToolDoc.h">
+      <Filter>99.Document</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98.Defaults</Filter>
+    </ClInclude>
+    <ClInclude Include="MFCTool.h">
+      <Filter>98.Defaults</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98.Defaults</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98.Defaults</Filter>
+    </ClInclude>
+    <ClInclude Include="MFC_Headers.h">
+      <Filter>97.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Form.h">
+      <Filter>01.View\00.Form</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\TerrainTool.h">
+      <Filter>01.View\00.Form\00.TerrainTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\ObjectTool.h">
+      <Filter>01.View\00.Form\01.ObjectTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\CameraTool.h">
+      <Filter>01.View\00.Form\03.CameraTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\NavmeshTool.h">
+      <Filter>01.View\00.Form\02.NavmeshTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\CollisionTool.h">
+      <Filter>01.View\00.Form\04.CollisionTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Camera.h">
+      <Filter>02.GameObject\00.MFC_Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Terrain.h">
+      <Filter>02.GameObject\01.Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\SyncManager.h">
+      <Filter>03.SyncManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>00.MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCToolView.cpp">
+      <Filter>01.View</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCToolDoc.cpp">
+      <Filter>99.Document</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>98.Defaults</Filter>
+    </ClCompile>
+    <ClCompile Include="MFCTool.cpp">
+      <Filter>98.Defaults</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Form.cpp">
+      <Filter>01.View\00.Form</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\TerrainTool.cpp">
+      <Filter>01.View\00.Form\00.TerrainTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\ObjectTool.cpp">
+      <Filter>01.View\00.Form\01.ObjectTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\CameraTool.cpp">
+      <Filter>01.View\00.Form\03.CameraTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\NavmeshTool.cpp">
+      <Filter>01.View\00.Form\02.NavmeshTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\CollisionTool.cpp">
+      <Filter>01.View\00.Form\04.CollisionTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Camera.cpp">
+      <Filter>02.GameObject\00.MFC_Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Terrain.cpp">
+      <Filter>02.GameObject\01.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SyncManager.cpp">
+      <Filter>03.SyncManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>98.Defaults</Filter>
+    </Image>
+    <Image Include="res\MFCToolDoc.ico">
+      <Filter>98.Defaults</Filter>
+    </Image>
+    <Image Include="res\MFCTool.ico">
+      <Filter>98.Defaults</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\MFCTool.rc2">
+      <Filter>98.Defaults</Filter>
+    </None>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MFCTool.rc">
+      <Filter>98.Defaults</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
