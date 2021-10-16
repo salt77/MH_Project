@@ -16,8 +16,11 @@ public:
 	HRESULT			AddGameObjectInManager(const _tchar* LayerTag, CLayer* pLayer);
 	HRESULT			DeleteGameObjectInManager(const _tchar* LayerTag);
 	CGameObject*	Get_MFCGameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
+	CComponent*		Get_MFCComponent(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID);
+
 	CGameObject*	Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
 	CComponent*		Get_Component(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID);
+	HRESULT			Set_RenderColType(const _tchar* pColName, COLTYPE eColType);
 
 public:
 	HRESULT			Set_Scene(CScene* pScene);

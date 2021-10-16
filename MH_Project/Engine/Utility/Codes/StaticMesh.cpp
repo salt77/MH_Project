@@ -98,7 +98,7 @@ HRESULT CStaticMesh::Ready_Meshes(const _tchar * pFilePath, const _tchar * pFile
 	{
 		if (Decl[i].Usage == D3DDECLUSAGE_POSITION)
 		{
-			byOffset = Decl[i].Offset;
+			byOffset = (_uint)Decl[i].Offset;
 			break;
 		}
 	}

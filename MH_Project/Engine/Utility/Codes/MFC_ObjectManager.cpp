@@ -44,6 +44,16 @@ CGameObject * CMFC_ObjectManager::Get_MFCGameObject(const _tchar * pLayerTag, co
 	return iter->second->Get_GameObject(pLayerTag, pObjTag);
 }
 
+CComponent * CMFC_ObjectManager::Get_MFCComponent(const _tchar * pLayerTag, const _tchar * pObjTag, const _tchar * pComponentTag, COMPONENTID eID)
+{
+	map<const _tchar*, CLayer*>::iterator	iter = find_if(m_mapMFCLayer.begin(), m_mapMFCLayer.end(), CTag_Finder(pLayerTag));
+
+	if (iter == m_mapMFCLayer.end())
+		return nullptr;
+
+	return iter->second->Get_Component(pObjTag, pComponentTag, eID);
+}
+
 HRESULT CMFC_ObjectManager::AddGameObjectInManager(const _tchar * LayerTag, CLayer * pLayer)
 {
 	m_mapMFCLayer.emplace(LayerTag, pLayer);

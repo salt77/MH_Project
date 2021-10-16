@@ -52,9 +52,6 @@
     <Filter Include="04.Component\00.VIBuffer\03.CubeTex">
       <UniqueIdentifier>{b3d34d6c-dcb4-429f-9a50-300c7c04f5a5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.GameObject\Manager">
-      <UniqueIdentifier>{0748bd57-ca62-4823-a451-12230c4ca53d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Component\05.StaticMesh">
       <UniqueIdentifier>{b0fe5b77-2c12-475a-8646-cf4b38675cdc}</UniqueIdentifier>
     </Filter>
@@ -63,6 +60,21 @@
     </Filter>
     <Filter Include="04.Component\07.Collider">
       <UniqueIdentifier>{de013b91-86c6-4316-93dd-7dd0d51f2d53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\06.DynamicMesh\00.HierachyLoader">
+      <UniqueIdentifier>{0b0d2d94-5ea1-49e2-bd62-8c6702a77f02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\06.DynamicMesh\01.AniCtrl">
+      <UniqueIdentifier>{d45f6fc4-3f4e-42ba-a143-2538a9d6ad2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Light">
+      <UniqueIdentifier>{8d2440ae-ce92-4986-8c31-ba3ac969ed2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Light\Manager">
+      <UniqueIdentifier>{52775da1-43d4-4ea1-aabf-5478b9c470cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObject\MFC_ObjManager">
+      <UniqueIdentifier>{0748bd57-ca62-4823-a451-12230c4ca53d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -118,13 +130,28 @@
       <Filter>04.Component\03.Renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\MFC_ObjectManager.h">
-      <Filter>03.GameObject\Manager</Filter>
+      <Filter>03.GameObject\MFC_ObjManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\StaticMesh.h">
       <Filter>04.Component\05.StaticMesh</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Collider.h">
       <Filter>04.Component\07.Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\DynamicMesh.h">
+      <Filter>04.Component\06.DynamicMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\HierachyLoader.h">
+      <Filter>04.Component\06.DynamicMesh\00.HierachyLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\AniCtrl.h">
+      <Filter>04.Component\06.DynamicMesh\01.AniCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Light.h">
+      <Filter>06.Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\LightMgr.h">
+      <Filter>06.Light\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -182,13 +209,28 @@
       <Filter>04.Component\03.Renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_ObjectManager.cpp">
-      <Filter>03.GameObject\Manager</Filter>
+      <Filter>03.GameObject\MFC_ObjManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\StaticMesh.cpp">
       <Filter>04.Component\05.StaticMesh</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Collider.cpp">
       <Filter>04.Component\07.Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DynamicMesh.cpp">
+      <Filter>04.Component\06.DynamicMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\HierachyLoader.cpp">
+      <Filter>04.Component\06.DynamicMesh\00.HierachyLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\AniCtrl.cpp">
+      <Filter>04.Component\06.DynamicMesh\01.AniCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Light.cpp">
+      <Filter>06.Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\LightMgr.cpp">
+      <Filter>06.Light\Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

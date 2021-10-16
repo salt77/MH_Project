@@ -1,4 +1,5 @@
 #include "Export_Utility.h"
+
 inline HRESULT AddGameObjectInManager(const _tchar * LayerTag, CLayer * pLayer)
 {
 	CManagement::GetInstance()->AddGameObjectInManager(LayerTag, pLayer);
@@ -15,9 +16,19 @@ inline CGameObject * Get_MFCGameObject(const _tchar * pLayerTag, const _tchar * 
 {
 	return CManagement::GetInstance()->Get_MFCGameObject(pLayerTag, pObjTag);
 }
+inline CComponent * Get_MFCComponent(const _tchar * pLayerTag, const _tchar * pObjTag, const _tchar * pComponentTag, COMPONENTID eID)
+{
+	return CManagement::GetInstance()->Get_MFCComponent(pLayerTag, pObjTag, pComponentTag, eID);
+}
 inline CGameObject * Get_GameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
 {
 	return CManagement::GetInstance()->Get_GameObject(pLayerTag, pObjTag);
+}
+inline HRESULT Set_RenderColType(const _tchar* pColType, COLTYPE eColType)
+{
+	CManagement::GetInstance()->Set_RenderColType(pColType, eColType);
+
+	return S_OK;
 }
 CComponent*		Get_Component(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID)
 {
@@ -82,8 +93,14 @@ void		Clear_RenderGroup(void)
 }
 
 
+inline HRESULT Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev, const D3DLIGHT9 * pLightInfo, const _uint & iIndex)
+{
+	return CLightMgr::GetInstance()->Ready_Light(pGraphicDev, pLightInfo, iIndex);
+}
+
 void			Release_Utility(void)
 {
+	CLightMgr::GetInstance()->DestroyInstance();
 	CRenderer::GetInstance()->DestroyInstance();
 	CProtoMgr::GetInstance()->DestroyInstance();
 	CManagement::GetInstance()->DestroyInstance();

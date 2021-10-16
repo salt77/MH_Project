@@ -2,6 +2,7 @@
 #include "Player.h"
 
 #include "Export_Function.h"
+#include "DynamicMesh.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -25,17 +26,19 @@ HRESULT CPlayer::Ready_Object(void)
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_pTransformCom->Set_Scale(0.01f, 0.01f, 0.01f);
+	m_pMeshCom->Set_AnimationIndex(0);
+
 	return S_OK;
 }
 
 _int CPlayer::Update_Object(const _float& fTimeDelta)
 {
-
 	SetUp_OnTerrain();
 	Key_Input(fTimeDelta);
 
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
-
+	m_pMeshCom->Play_Animation(fTimeDelta);
 
 	Add_RenderGroup(RENDER_NONALPHA, this);
 
@@ -47,8 +50,11 @@ void CPlayer::Render_Object(void)
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	m_pTextureCom->Set_Texture();
-	m_pBufferCom->Render_Buffer();
+	//m_pColliderCom->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	
+	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+	m_pMeshCom->Render_Meshes();
+	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
@@ -71,20 +77,15 @@ void CPlayer::Free(void)
 HRESULT CPlayer::Add_Component(void)
 {
 	CComponent*		pComponent = nullptr;
-	
-	// buffer
-	pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Clone_Prototype(L"Proto_Buffer_RcTex"));
-	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
 
-	// texture
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Player"));
-	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	// Mesh
+	pComponent = m_pMeshCom = dynamic_cast<CDynamicMesh*>(Clone_Prototype(L"Proto_Mesh_Player"));
+	NULL_CHECK_RETURN(m_pMeshCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Mesh", pComponent);
 
 	// Transform
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Clone_Prototype(L"Proto_Transform"));
-	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
+	NULL_CHECK_RETURN(m_pTransformCom, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].emplace(L"Com_Transform", pComponent);
 
 	// Renderer
@@ -98,6 +99,10 @@ HRESULT CPlayer::Add_Component(void)
 	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
 
+	//// Collider
+	//pComponent = m_pColliderCom = CCollider::Create(m_pGraphicDev, m_pMeshCom->Get_VtxPos(), m_pMeshCom->Get_VtxCnt(), m_pMeshCom->Get_Stride());
+	//NULL_CHECK_RETURN(m_pColliderCom, E_FAIL);
+	//m_mapComponent[ID_STATIC].emplace(L"Com_Collider", pComponent);
 
 	return S_OK;
 }
@@ -108,18 +113,23 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	if (GetAsyncKeyState(VK_UP) & 0x8000)
 	{
-		D3DXVec3Normalize(&m_vDir, &m_vDir);
-		m_pTransformCom->Move_Pos(&m_vDir, 5.f, fTimeDelta);
+		/*D3DXVec3Normalize(&m_vDir, &m_vDir);
+		m_pTransformCom->Move_Pos(&m_vDir, 5.f, fTimeDelta);*/
+		m_pMeshCom->Set_AnimationIndex(1);
+
 	}
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+		m_pMeshCom->Set_AnimationIndex(0);
 
 	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
 	{
-		D3DXVec3Normalize(&m_vDir, &m_vDir);
-		m_pTransformCom->Move_Pos(&m_vDir, -5.f, fTimeDelta);
+		m_pMeshCom->Set_AnimationIndex(2);
+		//D3DXVec3Normalize(&m_vDir, &m_vDir);
+		//m_pTransformCom->Move_Pos(&m_vDir, -5.f, fTimeDelta);
 	}
 	
 	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
+		//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
 	
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
@@ -131,10 +141,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_pTransformCom->Get_INFO(INFO_POS, &vPlayerPos);
 
 		_vec3	vDir = *D3DXVec3Normalize(&vDir, &(vPickPos - vPlayerPos));
-
 		m_pTransformCom->Move_Pos(&vDir, 5.f, fTimeDelta);
 	}
-
 }
 
 void CPlayer::SetUp_OnTerrain(void)

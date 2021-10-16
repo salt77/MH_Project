@@ -28,6 +28,30 @@
     <Filter Include="02.GameObject">
       <UniqueIdentifier>{d53520f2-5202-4453-856a-343af757a415}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Scene\00.Logo">
+      <UniqueIdentifier>{1b876db0-6135-4d6d-8dfd-144a3386c2cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\01.Stage">
+      <UniqueIdentifier>{230b2d10-0dc9-4861-af13-916ccee498e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\02.Loading">
+      <UniqueIdentifier>{d6465a76-7059-4a49-84bd-4ebfbb74290d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00.BackGround">
+      <UniqueIdentifier>{210af0c9-855f-4b98-b61f-0f2cda69304a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.Player">
+      <UniqueIdentifier>{03683c9d-f487-4405-84bf-512d2e517332}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.Terrain">
+      <UniqueIdentifier>{6f52b54c-c459-4c4c-b001-6510a8c0ffa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.MainCamera">
+      <UniqueIdentifier>{0261291c-e90d-4e1d-b5a9-3d71a5534c00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.SkyBox">
+      <UniqueIdentifier>{8d77d238-39c9-4118-8ccf-5993bef891a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -48,6 +72,30 @@
     <ClInclude Include="..\Codes\Define.h">
       <Filter>98.Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Logo.h">
+      <Filter>01.Scene\00.Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Stage.h">
+      <Filter>01.Scene\01.Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Loading.h">
+      <Filter>01.Scene\02.Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\BackGround.h">
+      <Filter>02.GameObject\00.BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player.h">
+      <Filter>02.GameObject\01.Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Terrain.h">
+      <Filter>02.GameObject\02.Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\DynamicCamera.h">
+      <Filter>02.GameObject\04.MainCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\SkyBox.h">
+      <Filter>02.GameObject\05.SkyBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -58,6 +106,30 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MainApp.cpp">
       <Filter>00.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Logo.cpp">
+      <Filter>01.Scene\00.Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Stage.cpp">
+      <Filter>01.Scene\01.Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Loading.cpp">
+      <Filter>01.Scene\02.Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\BackGround.cpp">
+      <Filter>02.GameObject\00.BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player.cpp">
+      <Filter>02.GameObject\01.Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Terrain.cpp">
+      <Filter>02.GameObject\02.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DynamicCamera.cpp">
+      <Filter>02.GameObject\04.MainCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SkyBox.cpp">
+      <Filter>02.GameObject\05.SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

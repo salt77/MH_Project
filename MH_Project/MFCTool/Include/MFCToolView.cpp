@@ -32,6 +32,7 @@ BEGIN_MESSAGE_MAP(CMFCToolView, CScrollView)
 	ON_COMMAND(ID_FILE_PRINT, &CScrollView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CScrollView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CScrollView::OnFilePrintPreview)
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CMFCToolView 생성/소멸
@@ -58,6 +59,60 @@ CMFCToolView::~CMFCToolView()
 
 // CMFCToolView 그리기
 
+list<D3DXMESHCONTAINER_DERIVED*> CMFCToolView::Get_MeshContainerList()
+{
+	if (m_pPlayer)
+	{
+		return dynamic_cast<CDynamicMesh*>(m_pPlayer->Get_Component(L"Com_Mesh", ID_STATIC))->Get_MeshContainerList();
+	}
+
+	return list<D3DXMESHCONTAINER_DERIVED*>();
+}
+
+void CMFCToolView::Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType)
+{
+	switch (eObjType)
+	{
+	case OBJECTADD_MFC_PLAYER:
+		m_pPlayer->Set_AniIndex(iIndex);
+		break;
+	case OBJECTADD_MFC_AHGLAN:
+		break;
+	}
+}
+
+void CMFCToolView::Set_ColliderMatrix(_matrix* matInfo, CString cstrColName)
+{
+	if (m_pPlayer)
+	{
+		dynamic_cast<CCollider*>(m_pPlayer->Get_Component(cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+	}
+}
+
+void CMFCToolView::Set_ColliderMatrixInterpolX(_float fX, CString cstrColName)
+{
+	if (m_pPlayer)
+	{
+		dynamic_cast<CCollider*>(m_pPlayer->Get_Component(cstrColName, ID_STATIC))->Set_MatrixInterpolX(fX);
+	}
+}
+
+void CMFCToolView::Set_ColliderMatrixInterpolY(_float fY, CString cstrColName)
+{
+	if (m_pPlayer)
+	{
+		dynamic_cast<CCollider*>(m_pPlayer->Get_Component(cstrColName, ID_STATIC))->Set_MatrixInterpolY(fY);
+	}
+}
+
+void CMFCToolView::Set_ColliderMatrixInterpolZ(_float fZ, CString cstrColName)
+{
+	if (m_pPlayer)
+	{
+		dynamic_cast<CCollider*>(m_pPlayer->Get_Component(cstrColName, ID_STATIC))->Set_MatrixInterpolZ(fZ);
+	}
+}
+
 HRESULT CMFCToolView::Add_Prototype()
 {
 	Ready_GraphicDev(g_hWnd, MODE_WIN, MAPTOOL_WINCX, MAPTOOL_WINCY, &m_pDeviceClass);
@@ -71,7 +126,8 @@ HRESULT CMFCToolView::Add_Prototype()
 	Engine::Ready_Prototype(L"Proto_Transform", CTransform::Create(m_pGraphicDev));
 	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 32, 32));
 	Engine::Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", TEX_NORMAL, 2));
-	Engine::Ready_Prototype(L"Proto_StaticMesh_Player", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Lethita/", L"Lethita.X"));
+	Engine::Ready_Prototype(L"Proto_DynamicMesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Lethita/", L"Lethita.X"));
+	//Engine::Ready_Prototype(L"Proto_StaticMesh_Player", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Lethita/", L"Lethita.X"));
 
 	return S_OK;
 }
@@ -188,13 +244,20 @@ HRESULT CMFCToolView::Delete_Object(OBJECTADD_MFC _eObjectType)
 	return S_OK;
 }
 
-HRESULT CMFCToolView::Add_Collider(_float fRadius)
+HRESULT CMFCToolView::Add_Collider(_float fRadius, CString cstrName)
 {
 	// Collider는 프로토타입 생성 안 함
 	//Engine::Ready_Prototype(L"Proto_Collider", CCollider::Create(m_pGraphicDev, fRadius));
 	if (m_pPlayer)
-		m_pPlayer->Add_Collider(fRadius);
+	{
+		m_pPlayer->Add_Collider(fRadius, cstrName);
+	}
 
+	return S_OK;
+}
+
+HRESULT CMFCToolView::Apply_Collider(_float fColScale, _uint iAniIndex)
+{
 	return S_OK;
 }
 
@@ -207,9 +270,9 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 
 	Engine::Render_GameObject(m_pGraphicDev);
 	if (m_pTerrain)
-		m_pTerrain->Update_Object(0);
+		m_pTerrain->Update_Object(m_fDeltaTime);
 	if (m_pPlayer)
-		m_pPlayer->Update_Object(0);
+		m_pPlayer->Update_Object(m_fDeltaTime);
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	Render_Begin(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f));
@@ -309,9 +372,9 @@ void CMFCToolView::OnInitialUpdate()
 BOOL CMFCToolView::PreTranslateMessage(MSG* pMsg)
 {
 	Set_TimeDelta(L"Timer_Immediate");
-	_float fDeltaTime = Get_TimeDelta(L"Timer_Immediate");
+	m_fDeltaTime = Get_TimeDelta(L"Timer_Immediate");
 
-	m_pCamera->Update_Object(fDeltaTime);
+	m_pCamera->Update_Object(m_fDeltaTime);
 	//if (m_pTerrain)
 	//	m_pTerrain->Update_Object(fDeltaTime);
 

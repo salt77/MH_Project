@@ -1,5 +1,6 @@
 #pragma once
 #include "afxcmn.h"
+#include "afxwin.h"
 
 
 // CCollisionTool 대화 상자입니다.
@@ -27,16 +28,40 @@ public:
 
 public:
 	afx_msg void OnTreeObjSelChanged(NMHDR *pNMHDR, LRESULT *pResult);
+
 	afx_msg void OnBnClickedObjectAdd();
 	afx_msg void OnBnClickedDeleteObject();
-	afx_msg void OnBnClickedApplyCollider();
+
 	afx_msg void OnBnClickedAddCollider();
+
+	afx_msg void OnListSelchangeCollider();
+
+	afx_msg void OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult);
+
+	afx_msg void OnEditChangeColX();
+	afx_msg void OnEditChangeColY();
+	afx_msg void OnEditChangeColZ();
+
+	afx_msg void OnEditChangeAni();
+
+	afx_msg void OnBtnClickedSave();
 
 public:
 	CTreeCtrl m_TreeObj;
 	CTreeCtrl m_TreeBone;
 
 	HTREEITEM	m_hRoot, m_hPlayer, m_hAhglan;
+	//HTREEITEM	m_hBoneRoot1, m_hBoneRoot2, m_hBoneRoot3, m_hBoneRoot4, m_hBoneRoot5, m_hBoneRoot6, m_hBoneRoot7;
 
+	CListBox m_ListBoxCollider;
+
+	CString m_cstrColName;
 	float m_fColScale;
+	UINT m_AniIndex;
+
+	_int	m_iListCulSelCol;
+
+	float m_fColX;
+	float m_fColY;
+	float m_fColZ;
 };

@@ -18,6 +18,8 @@ HRESULT CStage::Ready_Scene(void)
 {
 	FAILED_CHECK_RETURN(CScene::Ready_Scene(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
+
 
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
@@ -59,7 +61,6 @@ HRESULT CStage::Ready_Layer_Environment(const _tchar* pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
 
 
-	
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
 	return S_OK;
@@ -82,8 +83,8 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player", pGameObject), E_FAIL);
 
-
 	m_mapLayer.emplace(pLayerTag, pLayer);
+
 	return S_OK;
 }
 
@@ -101,6 +102,21 @@ HRESULT CStage::Ready_Layer_UI(const _tchar * pLayerTag)
 
 HRESULT CStage::Ready_Prototype(void)
 {
+	return S_OK;
+}
+
+HRESULT CStage::Ready_LightInfo(void)
+{
+	D3DLIGHT9			tLightInfo;
+	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
+
+	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
+	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Direction = _vec3(1.f, -1.f, 1.f);
+
+	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 
 	return S_OK;
 }

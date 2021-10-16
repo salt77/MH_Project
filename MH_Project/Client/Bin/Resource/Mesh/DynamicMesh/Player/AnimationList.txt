@@ -1,0 +1,3 @@
+0. Lower_Run
+1. Idle (Battle Mode)
+2. 

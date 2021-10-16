@@ -14,7 +14,9 @@
 #include "Renderer.h"
 #include "Calculator.h"
 #include "StaticMesh.h"
+#include "DynamicMesh.h"
 #include "Collider.h"
+#include "LightMgr.h"
 
 #include "Camera.h"
 
@@ -25,6 +27,9 @@ BEGIN(Engine)
 inline HRESULT		AddGameObjectInManager(const _tchar* LayerTag, CLayer* pLayer);
 inline HRESULT		DeleteGameObjectInManager(const _tchar* LayerTag);
 inline CGameObject*	Get_MFCGameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
+inline CComponent*	Get_MFCComponent(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID);
+inline HRESULT		Set_RenderColType(const _tchar* pColType, COLTYPE eColType);
+
 inline CGameObject*	Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
 inline CComponent*	Get_Component(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID);
 inline HRESULT		Create_Management(CManagement** ppManagement);
@@ -42,6 +47,11 @@ inline CRenderer*	Get_Renderer(void);
 inline void			Add_RenderGroup(RENDERID eID, CGameObject* pGameObject);
 inline void			Render_GameObject(LPDIRECT3DDEVICE9& pGraphicDev);
 inline void			Clear_RenderGroup(void);
+
+// LightMgr
+inline HRESULT		Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev,
+								const D3DLIGHT9* pLightInfo,
+								const _uint& iIndex);
 
 inline void			Release_Utility(void);
 

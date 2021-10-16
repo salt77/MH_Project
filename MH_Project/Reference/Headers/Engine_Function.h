@@ -74,7 +74,7 @@ namespace Engine
 		template<typename T>
 		bool operator()(const T& pair)
 		{
-			if (0 == lstrcmpW(m_pTargetTag, pair.first))
+			if (0 == lstrcmpW(m_pTargetTag, pair.first.c_str()))
 			{
 				return true;
 			}

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MFC_Player.h"
-#include "StaticMesh.h"
+#include "DynamicMesh.h"
 
 
 USING(Engine)
@@ -8,7 +8,6 @@ USING(Engine)
 CMFC_Player::CMFC_Player(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
-	m_vecColliderCom.reserve(8);
 }
 
 CMFC_Player::~CMFC_Player()
@@ -21,7 +20,9 @@ HRESULT CMFC_Player::Ready_Object(void)
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
-	m_pTransformCom->Set_Scale(0.05f, 0.05f, 0.05f);
+	m_pTransformCom->Set_Scale(0.01f, 0.01f, 0.01f);
+	
+	m_pMeshCom->Set_AnimationIndex(0);
 
 	return S_OK;
 }
@@ -29,6 +30,11 @@ HRESULT CMFC_Player::Ready_Object(void)
 _int CMFC_Player::Update_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
+
+	Key_Input(fTimeDelta);
+
+	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
+	m_pMeshCom->Play_Animation(fTimeDelta);
 
 	Add_RenderGroup(RENDER_NONALPHA, this);
 
@@ -44,10 +50,12 @@ void CMFC_Player::Render_Object(void)
 	
 	/*if (m_pColliderCom)
 		m_pColliderCom->Render_Collider(m_pTransformCom->Get_WorldMatrix());*/
-	if (!m_vecColliderCom.empty())
+	if (!m_mapColliderCom.empty())
 	{
-		for (CCollider* pCol : m_vecColliderCom)
-			pCol->Render_Collider(m_pTransformCom->Get_WorldMatrix());
+		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+
+		for (; iter != m_mapColliderCom.end(); ++iter)
+			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 	}
 
 	m_pMeshCom->Render_Meshes();
@@ -60,9 +68,10 @@ HRESULT CMFC_Player::Add_Component(void)
 {
 	CComponent*		pComponent = nullptr;
 
-	pComponent = m_pMeshCom = dynamic_cast<CStaticMesh*>(Clone_Prototype(L"Proto_StaticMesh_Player"));
+	// DynamicMesh
+	pComponent = m_pMeshCom = dynamic_cast<CDynamicMesh*>(Clone_Prototype(L"Proto_DynamicMesh_Player"));
 	NULL_CHECK_RETURN(m_pMeshCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_StaticMesh", pComponent);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Mesh", pComponent);
 
 	// Transform
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Clone_Prototype(L"Proto_Transform"));
@@ -88,21 +97,46 @@ HRESULT CMFC_Player::Add_Component(void)
 	return S_OK;
 }
 
-HRESULT CMFC_Player::Add_Collider(_float fRadius)
+void CMFC_Player::Key_Input(const _float & fTimeDelta)
 {
-	CComponent*		pComponent = nullptr;
+	m_pTransformCom->Get_INFO(INFO_LOOK, &m_vDir);
 
-	pComponent = CCollider::Create(m_pGraphicDev, fRadius);
-	m_vecColliderCom.emplace_back(dynamic_cast<CCollider*>(pComponent));
-	if (m_vecColliderCom.empty())
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
+
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
+}
+
+HRESULT CMFC_Player::Add_Collider(_float fRadius, CString cstrName)
+{
+	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius);
+	m_mapColliderCom.emplace(cstrName, dynamic_cast<CCollider*>(pComponent));
+	if (m_mapColliderCom.empty())
 		return E_FAIL;
 
-	CString cstrCollider, cstrColNum;
-	cstrColNum.Format(_T("%d"), m_iColliderNum);
-	cstrCollider = "Com_Collider";
-	cstrCollider += cstrColNum;
-	m_mapComponent[ID_STATIC].emplace(cstrCollider, pComponent);
-	++m_iColliderNum;
+	//CString cstrCollider, cstrColNum;
+	//cstrColNum.Format(_T("%d"), m_iColliderNum);
+	//cstrCollider = "Com_Collider";
+	//cstrCollider += cstrColNum;
+	m_mapComponent[ID_STATIC].emplace(cstrName, pComponent);
+	//++m_iColliderNum;
+
+	return S_OK;
+}
+
+HRESULT CMFC_Player::Change_ColliderScale(_float fRadius, CString cstrName)
+{
+	//map<const _tchar*, CCollider*>::iterator	iter = find_if(m_mapColliderCom.begin(), m_mapColliderCom.end(), CTag_Finder(cstrName));
+
+	//if (iter == m_mapColliderCom.end())
+
+	//	return E_FAIL;
+
+	//Safe_Release(iter->second);
+	//m_mapColliderCom.erase(cstrName);
+
+	//Add_Collider(fRadius, cstrName);
 
 	return S_OK;
 }

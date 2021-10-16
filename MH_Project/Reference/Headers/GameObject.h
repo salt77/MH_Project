@@ -23,7 +23,7 @@ public:
 
 protected:
 	LPDIRECT3DDEVICE9					m_pGraphicDev;
-	map<const _tchar*, CComponent*>		m_mapComponent[ID_END];
+	map<const wstring, CComponent*>		m_mapComponent[ID_END];
 
 private:
 	CComponent*		Find_Component(const _tchar* pComponentTag, COMPONENTID eID);

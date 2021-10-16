@@ -27,7 +27,16 @@ public:
 
 // 작업입니다.
 public:
+	list<D3DXMESHCONTAINER_DERIVED*>	Get_MeshContainerList();
+
+public:
 	void	Set_RenderTerrain(_uint _iRenderType) { m_iRenderTerrain = _iRenderType; }
+	void	Set_ChangeColType(CString cstrName, COLTYPE eColType) { Engine::Set_RenderColType(cstrName, eColType); }
+	void	Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
+	void	Set_ColliderMatrix(_matrix* matInfo, CString cstrColName);
+	void	Set_ColliderMatrixInterpolX(_float fX, CString cstrColName);
+	void	Set_ColliderMatrixInterpolY(_float fY, CString cstrColName);
+	void	Set_ColliderMatrixInterpolZ(_float fZ, CString cstrColName);
 
 public:
 	HRESULT	Add_Prototype();
@@ -38,7 +47,8 @@ public:
 	HRESULT	Add_Object(OBJECTADD_MFC _eObjectType);
 	HRESULT	Delete_Object(OBJECTADD_MFC _eObjectType);
 
-	HRESULT Add_Collider(_float fRadius);
+	HRESULT Add_Collider(_float fRadius, CString cstrName);
+	HRESULT Apply_Collider(_float fColScale, _uint iAniIndex);
 
 private:
 	CGraphicDev*		m_pDeviceClass = nullptr;
@@ -49,6 +59,8 @@ private:
 	CLayer*				m_pLayer = nullptr;
 
 	_uint		m_iRenderTerrain = 0;
+
+	_float		m_fDeltaTime = 0.f;
 
 // 재정의입니다.
 public:

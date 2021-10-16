@@ -70,6 +70,11 @@ CGameObject * CManagement::Get_MFCGameObject(const _tchar * pLayerTag, const _tc
 	return CMFC_ObjectManager::GetInstance()->Get_MFCGameObject(pLayerTag, pObjTag);
 }
 
+CComponent * CManagement::Get_MFCComponent(const _tchar * pLayerTag, const _tchar * pObjTag, const _tchar * pComponentTag, COMPONENTID eID)
+{
+	return CMFC_ObjectManager::GetInstance()->Get_MFCComponent(pLayerTag, pObjTag, pComponentTag, eID);
+}
+
 CGameObject * CManagement::Get_GameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
 {
 	if (nullptr == m_pScene)
@@ -84,5 +89,17 @@ Engine::CComponent* Engine::CManagement::Get_Component(const _tchar* pLayerTag, 
 		return nullptr;
 
 	return m_pScene->Get_Component(pLayerTag, pObjTag, pComponentTag, eID);
+}
+
+HRESULT CManagement::Set_RenderColType(const _tchar* pColName, COLTYPE eColType)
+{
+	CCollider* pCollider = dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", pColName, ID_STATIC));
+
+	if (!pCollider)
+		return E_FAIL;
+
+	pCollider->Set_RenderColType(eColType);
+
+	return S_OK;
 }
 

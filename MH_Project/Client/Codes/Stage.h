@@ -7,10 +7,11 @@
 #include "BackGround.h"
 
 #include "Player.h"
-#include "Monster.h"
+//#include "Monster.h"
 #include "Terrain.h"
 #include "DynamicCamera.h"
 #include "SkyBox.h"
+//#include "Stone.h"
 
 class CStage : public CScene
 {
@@ -28,6 +29,7 @@ private:
 	HRESULT				Ready_Layer_GameLogic(const _tchar* pLayerTag);
 	HRESULT				Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT				Ready_Prototype(void);
+	HRESULT				Ready_LightInfo(void);
 
 public:
 	static CStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -8,6 +8,7 @@
 BEGIN(Engine)
 
 class CGameObject;
+class CComponent;
 class CLayer;
 
 class ENGINE_DLL CMFC_ObjectManager final : public CBase
@@ -24,6 +25,7 @@ private:
 
 public:
 	CGameObject*	Get_MFCGameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
+	CComponent*		Get_MFCComponent(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID);
 
 public:
 	HRESULT	AddGameObjectInManager(const _tchar* LayerTag, CLayer* pLayer);

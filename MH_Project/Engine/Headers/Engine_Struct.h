@@ -57,5 +57,30 @@ namespace Engine
 
 	}INDEX32;			
 
+
+	typedef struct D3DXFRAME_DERIVED : public D3DXFRAME
+	{
+		_matrix			CombinedTransformMatrix;
+
+	}D3DXFRAME_DERIVED;
+
+
+	typedef struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER
+	{
+		LPDIRECT3DTEXTURE9*		ppTexture;
+		LPDIRECT3DTEXTURE9*		ppNormalTexture;
+		LPDIRECT3DTEXTURE9*		ppSpecularTexture;
+
+		LPD3DXMESH				pOriMesh;		// 스키닝이 적용되기 전 최초 로드상태를 보관하기 위한 컴객체
+
+		_ulong					dwNumBones;		// 메쉬가 지닌 뼈의 개수(메쉬가 지닌 뼈 상태의 행렬의 개수를 파악하기 위함)
+
+		_matrix*				pFrameOffSetMatrix;			// 애니메이션을 포함한 형태로 만들기 위한 최초 애니메이션 행렬
+
+		_matrix**				ppCombinedTransformMatrix;	// 뼈가 지닌 CombinedTransformMatrix들의 주소값을 보관하기 위한 이중 포인터
+		_matrix*				pRenderingMatrix;			// 최종 행렬 = pFrameOffSetMatrix * (*ppCombinedTransformMatrix);
+
+
+	}D3DXMESHCONTAINER_DERIVED;
 }
 #endif // Engine_Struct_h__

@@ -8,7 +8,6 @@
 #include "Loading.h"
 
 #include "Player.h"
-#include "Monster.h"
 
 class CLogo : public CScene
 {

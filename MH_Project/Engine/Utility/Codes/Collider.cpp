@@ -32,34 +32,47 @@ HRESULT CCollider::Ready_Collider(/*const _vec3 * pPos, const _ulong & dwVtxCnt,
 	//D3DXComputeBoundingSphere(pPos, dwVtxCnt, sizeof(_vec3), &m_vCenter, &m_fRadius);
 	D3DXCreateSphere(m_pGraphicDev, fRadius, 10, 10, &m_pSphere, nullptr);
 
-	D3DXCreateTexture(m_pGraphicDev,
-		1,
-		1,
-		1,  // miplevel
-		0,	// 텍스처의 용도, D3DUSAGE_RENDERTARGET
-		D3DFMT_A8R8G8B8,
-		D3DPOOL_MANAGED,
-		&m_pTexture);
+	for (_ulong i = 0; i < COL_END; ++i)
+	{
+		D3DXCreateTexture(m_pGraphicDev,
+			1,
+			1,
+			1,  // miplevel
+			0,	// 텍스처의 용도, D3DUSAGE_RENDERTARGET
+			D3DFMT_A8R8G8B8,
+			D3DPOOL_MANAGED,
+			&m_pTexture[i]);
 
-	D3DLOCKED_RECT LockRect;
-	m_pTexture->LockRect(0, &LockRect, NULL, 0);
+		D3DLOCKED_RECT LockRect;
+		m_pTexture[i]->LockRect(0, &LockRect, NULL, 0);
 
-	*((_ulong*)LockRect.pBits) = D3DXCOLOR(0.f, 1.f, 0.f, 1.f);
+		*((_ulong*)LockRect.pBits) = D3DXCOLOR(1.f * i, 1.f * (1.f - i), 0.f, 1.f);
 
-	m_pTexture->UnlockRect(0);
+		m_pTexture[i]->UnlockRect(0);
+	}
 
 	return S_OK;
 }
 
-void CCollider::Render_Collider(const _matrix * pColliderMatrix)
+void CCollider::Render_Collider(COLTYPE eType, const _matrix * pColliderMatrix)
 {
 	m_matColMatrix = *pColliderMatrix;
 
+	if (m_matColParts)
+		m_matColMatrix = (*m_matColParts) * m_matColMatrix;
+
+	if (0.f != m_fInterpolX)
+		m_matColMatrix._41 += m_fInterpolX;
+	if (0.f != m_fInterpolY)
+		m_matColMatrix._42 += m_fInterpolY;
+	if (0.f != m_fInterpolZ)
+		m_matColMatrix._43 += m_fInterpolZ;
+
 #ifdef _DEBUG
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, pColliderMatrix);
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matColMatrix);
 	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
-	m_pGraphicDev->SetTexture(0, m_pTexture);
+	m_pGraphicDev->SetTexture(0, m_pTexture[m_eColType]);
 	m_pSphere->DrawSubset(0);
 
 	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
@@ -83,7 +96,9 @@ CComponent * CCollider::Clone()
 
 void CCollider::Free(void)
 {
-	Safe_Release(m_pTexture);
+	for (_ulong i = 0; i < COL_END; ++i)
+		Safe_Release(m_pTexture[i]);
+
 	Safe_Release(m_pIB);
 	Safe_Release(m_pVB);
 
