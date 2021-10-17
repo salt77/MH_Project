@@ -24,6 +24,9 @@ public:
 	virtual void Render_Object(void) override;
 
 public:
+	const map<const wstring, CCollider*>	Get_ColliderMap() { return m_mapColliderCom; }
+
+public:
 	void			Set_AniIndex(_uint iIndex) { m_iAniIndex = iIndex; }
 
 private:
@@ -31,8 +34,8 @@ private:
 	void			Key_Input(const _float& fTimeDelta);
 
 public:
-	HRESULT			Add_Collider(_float fRadius, CString cstrName);
-	HRESULT			Change_ColliderScale(_float fRadius, CString cstrName);
+	HRESULT			Add_Collider(_float fRadius, wstring cstrName);
+	HRESULT			Change_ColliderScale(_float fRadius, wstring cstrName);
 
 private:
 	_uint			m_iColliderNum = 0;

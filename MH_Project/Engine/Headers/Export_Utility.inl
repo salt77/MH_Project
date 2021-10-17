@@ -1,36 +1,36 @@
 #include "Export_Utility.h"
 
-inline HRESULT AddGameObjectInManager(const _tchar * LayerTag, CLayer * pLayer)
+inline HRESULT AddGameObjectInManager(const wstring LayerTag, CLayer * pLayer)
 {
 	CManagement::GetInstance()->AddGameObjectInManager(LayerTag, pLayer);
 
 	return S_OK;
 }
-inline HRESULT DeleteGameObjectInManager(const _tchar * LayerTag)
+inline HRESULT DeleteGameObjectInManager(const wstring LayerTag)
 {
 	CManagement::GetInstance()->DeleteGameObjectInManager(LayerTag);
 
 	return S_OK;
 }
-inline CGameObject * Get_MFCGameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
+inline CGameObject * Get_MFCGameObject(const wstring pLayerTag, const wstring pObjTag)
 {
 	return CManagement::GetInstance()->Get_MFCGameObject(pLayerTag, pObjTag);
 }
-inline CComponent * Get_MFCComponent(const _tchar * pLayerTag, const _tchar * pObjTag, const _tchar * pComponentTag, COMPONENTID eID)
+inline CComponent * Get_MFCComponent(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID)
 {
 	return CManagement::GetInstance()->Get_MFCComponent(pLayerTag, pObjTag, pComponentTag, eID);
 }
-inline CGameObject * Get_GameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
+inline CGameObject * Get_GameObject(const wstring pLayerTag, const wstring pObjTag)
 {
 	return CManagement::GetInstance()->Get_GameObject(pLayerTag, pObjTag);
 }
-inline HRESULT Set_RenderColType(const _tchar* pColType, COLTYPE eColType)
+inline HRESULT Set_RenderColType(const wstring pColType, COLTYPE eColType)
 {
 	CManagement::GetInstance()->Set_RenderColType(pColType, eColType);
 
 	return S_OK;
 }
-CComponent*		Get_Component(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID)
+CComponent*		Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID)
 {
 	return CManagement::GetInstance()->Get_Component(pLayerTag, pObjTag, pComponentTag, eID);
 }
@@ -58,16 +58,16 @@ void			Render_Scene(LPDIRECT3DDEVICE9& pGraphicDev)
 	CManagement::GetInstance()->Render_Scene(pGraphicDev);
 }
 
-HRESULT		Ready_Prototype(const _tchar* pProtoTag, CComponent* pInstance)
+HRESULT		Ready_Prototype(const wstring pProtoTag, CComponent* pInstance)
 {
 	return CProtoMgr::GetInstance()->Ready_Prototype(pProtoTag, pInstance);
 }
-CComponent* Clone_Prototype(const _tchar* pProtoTag)
+CComponent* Clone_Prototype(const wstring pProtoTag)
 {
 	return CProtoMgr::GetInstance()->Clone_Prototype(pProtoTag);
 }
 
-inline HRESULT Delete_Prototype(const _tchar * pProtoTag)
+inline HRESULT Delete_Prototype(const wstring pProtoTag)
 {
 	CProtoMgr::GetInstance()->Delete_Prototype(pProtoTag);
 

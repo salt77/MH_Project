@@ -192,7 +192,9 @@
     <ClInclude Include="..\Codes\CameraTool.h" />
     <ClInclude Include="..\Codes\CollisionTool.h" />
     <ClInclude Include="..\Codes\Form.h" />
+    <ClInclude Include="..\Codes\MFC_CamAt.h" />
     <ClInclude Include="..\Codes\MFC_Camera.h" />
+    <ClInclude Include="..\Codes\MFC_CamEye.h" />
     <ClInclude Include="..\Codes\MFC_Player.h" />
     <ClInclude Include="..\Codes\MFC_Terrain.h" />
     <ClInclude Include="..\Codes\NavmeshTool.h" />
@@ -212,7 +214,9 @@
     <ClCompile Include="..\Codes\CameraTool.cpp" />
     <ClCompile Include="..\Codes\CollisionTool.cpp" />
     <ClCompile Include="..\Codes\Form.cpp" />
+    <ClCompile Include="..\Codes\MFC_CamAt.cpp" />
     <ClCompile Include="..\Codes\MFC_Camera.cpp" />
+    <ClCompile Include="..\Codes\MFC_CamEye.cpp" />
     <ClCompile Include="..\Codes\MFC_Player.cpp" />
     <ClCompile Include="..\Codes\MFC_Terrain.cpp" />
     <ClCompile Include="..\Codes\NavmeshTool.cpp" />

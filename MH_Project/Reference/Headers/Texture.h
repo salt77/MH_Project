@@ -13,7 +13,7 @@ protected:
 	virtual ~CTexture(void);
 
 public:
-	HRESULT		Ready_Texture(const _tchar* pPath, 
+	HRESULT		Ready_Texture(const wstring pPath, 
 								TEXTURETYPE eType, 
 								const _uint& iCnt);
 
@@ -24,7 +24,7 @@ private:
 		
 public:
 	static CTexture*		Create(LPDIRECT3DDEVICE9 pGraphicDev, 
-									const _tchar* pPath, 
+									const wstring pPath, 
 									TEXTURETYPE eType, 
 									const _uint& iCnt = 1);
 

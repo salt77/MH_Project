@@ -13,7 +13,7 @@ Engine::CProtoMgr::~CProtoMgr(void)
 	Free();
 }
 
-HRESULT Engine::CProtoMgr::Ready_Prototype(const _tchar* pProtoTag, CComponent* pInstance)
+HRESULT Engine::CProtoMgr::Ready_Prototype(const wstring pProtoTag, CComponent* pInstance)
 {
 	CComponent*		pComponent = Find_Prototype(pProtoTag);
 
@@ -25,7 +25,7 @@ HRESULT Engine::CProtoMgr::Ready_Prototype(const _tchar* pProtoTag, CComponent* 
 	return S_OK;
 }
 
-Engine::CComponent* Engine::CProtoMgr::Clone_Prototype(const _tchar* pProtoTag)
+Engine::CComponent* Engine::CProtoMgr::Clone_Prototype(const wstring pProtoTag)
 {
 	CComponent*		pComponent = Find_Prototype(pProtoTag);
 
@@ -35,7 +35,7 @@ Engine::CComponent* Engine::CProtoMgr::Clone_Prototype(const _tchar* pProtoTag)
 	return pComponent->Clone();
 }
 
-HRESULT CProtoMgr::Delete_Prototype(const _tchar * pProtoTag)
+HRESULT CProtoMgr::Delete_Prototype(const wstring pProtoTag)
 {
 	CComponent*		pComponent = Find_Prototype(pProtoTag);
 
@@ -52,7 +52,7 @@ HRESULT CProtoMgr::Delete_Prototype(const _tchar * pProtoTag)
 	return S_OK;
 }
 
-Engine::CComponent* Engine::CProtoMgr::Find_Prototype(const _tchar* pProtoTag)
+Engine::CComponent* Engine::CProtoMgr::Find_Prototype(const wstring pProtoTag)
 {
 	auto	iter = find_if(m_mapPrototype.begin(), m_mapPrototype.end(), CTag_Finder(pProtoTag));
 

@@ -13,12 +13,12 @@ private:
 	virtual ~CFont(void);
 
 public:
-	HRESULT		Ready_Font(const _tchar* pFontType, 
+	HRESULT		Ready_Font(const wstring pFontType, 
 							const _uint& iWidth, 
 							const _uint& iHeight,
 							const _uint& iWeight);
 
-	void		Render_Font(const _tchar* pString, 
+	void		Render_Font(const wstring pString, 
 							const _vec2* pPos,
 							D3DXCOLOR Color);
 
@@ -29,7 +29,7 @@ private:
 
 public:
 	static CFont*		Create(LPDIRECT3DDEVICE9 pGraphicDev,
-								const _tchar* pFontType,
+								const wstring pFontType,
 								const _uint& iWidth,
 								const _uint& iHeight,
 								const _uint& iWeight);

@@ -145,6 +145,11 @@ void Engine::CTransform::Get_INFO(INFO eType, _vec3* pInfo)
 	memcpy(pInfo, &m_matWorld.m[eType][0], sizeof(_vec3));
 }
 
+const _vec3 * CTransform::Get_Info(INFO eType)
+{
+	return &m_vInfo[eType];
+}
+
 
 
 Engine::CTransform* Engine::CTransform::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -51,31 +51,31 @@ void Engine::CManagement::Free(void)
 	Safe_Release(m_pScene);
 }
 
-HRESULT CManagement::AddGameObjectInManager(const _tchar * LayerTag, CLayer * pLayer)
+HRESULT CManagement::AddGameObjectInManager(const wstring LayerTag, CLayer * pLayer)
 {
 	CMFC_ObjectManager::GetInstance()->AddGameObjectInManager(LayerTag, pLayer);
 
 	return S_OK;
 }
 
-HRESULT CManagement::DeleteGameObjectInManager(const _tchar * LayerTag)
+HRESULT CManagement::DeleteGameObjectInManager(const wstring LayerTag)
 {
 	CMFC_ObjectManager::GetInstance()->DeleteGameObjectInManager(LayerTag);
 
 	return S_OK;
 }
 
-CGameObject * CManagement::Get_MFCGameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
+CGameObject * CManagement::Get_MFCGameObject(const wstring pLayerTag, const wstring pObjTag)
 {
 	return CMFC_ObjectManager::GetInstance()->Get_MFCGameObject(pLayerTag, pObjTag);
 }
 
-CComponent * CManagement::Get_MFCComponent(const _tchar * pLayerTag, const _tchar * pObjTag, const _tchar * pComponentTag, COMPONENTID eID)
+CComponent * CManagement::Get_MFCComponent(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID)
 {
 	return CMFC_ObjectManager::GetInstance()->Get_MFCComponent(pLayerTag, pObjTag, pComponentTag, eID);
 }
 
-CGameObject * CManagement::Get_GameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
+CGameObject * CManagement::Get_GameObject(const wstring pLayerTag, const wstring pObjTag)
 {
 	if (nullptr == m_pScene)
 		return nullptr;
@@ -83,7 +83,7 @@ CGameObject * CManagement::Get_GameObject(const _tchar * pLayerTag, const _tchar
 	return m_pScene->Get_GameObject(pLayerTag, pObjTag);
 }
 
-Engine::CComponent* Engine::CManagement::Get_Component(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID)
+Engine::CComponent* Engine::CManagement::Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID)
 {
 	if (nullptr == m_pScene)
 		return nullptr;
@@ -91,7 +91,7 @@ Engine::CComponent* Engine::CManagement::Get_Component(const _tchar* pLayerTag, 
 	return m_pScene->Get_Component(pLayerTag, pObjTag, pComponentTag, eID);
 }
 
-HRESULT CManagement::Set_RenderColType(const _tchar* pColName, COLTYPE eColType)
+HRESULT CManagement::Set_RenderColType(const wstring pColName, COLTYPE eColType)
 {
 	CCollider* pCollider = dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", pColName, ID_STATIC));
 

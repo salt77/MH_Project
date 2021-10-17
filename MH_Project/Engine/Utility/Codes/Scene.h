@@ -12,8 +12,8 @@ protected:
 	virtual ~CScene(void);
 
 public:
-	CGameObject*	Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
-	CComponent*		Get_Component(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID);
+	CGameObject*	Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
+	CComponent*		Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
 
 public:
 	virtual HRESULT		Ready_Scene(void);
@@ -22,7 +22,7 @@ public:
 
 protected:
 	LPDIRECT3DDEVICE9				m_pGraphicDev;
-	map<const _tchar*, CLayer*>		m_mapLayer;
+	map<const wstring, CLayer*>		m_mapLayer;
 
 public:
 	virtual void Free(void);

@@ -19,7 +19,7 @@ HRESULT CMFC_Player::Ready_Object(void)
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
+	m_pTransformCom->Set_Pos(1.f, 0.f, 1.f);
 	m_pTransformCom->Set_Scale(0.01f, 0.01f, 0.01f);
 	
 	m_pMeshCom->Set_AnimationIndex(0);
@@ -108,14 +108,14 @@ void CMFC_Player::Key_Input(const _float & fTimeDelta)
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
 }
 
-HRESULT CMFC_Player::Add_Collider(_float fRadius, CString cstrName)
+HRESULT CMFC_Player::Add_Collider(_float fRadius, wstring cstrName)
 {
 	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius);
 	m_mapColliderCom.emplace(cstrName, dynamic_cast<CCollider*>(pComponent));
 	if (m_mapColliderCom.empty())
 		return E_FAIL;
 
-	//CString cstrCollider, cstrColNum;
+	//wstring cstrCollider, cstrColNum;
 	//cstrColNum.Format(_T("%d"), m_iColliderNum);
 	//cstrCollider = "Com_Collider";
 	//cstrCollider += cstrColNum;
@@ -125,9 +125,9 @@ HRESULT CMFC_Player::Add_Collider(_float fRadius, CString cstrName)
 	return S_OK;
 }
 
-HRESULT CMFC_Player::Change_ColliderScale(_float fRadius, CString cstrName)
+HRESULT CMFC_Player::Change_ColliderScale(_float fRadius, wstring cstrName)
 {
-	//map<const _tchar*, CCollider*>::iterator	iter = find_if(m_mapColliderCom.begin(), m_mapColliderCom.end(), CTag_Finder(cstrName));
+	//map<const wstring, CCollider*>::iterator	iter = find_if(m_mapColliderCom.begin(), m_mapColliderCom.end(), CTag_Finder(cstrName));
 
 	//if (iter == m_mapColliderCom.end())
 

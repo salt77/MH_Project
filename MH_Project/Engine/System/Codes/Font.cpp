@@ -15,7 +15,7 @@ Engine::CFont::~CFont(void)
 
 }
 
-HRESULT Engine::CFont::Ready_Font(const _tchar* pFontType,
+HRESULT Engine::CFont::Ready_Font(const wstring pFontType,
 									const _uint& iWidth,
 									const _uint& iHeight,
 									const _uint& iWeight)
@@ -24,7 +24,7 @@ HRESULT Engine::CFont::Ready_Font(const _tchar* pFontType,
 	ZeroMemory(&Font_Desc, sizeof(D3DXFONT_DESC));
 
 	Font_Desc.CharSet = HANGUL_CHARSET;
-	lstrcpy(Font_Desc.FaceName, pFontType);
+	lstrcpy(Font_Desc.FaceName, pFontType.c_str());
 	Font_Desc.Width  = iWidth;
 	Font_Desc.Height = iHeight;
 	Font_Desc.Weight = iWeight;
@@ -44,19 +44,19 @@ HRESULT Engine::CFont::Ready_Font(const _tchar* pFontType,
 	return S_OK;
 }
 
-void Engine::CFont::Render_Font(const _tchar* pString, const _vec2* pPos, D3DXCOLOR Color)
+void Engine::CFont::Render_Font(const wstring pString, const _vec2* pPos, D3DXCOLOR Color)
 {
 	RECT	rc{ _long(pPos->x), _long(pPos->y) };
 
 	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
 
-	m_pFont->DrawTextW(m_pSprite, pString, lstrlen(pString), &rc, DT_NOCLIP, Color);
+	m_pFont->DrawTextW(m_pSprite, pString.c_str(), pString.length(), &rc, DT_NOCLIP, Color);
 
 	m_pSprite->End();
 }
 
 CFont* Engine::CFont::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
-							const _tchar* pFontType,
+							const wstring pFontType,
 							const _uint& iWidth,
 							const _uint& iHeight,
 							const _uint& iWeight)

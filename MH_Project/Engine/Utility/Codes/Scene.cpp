@@ -42,9 +42,9 @@ void Engine::CScene::Free(void)
 	Safe_Release(m_pGraphicDev);
 }
 
-CGameObject * CScene::Get_GameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
+CGameObject * CScene::Get_GameObject(const wstring pLayerTag, const wstring pObjTag)
 {
-	map<const _tchar*, CLayer*>::iterator	iter = find_if(m_mapLayer.begin(), m_mapLayer.end(), CTag_Finder(pLayerTag));
+	map<const wstring, CLayer*>::iterator	iter = find_if(m_mapLayer.begin(), m_mapLayer.end(), CTag_Finder(pLayerTag));
 
 	if (iter == m_mapLayer.end())
 		return nullptr;
@@ -52,7 +52,7 @@ CGameObject * CScene::Get_GameObject(const _tchar * pLayerTag, const _tchar * pO
 	return iter->second->Get_GameObject(pLayerTag, pObjTag);
 }
 
-Engine::CComponent* Engine::CScene::Get_Component(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID)
+Engine::CComponent* Engine::CScene::Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID)
 {
 	auto	iter = find_if(m_mapLayer.begin(), m_mapLayer.end(), CTag_Finder(pLayerTag));
 

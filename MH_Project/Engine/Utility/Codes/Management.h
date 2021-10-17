@@ -13,14 +13,14 @@ private:
 	explicit CManagement(void);
 	virtual ~CManagement(void);
 public:
-	HRESULT			AddGameObjectInManager(const _tchar* LayerTag, CLayer* pLayer);
-	HRESULT			DeleteGameObjectInManager(const _tchar* LayerTag);
-	CGameObject*	Get_MFCGameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
-	CComponent*		Get_MFCComponent(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID);
+	HRESULT			AddGameObjectInManager(const wstring LayerTag, CLayer* pLayer);
+	HRESULT			DeleteGameObjectInManager(const wstring LayerTag);
+	CGameObject*	Get_MFCGameObject(const wstring pLayerTag, const wstring pObjTag);
+	CComponent*		Get_MFCComponent(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
 
-	CGameObject*	Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
-	CComponent*		Get_Component(const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID);
-	HRESULT			Set_RenderColType(const _tchar* pColName, COLTYPE eColType);
+	CGameObject*	Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
+	CComponent*		Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
+	HRESULT			Set_RenderColType(const wstring pColName, COLTYPE eColType);
 
 public:
 	HRESULT			Set_Scene(CScene* pScene);

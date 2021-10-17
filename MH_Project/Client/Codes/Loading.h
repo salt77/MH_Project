@@ -17,7 +17,7 @@ public:
 	LOADINGID			Get_LoadingID(void) const { return m_eLoading; }
 	CRITICAL_SECTION*	Get_Crt(void) { return &m_Crt; }
 	_bool				Get_Finish(void) const { return m_bFinish; }
-	const _tchar*		Get_String(void) { return m_szLoading; }
+	const wstring		Get_String(void) { return m_szLoading; }
 	
 public:
 	static unsigned int CALLBACK Thread_Main(void* pArg);

@@ -14,7 +14,7 @@ protected:
 
 
 public:
-	CComponent*		Get_Component(const _tchar* pComponentTag, COMPONENTID eID);
+	CComponent*		Get_Component(const wstring pComponentTag, COMPONENTID eID);
 
 public:
 	virtual		HRESULT		Ready_Object(void);
@@ -26,7 +26,7 @@ protected:
 	map<const wstring, CComponent*>		m_mapComponent[ID_END];
 
 private:
-	CComponent*		Find_Component(const _tchar* pComponentTag, COMPONENTID eID);
+	CComponent*		Find_Component(const wstring pComponentTag, COMPONENTID eID);
 
 public:
 	virtual void	Free(void);

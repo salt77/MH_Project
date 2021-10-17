@@ -13,7 +13,7 @@ Engine::CFrameMgr::~CFrameMgr(void)
 	Free();
 }
 
-Engine::_bool Engine::CFrameMgr::IsPermit_Call(const _tchar* pFrameTag,
+Engine::_bool Engine::CFrameMgr::IsPermit_Call(const wstring pFrameTag,
 											const _float& fTimeDelta)
 {
 	CFrame*		pInstance = Find_Frame(pFrameTag);
@@ -22,7 +22,7 @@ Engine::_bool Engine::CFrameMgr::IsPermit_Call(const _tchar* pFrameTag,
 	return pInstance->IsPermit_Call(fTimeDelta);
 }
 
-HRESULT Engine::CFrameMgr::Ready_Frame(const _tchar* pFrameTag, const _float& fCallLimit)
+HRESULT Engine::CFrameMgr::Ready_Frame(const wstring pFrameTag, const _float& fCallLimit)
 {
 	CFrame*	pFrame = Find_Frame(pFrameTag);
 
@@ -37,7 +37,7 @@ HRESULT Engine::CFrameMgr::Ready_Frame(const _tchar* pFrameTag, const _float& fC
 	return S_OK;
 }
 
-CFrame* Engine::CFrameMgr::Find_Frame(const _tchar* pFrameTag)
+CFrame* Engine::CFrameMgr::Find_Frame(const wstring pFrameTag)
 {
 	auto	iter = find_if(m_mapFrame.begin(), m_mapFrame.end(), CTag_Finder(pFrameTag));
 

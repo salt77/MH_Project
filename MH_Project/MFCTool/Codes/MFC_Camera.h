@@ -2,6 +2,12 @@
 
 #include "Camera.h"
 
+BEGIN(Engine)
+
+class CTransform;
+
+END
+
 class CMFC_Camera : public CCamera
 {
 public:
@@ -21,6 +27,7 @@ public:
 	virtual _int Update_Object(const _float& fTimeDelta) override;
 
 private:
+	HRESULT		Add_Component();
 	void		Key_Input(const _float& fTimeDelta);
 	//void		Mouse_Move(void);
 
@@ -37,5 +44,7 @@ public:
 
 private:
 	_float		m_fSpeed = 15.f;
+
+	CTransform*	m_pTransformCom = nullptr;
 };
 

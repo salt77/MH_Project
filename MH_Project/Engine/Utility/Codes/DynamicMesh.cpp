@@ -36,11 +36,11 @@ void CDynamicMesh::Play_Animation(const _float & fTimeDelta)
 	Update_FrameMatrices((D3DXFRAME_DERIVED*)m_pRootFrame, D3DXMatrixIdentity(&matTemp));
 }
 
-HRESULT CDynamicMesh::Ready_Meshes(const _tchar * pFilePath, const _tchar * pFileName)
+HRESULT CDynamicMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileName)
 {
 	_tchar	szFullPath[MAX_PATH] = L"";
-	lstrcpy(szFullPath, pFilePath);
-	lstrcat(szFullPath, pFileName);
+	lstrcpy(szFullPath, pFilePath.c_str());
+	lstrcat(szFullPath, pFileName.c_str());
 
 	m_pLoader = CHierachyLoader::Create(m_pGraphicDev, pFilePath);
 	NULL_CHECK_RETURN(m_pLoader, E_FAIL);
@@ -138,7 +138,7 @@ void CDynamicMesh::SetUp_FrameMatrices(D3DXFRAME_DERIVED * pFrame)
 		SetUp_FrameMatrices((D3DXFRAME_DERIVED*)pFrame->pFrameFirstChild);
 }
 
-CDynamicMesh * CDynamicMesh::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar * pFilePath, const _tchar * pFileName)
+CDynamicMesh * CDynamicMesh::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pFilePath, const wstring pFileName)
 {
 	CDynamicMesh*	pInstance = new CDynamicMesh(pGraphicDev);
 

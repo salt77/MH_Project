@@ -15,6 +15,8 @@
 #include "MFC_Camera.h"
 #include "MFC_Terrain.h"
 #include "MFC_Player.h"
+#include "MFC_CamEye.h"
+#include "MFC_CamAt.h"
 #include "Layer.h"
 
 #ifdef _DEBUG
@@ -81,35 +83,35 @@ void CMFCToolView::Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType)
 	}
 }
 
-void CMFCToolView::Set_ColliderMatrix(_matrix* matInfo, CString cstrColName)
+void CMFCToolView::Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName)
 {
 	if (m_pPlayer)
 	{
-		dynamic_cast<CCollider*>(m_pPlayer->Get_Component(cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+		dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
 	}
 }
 
-void CMFCToolView::Set_ColliderMatrixInterpolX(_float fX, CString cstrColName)
+void CMFCToolView::Set_ColliderMatrixInterpolX(_float fX, wstring cstrColName)
 {
 	if (m_pPlayer)
 	{
-		dynamic_cast<CCollider*>(m_pPlayer->Get_Component(cstrColName, ID_STATIC))->Set_MatrixInterpolX(fX);
+		dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_MatrixInterpolX(fX);
 	}
 }
 
-void CMFCToolView::Set_ColliderMatrixInterpolY(_float fY, CString cstrColName)
+void CMFCToolView::Set_ColliderMatrixInterpolY(_float fY, wstring cstrColName)
 {
 	if (m_pPlayer)
 	{
-		dynamic_cast<CCollider*>(m_pPlayer->Get_Component(cstrColName, ID_STATIC))->Set_MatrixInterpolY(fY);
+		dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_MatrixInterpolY(fY);
 	}
 }
 
-void CMFCToolView::Set_ColliderMatrixInterpolZ(_float fZ, CString cstrColName)
+void CMFCToolView::Set_ColliderMatrixInterpolZ(_float fZ, wstring cstrColName)
 {
 	if (m_pPlayer)
 	{
-		dynamic_cast<CCollider*>(m_pPlayer->Get_Component(cstrColName, ID_STATIC))->Set_MatrixInterpolZ(fZ);
+		dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_MatrixInterpolZ(fZ);
 	}
 }
 
@@ -127,6 +129,7 @@ HRESULT CMFCToolView::Add_Prototype()
 	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 32, 32));
 	Engine::Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", TEX_NORMAL, 2));
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Lethita/", L"Lethita.X"));
+	
 	//Engine::Ready_Prototype(L"Proto_StaticMesh_Player", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Lethita/", L"Lethita.X"));
 
 	return S_OK;
@@ -205,7 +208,7 @@ HRESULT CMFCToolView::Add_NewTerrain(_uint iRowX, _uint iColZ, _uint iInterval)
 	return S_OK;
 }
 
-HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType)
+HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 {
 	CGameObject* pObj = nullptr;
 
@@ -219,8 +222,32 @@ HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType)
 		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
 		m_pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
+
 		break;
+
 	case OBJECTADD_MFC_AHGLAN:
+		break;
+
+	case OBJECTADD_MFC_CAMEYE:
+		pObj = CMFC_CamEye::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pObj, E_FAIL);
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Add_GameObject(ObjTag, pObj);
+		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+		m_pCamEye = dynamic_cast<CMFC_CamEye*>(Engine::Get_MFCGameObject(L"GameLogic", ObjTag));
+
+		break;
+
+	case OBJECTADD_MFC_CAMAT:
+		pObj = CMFC_CamAt::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pObj, E_FAIL);
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Add_GameObject(ObjTag, pObj);
+		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+		m_pCamAt = dynamic_cast<CMFC_CamAt*>(Engine::Get_MFCGameObject(L"GameLogic", ObjTag));
+
 		break;
 	}
 
@@ -244,7 +271,7 @@ HRESULT CMFCToolView::Delete_Object(OBJECTADD_MFC _eObjectType)
 	return S_OK;
 }
 
-HRESULT CMFCToolView::Add_Collider(_float fRadius, CString cstrName)
+HRESULT CMFCToolView::Add_Collider(_float fRadius, wstring cstrName)
 {
 	// Collider는 프로토타입 생성 안 함
 	//Engine::Ready_Prototype(L"Proto_Collider", CCollider::Create(m_pGraphicDev, fRadius));
@@ -278,22 +305,33 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 	Render_Begin(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f));
 
 	//CMFC_Terrain* pTerrain = static_cast<CMFC_Terrain*>(Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
-	if (m_pTerrain)
-	{
-		switch (m_iRenderTerrain)
-		{
-		case 0:
-			m_pTerrain->Render_Object();
-			break;
-		case 2:
-			break;
-		default:
-			m_pTerrain->Render_Object();
-			break;
-		}
-	}
-	if (m_pPlayer)
-		m_pPlayer->Render_Object();
+	//if (m_pTerrain)
+	//{
+	//	switch (m_iRenderTerrain)
+	//	{
+	//	case 0:
+	//		m_pTerrain->Render_Object();
+	//		break;
+	//	case 2:
+	//		break;
+	//	default:
+	//		m_pTerrain->Render_Object();
+	//		break;
+	//	}
+	//}
+
+	// Terrain은 선택적으로 보이게 해야하는데 어차피 안쓸거라 놔둔다. 
+	m_pLayer->Update_Layer(m_fDeltaTime);
+	m_pLayer->Render_Layer(m_fDeltaTime);
+
+	//if (m_pPlayer)
+	//	m_pPlayer->Render_Object();
+
+	//if (m_pCamEye)
+	//	m_pCamEye->Render_Object();
+
+	//if (m_pCamAt)
+	//	m_pCamAt->Render_Object();
 
 	Render_End();
 

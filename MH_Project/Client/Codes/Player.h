@@ -42,7 +42,7 @@ private:
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual void			Free(void);
+	virtual void		Free(void);
 };
 
 #endif // Player_h__

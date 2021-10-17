@@ -17,22 +17,22 @@ private:
 
 public:
 	HRESULT	Ready_Font(LPDIRECT3DDEVICE9 pGraphicDev,
-						const _tchar* pFontTag,
-						const _tchar* pFontType,
+						const wstring pFontTag,
+						const wstring pFontType,
 						const _uint& iWidth,
 						const _uint& iHeight,
 						const _uint& iWeight);
 
-	void	Render_Font(const _tchar* pFontTag, 
-						const _tchar* pString,
+	void	Render_Font(const wstring pFontTag, 
+						const wstring pString,
 						const _vec2* pPos, 
 						D3DXCOLOR Color);
 
 private:
-	CFont*		Find_Font(const _tchar* pFontTag);
+	CFont*		Find_Font(const wstring pFontTag);
 
 private:
-	map<const _tchar*, CFont*>		m_mapFont;
+	map<const wstring, CFont*>		m_mapFont;
 
 public:
 	virtual void Free(void);

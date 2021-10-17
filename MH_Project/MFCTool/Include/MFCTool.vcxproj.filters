@@ -49,6 +49,15 @@
     <Filter Include="02.GameObject\02.MFC_Player">
       <UniqueIdentifier>{a5661fbd-ec28-4072-9dd0-dffe66276db5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\03.MFC_CameraSet">
+      <UniqueIdentifier>{d3539b43-b9fe-4c1f-aca0-9ae444b659fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.MFC_CameraSet\00.MFC_CamEye">
+      <UniqueIdentifier>{c68875b4-3355-49d4-9cb4-12cc89052a76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.MFC_CameraSet\01.MFC_CamAt">
+      <UniqueIdentifier>{67344af2-7947-40e9-9ad7-d08c5d8983a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -90,9 +99,6 @@
     <ClInclude Include="..\Codes\NavmeshTool.h">
       <Filter>01.View\00.Form\02.NavmeshTool</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\CollisionTool.h">
-      <Filter>01.View\00.Form\04.CollisionTool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\MFC_Camera.h">
       <Filter>02.GameObject\00.MFC_Camera</Filter>
     </ClInclude>
@@ -104,6 +110,15 @@
     </ClInclude>
     <ClInclude Include="..\Codes\MFC_Player.h">
       <Filter>02.GameObject\02.MFC_Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\CollisionTool.h">
+      <Filter>01.View\00.Form\04.CollisionTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MFC_CamEye.h">
+      <Filter>02.GameObject\03.MFC_CameraSet\00.MFC_CamEye</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MFC_CamAt.h">
+      <Filter>02.GameObject\03.MFC_CameraSet\01.MFC_CamAt</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +166,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_Player.cpp">
       <Filter>02.GameObject\02.MFC_Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_CamEye.cpp">
+      <Filter>02.GameObject\03.MFC_CameraSet\00.MFC_CamEye</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_CamAt.cpp">
+      <Filter>02.GameObject\03.MFC_CameraSet\01.MFC_CamAt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

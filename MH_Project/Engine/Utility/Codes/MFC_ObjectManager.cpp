@@ -34,9 +34,9 @@ CMFC_ObjectManager::~CMFC_ObjectManager()
 //	return iResult;
 //}
 
-CGameObject * CMFC_ObjectManager::Get_MFCGameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
+CGameObject * CMFC_ObjectManager::Get_MFCGameObject(const wstring pLayerTag, const wstring pObjTag)
 {
-	map<const _tchar*, CLayer*>::iterator	iter = find_if(m_mapMFCLayer.begin(), m_mapMFCLayer.end(), CTag_Finder(pLayerTag));
+	map<const wstring, CLayer*>::iterator	iter = find_if(m_mapMFCLayer.begin(), m_mapMFCLayer.end(), CTag_Finder(pLayerTag));
 
 	if (iter == m_mapMFCLayer.end())
 		return nullptr;
@@ -44,9 +44,9 @@ CGameObject * CMFC_ObjectManager::Get_MFCGameObject(const _tchar * pLayerTag, co
 	return iter->second->Get_GameObject(pLayerTag, pObjTag);
 }
 
-CComponent * CMFC_ObjectManager::Get_MFCComponent(const _tchar * pLayerTag, const _tchar * pObjTag, const _tchar * pComponentTag, COMPONENTID eID)
+CComponent * CMFC_ObjectManager::Get_MFCComponent(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID)
 {
-	map<const _tchar*, CLayer*>::iterator	iter = find_if(m_mapMFCLayer.begin(), m_mapMFCLayer.end(), CTag_Finder(pLayerTag));
+	map<const wstring, CLayer*>::iterator	iter = find_if(m_mapMFCLayer.begin(), m_mapMFCLayer.end(), CTag_Finder(pLayerTag));
 
 	if (iter == m_mapMFCLayer.end())
 		return nullptr;
@@ -54,16 +54,16 @@ CComponent * CMFC_ObjectManager::Get_MFCComponent(const _tchar * pLayerTag, cons
 	return iter->second->Get_Component(pObjTag, pComponentTag, eID);
 }
 
-HRESULT CMFC_ObjectManager::AddGameObjectInManager(const _tchar * LayerTag, CLayer * pLayer)
+HRESULT CMFC_ObjectManager::AddGameObjectInManager(const wstring LayerTag, CLayer * pLayer)
 {
 	m_mapMFCLayer.emplace(LayerTag, pLayer);
 
 	return S_OK;
 }
 
-HRESULT CMFC_ObjectManager::DeleteGameObjectInManager(const _tchar * LayerTag)
+HRESULT CMFC_ObjectManager::DeleteGameObjectInManager(const wstring LayerTag)
 {
-	map<const _tchar*, CLayer*>::iterator	iter = m_mapMFCLayer.begin();
+	map<const wstring, CLayer*>::iterator	iter = m_mapMFCLayer.begin();
 
 	for (; iter != m_mapMFCLayer.end(); )
 	{

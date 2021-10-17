@@ -29,6 +29,7 @@ HRESULT CMFC_Camera::Ready_Object(const _vec3 * pEye, const _vec3 * pAt, const _
 	m_fFar = fFar;
 
 	FAILED_CHECK_RETURN(CCamera::Ready_Object(), E_FAIL);
+	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	return S_OK;
 }
@@ -38,8 +39,21 @@ _int CMFC_Camera::Update_Object(const _float & fTimeDelta)
 	_int iExit = CCamera::Update_Object(fTimeDelta);
 
 	Key_Input(fTimeDelta);
+	m_pTransformCom->Set_Pos(&m_vEye);
 
 	return iExit;
+}
+
+HRESULT CMFC_Camera::Add_Component()
+{
+	CComponent*		pComponent = nullptr;
+
+	// Transform
+	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Clone_Prototype(L"Proto_Transform"));
+	NULL_CHECK_RETURN(m_pTransformCom, E_FAIL);
+	m_mapComponent[ID_DYNAMIC].emplace(L"Com_Transform", pComponent);
+
+	return S_OK;
 }
 
 void CMFC_Camera::Key_Input(const _float & fTimeDelta)

@@ -38,7 +38,7 @@ void CStage::Render_Scene(void)
 	// DEBUG ¿ë
 }
 
-HRESULT CStage::Ready_Layer_Environment(const _tchar* pLayerTag)
+HRESULT CStage::Ready_Layer_Environment(const wstring pLayerTag)
 {
 	CLayer*		pLayer = CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
@@ -66,7 +66,7 @@ HRESULT CStage::Ready_Layer_Environment(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
+HRESULT CStage::Ready_Layer_GameLogic(const wstring pLayerTag)
 {
 	CLayer*		pLayer = CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
@@ -88,7 +88,7 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CStage::Ready_Layer_UI(const _tchar * pLayerTag)
+HRESULT CStage::Ready_Layer_UI(const wstring pLayerTag)
 {
 	CLayer*		pLayer = CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);

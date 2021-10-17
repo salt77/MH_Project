@@ -19,6 +19,7 @@ Engine::CGameObject::~CGameObject(void)
 
 }
 
+
 HRESULT Engine::CGameObject::Ready_Object(void)
 {
 	return S_OK;
@@ -39,7 +40,7 @@ Engine::_int Engine::CGameObject::Update_Object(const _float& fTimeDelta)
 	return iResult;
 }
 
-CComponent * CGameObject::Find_Component(const _tchar * pComponentTag, COMPONENTID eID)
+CComponent * CGameObject::Find_Component(const wstring pComponentTag, COMPONENTID eID)
 {
 	auto	iter = find_if(m_mapComponent[eID].begin(), m_mapComponent[eID].end(), CTag_Finder(pComponentTag));
 
@@ -49,7 +50,7 @@ CComponent * CGameObject::Find_Component(const _tchar * pComponentTag, COMPONENT
 	return iter->second;
 }
 
-Engine::CComponent* Engine::CGameObject::Get_Component(const _tchar* pComponentTag, COMPONENTID eID)
+Engine::CComponent* Engine::CGameObject::Get_Component(const wstring pComponentTag, COMPONENTID eID)
 {
 	CComponent*		pComponent = Find_Component(pComponentTag, eID);
 

@@ -26,7 +26,7 @@ Engine::CTexture::~CTexture(void)
 
 }
 
-HRESULT Engine::CTexture::Ready_Texture(const _tchar* pPath, 
+HRESULT Engine::CTexture::Ready_Texture(const wstring pPath, 
 										TEXTURETYPE eType, 
 										const _uint& iCnt)
 {
@@ -38,7 +38,7 @@ HRESULT Engine::CTexture::Ready_Texture(const _tchar* pPath,
 	{
 		TCHAR	szFileName[256] = L"";
 
-		wsprintf(szFileName, pPath, i);
+		wsprintf(szFileName, pPath.c_str(), i);
 
 		switch (eType)
 		{
@@ -70,7 +70,7 @@ void Engine::CTexture::Set_Texture(const _uint& iIndex /*= 0*/)
 
 
 CTexture* Engine::CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
-									const _tchar* pPath, 
+									const wstring pPath, 
 									TEXTURETYPE eType, 
 									const _uint& iCnt /*= 1*/)
 {

@@ -47,15 +47,15 @@ CStaticMesh::~CStaticMesh()
 {
 }
 
-HRESULT CStaticMesh::Ready_Meshes(const _tchar * pFilePath, const _tchar * pFileName)
+HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileName)
 {
 	_tchar	szFullPath[MAX_PATH] = L"";
 
 	// 메쉬의 최종 경로를 만들어주는 코드
 	// Bin\Resource\Mesh\StaticMesh\Sword
-	lstrcpy(szFullPath, pFilePath);
+	lstrcpy(szFullPath, pFilePath.c_str());
 	// Bin\Resource\Mesh\StaticMesh\Sword\SWORD.x
-	lstrcat(szFullPath, pFileName);
+	lstrcat(szFullPath, pFileName.c_str());
 
 	if (FAILED(D3DXLoadMeshFromX(szFullPath, D3DXMESH_MANAGED, m_pGraphicDev,
 								&m_pAdjacency,
@@ -117,13 +117,14 @@ HRESULT CStaticMesh::Ready_Meshes(const _tchar * pFilePath, const _tchar * pFile
 
 	for (_ulong i = 0; i < m_dwSubsetCnt; ++i)
 	{
-		_tchar	szFileName[256] = L"";
+		wstring	szFileName = L"";
 
-		MultiByteToWideChar(CP_ACP, 0, m_pMtrl[i].pTextureFilename, strlen(m_pMtrl[i].pTextureFilename), szFileName, 256);
+		//MultiByteToWideChar(CP_ACP, 0, m_pMtrl[i].pTextureFilename, strlen(m_pMtrl[i].pTextureFilename), szFileName, 256);
+		szFileName = *m_pMtrl[i].pTextureFilename;
 
 		// 메쉬 텍스처의 최종 경로를 만들어주는 코드
-		lstrcpy(szFullPath, pFilePath);
-		lstrcat(szFullPath, szFileName);
+		lstrcpy(szFullPath, pFilePath.c_str());
+		lstrcat(szFullPath, szFileName.c_str());
 
 		if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppTexture[i])))
 			return E_FAIL;
@@ -145,7 +146,7 @@ void CStaticMesh::Render_Meshes()
 	}
 }
 
-CStaticMesh * CStaticMesh::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar * pFilePath, const _tchar * pFileName)
+CStaticMesh * CStaticMesh::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pFilePath, const wstring pFileName)
 {
 	CStaticMesh* pInstance = new CStaticMesh(pGraphicDev);
 

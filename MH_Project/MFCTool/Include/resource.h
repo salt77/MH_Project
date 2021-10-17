@@ -36,6 +36,25 @@
 #define IDC_EDIT4_ColY                  1037
 #define IDC_BUTTON_SAVE                 1038
 #define IDC_BUTTON_XYZ                  1039
+#define IDC_BUTTON_Y                    1040
+#define IDC_BUTTON_Z                    1041
+#define IDC_BUTTON_LOAD                 1042
+#define IDC_LIST_EYE                    1043
+#define IDC_BUTTON_ADD_AT               1045
+#define IDC_BUTTON_DELETE_AT            1046
+#define IDC_EDIT_AT_Y                   1048
+#define IDC_EDIT_AT_Z                   1049
+#define IDC_EDIT_SECTION_SPEED          1050
+#define IDC_SPIN_SECTION_SPEED          1051
+#define IDC_BUTTON_CAMLOAD              1053
+#define IDC_LIST_AT                     1054
+#define IDC_BUTTON_DELETE_EYE           1055
+#define IDC_BUTTON_ADD_EYE              1056
+#define IDC_EDIT_EYE_X                  1057
+#define IDC_EDIT_EYE_Y                  1058
+#define IDC_EDIT_EYE_Z                  1059
+#define IDC_EDIT_AT_X                   1060
+#define IDC_BUTTON_CAMSAVE              1061
 
 // Next default values for new objects
 // 
@@ -43,7 +62,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        321
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1040
+#define _APS_NEXT_CONTROL_VALUE         1062
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

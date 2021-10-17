@@ -21,7 +21,7 @@ public:
 	void			Play_Animation(const _float& fTimeDelta);
 
 public:
-	HRESULT		Ready_Meshes(const _tchar* pFilePath, const _tchar* pFileName);
+	HRESULT		Ready_Meshes(const wstring pFilePath, const wstring pFileName);
 	void		Render_Meshes(void);
 
 private:
@@ -36,7 +36,7 @@ private:
 	CAniCtrl*									m_pAniCtrl;
 
 public:
-	static CDynamicMesh*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pFilePath, const _tchar* pFileName);
+	static CDynamicMesh*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pFilePath, const wstring pFileName);
 	virtual CComponent*			Clone(void);
 
 private:

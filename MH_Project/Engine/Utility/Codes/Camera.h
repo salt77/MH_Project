@@ -14,7 +14,7 @@ protected:
 
 public:
 	virtual HRESULT Ready_Object(void) override;
-	virtual _int Update_Object(const _float& fTimeDelta) override;
+	virtual _int	Update_Object(const _float& fTimeDelta) override;
 
 protected:
 	_vec3			m_vEye, m_vAt, m_vUp;

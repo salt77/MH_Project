@@ -2,7 +2,7 @@
 
 USING(Engine)
 
-CHierachyLoader::CHierachyLoader(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar * pPath)\
+CHierachyLoader::CHierachyLoader(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pPath)\
 	: m_pGraphicDev(pGraphicDev)
 	, m_pPath(pPath)
 {
@@ -81,7 +81,7 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 				strlen(pDerivedMeshContainer->pMaterials[i].pTextureFilename), szFileName, 256);
 
 			// 메쉬 텍스처의 최종 경로를 만들어주는 코드
-			lstrcpy(szFullPath, m_pPath);
+			lstrcpy(szFullPath, m_pPath.c_str());
 			lstrcat(szFullPath, szFileName);
 
 			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppTexture[i])))
@@ -89,7 +89,7 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 
 			if (!lstrcmp(szFileName, L"pc_male_plate_chain.tga"))
 			{
-				lstrcpy(szFullPath, m_pPath);
+				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_chain_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
@@ -98,7 +98,7 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_foot.tga"))
 			{
-				lstrcpy(szFullPath, m_pPath);
+				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_foot_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
@@ -107,7 +107,7 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_hand.tga"))
 			{
-				lstrcpy(szFullPath, m_pPath);
+				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_hand_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
@@ -116,7 +116,7 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_head.tga"))
 			{
-				lstrcpy(szFullPath, m_pPath);
+				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_head_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
@@ -125,7 +125,7 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_lower_body.tga"))
 			{
-				lstrcpy(szFullPath, m_pPath);
+				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_lower_body_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
@@ -134,7 +134,7 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_upper_body.tga"))
 			{
-				lstrcpy(szFullPath, m_pPath);
+				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_upper_body_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
@@ -242,7 +242,7 @@ void CHierachyLoader::Allocate_Name(char ** ppName, const char * pFrameName)
 	strcpy_s(*ppName, iLength + 1, pFrameName);
 }
 
-CHierachyLoader * CHierachyLoader::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar * pPath)
+CHierachyLoader * CHierachyLoader::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pPath)
 {
 	return new CHierachyLoader(pGraphicDev, pPath);
 }

@@ -13,7 +13,7 @@ Engine::CFontMgr::~CFontMgr(void)
 	Free();
 }
 
-HRESULT Engine::CFontMgr::Ready_Font(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pFontTag, const _tchar* pFontType, const _uint& iWidth, const _uint& iHeight, const _uint& iWeight)
+HRESULT Engine::CFontMgr::Ready_Font(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pFontTag, const wstring pFontType, const _uint& iWidth, const _uint& iHeight, const _uint& iWeight)
 {
 	CFont*		pFont = nullptr;
 
@@ -29,7 +29,7 @@ HRESULT Engine::CFontMgr::Ready_Font(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar
 	return S_OK;
 }
 
-void Engine::CFontMgr::Render_Font(const _tchar* pFontTag, const _tchar* pString, const _vec2* pPos, D3DXCOLOR Color)
+void Engine::CFontMgr::Render_Font(const wstring pFontTag, const wstring pString, const _vec2* pPos, D3DXCOLOR Color)
 {
 	CFont*	pFont = Find_Font(pFontTag);
 	NULL_CHECK(pFont);
@@ -38,7 +38,7 @@ void Engine::CFontMgr::Render_Font(const _tchar* pFontTag, const _tchar* pString
 
 }
 
-CFont* Engine::CFontMgr::Find_Font(const _tchar* pFontTag)
+CFont* Engine::CFontMgr::Find_Font(const wstring pFontTag)
 {
 	auto	iter = find_if(m_mapFont.begin(), m_mapFont.end(), CTag_Finder(pFontTag));
 

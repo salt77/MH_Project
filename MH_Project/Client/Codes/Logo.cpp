@@ -57,7 +57,7 @@ void CLogo::Render_Scene(void)
 
 }
 
-HRESULT CLogo::Ready_Layer_Environment(const _tchar* pLayerTag)
+HRESULT CLogo::Ready_Layer_Environment(const wstring pLayerTag)
 {
 	CLayer*		pLayer = CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);

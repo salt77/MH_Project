@@ -8,6 +8,8 @@ class CMFCToolDoc;
 class CMFC_Camera;
 class CMFC_Terrain;
 class CMFC_Player;
+class CMFC_CamEye;
+class CMFC_CamAt;
 
 BEGIN(Engine)
 
@@ -31,12 +33,12 @@ public:
 
 public:
 	void	Set_RenderTerrain(_uint _iRenderType) { m_iRenderTerrain = _iRenderType; }
-	void	Set_ChangeColType(CString cstrName, COLTYPE eColType) { Engine::Set_RenderColType(cstrName, eColType); }
+	void	Set_ChangeColType(wstring cstrName, COLTYPE eColType) { Engine::Set_RenderColType(cstrName, eColType); }
 	void	Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
-	void	Set_ColliderMatrix(_matrix* matInfo, CString cstrColName);
-	void	Set_ColliderMatrixInterpolX(_float fX, CString cstrColName);
-	void	Set_ColliderMatrixInterpolY(_float fY, CString cstrColName);
-	void	Set_ColliderMatrixInterpolZ(_float fZ, CString cstrColName);
+	void	Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName);
+	void	Set_ColliderMatrixInterpolX(_float fX, wstring cstrColName);
+	void	Set_ColliderMatrixInterpolY(_float fY, wstring cstrColName);
+	void	Set_ColliderMatrixInterpolZ(_float fZ, wstring cstrColName);
 
 public:
 	HRESULT	Add_Prototype();
@@ -44,10 +46,10 @@ public:
 
 	HRESULT Add_NewTerrain(_uint iRowX, _uint iColZ, _uint iInterval);
 
-	HRESULT	Add_Object(OBJECTADD_MFC _eObjectType);
+	HRESULT	Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag = L"");
 	HRESULT	Delete_Object(OBJECTADD_MFC _eObjectType);
 
-	HRESULT Add_Collider(_float fRadius, CString cstrName);
+	HRESULT Add_Collider(_float fRadius, wstring cstrName);
 	HRESULT Apply_Collider(_float fColScale, _uint iAniIndex);
 
 private:
@@ -56,6 +58,8 @@ private:
 	CMFC_Camera*		m_pCamera = nullptr;
 	CMFC_Terrain*		m_pTerrain = nullptr;
 	CMFC_Player*		m_pPlayer = nullptr;
+	CMFC_CamEye*		m_pCamEye = nullptr;
+	CMFC_CamAt*			m_pCamAt = nullptr;
 	CLayer*				m_pLayer = nullptr;
 
 	_uint		m_iRenderTerrain = 0;

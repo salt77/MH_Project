@@ -21,6 +21,7 @@ public:
 	void				Set_WorldMatrix(const _matrix* pWorld);
 	void				Move_Pos(const _vec3* pDir, const _float& fSpeed, const _float& fTimeDelta);
 	void				Get_INFO(INFO eType, _vec3* pInfo);
+	const _vec3*		Get_Info(INFO eType);
 	void				Rotation(ROTATION eType, const _float& fAngle);
 
 	void				Chase_Target(const _vec3* pTargetPos, const _float& fSpeed, const _float& fTimeDelta);

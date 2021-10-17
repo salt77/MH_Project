@@ -13,7 +13,7 @@ Engine::CTimerMgr::~CTimerMgr(void)
 	Free();	// 소멸자에서 free 호출한다.
 }
 
-HRESULT Engine::CTimerMgr::Ready_Timer(const _tchar* pTimerTag)	// 타이머 생성 용도
+HRESULT Engine::CTimerMgr::Ready_Timer(const wstring pTimerTag)	// 타이머 생성 용도
 {
 	CTimer*	pTimer = Find_Timer(pTimerTag);
 	
@@ -29,7 +29,7 @@ HRESULT Engine::CTimerMgr::Ready_Timer(const _tchar* pTimerTag)	// 타이머 생성 �
 }
 
 
-Engine::CTimer* Engine::CTimerMgr::Find_Timer(const _tchar* pTimerTag)
+Engine::CTimer* Engine::CTimerMgr::Find_Timer(const wstring pTimerTag)
 {
 	// auto	iter = m_mapTimers.find(pTimerTag); // 오류 발생 가능성이 있음
 	
@@ -43,7 +43,7 @@ Engine::CTimer* Engine::CTimerMgr::Find_Timer(const _tchar* pTimerTag)
 }
 
 
-Engine::_float	Engine::CTimerMgr::Get_TimeDelta(const _tchar* pTimerTag)
+Engine::_float	Engine::CTimerMgr::Get_TimeDelta(const wstring pTimerTag)
 {
 	CTimer*	pTimer = Find_Timer(pTimerTag);
 
@@ -52,7 +52,7 @@ Engine::_float	Engine::CTimerMgr::Get_TimeDelta(const _tchar* pTimerTag)
 
 	return pTimer->Get_TimeDelta();
 }
-void		Engine::CTimerMgr::Set_TimeDelta(const _tchar* pTimerTag)
+void		Engine::CTimerMgr::Set_TimeDelta(const wstring pTimerTag)
 {
 	CTimer*	pTimer = Find_Timer(pTimerTag);
 

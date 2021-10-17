@@ -5,7 +5,6 @@ USING(Engine)
 CCamera::CCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
-
 }
 
 CCamera::CCamera(const CCamera& rhs)
@@ -20,16 +19,17 @@ CCamera::CCamera(const CCamera& rhs)
 	, m_matView(rhs.m_matView)
 	, m_matProj(rhs.m_matProj)
 {
-
 }
 
 Engine::CCamera::~CCamera(void)
 {
-
 }
+
 
 HRESULT Engine::CCamera::Ready_Object(void)
 {
+	CGameObject::Render_Object();
+
 	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
 
@@ -41,6 +41,8 @@ HRESULT Engine::CCamera::Ready_Object(void)
 
 Engine::_int Engine::CCamera::Update_Object(const _float& fTimeDelta)
 {
+	CGameObject::Update_Object(fTimeDelta);
+
 	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
 

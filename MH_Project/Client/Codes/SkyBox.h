@@ -35,7 +35,7 @@ private:
 
 public:
 	static CSkyBox*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual void			Free(void);
+	virtual void		Free(void);
 };
 
 #endif // SkyBox_h__

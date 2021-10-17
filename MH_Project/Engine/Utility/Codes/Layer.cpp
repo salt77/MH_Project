@@ -12,7 +12,7 @@ Engine::CLayer::~CLayer(void)
 
 }
 
-HRESULT Engine::CLayer::Add_GameObject(const _tchar* pObjTag, CGameObject* pInstance)
+HRESULT Engine::CLayer::Add_GameObject(const wstring pObjTag, CGameObject* pInstance)
 {
 	if (nullptr == pInstance)
 		return E_FAIL;
@@ -42,9 +42,19 @@ int Engine::CLayer::Update_Layer(const _float& fTimeDelta)
 	return iResult;
 }
 
-HRESULT CLayer::Delete_Layer(const _tchar* pObjTag)
+_uint CLayer::Render_Layer(const _float & fTimeDelta)
 {
-	map<const _tchar*, CGameObject*>::iterator	iter = find_if(m_mapObject.begin(), m_mapObject.end(), CTag_Finder(pObjTag));
+	for (auto& iter : m_mapObject)
+	{
+		iter.second->Render_Object();
+	}
+
+	return _uint();
+}
+
+HRESULT CLayer::Delete_Layer(const wstring pObjTag)
+{
+	map<const wstring, CGameObject*>::iterator	iter = find_if(m_mapObject.begin(), m_mapObject.end(), CTag_Finder(pObjTag));
 
 	if (iter == m_mapObject.end())
 	{
@@ -76,9 +86,9 @@ void Engine::CLayer::Free(void)
 	m_mapObject.clear();
 }
 
-CGameObject * CLayer::Get_GameObject(const _tchar * pLayerTag, const _tchar * pObjTag)
+CGameObject * CLayer::Get_GameObject(const wstring pLayerTag, const wstring pObjTag)
 {
-	map<const _tchar*, CGameObject*>::iterator	iter = find_if(m_mapObject.begin(), m_mapObject.end(), CTag_Finder(pObjTag));
+	map<const wstring, CGameObject*>::iterator	iter = find_if(m_mapObject.begin(), m_mapObject.end(), CTag_Finder(pObjTag));
 
 	if (iter == m_mapObject.end())
 		return nullptr;
@@ -86,7 +96,7 @@ CGameObject * CLayer::Get_GameObject(const _tchar * pLayerTag, const _tchar * pO
 	return iter->second;
 }
 
-Engine::CComponent* Engine::CLayer::Get_Component(const _tchar* pObjTag, const _tchar* pComponentTag, COMPONENTID eID)
+Engine::CComponent* Engine::CLayer::Get_Component(const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID)
 {
 	auto	iter = find_if(m_mapObject.begin(), m_mapObject.end(), CTag_Finder(pObjTag));
 

@@ -65,7 +65,7 @@ namespace Engine
 	class CTag_Finder
 	{
 	public:
-		explicit CTag_Finder(const _tchar* pTag)
+		explicit CTag_Finder(const wstring pTag)
 			: m_pTargetTag(pTag)
 		{
 		}
@@ -74,7 +74,7 @@ namespace Engine
 		template<typename T>
 		bool operator()(const T& pair)
 		{
-			if (0 == lstrcmpW(m_pTargetTag, pair.first.c_str()))
+			if (0 == lstrcmpW(m_pTargetTag.c_str(), pair.first.c_str()))
 			{
 				return true;
 			}
@@ -83,7 +83,7 @@ namespace Engine
 		}
 
 	private:
-		const _tchar*		m_pTargetTag = nullptr;
+		const wstring		m_pTargetTag = nullptr;
 	};
 
 	class CDeleteObj

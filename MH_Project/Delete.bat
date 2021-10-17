@@ -21,4 +21,4 @@ del /f /q .\MFCTool\Bin\MFCTool.exe
 del /f /q .\MFCTool\Bin\MFCTool.ilk
 del /f /q .\MFCTool\Bin\MFCTool.pdb
 
-del /f /q Frame117.VC.db
+del /f /q MH_Project.VC.db

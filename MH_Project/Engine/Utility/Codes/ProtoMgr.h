@@ -17,15 +17,15 @@ private:
 	virtual ~CProtoMgr(void);
 
 public:
-	HRESULT		Ready_Prototype(const _tchar* pProtoTag, CComponent* pInstance);
-	CComponent* Clone_Prototype(const _tchar* pProtoTag);
-	HRESULT		Delete_Prototype(const _tchar* pProtoTag);
+	HRESULT		Ready_Prototype(const wstring pProtoTag, CComponent* pInstance);
+	CComponent* Clone_Prototype(const wstring pProtoTag);
+	HRESULT		Delete_Prototype(const wstring pProtoTag);
 
 private:
-	CComponent*	Find_Prototype(const _tchar* pProtoTag);
+	CComponent*	Find_Prototype(const wstring pProtoTag);
 
 private:
-	map<const _tchar*, CComponent*>		m_mapPrototype;
+	map<const wstring, CComponent*>		m_mapPrototype;
 
 public:
 	virtual void	Free(void);

@@ -82,5 +82,20 @@ namespace Engine
 
 
 	}D3DXMESHCONTAINER_DERIVED;
+
+
+	typedef struct PARSINGFORCOLLIDER
+	{
+//#ifdef _AFX
+//		CString wstrColName;
+//		CString wstrBoneName;
+//#else
+//		
+//#endif
+		wstring	wstrColName;
+		wstring wstrBoneName;
+		_float	fRadius = 0.f;
+
+	} PS_Collider;
 }
 #endif // Engine_Struct_h__

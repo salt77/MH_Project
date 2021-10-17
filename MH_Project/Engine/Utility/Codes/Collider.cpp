@@ -51,6 +51,8 @@ HRESULT CCollider::Ready_Collider(/*const _vec3 * pPos, const _ulong & dwVtxCnt,
 		m_pTexture[i]->UnlockRect(0);
 	}
 
+	m_fRadius = fRadius;
+
 	return S_OK;
 }
 

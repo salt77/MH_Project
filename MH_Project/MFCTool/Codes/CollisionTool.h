@@ -38,13 +38,14 @@ public:
 
 	afx_msg void OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult);
 
-	afx_msg void OnEditChangeColX();
-	afx_msg void OnEditChangeColY();
-	afx_msg void OnEditChangeColZ();
-
 	afx_msg void OnEditChangeAni();
 
+	afx_msg void OnBnClickedButtonX();
+	afx_msg void OnBnClickedButtonY();
+	afx_msg void OnBnClickedButtonZ();
+
 	afx_msg void OnBtnClickedSave();
+	afx_msg void OnBnClickedButtonLoad();
 
 public:
 	CTreeCtrl m_TreeObj;
@@ -64,4 +65,7 @@ public:
 	float m_fColX;
 	float m_fColY;
 	float m_fColZ;
+
+	//vector<PS_Collider>	m_vecParsing;
+	//PS_Collider*		m_pParsing = nullptr;
 };

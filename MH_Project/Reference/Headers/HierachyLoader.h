@@ -7,7 +7,7 @@ BEGIN(Engine)
 class CHierachyLoader : public ID3DXAllocateHierarchy
 {
 private:
-	explicit CHierachyLoader(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pPath);
+	explicit CHierachyLoader(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pPath);
 	virtual ~CHierachyLoader(void);
 
 public:
@@ -29,10 +29,10 @@ private:
 
 private:
 	LPDIRECT3DDEVICE9			m_pGraphicDev;
-	const _tchar*				m_pPath;
+	const wstring				m_pPath;
 
 public:
-	static CHierachyLoader*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pPath);
+	static CHierachyLoader*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pPath);
 
 public:
 	_ulong	Release(void);
