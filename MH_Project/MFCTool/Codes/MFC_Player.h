@@ -9,6 +9,7 @@ class CRenderer;
 class CCalculator;
 class CDynamicMesh;
 class CCollider;
+class CBoxCollider;
 
 END
 
@@ -25,6 +26,7 @@ public:
 
 public:
 	const map<const wstring, CCollider*>	Get_ColliderMap() { return m_mapColliderCom; }
+	const map<const wstring, CBoxCollider*>	Get_BoxColliderMap() { return m_mapBoxColliderCom; }
 
 public:
 	void			Set_AniIndex(_uint iIndex) { m_iAniIndex = iIndex; }
@@ -34,7 +36,10 @@ private:
 	void			Key_Input(const _float& fTimeDelta);
 
 public:
-	HRESULT			Add_Collider(_float fRadius, wstring cstrName);
+	HRESULT			Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
+	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
+								_float vMaxX, _float vMaxY, _float vMaxZ,
+								wstring wstrName, COLLIDERTYPE eColliderType);
 	HRESULT			Change_ColliderScale(_float fRadius, wstring cstrName);
 
 private:
@@ -50,6 +55,7 @@ private:
 	
 	//CCollider*		m_pColliderCom = nullptr;
 	map<const wstring, CCollider*>		m_mapColliderCom;
+	map<const wstring, CBoxCollider*>	m_mapBoxColliderCom;
 
 public:
 	static	CMFC_Player*	Create(LPDIRECT3DDEVICE9 pGraphicDev);

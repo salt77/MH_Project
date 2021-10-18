@@ -33,9 +33,9 @@ public:
 
 public:
 	void	Set_RenderTerrain(_uint _iRenderType) { m_iRenderTerrain = _iRenderType; }
-	void	Set_ChangeColType(wstring cstrName, COLTYPE eColType) { Engine::Set_RenderColType(cstrName, eColType); }
+	void	Set_ChangeColType(wstring cstrName, COLTYPE eColType, COLLIDERTYPE eColliderType = COLTYPE_SPHERE_DAMAGED) { Engine::Set_RenderColType(cstrName, eColType, eColliderType); }
 	void	Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
-	void	Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName);
+	void	Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName, COLLIDERTYPE eColType = COLTYPE_SPHERE_DAMAGED);
 	void	Set_ColliderMatrixInterpolX(_float fX, wstring cstrColName);
 	void	Set_ColliderMatrixInterpolY(_float fY, wstring cstrColName);
 	void	Set_ColliderMatrixInterpolZ(_float fZ, wstring cstrColName);
@@ -49,7 +49,10 @@ public:
 	HRESULT	Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag = L"");
 	HRESULT	Delete_Object(OBJECTADD_MFC _eObjectType);
 
-	HRESULT Add_Collider(_float fRadius, wstring cstrName);
+	HRESULT Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType);
+	HRESULT	Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
+							_float vMaxX, _float vMaxY, _float vMaxZ,
+							wstring wstrName, COLLIDERTYPE eColliderType);
 	HRESULT Apply_Collider(_float fColScale, _uint iAniIndex);
 
 private:

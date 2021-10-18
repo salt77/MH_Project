@@ -17,6 +17,7 @@ public:
 	const _matrix*		Get_ColliderWorld() { return &m_matColMatrix; }
 	const _float&		Get_Radius() { return m_fRadius; }
 	const wstring		Get_BoneName() { return m_cstrBoneName; }
+	const COLLIDERTYPE&	Get_ColldierType() { return m_eColliderType; }
 
 public:
 	void	Set_RenderColType(COLTYPE _eColType) { m_eColType = _eColType; }
@@ -27,7 +28,7 @@ public:
 	void	Set_MatrixInterpolZ(_float fZ) { m_fInterpolZ = fZ; m_fInterpolZ *= 0.01f; }
 
 public:
-	HRESULT			Ready_Collider(/*const _vec3* pPos, const _ulong& dwVtxCnt, const _ulong& dwStride, */const _float& fRadius);
+	HRESULT			Ready_Collider(const _float& fRadius, COLLIDERTYPE eColliderType);
 	void			Render_Collider(COLTYPE eType, const _matrix* pColliderMatrix);
 
 private:
@@ -49,11 +50,12 @@ private:
 	LPDIRECT3DTEXTURE9			m_pTexture[COLTYPE::COL_END];
 
 	COLTYPE						m_eColType = COL_FALSE;
+	COLLIDERTYPE				m_eColliderType = COLLIDERTYPE::COLTYPE_END;
 
 #endif
 
 public:
-	static CCollider*		Create(LPDIRECT3DDEVICE9 pGraphicDev/*, const _vec3* pPos, const _ulong& dwVtxCnt, const _ulong& dwStride*/, const _float& fRadius);
+	static CCollider*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fRadius, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
 	virtual CComponent*		Clone();
 	virtual void			Free();
 };

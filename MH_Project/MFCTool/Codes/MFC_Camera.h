@@ -26,6 +26,10 @@ public:
 
 	virtual _int Update_Object(const _float& fTimeDelta) override;
 
+public:
+	const _matrix&	Get_MatView() { return m_matView; }
+	const _matrix&	Get_MatProj() { return m_matProj; }
+
 private:
 	HRESULT		Add_Component();
 	void		Key_Input(const _float& fTimeDelta);

@@ -18,7 +18,7 @@ public:
 public:
 	virtual HRESULT Ready_Object(void) override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
-	virtual void Render_Object() override;
+	virtual void	Render_Object() override;
 
 public:
 	void			Set_Selected(COLTYPE eColType) { m_eColType = eColType; }

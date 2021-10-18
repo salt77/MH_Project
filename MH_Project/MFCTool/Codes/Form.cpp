@@ -80,6 +80,8 @@ void CForm::OnInitialUpdate()
 {
 	CFormView::OnInitialUpdate();
 
+	//SetTimer(1, 30, NULL);
+
 	m_Tab.InsertItem(0, _T("Terrain"));
 	m_Tab.InsertItem(1, _T("Object"));
 	m_Tab.InsertItem(2, _T("Navmesh"));

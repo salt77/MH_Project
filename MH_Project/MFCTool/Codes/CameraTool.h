@@ -40,6 +40,8 @@ public:
 
 	afx_msg void OnDeltaposSpinSectionSpeed(NMHDR *pNMHDR, LRESULT *pResult);
 
+	afx_msg void OnComboSelChangeCamType();
+
 	afx_msg void OnBnClickedSaveCam();
 	afx_msg void OnBnClickedLoadCam();
 
@@ -60,7 +62,6 @@ public:
 
 	CSpinButtonCtrl m_spSpeed;
 
-	//CMainFrame*	m_pMain = nullptr;
-	//CMFCToolView*	m_pToolView = nullptr;
 	CMFC_Camera*	m_pCamera = nullptr;
+	CComboBox		m_ComboCamType;
 };

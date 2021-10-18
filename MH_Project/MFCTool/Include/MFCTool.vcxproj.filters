@@ -58,6 +58,9 @@
     <Filter Include="02.GameObject\03.MFC_CameraSet\01.MFC_CamAt">
       <UniqueIdentifier>{67344af2-7947-40e9-9ad7-d08c5d8983a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.MFC_Line">
+      <UniqueIdentifier>{2a0d9224-f369-4e77-8b85-d899b2b9782b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -120,6 +123,9 @@
     <ClInclude Include="..\Codes\MFC_CamAt.h">
       <Filter>02.GameObject\03.MFC_CameraSet\01.MFC_CamAt</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Line.h">
+      <Filter>02.GameObject\04.MFC_Line</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -172,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_CamAt.cpp">
       <Filter>02.GameObject\03.MFC_CameraSet\01.MFC_CamAt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Line.cpp">
+      <Filter>02.GameObject\04.MFC_Line</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

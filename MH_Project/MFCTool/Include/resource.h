@@ -27,7 +27,6 @@
 #define IDC_BUTTON_ADD                  1027
 #define IDC_BUTTON_DELETE               1028
 #define IDC_Btn_AddCollider             1029
-#define IDC_Btn_ApplyCollider           1030
 #define IDC_Static_ColScale             1031
 #define IDC_EDIT_ColScale               1032
 #define IDC_LIST_Collider               1033
@@ -55,6 +54,19 @@
 #define IDC_EDIT_EYE_Z                  1059
 #define IDC_EDIT_AT_X                   1060
 #define IDC_BUTTON_CAMSAVE              1061
+#define IDC_COMBO_COLTAG                1062
+#define IDC_EDIT_MIN_Z                  1063
+#define IDC_EDIT_MAX_X                  1064
+#define IDC_EDIT_MAX_Y                  1065
+#define IDC_EDIT_MAX_Z                  1066
+#define IDC_EDIT_CREATE_TIME            1067
+#define IDC_EDIT_DELETE_TIME            1068
+#define IDC_EDIT_MIN_X                  1069
+#define IDC_EDIT_MIN_Y                  1070
+#define IDC_BUTTON_CREATETIME_OKI       1071
+#define IDC_BUTTON_DELETETIME_OK        1072
+#define IDC_LIST2                       1074
+#define IDC_COMBO1                      1075
 
 // Next default values for new objects
 // 
@@ -62,7 +74,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        321
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1062
+#define _APS_NEXT_CONTROL_VALUE         1076
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

@@ -35,6 +35,7 @@ BEGIN_MESSAGE_MAP(CMFCToolView, CScrollView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CScrollView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CScrollView::OnFilePrintPreview)
 	ON_WM_LBUTTONDOWN()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 // CMFCToolView 생성/소멸
@@ -83,11 +84,25 @@ void CMFCToolView::Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType)
 	}
 }
 
-void CMFCToolView::Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName)
+void CMFCToolView::Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName, COLLIDERTYPE eColType)
 {
 	if (m_pPlayer)
 	{
-		dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+		switch (eColType)
+		{
+		case Engine::COLTYPE_BOX_DAMAGED:
+			dynamic_cast<CBoxCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_BOX_HIT:
+			dynamic_cast<CBoxCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_SPHERE_DAMAGED:
+			dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_SPHERE_HIT:
+			dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		}
 	}
 }
 
@@ -271,14 +286,20 @@ HRESULT CMFCToolView::Delete_Object(OBJECTADD_MFC _eObjectType)
 	return S_OK;
 }
 
-HRESULT CMFCToolView::Add_Collider(_float fRadius, wstring cstrName)
+HRESULT CMFCToolView::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType)
 {
 	// Collider는 프로토타입 생성 안 함
 	//Engine::Ready_Prototype(L"Proto_Collider", CCollider::Create(m_pGraphicDev, fRadius));
 	if (m_pPlayer)
-	{
-		m_pPlayer->Add_Collider(fRadius, cstrName);
-	}
+		m_pPlayer->Add_Collider(fRadius, cstrName, eColliderType);
+
+	return S_OK;
+}
+
+HRESULT CMFCToolView::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType)
+{
+	if (m_pPlayer)
+		m_pPlayer->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName, eColliderType);
 
 	return S_OK;
 }

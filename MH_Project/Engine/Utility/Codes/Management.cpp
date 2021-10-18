@@ -91,14 +91,60 @@ Engine::CComponent* Engine::CManagement::Get_Component(const wstring pLayerTag, 
 	return m_pScene->Get_Component(pLayerTag, pObjTag, pComponentTag, eID);
 }
 
-HRESULT CManagement::Set_RenderColType(const wstring pColName, COLTYPE eColType)
+HRESULT CManagement::Set_RenderColType(const wstring pColName, COLTYPE eColType, COLLIDERTYPE eColliderType)
 {
-	CCollider* pCollider = dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", pColName, ID_STATIC));
+	CCollider*	pCollider = nullptr;
+	CBoxCollider*	pBoxCollider = nullptr;
 
-	if (!pCollider)
-		return E_FAIL;
+	switch (eColliderType)
+	{
+	case Engine::COLTYPE_BOX_DAMAGED:
+		pBoxCollider = dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", pColName, ID_STATIC));
 
-	pCollider->Set_RenderColType(eColType);
+		if (!pBoxCollider)
+			return E_FAIL;
+
+		pBoxCollider->Set_RenderColType(eColType);
+		break;
+
+	case Engine::COLTYPE_BOX_HIT:
+		pBoxCollider = dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", pColName, ID_STATIC));
+
+		if (!pBoxCollider)
+			return E_FAIL;
+
+		pBoxCollider->Set_RenderColType(eColType);
+
+		break;
+
+	case Engine::COLTYPE_SPHERE_DAMAGED:
+		pCollider = dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", pColName, ID_STATIC));
+
+		if (!pCollider)
+			return E_FAIL;
+
+		pCollider->Set_RenderColType(eColType);
+		break;
+
+	case Engine::COLTYPE_SPHERE_HIT:
+		pCollider = dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", pColName, ID_STATIC));
+
+		if (!pCollider)
+			return E_FAIL;
+
+		pCollider->Set_RenderColType(eColType);
+
+		break;
+
+	default:
+		pCollider = dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", pColName, ID_STATIC));
+
+		if (!pCollider)
+			return E_FAIL;
+
+		pCollider->Set_RenderColType(eColType);
+		break;
+	}
 
 	return S_OK;
 }

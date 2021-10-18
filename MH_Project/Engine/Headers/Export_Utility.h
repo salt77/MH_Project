@@ -16,6 +16,7 @@
 #include "StaticMesh.h"
 #include "DynamicMesh.h"
 #include "Collider.h"
+#include "BoxCollider.h"
 #include "LightMgr.h"
 
 #include "Camera.h"
@@ -28,7 +29,7 @@ inline HRESULT		AddGameObjectInManager(const wstring LayerTag, CLayer* pLayer);
 inline HRESULT		DeleteGameObjectInManager(const wstring LayerTag);
 inline CGameObject*	Get_MFCGameObject(const wstring pLayerTag, const wstring pObjTag);
 inline CComponent*	Get_MFCComponent(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
-inline HRESULT		Set_RenderColType(const wstring pColType, COLTYPE eColType);
+inline HRESULT		Set_RenderColType(const wstring pColType, COLTYPE eColType, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
 
 inline CGameObject*	Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
 inline CComponent*	Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);

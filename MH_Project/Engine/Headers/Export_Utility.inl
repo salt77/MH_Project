@@ -24,9 +24,9 @@ inline CGameObject * Get_GameObject(const wstring pLayerTag, const wstring pObjT
 {
 	return CManagement::GetInstance()->Get_GameObject(pLayerTag, pObjTag);
 }
-inline HRESULT Set_RenderColType(const wstring pColType, COLTYPE eColType)
+inline HRESULT Set_RenderColType(const wstring pColType, COLTYPE eColType, COLLIDERTYPE eColliderType)
 {
-	CManagement::GetInstance()->Set_RenderColType(pColType, eColType);
+	CManagement::GetInstance()->Set_RenderColType(pColType, eColType, eColliderType);
 
 	return S_OK;
 }

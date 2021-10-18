@@ -26,7 +26,7 @@ CCollider::~CCollider()
 }
 
 
-HRESULT CCollider::Ready_Collider(/*const _vec3 * pPos, const _ulong & dwVtxCnt, const _ulong & dwStride, */const _float& fRadius)
+HRESULT CCollider::Ready_Collider(const _float& fRadius, COLLIDERTYPE eColliderType)
 {
 	// 메시 사이즈에 맞는 바운딩 박스를 만들기 가장 작은 좌표 값과 가장 큰 좌표 값을 만들어주는 함수
 	//D3DXComputeBoundingSphere(pPos, dwVtxCnt, sizeof(_vec3), &m_vCenter, &m_fRadius);
@@ -52,6 +52,7 @@ HRESULT CCollider::Ready_Collider(/*const _vec3 * pPos, const _ulong & dwVtxCnt,
 	}
 
 	m_fRadius = fRadius;
+	m_eColliderType = eColliderType;
 
 	return S_OK;
 }
@@ -81,11 +82,11 @@ void CCollider::Render_Collider(COLTYPE eType, const _matrix * pColliderMatrix)
 #endif
 }
 
-CCollider * CCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev/*, const _vec3 * pPos, const _ulong & dwVtxCnt, const _ulong & dwStride*/, const _float& fRadius)
+CCollider * CCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fRadius, COLLIDERTYPE eColliderType)
 {
 	CCollider*	pInstance = new	CCollider(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Collider(/*pPos, dwVtxCnt, dwStride, */fRadius)))
+	if (FAILED(pInstance->Ready_Collider(fRadius, eColliderType)))
 		Safe_Release(pInstance);
 
 	return pInstance;

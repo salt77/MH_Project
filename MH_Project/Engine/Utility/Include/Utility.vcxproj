@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Headers\Export_Utility.h" />
     <ClInclude Include="..\Codes\AniCtrl.h" />
+    <ClInclude Include="..\Codes\BoxCollider.h" />
     <ClInclude Include="..\Codes\Calculator.h" />
     <ClInclude Include="..\Codes\Camera.h" />
     <ClInclude Include="..\Codes\Collider.h" />
@@ -50,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\AniCtrl.cpp" />
+    <ClCompile Include="..\Codes\BoxCollider.cpp" />
     <ClCompile Include="..\Codes\Calculator.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
     <ClCompile Include="..\Codes\Collider.cpp" />

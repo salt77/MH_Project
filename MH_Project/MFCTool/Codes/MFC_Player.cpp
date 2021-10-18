@@ -2,7 +2,6 @@
 #include "MFC_Player.h"
 #include "DynamicMesh.h"
 
-
 USING(Engine)
 
 CMFC_Player::CMFC_Player(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -57,6 +56,13 @@ void CMFC_Player::Render_Object(void)
 		for (; iter != m_mapColliderCom.end(); ++iter)
 			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 	}
+	if (!m_mapBoxColliderCom.empty())
+	{
+		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+
+		for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	}
 
 	m_pMeshCom->Render_Meshes();
 
@@ -108,9 +114,9 @@ void CMFC_Player::Key_Input(const _float & fTimeDelta)
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
 }
 
-HRESULT CMFC_Player::Add_Collider(_float fRadius, wstring cstrName)
+HRESULT CMFC_Player::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType)
 {
-	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius);
+	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius, eColliderType);
 	m_mapColliderCom.emplace(cstrName, dynamic_cast<CCollider*>(pComponent));
 	if (m_mapColliderCom.empty())
 		return E_FAIL;
@@ -121,6 +127,18 @@ HRESULT CMFC_Player::Add_Collider(_float fRadius, wstring cstrName)
 	//cstrCollider += cstrColNum;
 	m_mapComponent[ID_STATIC].emplace(cstrName, pComponent);
 	//++m_iColliderNum;
+
+	return S_OK;
+}
+
+HRESULT CMFC_Player::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType)
+{
+	CComponent*		pComponent = CBoxCollider::Create(m_pGraphicDev, vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, eColliderType);
+	m_mapBoxColliderCom.emplace(wstrName, dynamic_cast<CBoxCollider*>(pComponent));
+	if (m_mapBoxColliderCom.empty())
+		return E_FAIL;
+
+	m_mapComponent[ID_STATIC].emplace(wstrName, pComponent);
 
 	return S_OK;
 }

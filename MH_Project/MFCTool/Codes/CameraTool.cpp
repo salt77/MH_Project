@@ -47,6 +47,7 @@ void CCameraTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_AT_Z, m_fAtZ);
 	DDX_Text(pDX, IDC_EDIT_SECTION_SPEED, m_fSectionSpeed);
 	DDX_Control(pDX, IDC_SPIN_SECTION_SPEED, m_spSpeed);
+	DDX_Control(pDX, IDC_COMBO1, m_ComboCamType);
 }
 
 
@@ -61,6 +62,7 @@ BEGIN_MESSAGE_MAP(CCameraTool, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CAMLOAD, &CCameraTool::OnBnClickedLoadCam)
 	ON_NOTIFY(UDN_DELTAPOS, IDC_SPIN_SECTION_SPEED, &CCameraTool::OnDeltaposSpinSectionSpeed)
 
+	ON_CBN_SELCHANGE(IDC_COMBO1, &CCameraTool::OnComboSelChangeCamType)
 END_MESSAGE_MAP()
 
 
@@ -73,6 +75,9 @@ BOOL CCameraTool::OnInitDialog()
 
 	if (!m_pCamera)
 		return FALSE;
+
+	m_ComboCamType.AddString(L"Type_Normal");
+	m_ComboCamType.AddString(L"Type_Action");
 
 	return TRUE;
 }
@@ -179,6 +184,19 @@ void CCameraTool::OnDeltaposSpinSectionSpeed(NMHDR *pNMHDR, LRESULT *pResult)
 	LPNMUPDOWN pNMUpDown = reinterpret_cast<LPNMUPDOWN>(pNMHDR);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	*pResult = 0;
+}
 
 
+void CCameraTool::OnComboSelChangeCamType()
+{
+	_uint iSel = m_ComboCamType.GetCurSel();
+
+	if (iSel == 0)
+	{
+
+	}
+	else
+	{
+
+	}
 }

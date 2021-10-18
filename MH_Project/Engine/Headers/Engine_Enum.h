@@ -27,6 +27,7 @@ namespace Engine
 	enum POINTT { POINT_START, POINT_FINISH, POINT_END };
 	enum COMPARE { COMPARE_LEFT, COMPARE_RIGHT }; // 플레이어 위치를 기준으로 왼쪽에 선분이 있으면 이동한 것
 
+	enum COLLIDERTYPE { COLTYPE_BOX_DAMAGED, COLTYPE_BOX_HIT, COLTYPE_SPHERE_DAMAGED, COLTYPE_SPHERE_HIT, COLTYPE_END };
 }
 
 #endif // Engine_Enum_h__

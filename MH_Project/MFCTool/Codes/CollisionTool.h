@@ -35,6 +35,7 @@ public:
 	afx_msg void OnBnClickedAddCollider();
 
 	afx_msg void OnListSelchangeCollider();
+	afx_msg void OnListSelChangeBoxCol();
 
 	afx_msg void OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult);
 
@@ -43,6 +44,9 @@ public:
 	afx_msg void OnBnClickedButtonX();
 	afx_msg void OnBnClickedButtonY();
 	afx_msg void OnBnClickedButtonZ();
+
+	afx_msg void OnBnClickedCreateTimeOK();
+	afx_msg void OnBnClickedDeleteTimeOK();
 
 	afx_msg void OnBtnClickedSave();
 	afx_msg void OnBnClickedButtonLoad();
@@ -54,18 +58,29 @@ public:
 	HTREEITEM	m_hRoot, m_hPlayer, m_hAhglan;
 	//HTREEITEM	m_hBoneRoot1, m_hBoneRoot2, m_hBoneRoot3, m_hBoneRoot4, m_hBoneRoot5, m_hBoneRoot6, m_hBoneRoot7;
 
-	CListBox m_ListBoxCollider;
+	CListBox m_ListBoxCollider;		// Sphere Collider Box
+	CListBox m_ListBoxCol;			// Box Collider Box
 
 	CString m_cstrColName;
 	float m_fColScale;
 	UINT m_AniIndex;
 
 	_int	m_iListCulSelCol;
+	_int	m_iListCulSelBoxCollider;
 
 	float m_fColX;
 	float m_fColY;
 	float m_fColZ;
 
-	//vector<PS_Collider>	m_vecParsing;
-	//PS_Collider*		m_pParsing = nullptr;
+	CComboBox m_ComboBox;
+
+	float m_fBoxMinX;
+	float m_fBoxMinY;
+	float m_fBoxMinZ;
+	float m_fBoxMaxX;
+	float m_fBoxMaxY;
+	float m_fBoxMaxZ;
+
+	float m_fBoxCreateTime;
+	float m_fBoxDeleteTime;
 };

@@ -76,6 +76,12 @@
     <Filter Include="03.GameObject\MFC_ObjManager">
       <UniqueIdentifier>{0748bd57-ca62-4823-a451-12230c4ca53d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Component\07.Collider\00.Sphere">
+      <UniqueIdentifier>{798cab07-8241-46fd-a565-0fb0f40557e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\07.Collider\01.Box">
+      <UniqueIdentifier>{39c29150-2081-4bc6-a23a-b54b3786534a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Headers\Export_Utility.h">
@@ -135,9 +141,6 @@
     <ClInclude Include="..\Codes\StaticMesh.h">
       <Filter>04.Component\05.StaticMesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Collider.h">
-      <Filter>04.Component\07.Collider</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\DynamicMesh.h">
       <Filter>04.Component\06.DynamicMesh</Filter>
     </ClInclude>
@@ -152,6 +155,12 @@
     </ClInclude>
     <ClInclude Include="..\Codes\LightMgr.h">
       <Filter>06.Light\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Collider.h">
+      <Filter>04.Component\07.Collider\00.Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\BoxCollider.h">
+      <Filter>04.Component\07.Collider\01.Box</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -214,9 +223,6 @@
     <ClCompile Include="..\Codes\StaticMesh.cpp">
       <Filter>04.Component\05.StaticMesh</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Collider.cpp">
-      <Filter>04.Component\07.Collider</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\DynamicMesh.cpp">
       <Filter>04.Component\06.DynamicMesh</Filter>
     </ClCompile>
@@ -231,6 +237,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\LightMgr.cpp">
       <Filter>06.Light\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Collider.cpp">
+      <Filter>04.Component\07.Collider\00.Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\BoxCollider.cpp">
+      <Filter>04.Component\07.Collider\01.Box</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
