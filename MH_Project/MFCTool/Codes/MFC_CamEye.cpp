@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MFC_CamEye.h"
+#include "MFC_Camera.h"
 
 
 CMFC_CamEye::CMFC_CamEye(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -44,12 +45,31 @@ HRESULT CMFC_CamEye::Ready_Object(void)
 
 	m_pTransformCom->Set_Pos(pTrans->Get_Info(INFO_POS));
 
+	D3DXCreateLine(m_pGraphicDev, &m_pLine);
+	m_pLine->SetWidth(10.f);
+	m_pLine->SetAntialias(TRUE);
+
 	return S_OK;
 }
 
 _int CMFC_CamEye::Update_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
+
+	Interpolation_Traffic();
+
+	CMFC_Camera* pCamera = static_cast<CMFC_Camera*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Camera"));
+	//CMFC_CamInterpol* vCamInterpol = static_cast<CMFC_CamInterpol*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_CamInterpol"));
+
+	if (pCamera && 
+		pCamera->Get_ActionCam())
+	{
+		CTransform* pCamTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Camera", L"Com_Transform", ID_DYNAMIC));
+		//CTransform*	pCamInterpolTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_CamInterpol", L"Com_Transform", ID_DYNAMIC));
+
+		if (D3DXVec3Length(&(*pCamTrans->Get_Info(INFO_POS) - *m_pTransformCom->Get_Info(INFO_POS))) < 0.5f)
+			pCamera->Set_StalkTarget(m_vTargetEye);
+	}
 
 	return iExit;
 }
@@ -85,6 +105,27 @@ HRESULT CMFC_CamEye::Add_Component(void)
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
 	return S_OK;
+}
+
+void CMFC_CamEye::Interpolation_Traffic()
+{
+	if (_vec3(0.f, 0.f, 0.f) != m_vNextEye)
+	{
+		if (_vec3(0.f, 0.f, 0.f) != m_vPreEye)
+			D3DXVec3CatmullRom(&m_vTargetEye, &m_vPreEye, m_pTransformCom->Get_Info(INFO_POS), &m_vNextEye, &m_vNextEye, 0.5f);
+		else
+			D3DXVec3CatmullRom(&m_vTargetEye, m_pTransformCom->Get_Info(INFO_POS), m_pTransformCom->Get_Info(INFO_POS), &m_vNextEye, &m_vNextEye, 0.5f);
+
+		_vec3 vTemp[2];
+		vTemp[0] = *m_pTransformCom->Get_Info(INFO_POS);
+		vTemp[1] = m_vTargetEye;
+
+		_matrix		matWorld, matView, matProj;
+		m_pGraphicDev->GetTransform(D3DTS_WORLD, &matWorld);
+		m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+		m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+		m_pLine->DrawTransform(vTemp, 2, &(matWorld * matView * matProj), D3DXCOLOR(0.f, 1.f, 1.f, 1.f));
+	}
 }
 
 

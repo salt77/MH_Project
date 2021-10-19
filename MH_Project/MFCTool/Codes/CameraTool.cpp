@@ -5,7 +5,6 @@
 #include "MFCTool.h"
 #include "../Codes/CameraTool.h"
 #include "afxdialogex.h"
-
 #include "MainFrm.h"
 #include "MFCToolView.h"
 #include "MFC_Camera.h"
@@ -76,8 +75,9 @@ BOOL CCameraTool::OnInitDialog()
 	if (!m_pCamera)
 		return FALSE;
 
-	m_ComboCamType.AddString(L"Type_Normal");
 	m_ComboCamType.AddString(L"Type_Action");
+	m_ComboCamType.AddString(L"Type_Normal");
+	m_ComboCamType.SetCurSel(1);
 
 	return TRUE;
 }
@@ -86,6 +86,9 @@ BOOL CCameraTool::OnInitDialog()
 void CCameraTool::OnListEyeSelChange()
 {
 	_uint iSel = m_ListEye.GetCurSel();
+
+	if (iSel > m_ListEye.GetCount() - 1)
+		return;
 
 	wstring wstrEyeName = L"MFC_CamEye" + std::to_wstring(iSel);
 
@@ -107,6 +110,9 @@ void CCameraTool::OnListEyeSelChange()
 void CCameraTool::OnListAtSelChange()
 {
 	_uint iSel = m_ListAt.GetCurSel();
+
+	if (iSel > m_ListAt.GetCount() - 1)
+		return;
 
 	wstring wstrAtName = L"MFC_CamAt" + std::to_wstring(iSel);
 
@@ -137,12 +143,53 @@ void CCameraTool::OnBnClickedEyeAdd()
 	m_ListEye.AddString(wstrName.c_str());
 
 	++m_iEyeTagIndex;
+
+	UpdateData(TRUE);
+
+	CMFC_CamEye* pEye = dynamic_cast<CMFC_CamEye*>(Engine::Get_MFCGameObject(L"GameLogic", wstrName));
+	pEye->Set_CamSpeed(m_fSectionSpeed);
+
+	UpdateData(FALSE);
+
+	if (1 < m_ListEye.GetCount())
+	{
+		pToolView->Add_Object(OBJECTADD_MFC_CAMINTERPOL, L"MFC_CamInterpol");
+
+		CTransform*	 pNextTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+
+		//wstrName.erase(std::remove(wstrName.begin(), wstrName.end(), wstrName.back()));
+		wstring wstrNumber = wstrName.substr(10);
+		_uint iPreIndex = std::stoi(wstrNumber);
+		wstrName = L"MFC_CamEye" + std::to_wstring(--iPreIndex);
+
+		// Index 값 --1 한 pEye의 Transform 컴포넌트
+		CTransform*	 pPreTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+
+		// Index 값 --1 한 pEye (이전 인덱스에 NextTarget 값 설정해줌)
+		CMFC_CamEye* pPreEye = dynamic_cast<CMFC_CamEye*>(Engine::Get_MFCGameObject(L"GameLogic", wstrName));
+
+		pPreEye->Set_NextEye(*pNextTrans->Get_Info(INFO_POS));
+		pEye->Set_PreEye(*pPreTrans->Get_Info(INFO_POS));
+	}
 }
 
 
 void CCameraTool::OnBnClickedDeleteEye()
 {
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMFCToolView* pToolView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
+	
+	_int iCount = m_ListEye.GetCount();
 
+	for (_int i = 0; i < iCount; ++i)
+	{
+		CString cstrEyeName;
+		m_ListEye.GetText(0, cstrEyeName);
+		m_ListEye.DeleteString(0);
+		m_iEyeTagIndex = 0;
+
+		pToolView->Delete_Object(OBJECTADD_MFC_CAMEYE, (wstring)cstrEyeName);
+	}
 }
 
 
@@ -163,7 +210,20 @@ void CCameraTool::OnBnClickedAddAt()
 
 void CCameraTool::OnBnClickedDeleteAt()
 {
-	
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMFCToolView* pToolView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
+
+	_int iCount = m_ListAt.GetCount();
+
+	for (_int i = 0; i < iCount; ++i)
+	{
+		CString cstrAtName;
+		m_ListAt.GetText(0, cstrAtName);
+		m_ListAt.DeleteString(0);
+		m_iAtTagIndex = 0;
+
+		pToolView->Delete_Object(OBJECTADD_MFC_CAMAT, (wstring)cstrAtName);
+	}
 }
 
 
@@ -193,10 +253,40 @@ void CCameraTool::OnComboSelChangeCamType()
 
 	if (iSel == 0)
 	{
+		if (0 != m_ListAt.GetCount())
+		{
+			_uint iAtSel = m_ListAt.GetCurSel();
 
+			CString cstrAtSel;
+			m_ListAt.GetText(iAtSel, cstrAtSel);
+
+			CTransform* pAtTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", (wstring)cstrAtSel, L"Com_Transform", ID_DYNAMIC));
+
+			m_pCamera->Set_ActionCam(TRUE);
+			m_pCamera->Set_ActionAt(*pAtTrans->Get_Info(INFO_POS));
+		}
+
+		if (0 != m_ListEye.GetCount())
+		{
+			_uint iEyeSel = m_ListEye.GetCurSel();
+
+			CString cstrEyeSel;
+			m_ListEye.GetText(iEyeSel, cstrEyeSel);
+
+			CTransform* pEyeTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", (wstring)cstrEyeSel, L"Com_Transform", ID_DYNAMIC));
+			//CMFC_CamInterpol* pCamInterpol = dynamic_cast<CMFC_CamInterpol*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_CamInterpol"));
+			//CTransform* pCamInterpolTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_CamInterpol", L"Com_Transform", ID_DYNAMIC));
+
+			//m_pCamera->Set_NextEye(*pEyeTrans->Get_Info(INFO_POS));
+			//pCamInterpol->Set_NextPos(*pEyeTrans->Get_Info(INFO_POS));
+			//pCamInterpol->RefreshPos();
+			m_pCamera->Set_ActionCam(TRUE);
+			m_pCamera->Set_ActionEye(*pEyeTrans->Get_Info(INFO_POS));
+			m_pCamera->Set_StalkTarget(*pEyeTrans->Get_Info(INFO_POS));
+		}
 	}
 	else
 	{
-
+		m_pCamera->Set_ActionCam(FALSE);
 	}
 }

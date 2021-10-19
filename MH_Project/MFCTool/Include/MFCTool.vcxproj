@@ -195,12 +195,12 @@
     <ClInclude Include="..\Codes\MFC_CamAt.h" />
     <ClInclude Include="..\Codes\MFC_Camera.h" />
     <ClInclude Include="..\Codes\MFC_CamEye.h" />
+    <ClInclude Include="..\Codes\MFC_CamInterpol.h" />
     <ClInclude Include="..\Codes\MFC_Line.h" />
     <ClInclude Include="..\Codes\MFC_Player.h" />
     <ClInclude Include="..\Codes\MFC_Terrain.h" />
     <ClInclude Include="..\Codes\NavmeshTool.h" />
     <ClInclude Include="..\Codes\ObjectTool.h" />
-    <ClInclude Include="..\Codes\SyncManager.h" />
     <ClInclude Include="..\Codes\TerrainTool.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MFCTool.h" />
@@ -218,12 +218,12 @@
     <ClCompile Include="..\Codes\MFC_CamAt.cpp" />
     <ClCompile Include="..\Codes\MFC_Camera.cpp" />
     <ClCompile Include="..\Codes\MFC_CamEye.cpp" />
+    <ClCompile Include="..\Codes\MFC_CamInterpol.cpp" />
     <ClCompile Include="..\Codes\MFC_Line.cpp" />
     <ClCompile Include="..\Codes\MFC_Player.cpp" />
     <ClCompile Include="..\Codes\MFC_Terrain.cpp" />
     <ClCompile Include="..\Codes\NavmeshTool.cpp" />
     <ClCompile Include="..\Codes\ObjectTool.cpp" />
-    <ClCompile Include="..\Codes\SyncManager.cpp" />
     <ClCompile Include="..\Codes\TerrainTool.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MFCTool.cpp" />

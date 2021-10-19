@@ -5,6 +5,8 @@
 
 BEGIN(Engine)
 
+class CTransform;
+
 class ENGINE_DLL CCamera : public CGameObject
 {
 protected:
@@ -16,10 +18,30 @@ public:
 	virtual HRESULT Ready_Object(void) override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 
+public:
+	const _float&	Get_Speed() { return m_fSpeed; }
+	const _bool&	Get_ActionCam() { return m_bActionCam; }
+
+public:
+	void			Set_ActionCam(_bool bValue) { m_bActionCam = bValue; }
+	void			Set_ActionEye(_vec3 vEye) { m_vActionEye = vEye; }
+	void			Set_ActionAt(_vec3 vAt) { m_vActionAt = vAt; }
+	void			Set_StalkTarget(_vec3 vTargetPos) { m_vStalkTarget = vTargetPos; }
+	void			Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
+
 protected:
 	_vec3			m_vEye, m_vAt, m_vUp;
 	_float			m_fFov, m_fAspect, m_fNear, m_fFar;
 	_matrix			m_matView, m_matProj;
+
+	// Action Camera Settings
+	_bool		m_bActionCam = false;
+
+	_float		m_fSpeed = 0.005f;
+
+	_vec3		m_vStalkTarget = {};
+	_vec3		m_vActionEye = {};
+	_vec3		m_vActionAt = {};
 
 public:
 	virtual void Free(void) override;

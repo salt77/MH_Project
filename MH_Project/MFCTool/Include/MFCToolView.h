@@ -47,7 +47,7 @@ public:
 	HRESULT Add_NewTerrain(_uint iRowX, _uint iColZ, _uint iInterval);
 
 	HRESULT	Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag = L"");
-	HRESULT	Delete_Object(OBJECTADD_MFC _eObjectType);
+	HRESULT	Delete_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag = L"");
 
 	HRESULT Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType);
 	HRESULT	Add_Collider(_float vMinX, _float vMinY, _float vMinZ,

@@ -38,8 +38,13 @@ _int CMFC_Camera::Update_Object(const _float & fTimeDelta)
 {
 	_int iExit = CCamera::Update_Object(fTimeDelta);
 
-	Key_Input(fTimeDelta);
-	m_pTransformCom->Set_Pos(&m_vEye);
+	if (!m_bActionCam)
+		Key_Input(fTimeDelta);
+
+	if (!m_bActionCam)
+		m_pTransformCom->Set_Pos(&m_vEye);
+	else
+		m_pTransformCom->Set_Pos(&m_vActionEye);
 
 	return iExit;
 }

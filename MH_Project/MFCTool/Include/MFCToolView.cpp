@@ -17,6 +17,7 @@
 #include "MFC_Player.h"
 #include "MFC_CamEye.h"
 #include "MFC_CamAt.h"
+#include "MFC_CamInterpol.h"
 #include "Layer.h"
 
 #ifdef _DEBUG
@@ -264,24 +265,49 @@ HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 		m_pCamAt = dynamic_cast<CMFC_CamAt*>(Engine::Get_MFCGameObject(L"GameLogic", ObjTag));
 
 		break;
+
+	case OBJECTADD_MFC_CAMINTERPOL:
+		CMFC_CamInterpol* pCamInterpol = dynamic_cast<CMFC_CamInterpol*>(Engine::Get_MFCGameObject(L"GameLogic", ObjTag));
+
+		if (!pCamInterpol)
+		{
+			pObj = CMFC_CamInterpol::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pObj, E_FAIL);
+			NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+			m_pLayer->Add_GameObject(ObjTag, pObj);
+			Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+		}
+
+		break;
 	}
 
 	return S_OK;
 }
 
-HRESULT CMFCToolView::Delete_Object(OBJECTADD_MFC _eObjectType)
+HRESULT CMFCToolView::Delete_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 {
-	//switch (_eObjectType)
-	//{
-	//case OBJECTADD_MFC_PLAYER:
-	//	NULL_CHECK_RETURN(m_pLayer, E_FAIL);
-	//	m_pLayer->Delete_Layer(L"MFC_Player");
-	//	m_pPlayer = nullptr;
-	//	Engine::DeleteGameObjectInManager(L"Player");
-	//	break;
-	//case OBJECTADD_MFC_AHGLAN:
-	//	break;
-	//}
+	switch (_eObjectType)
+	{
+	case OBJECTADD_MFC_PLAYER:
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Delete_Layer(L"MFC_Player");
+		m_pPlayer = nullptr;
+		//Engine::DeleteGameObjectInManager(L"Player");
+		break;
+
+	case OBJECTADD_MFC_AHGLAN:
+		break;
+
+	case OBJECTADD_MFC_CAMEYE:
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Delete_Layer(ObjTag);
+		break;
+
+	case OBJECTADD_MFC_CAMAT:
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Delete_Layer(ObjTag);
+		break;
+	}
 
 	return S_OK;
 }

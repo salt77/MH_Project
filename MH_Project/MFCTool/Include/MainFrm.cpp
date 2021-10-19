@@ -44,8 +44,6 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
-	CSyncManager::DestroyInstance();
-
 	Release_Utility();
 	Release_System();
 }

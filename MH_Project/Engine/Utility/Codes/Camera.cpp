@@ -43,7 +43,34 @@ Engine::_int Engine::CCamera::Update_Object(const _float& fTimeDelta)
 {
 	CGameObject::Update_Object(fTimeDelta);
 
-	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
+	if (!m_bActionCam)
+	{
+		D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
+	}
+	else
+	{
+		if (_vec3(0.f, 0.f, 0.f) != m_vStalkTarget)
+		{
+			_vec3 vDir = m_vStalkTarget - m_vActionEye;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_vActionEye += vDir * m_fSpeed;
+
+			D3DXMatrixLookAtLH(&m_matView, &m_vActionEye, &m_vActionAt, &m_vUp);
+
+			if (D3DXVec3Length(&(m_vStalkTarget - m_vEye)) < 0.5f)
+			{
+				m_vStalkTarget = _vec3(0.f, 0.f, 0.f);
+				//m_bActionCam = false;
+			}
+		}
+
+		else
+		{
+			m_bActionCam = false;
+		}
+	}
+
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
 
 	return 0;
