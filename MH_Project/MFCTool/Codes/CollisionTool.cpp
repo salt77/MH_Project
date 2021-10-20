@@ -123,13 +123,24 @@ void CCollisionTool::OnBnClickedObjectAdd()
 
 	if (m_TreeObj.GetSelectedItem() == m_hPlayer)
 		pToolView->Add_Object(OBJECTADD_MFC_PLAYER);
+	else if (m_TreeObj.GetSelectedItem() == m_hAhglan)
+		pToolView->Add_Object(OBJECTADD_MFC_AHGLAN);
 
 	// Bone Ãß°¡
 	_uint iIndex = 0;
 
 	//m_hBoneRoot1 = m_TreeBone.InsertItem((CA2W)pName, 0, 0, TVI_ROOT, TVI_LAST);
 
-	list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList();
+	list<D3DXMESHCONTAINER_DERIVED*>	listTemp;
+	if (m_TreeObj.GetSelectedItem() == m_hPlayer)
+	{
+		list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
+	}
+	else if (m_TreeObj.GetSelectedItem() == m_hAhglan)
+	{
+		list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_AHGLAN);
+	}
+
 	list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
 
 	for (; iter != listTemp.end(); ++iter)
@@ -340,7 +351,17 @@ void CCollisionTool::OnEditChangeAni()
 
 	UpdateData(TRUE);
 
-	pToolView->Set_ObjectAniIndex(m_AniIndex);
+	HTREEITEM hItem = m_TreeObj.GetSelectedItem();
+
+	if (!m_TreeObj.ItemHasChildren(hItem))
+	{
+		CString cstrObjName = m_TreeObj.GetItemText(hItem);
+
+		if (L"Player" == cstrObjName)
+			pToolView->Set_ObjectAniIndex(m_AniIndex, OBJECTADD_MFC_PLAYER);
+		else if (L"Ahglan" == cstrObjName)
+			pToolView->Set_ObjectAniIndex(m_AniIndex, OBJECTADD_MFC_AHGLAN);
+	}
 
 	UpdateData(FALSE);
 }

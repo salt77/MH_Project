@@ -102,6 +102,8 @@ void CCollider::Free(void)
 	for (_ulong i = 0; i < COL_END; ++i)
 		Safe_Release(m_pTexture[i]);
 
+	m_pSphere->Release();
+	m_pSphere = 0;
 	Safe_Release(m_pIB);
 	Safe_Release(m_pVB);
 

@@ -61,6 +61,12 @@
     <Filter Include="02.GameObject\03.MFC_CameraSet\02.MFC_CamInterpol">
       <UniqueIdentifier>{debd9139-71b9-4b80-bc94-98a0fa0471a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.MFC_Navmesh">
+      <UniqueIdentifier>{0a902515-7d08-4129-82a9-e92a1fc4f53d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.MFC_Ahglan">
+      <UniqueIdentifier>{f0ce8fb3-0684-417d-8aab-fe853de19c27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -126,6 +132,12 @@
     <ClInclude Include="..\Codes\MFC_CamInterpol.h">
       <Filter>02.GameObject\03.MFC_CameraSet\02.MFC_CamInterpol</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Nevmesh.h">
+      <Filter>02.GameObject\05.MFC_Navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Ahglan.h">
+      <Filter>02.GameObject\03.MFC_Ahglan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -181,6 +193,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_CamInterpol.cpp">
       <Filter>02.GameObject\03.MFC_CameraSet\02.MFC_CamInterpol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Nevmesh.cpp">
+      <Filter>02.GameObject\05.MFC_Navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Ahglan.cpp">
+      <Filter>02.GameObject\03.MFC_Ahglan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

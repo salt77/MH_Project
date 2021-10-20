@@ -68,7 +68,7 @@ _int CMFC_CamEye::Update_Object(const _float & fTimeDelta)
 		//CTransform*	pCamInterpolTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_CamInterpol", L"Com_Transform", ID_DYNAMIC));
 
 		if (D3DXVec3Length(&(*pCamTrans->Get_Info(INFO_POS) - *m_pTransformCom->Get_Info(INFO_POS))) < 0.5f)
-			pCamera->Set_StalkTarget(m_vTargetEye);
+			pCamera->Set_StalkTarget(m_vNextEye);
 	}
 
 	return iExit;
@@ -109,23 +109,23 @@ HRESULT CMFC_CamEye::Add_Component(void)
 
 void CMFC_CamEye::Interpolation_Traffic()
 {
-	if (_vec3(0.f, 0.f, 0.f) != m_vNextEye)
-	{
-		if (_vec3(0.f, 0.f, 0.f) != m_vPreEye)
-			D3DXVec3CatmullRom(&m_vTargetEye, &m_vPreEye, m_pTransformCom->Get_Info(INFO_POS), &m_vNextEye, &m_vNextEye, 0.5f);
-		else
-			D3DXVec3CatmullRom(&m_vTargetEye, m_pTransformCom->Get_Info(INFO_POS), m_pTransformCom->Get_Info(INFO_POS), &m_vNextEye, &m_vNextEye, 0.5f);
+	//if (_vec3(0.f, 0.f, 0.f) != m_vNextEye)
+	//{
+	//	if (_vec3(0.f, 0.f, 0.f) != m_vPreEye)
+	//		D3DXVec3CatmullRom(&m_vTargetEye, &m_vPreEye, m_pTransformCom->Get_Info(INFO_POS), &m_vNextEye, &m_vNextEye, 0.5f);
+	//	else
+	//		D3DXVec3CatmullRom(&m_vTargetEye, m_pTransformCom->Get_Info(INFO_POS), m_pTransformCom->Get_Info(INFO_POS), &m_vNextEye, &m_vNextEye, 1.f);
+	//	
+	//	_vec3 vTemp[2];
+	//	vTemp[0] = *m_pTransformCom->Get_Info(INFO_POS);
+	//	vTemp[1] = m_vTargetEye;
 
-		_vec3 vTemp[2];
-		vTemp[0] = *m_pTransformCom->Get_Info(INFO_POS);
-		vTemp[1] = m_vTargetEye;
-
-		_matrix		matWorld, matView, matProj;
-		m_pGraphicDev->GetTransform(D3DTS_WORLD, &matWorld);
-		m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-		m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
-		m_pLine->DrawTransform(vTemp, 2, &(matWorld * matView * matProj), D3DXCOLOR(0.f, 1.f, 1.f, 1.f));
-	}
+	//	_matrix		matWorld, matView, matProj;
+	//	m_pGraphicDev->GetTransform(D3DTS_WORLD, &matWorld);
+	//	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	//	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+	//	m_pLine->DrawTransform(vTemp, 2, &(matWorld * matView * matProj), D3DXCOLOR(0.f, 1.f, 1.f, 1.f));
+	//}
 }
 
 
@@ -143,6 +143,9 @@ void CMFC_CamEye::Free()
 {
 	for (_uint i = 0; i < COL_END; ++i)
 		Safe_Release(m_pTexture[i]);
+
+	m_pSphere->Release();
+	m_pSphere = 0;
 
 	CGameObject::Free();
 }

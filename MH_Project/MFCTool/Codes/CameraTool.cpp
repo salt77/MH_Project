@@ -85,7 +85,7 @@ BOOL CCameraTool::OnInitDialog()
 
 void CCameraTool::OnListEyeSelChange()
 {
-	_uint iSel = m_ListEye.GetCurSel();
+	_int iSel = m_ListEye.GetCurSel();
 
 	if (iSel > m_ListEye.GetCount() - 1)
 		return;
@@ -109,7 +109,7 @@ void CCameraTool::OnListEyeSelChange()
 
 void CCameraTool::OnListAtSelChange()
 {
-	_uint iSel = m_ListAt.GetCurSel();
+	_int iSel = m_ListAt.GetCurSel();
 
 	if (iSel > m_ListAt.GetCount() - 1)
 		return;

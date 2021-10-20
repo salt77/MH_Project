@@ -35,7 +35,6 @@ void CTerrainTex::Copy_Indices(INDEX32 * pIndex, const _ulong & dwTriCnt)
 	m_pIB->Unlock();
 
 	m_dwTriCnt = dwTriCnt;
-
 }
 
 HRESULT Engine::CTerrainTex::Ready_Buffer(const _ulong& dwCntX,

@@ -43,7 +43,7 @@ HRESULT Engine::CVIBuffer::Ready_Buffer(void)
 												D3DPOOL_MANAGED,
 												&m_pVB,
 												NULL)))
-		return E_FAIL;
+	return E_FAIL;
 
 	if (FAILED(m_pGraphicDev->CreateIndexBuffer(m_dwIdxSize * m_dwTriCnt,
 												0, // 정적 버퍼(사이즈를 정해준 만큼 할당해서 사용한다는 뜻) - D3DUSAGE_DYNAMIC(동적 버퍼 : 파티클)

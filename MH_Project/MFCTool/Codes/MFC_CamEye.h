@@ -48,6 +48,7 @@ private:
 
 	LPD3DXMESH		m_pSphere;
 	LPD3DXLINE		m_pLine;
+
 #ifdef _DEBUG
 	LPDIRECT3DTEXTURE9			m_pTexture[COLTYPE::COL_END];
 #endif

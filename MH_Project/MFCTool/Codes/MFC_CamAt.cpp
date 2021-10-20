@@ -103,5 +103,8 @@ void CMFC_CamAt::Free()
 	for (_uint i = 0; i < COL_END; ++i)
 		Safe_Release(m_pTexture[i]);
 
+	m_pSphere->Release();
+	m_pSphere = 0;
+
 	CGameObject::Free();
 }

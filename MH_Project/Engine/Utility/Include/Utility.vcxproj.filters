@@ -82,6 +82,9 @@
     <Filter Include="04.Component\07.Collider\01.Box">
       <UniqueIdentifier>{39c29150-2081-4bc6-a23a-b54b3786534a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Component\00.VIBuffer\04.Navmesh">
+      <UniqueIdentifier>{9baa383d-8c32-4fe8-b9f6-9f85424745ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Headers\Export_Utility.h">
@@ -161,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="..\Codes\BoxCollider.h">
       <Filter>04.Component\07.Collider\01.Box</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Navmesh.h">
+      <Filter>04.Component\00.VIBuffer\04.Navmesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -243,6 +249,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\BoxCollider.cpp">
       <Filter>04.Component\07.Collider\01.Box</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Navmesh.cpp">
+      <Filter>04.Component\00.VIBuffer\04.Navmesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

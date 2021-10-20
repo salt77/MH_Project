@@ -21,8 +21,8 @@ private:
 
 public:
 	virtual HRESULT Ready_Object(void) override;
-	virtual _int Update_Object(const _float& fTimeDelta) override;
-	virtual void Render_Object(void) override;
+	virtual _int	Update_Object(const _float& fTimeDelta) override;
+	virtual void	Render_Object(void) override;
 
 public:
 	const map<const wstring, CCollider*>	Get_ColliderMap() { return m_mapColliderCom; }

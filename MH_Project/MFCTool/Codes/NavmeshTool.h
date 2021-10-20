@@ -1,4 +1,5 @@
 #pragma once
+#include "afxcmn.h"
 
 
 // CNavmeshTool 대화 상자입니다.
@@ -20,4 +21,13 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnTreeSelChangeNavmesh(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedDeleteNav();
+	afx_msg void OnBnClickedDeleteAllNav();
+	afx_msg void OnBnClickedSave();
+	afx_msg void OnBnClickedLoad();
+
+public:
+	CTreeCtrl m_TreeNavmesh;
 };

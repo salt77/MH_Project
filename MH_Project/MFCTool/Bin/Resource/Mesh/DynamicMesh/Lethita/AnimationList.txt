@@ -1,3 +1,42 @@
-0. Lower_Run
-1. Idle (Battle Mode)
-2. 
+Idle (Battle Mode)
+
+Run_Lower
+Run_Sprint 
+
+Atk1
+Atk2
+Atk3
+Atk4
+
+SmashAtk1
+SmashAtk2
+SmashAtk3 => 2타 스매쉬 추가타
+SmashAtk4
+SmashAtk4b
+SmashAtk33 => 진짜 3타 스매쉬
+
+SpaceDashE
+SpaceDashN
+SpaceDashS
+SpaceDashW
+
+Fury1
+Fury2
+
+DashAtk
+
+DoubleCrecsent
+Windmil
+
+DamageFromBack
+DamageFromFront
+DownIdleBack
+DownIdleFront
+DownToIdleBack
+DownToIdleFront
+DamageResist
+
+Dead
+Revive
+
+Sprint_Stop

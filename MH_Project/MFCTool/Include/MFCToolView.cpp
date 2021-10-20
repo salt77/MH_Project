@@ -15,6 +15,7 @@
 #include "MFC_Camera.h"
 #include "MFC_Terrain.h"
 #include "MFC_Player.h"
+#include "MFC_Ahglan.h"
 #include "MFC_CamEye.h"
 #include "MFC_CamAt.h"
 #include "MFC_CamInterpol.h"
@@ -63,13 +64,26 @@ CMFCToolView::~CMFCToolView()
 
 // CMFCToolView 그리기
 
-list<D3DXMESHCONTAINER_DERIVED*> CMFCToolView::Get_MeshContainerList()
+list<D3DXMESHCONTAINER_DERIVED*> CMFCToolView::Get_MeshContainerList(OBJECTADD_MFC eObjType)
 {
-	if (m_pPlayer)
+	switch (eObjType)
 	{
-		return dynamic_cast<CDynamicMesh*>(m_pPlayer->Get_Component(L"Com_Mesh", ID_STATIC))->Get_MeshContainerList();
-	}
+	case OBJECTADD_MFC_PLAYER:
+		if (m_pPlayer)
+		{
+			return dynamic_cast<CDynamicMesh*>(m_pPlayer->Get_Component(L"Com_Mesh", ID_STATIC))->Get_MeshContainerList();
+		}
 
+		break;
+	case OBJECTADD_MFC_AHGLAN:
+		if (m_pAhglan)
+		{
+			return dynamic_cast<CDynamicMesh*>(m_pAhglan->Get_Component(L"Com_Mesh", ID_STATIC))->Get_MeshContainerList();
+		}
+
+		break;
+	}
+	
 	return list<D3DXMESHCONTAINER_DERIVED*>();
 }
 
@@ -81,6 +95,7 @@ void CMFCToolView::Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType)
 		m_pPlayer->Set_AniIndex(iIndex);
 		break;
 	case OBJECTADD_MFC_AHGLAN:
+		m_pAhglan->Set_AniIndex(iIndex);
 		break;
 	}
 }
@@ -145,6 +160,7 @@ HRESULT CMFCToolView::Add_Prototype()
 	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 32, 32));
 	Engine::Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", TEX_NORMAL, 2));
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Lethita/", L"Lethita.X"));
+	Engine::Ready_Prototype(L"Proto_DynamicMesh_Ahglan", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Ahglan/", L"Ahglan.X"));
 	
 	//Engine::Ready_Prototype(L"Proto_StaticMesh_Player", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Lethita/", L"Lethita.X"));
 
@@ -154,7 +170,8 @@ HRESULT CMFCToolView::Add_Prototype()
 HRESULT CMFCToolView::Ready_DefaultSettings()
 {
 	Ready_Font(m_pGraphicDev, L"Font_Default", L"바탕", 15, 15, FW_NORMAL);
-	//Ready_InputDev(g_hInst, g_hWnd);
+	Ready_Font(m_pGraphicDev, L"Font_Jinji", L"궁서", 30, 30, FW_HEAVY);
+	//Ready_InputDev(g_hInst, g_hWnd);	// Font 추가
 
 	m_pLayer = CLayer::Create();
 	NULL_CHECK_RETURN(m_pLayer, E_FAIL);
@@ -242,6 +259,14 @@ HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 		break;
 
 	case OBJECTADD_MFC_AHGLAN:
+		pObj = CMFC_Ahglan::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pObj, E_FAIL);
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Add_GameObject(L"MFC_Ahglan", pObj);
+		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+		m_pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
+
 		break;
 
 	case OBJECTADD_MFC_CAMEYE:
@@ -296,6 +321,9 @@ HRESULT CMFCToolView::Delete_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 		break;
 
 	case OBJECTADD_MFC_AHGLAN:
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Delete_Layer(L"MFC_Ahglan");
+		m_pPlayer = nullptr;
 		break;
 
 	case OBJECTADD_MFC_CAMEYE:
@@ -312,20 +340,43 @@ HRESULT CMFCToolView::Delete_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 	return S_OK;
 }
 
-HRESULT CMFCToolView::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType)
+HRESULT CMFCToolView::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType)
 {
 	// Collider는 프로토타입 생성 안 함
 	//Engine::Ready_Prototype(L"Proto_Collider", CCollider::Create(m_pGraphicDev, fRadius));
-	if (m_pPlayer)
-		m_pPlayer->Add_Collider(fRadius, cstrName, eColliderType);
+	switch (eObjType)
+	{
+	case OBJECTADD_MFC_PLAYER:
+		if (m_pPlayer)
+			m_pPlayer->Add_Collider(fRadius, cstrName, eColliderType);
+
+		break;
+
+	case OBJECTADD_MFC_AHGLAN:
+		if (m_pAhglan)
+			m_pAhglan->Add_Collider(fRadius, cstrName, eColliderType);
+
+		break;
+	}
 
 	return S_OK;
 }
 
-HRESULT CMFCToolView::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType)
+HRESULT CMFCToolView::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType)
 {
-	if (m_pPlayer)
-		m_pPlayer->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName, eColliderType);
+	switch (eObjType)
+	{
+	case OBJECTADD_MFC_PLAYER:
+		if (m_pPlayer)
+			m_pPlayer->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName, eColliderType);
+
+		break;
+	case OBJECTADD_MFC_AHGLAN:
+		if (m_pAhglan)
+			m_pAhglan->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName, eColliderType);
+
+		break;
+	}
 
 	return S_OK;
 }
@@ -342,11 +393,25 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 	if (!pDoc)
 		return;
 
+	m_fTime += m_fDeltaTime;
+	++m_dwRenderCnt;
+
+	if (m_fTime >= 1.f)
+	{
+		wsprintf(m_szFPS, L"FPS : %d", m_dwRenderCnt);
+		m_dwRenderCnt = 0;
+		m_fTime = 0.f;
+	}
+
+	Render_Font(L"Font_Jinji", m_szFPS, &_vec2(600.f, 600.f), D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
+
 	Engine::Render_GameObject(m_pGraphicDev);
 	if (m_pTerrain)
 		m_pTerrain->Update_Object(m_fDeltaTime);
 	if (m_pPlayer)
 		m_pPlayer->Update_Object(m_fDeltaTime);
+	if (m_pAhglan)
+		m_pAhglan->Update_Object(m_fDeltaTime);
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	Render_Begin(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f));
