@@ -44,6 +44,8 @@ public:
 	virtual void Free(void) override;
 
 private:
+	_bool		m_bCamMove = true;
+
 	_float		m_fSpeed = 15.f;
 
 	CTransform*	m_pTransformCom = nullptr;

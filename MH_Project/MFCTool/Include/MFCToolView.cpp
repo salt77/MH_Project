@@ -87,6 +87,11 @@ list<D3DXMESHCONTAINER_DERIVED*> CMFCToolView::Get_MeshContainerList(OBJECTADD_M
 	return list<D3DXMESHCONTAINER_DERIVED*>();
 }
 
+void CMFCToolView::Set_ChangeColType(wstring cstrName, COLTYPE eColType, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType)
+{
+	Engine::Set_RenderColType(cstrName, eColType, eColliderType);
+}
+
 void CMFCToolView::Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType)
 {
 	switch (eObjType)
@@ -100,25 +105,53 @@ void CMFCToolView::Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType)
 	}
 }
 
-void CMFCToolView::Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName, COLLIDERTYPE eColType)
+void CMFCToolView::Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName, COLLIDERTYPE eColType, OBJECTADD_MFC eObjType)
 {
-	if (m_pPlayer)
+	switch (eObjType)
 	{
-		switch (eColType)
+	case OBJECTADD_MFC_PLAYER:
+		if (m_pPlayer)
 		{
-		case Engine::COLTYPE_BOX_DAMAGED:
-			dynamic_cast<CBoxCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
-			break;
-		case Engine::COLTYPE_BOX_HIT:
-			dynamic_cast<CBoxCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
-			break;
-		case Engine::COLTYPE_SPHERE_DAMAGED:
-			dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
-			break;
-		case Engine::COLTYPE_SPHERE_HIT:
-			dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
-			break;
+			switch (eColType)
+			{
+			case Engine::COLTYPE_BOX_DAMAGED:
+				dynamic_cast<CBoxCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+				break;
+			case Engine::COLTYPE_BOX_HIT:
+				dynamic_cast<CBoxCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+				break;
+			case Engine::COLTYPE_SPHERE_DAMAGED:
+				dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+				break;
+			case Engine::COLTYPE_SPHERE_HIT:
+				dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+				break;
+			}
 		}
+
+		break;
+
+	case OBJECTADD_MFC_AHGLAN:
+		if (m_pAhglan)
+		{
+			switch (eColType)
+			{
+			case Engine::COLTYPE_BOX_DAMAGED:
+				dynamic_cast<CBoxCollider*>(m_pAhglan->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+				break;
+			case Engine::COLTYPE_BOX_HIT:
+				dynamic_cast<CBoxCollider*>(m_pAhglan->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+				break;
+			case Engine::COLTYPE_SPHERE_DAMAGED:
+				dynamic_cast<CCollider*>(m_pAhglan->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+				break;
+			case Engine::COLTYPE_SPHERE_HIT:
+				dynamic_cast<CCollider*>(m_pAhglan->Get_Component((wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+				break;
+			}
+		}
+
+		break;
 	}
 }
 
@@ -173,6 +206,8 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 	Ready_Font(m_pGraphicDev, L"Font_Jinji", L"±Ã¼­", 30, 30, FW_HEAVY);
 	//Ready_InputDev(g_hInst, g_hWnd);	// Font Ãß°¡
 
+	Ready_LightInfo();
+
 	m_pLayer = CLayer::Create();
 	NULL_CHECK_RETURN(m_pLayer, E_FAIL);
 
@@ -212,6 +247,22 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 
 
 	Ready_Timer(L"Timer_Immediate");
+
+	return S_OK;
+}
+
+HRESULT CMFCToolView::Ready_LightInfo()
+{
+	D3DLIGHT9			tLightInfo;
+	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
+
+	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
+	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Direction = _vec3(1.f, -1.f, 1.f);
+
+	Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0);
 
 	return S_OK;
 }
@@ -374,6 +425,29 @@ HRESULT CMFCToolView::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _fl
 	case OBJECTADD_MFC_AHGLAN:
 		if (m_pAhglan)
 			m_pAhglan->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName, eColliderType);
+
+		break;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMFCToolView::Delete_Collider(wstring wstrName, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType)
+{
+	switch (eObjType)
+	{
+	case OBJECTADD_MFC_PLAYER:
+		if (m_pPlayer)
+		{
+			m_pPlayer->Delete_Collider(wstrName, eColliderType);
+		}
+
+		break;
+	case OBJECTADD_MFC_AHGLAN:
+		if (m_pAhglan)
+		{
+			m_pAhglan->Delete_Collider(wstrName, eColliderType);
+		}
 
 		break;
 	}

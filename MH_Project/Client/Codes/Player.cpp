@@ -3,6 +3,7 @@
 
 #include "Export_Function.h"
 #include "DynamicMesh.h"
+#include "DynamicCamera.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -34,10 +35,16 @@ HRESULT CPlayer::Ready_Object(void)
 
 _int CPlayer::Update_Object(const _float& fTimeDelta)
 {
-	SetUp_OnTerrain();
+	_int iExit = CGameObject::Update_Object(fTimeDelta);
+
+	m_pMainCam = dynamic_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
+	m_pMainCam->Set_CameraTarget(*m_pTransformCom->Get_Info(INFO_POS));
+
+	//SetUp_OnTerrain();
 	Key_Input(fTimeDelta);
 
-	_int iExit = CGameObject::Update_Object(fTimeDelta);
+	/*_int iExit = CGameObject::Update_Object(fTimeDelta);*/
+	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_pMeshCom->Play_Animation(fTimeDelta);
 
 	Add_RenderGroup(RENDER_NONALPHA, this);
@@ -52,9 +59,9 @@ void CPlayer::Render_Object(void)
 
 	//m_pColliderCom->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 	
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pMeshCom->Render_Meshes();
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
@@ -110,39 +117,51 @@ HRESULT CPlayer::Add_Component(void)
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
 	m_pTransformCom->Get_INFO(INFO_LOOK, &m_vDir);
+	m_pTransformCom->Get_INFO(INFO_RIGHT, &m_vRightDir);
 
-	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	_vec3 vCamLook = m_pMainCam->Get_CamLook();
+
+	if (/*Get_DIMouseState(DIM_LB) & 0X80*/GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
-		/*D3DXVec3Normalize(&m_vDir, &m_vDir);
-		m_pTransformCom->Move_Pos(&m_vDir, 5.f, fTimeDelta);*/
-		m_pMeshCom->Set_AnimationIndex(1);
-
-	}
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-		m_pMeshCom->Set_AnimationIndex(0);
-
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-	{
-		m_pMeshCom->Set_AnimationIndex(2);
-		//D3DXVec3Normalize(&m_vDir, &m_vDir);
-		//m_pTransformCom->Move_Pos(&m_vDir, -5.f, fTimeDelta);
-	}
-	
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-		//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
-	
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
-
-	if (Get_DIMouseState(DIM_LB) & 0X80)
-	{
-		_vec3	vPickPos = PickUp_OnTerrain();
+		m_iAniIndex = 28;
+		/*_vec3	vPickPos = PickUp_OnTerrain();
 		_vec3	vPlayerPos;
 		m_pTransformCom->Get_INFO(INFO_POS, &vPlayerPos);
 
 		_vec3	vDir = *D3DXVec3Normalize(&vDir, &(vPickPos - vPlayerPos));
-		m_pTransformCom->Move_Pos(&vDir, 5.f, fTimeDelta);
+		m_pTransformCom->Move_Pos(&vDir, 5.f, fTimeDelta);*/
 	}
+	else if (GetAsyncKeyState('W') & 0x8000)
+	{
+		D3DXVec3Normalize(&m_vRightDir, &m_vRightDir);
+		m_pTransformCom->Move_Pos(&-m_vRightDir, 5.f, fTimeDelta);
+
+		m_iAniIndex = 30;
+		
+		Rotate_PlayerLook(fTimeDelta, vCamLook);
+	}
+	else if (GetAsyncKeyState('A') & 0x8000)
+	{
+		m_iAniIndex = 30;
+	}
+	else if (GetAsyncKeyState('S') & 0x8000)
+	{
+		m_iAniIndex = 30;
+	}
+	else if (GetAsyncKeyState('D') & 0x8000)
+	{
+		m_iAniIndex = 30;
+	}
+	else
+	{
+		m_iAniIndex = 31;
+	}
+	
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
+	
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
 }
 
 void CPlayer::SetUp_OnTerrain(void)
@@ -166,5 +185,26 @@ Engine::_vec3 CPlayer::PickUp_OnTerrain(void)
 	NULL_CHECK_RETURN(pTerrainTransCom, _vec3(0.f, 0.f, 0.f));
 
 	return m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
+}
+
+void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector)
+{
+	_vec3 vUp = _vec3(0.f, 1.f, 0.f);
+	_vec3 vTemp;
+
+	D3DXVec3Normalize(&TargetLookVector, &TargetLookVector);
+	D3DXVec3Normalize(&m_vRightDir, &m_vRightDir);
+
+	if (D3DXToDegree(acos(D3DXVec3Dot(&TargetLookVector, &-m_vRightDir))) > 5.f)
+	{
+		if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &m_vRightDir)) > 0.f)
+		{
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * fTimeDelta * 2.f));
+		}
+		else if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &m_vRightDir)) < 0.f)
+		{
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * -fTimeDelta * 2.f));
+		}
+	}
 }
 

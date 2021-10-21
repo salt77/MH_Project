@@ -169,7 +169,15 @@ HRESULT Engine::CBoxCollider::Ready_Collider(_float vMinX, _float vMinY, _float 
 		D3DLOCKED_RECT LockRect;
 		m_pTexture[i]->LockRect(0, &LockRect, NULL, 0);
 
-		*((_ulong*)LockRect.pBits) = D3DXCOLOR(1.f * i, 1.f * (1.f - i), 0.f, 1.f);
+		switch (eColliderType)
+		{
+		case Engine::COLTYPE_BOX_DAMAGED:
+			*((_ulong*)LockRect.pBits) = D3DXCOLOR(1.f * i, 1.f * (1.f - i), 0.f, 1.f);
+			break;
+		case Engine::COLTYPE_BOX_HIT:
+			*((_ulong*)LockRect.pBits) = D3DXCOLOR(1.f * i, 0.f, 1.f * (1.f - i), 1.f);
+			break;
+		}
 
 		m_pTexture[i]->UnlockRect(0);
 	}

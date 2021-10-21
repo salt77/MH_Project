@@ -33,6 +33,7 @@ public:
 	afx_msg void OnBnClickedDeleteObject();
 
 	afx_msg void OnBnClickedAddCollider();
+	afx_msg void OnBnClickedDeleteCol();
 
 	afx_msg void OnListSelchangeCollider();
 	afx_msg void OnListSelChangeBoxCol();

@@ -73,7 +73,7 @@ Engine::_uint CLoading::Loading_ForStage(void)
 	lstrcpy(m_szLoading, L"Loading Mesh...............");
 
 	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Stone", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/TombStone/", L"TombStone.x")), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Player/", L"Lethita.x")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Lethita/", L"Lethita.X")), E_FAIL);
 
 	lstrcpy(m_szLoading, L"Loading Complete!!!!");
 

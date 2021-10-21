@@ -55,18 +55,23 @@ void CAniCtrl::Set_AnimationIndex(const _uint & iIndex)
 	// 현재 애니메이션 셋의 재생 완료 시간을 반환하는 함수
 	m_dPeriod = pAS->GetPeriod();
 
+	// 트랙 재생 시 발생할 수 있는 각종 이벤트 정보를 해제하는 함수(트랙끼리 모션 보간을 할 때 실패의 가능성이 있어서 이벤트 정보를 강제로 해제시킴)
 	m_pAniCtrl->UnkeyAllTrackEvents(m_iCurrentTrack);
 	m_pAniCtrl->UnkeyAllTrackEvents(m_iNewTrack);
 
+	// 현재 지정한 트랙을 활성화 또는 비활성화를 결정하는데 시점을 지정할 수 있는 함수
 	m_pAniCtrl->KeyTrackEnable(m_iCurrentTrack, FALSE, m_fAccTime + 0.25);
 
+	// 지정된 트랙의 재생속도를 지정하는 함수
 	m_pAniCtrl->KeyTrackSpeed(m_iCurrentTrack, 1.f, m_fAccTime, 0.25, D3DXTRANSITION_LINEAR);
-	m_pAniCtrl->KeyTrackWeight(m_iCurrentTrack, 0.1f, m_fAccTime, 0.25, D3DXTRANSITION_LINEAR);
+
+	// 지정된 트랙의 재생 가중치를 지정하는 함수
+	m_pAniCtrl->KeyTrackWeight(m_iCurrentTrack, 0.05f, m_fAccTime, 0.2, D3DXTRANSITION_LINEAR);
 
 	// 트랙의 활성화 유무를 결정하는 함수
 	m_pAniCtrl->SetTrackEnable(m_iNewTrack, TRUE);
-	m_pAniCtrl->KeyTrackSpeed(m_iNewTrack, 1.f, m_fAccTime, 0.25, D3DXTRANSITION_LINEAR);
-	m_pAniCtrl->KeyTrackWeight(m_iNewTrack, 0.9f, m_fAccTime, 0.25, D3DXTRANSITION_LINEAR);
+	m_pAniCtrl->KeyTrackSpeed(m_iNewTrack, 2.5f, m_fAccTime, 0.25, D3DXTRANSITION_LINEAR);
+	m_pAniCtrl->KeyTrackWeight(m_iNewTrack, 0.95f, m_fAccTime, 0.2, D3DXTRANSITION_LINEAR);
 
 	// advancedtime 함수 호출시 증가하던 시간 값을 초기화
 	m_pAniCtrl->ResetTime();

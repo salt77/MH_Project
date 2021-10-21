@@ -34,9 +34,9 @@ public:
 
 public:
 	void	Set_RenderTerrain(_uint _iRenderType) { m_iRenderTerrain = _iRenderType; }
-	void	Set_ChangeColType(wstring cstrName, COLTYPE eColType, COLLIDERTYPE eColliderType = COLTYPE_SPHERE_DAMAGED) { Engine::Set_RenderColType(cstrName, eColType, eColliderType); }
+	void	Set_ChangeColType(wstring cstrName, COLTYPE eColType, COLLIDERTYPE eColliderType = COLTYPE_SPHERE_DAMAGED, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
 	void	Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
-	void	Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName, COLLIDERTYPE eColType = COLTYPE_SPHERE_DAMAGED);
+	void	Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName, COLLIDERTYPE eColType = COLTYPE_SPHERE_DAMAGED, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
 	void	Set_ColliderMatrixInterpolX(_float fX, wstring cstrColName);
 	void	Set_ColliderMatrixInterpolY(_float fY, wstring cstrColName);
 	void	Set_ColliderMatrixInterpolZ(_float fZ, wstring cstrColName);
@@ -44,6 +44,7 @@ public:
 public:
 	HRESULT	Add_Prototype();
 	HRESULT Ready_DefaultSettings();
+	HRESULT	Ready_LightInfo();
 
 	HRESULT Add_NewTerrain(_uint iRowX, _uint iColZ, _uint iInterval);
 
@@ -54,6 +55,7 @@ public:
 	HRESULT	Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
 							_float vMaxX, _float vMaxY, _float vMaxZ,
 							wstring wstrName, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
+	HRESULT	Delete_Collider(wstring wstrName, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType);
 	HRESULT Apply_Collider(_float fColScale, _uint iAniIndex);
 
 private:

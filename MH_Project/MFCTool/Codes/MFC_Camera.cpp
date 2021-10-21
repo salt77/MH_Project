@@ -66,79 +66,110 @@ void CMFC_Camera::Key_Input(const _float & fTimeDelta)
 	_matrix		matWorld;
 	D3DXMatrixInverse(&matWorld, NULL, &m_matView);
 
-	if (GetAsyncKeyState('W') & 0x8000)
+	if (GetAsyncKeyState('T') & 0x8000)
 	{
-		_vec3	vLook;
-		memcpy(&vLook, &matWorld.m[2][0], sizeof(_vec3));
-
-		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * m_fSpeed * fTimeDelta;
-
-		m_vEye += vLength;
-		m_vAt += vLength;
+		m_bCamMove = true;
 	}
-	if (GetAsyncKeyState('S') & 0x8000)
+	else if (GetAsyncKeyState('G') & 0x8000)
 	{
-		_vec3	vLook;
-		memcpy(&vLook, &matWorld.m[2][0], sizeof(_vec3));
-
-		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * m_fSpeed * fTimeDelta;
-
-		m_vEye -= vLength;
-		m_vAt -= vLength;
-	}
-	if (GetAsyncKeyState('D') & 0x8000)
-	{
-		_vec3	vRight;
-		memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
-
-		_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * m_fSpeed * fTimeDelta;
-
-		m_vEye += vLength;
-		m_vAt += vLength;
-	}
-	if (GetAsyncKeyState('A') & 0x8000)
-	{
-		_vec3	vRight;
-		memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
-
-		_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * m_fSpeed * fTimeDelta;
-
-		m_vEye -= vLength;
-		m_vAt -= vLength;
+		m_bCamMove = false;
 	}
 
-	if (GetAsyncKeyState('Q') & 0x8000)
+	if (m_bCamMove)
 	{
-		_vec3	vRight;
-		memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
-		D3DXVec3Normalize(&vRight, &vRight);
-		
-		m_vAt -= *D3DXVec3Normalize(&vRight, &vRight) * m_fSpeed * fTimeDelta;
-	}
-	if (GetAsyncKeyState('E') & 0x8000)
-	{
-		_vec3	vRight;
-		memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
-		D3DXVec3Normalize(&vRight, &vRight);
+		if (GetAsyncKeyState('W') & 0x8000)
+		{
+			_vec3	vLook;
+			memcpy(&vLook, &matWorld.m[2][0], sizeof(_vec3));
 
-		m_vAt += *D3DXVec3Normalize(&vRight, &vRight) * m_fSpeed * fTimeDelta;
-	}
+			_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * m_fSpeed * fTimeDelta;
 
-	if (GetAsyncKeyState('R') & 0x8000)
-	{
-		_vec3	vUp;
-		memcpy(&vUp, &matWorld.m[1][0], sizeof(_vec3));
-		D3DXVec3Normalize(&vUp, &vUp);
+			m_vEye += vLength;
+			m_vAt += vLength;
+		}
+		if (GetAsyncKeyState('S') & 0x8000)
+		{
+			_vec3	vLook;
+			memcpy(&vLook, &matWorld.m[2][0], sizeof(_vec3));
 
-		m_vAt += *D3DXVec3Normalize(&vUp, &vUp) * m_fSpeed * fTimeDelta;
-	}
-	if (GetAsyncKeyState('F') & 0x8000)
-	{
-		_vec3	vUp;
-		memcpy(&vUp, &matWorld.m[1][0], sizeof(_vec3));
-		D3DXVec3Normalize(&vUp, &vUp);
+			_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * m_fSpeed * fTimeDelta;
 
-		m_vAt -= *D3DXVec3Normalize(&vUp, &vUp) * m_fSpeed * fTimeDelta;
+			m_vEye -= vLength;
+			m_vAt -= vLength;
+		}
+		if (GetAsyncKeyState('D') & 0x8000)
+		{
+			_vec3	vRight;
+			memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
+
+			_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * m_fSpeed * fTimeDelta;
+
+			m_vEye += vLength;
+			m_vAt += vLength;
+		}
+		if (GetAsyncKeyState('A') & 0x8000)
+		{
+			_vec3	vRight;
+			memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
+
+			_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * m_fSpeed * fTimeDelta;
+
+			m_vEye -= vLength;
+			m_vAt -= vLength;
+		}
+
+		if (GetAsyncKeyState('Q') & 0x8000)
+		{
+			_vec3	vRight;
+			memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
+			D3DXVec3Normalize(&vRight, &vRight);
+
+			m_vAt -= *D3DXVec3Normalize(&vRight, &vRight) * m_fSpeed * fTimeDelta;
+		}
+		if (GetAsyncKeyState('E') & 0x8000)
+		{
+			_vec3	vRight;
+			memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
+			D3DXVec3Normalize(&vRight, &vRight);
+
+			m_vAt += *D3DXVec3Normalize(&vRight, &vRight) * m_fSpeed * fTimeDelta;
+		}
+
+		if (GetAsyncKeyState('R') & 0x8000)
+		{
+			_vec3	vUp;
+			memcpy(&vUp, &matWorld.m[1][0], sizeof(_vec3));
+			D3DXVec3Normalize(&vUp, &vUp);
+
+			m_vAt += *D3DXVec3Normalize(&vUp, &vUp) * m_fSpeed * fTimeDelta;
+		}
+		if (GetAsyncKeyState('F') & 0x8000)
+		{
+			_vec3	vUp;
+			memcpy(&vUp, &matWorld.m[1][0], sizeof(_vec3));
+			D3DXVec3Normalize(&vUp, &vUp);
+
+			m_vAt -= *D3DXVec3Normalize(&vUp, &vUp) * m_fSpeed * fTimeDelta;
+		}
+
+		if (GetAsyncKeyState('Z') & 0x8000)
+		{
+			_vec3	vUp;
+			memcpy(&vUp, &matWorld.m[1][0], sizeof(_vec3));
+			D3DXVec3Normalize(&vUp, &vUp);
+
+			m_vEye += *D3DXVec3Normalize(&vUp, &vUp) * m_fSpeed * fTimeDelta;
+			m_vAt += *D3DXVec3Normalize(&vUp, &vUp) * m_fSpeed * fTimeDelta;
+		}
+		if (GetAsyncKeyState('X') & 0x8000)
+		{
+			_vec3	vUp;
+			memcpy(&vUp, &matWorld.m[1][0], sizeof(_vec3));
+			D3DXVec3Normalize(&vUp, &vUp);
+
+			m_vEye -= *D3DXVec3Normalize(&vUp, &vUp) * m_fSpeed * fTimeDelta;
+			m_vAt -= *D3DXVec3Normalize(&vUp, &vUp) * m_fSpeed * fTimeDelta;
+		}
 	}
 }
 

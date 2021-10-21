@@ -40,6 +40,7 @@ public:
 	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
 								_float vMaxX, _float vMaxY, _float vMaxZ,
 								wstring wstrName, COLLIDERTYPE eColliderType);
+	HRESULT			Delete_Collider(wstring wstrName, COLLIDERTYPE eColliderType);
 	HRESULT			Change_ColliderScale(_float fRadius, wstring cstrName);
 
 private:

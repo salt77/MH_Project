@@ -43,9 +43,6 @@ _int CMFC_Ahglan::Update_Object(const _float & fTimeDelta)
 
 void CMFC_Ahglan::Render_Object(void)
 {
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
 	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	
 	/*if (m_pColliderCom)
@@ -65,7 +62,12 @@ void CMFC_Ahglan::Render_Object(void)
 			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 	}
 
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pMeshCom->Render_Meshes();
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
@@ -140,6 +142,75 @@ HRESULT CMFC_Ahglan::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _flo
 		return E_FAIL;
 
 	m_mapComponent[ID_STATIC].emplace(wstrName, pComponent);
+
+	return S_OK;
+}
+
+HRESULT CMFC_Ahglan::Delete_Collider(wstring wstrName, COLLIDERTYPE eColliderType)
+{
+	map<const wstring, CComponent*>::iterator	iterCom;
+	map<const wstring, CBoxCollider*>::iterator	iterBox;
+	map<const wstring, CCollider*>::iterator	iterSphere;
+
+	switch (eColliderType)
+	{
+	case Engine::COLTYPE_BOX_DAMAGED:
+		iterBox = find_if(m_mapBoxColliderCom.begin(), m_mapBoxColliderCom.end(), CTag_Finder(wstrName));
+		iterCom = find_if(m_mapComponent[ID_STATIC].begin(), m_mapComponent[ID_STATIC].end(), CTag_Finder(wstrName));
+
+		if (iterBox == m_mapBoxColliderCom.end() ||
+			iterCom == m_mapComponent[ID_STATIC].end())
+			return E_FAIL;
+
+		Safe_Release(iterBox->second);
+		Safe_Release(iterCom->second);
+		m_mapBoxColliderCom.erase(wstrName);
+		m_mapComponent[ID_STATIC].erase(wstrName);
+
+		break;
+	case Engine::COLTYPE_BOX_HIT:
+		iterBox = find_if(m_mapBoxColliderCom.begin(), m_mapBoxColliderCom.end(), CTag_Finder(wstrName));
+		iterCom = find_if(m_mapComponent[ID_STATIC].begin(), m_mapComponent[ID_STATIC].end(), CTag_Finder(wstrName));
+
+		if (iterBox == m_mapBoxColliderCom.end() ||
+			iterCom == m_mapComponent[ID_STATIC].end())
+			return E_FAIL;
+
+		Safe_Release(iterBox->second);
+		Safe_Release(iterCom->second);
+		m_mapBoxColliderCom.erase(wstrName);
+		m_mapComponent[ID_STATIC].erase(wstrName);
+
+		break;
+	case Engine::COLTYPE_SPHERE_DAMAGED:
+		iterSphere = find_if(m_mapColliderCom.begin(), m_mapColliderCom.end(), CTag_Finder(wstrName));
+		iterCom = find_if(m_mapComponent[ID_STATIC].begin(), m_mapComponent[ID_STATIC].end(), CTag_Finder(wstrName));
+
+		if (iterSphere == m_mapColliderCom.end() ||
+			iterCom == m_mapComponent[ID_STATIC].end())
+			return E_FAIL;
+
+		Safe_Release(iterSphere->second);
+		Safe_Release(iterCom->second);
+		m_mapColliderCom.erase(wstrName);
+		m_mapComponent[ID_STATIC].erase(wstrName);
+
+		break;
+	case Engine::COLTYPE_SPHERE_HIT:
+		iterSphere = find_if(m_mapColliderCom.begin(), m_mapColliderCom.end(), CTag_Finder(wstrName));
+		iterCom = find_if(m_mapComponent[ID_STATIC].begin(), m_mapComponent[ID_STATIC].end(), CTag_Finder(wstrName));
+
+		if (iterSphere == m_mapColliderCom.end() ||
+			iterCom == m_mapComponent[ID_STATIC].end())
+			return E_FAIL;
+
+		Safe_Release(iterSphere->second);
+		Safe_Release(iterCom->second);
+		m_mapColliderCom.erase(wstrName);
+		m_mapComponent[ID_STATIC].erase(wstrName);
+
+		break;
+	}
 
 	return S_OK;
 }

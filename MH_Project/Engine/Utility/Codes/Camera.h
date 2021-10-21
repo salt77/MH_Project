@@ -21,6 +21,8 @@ public:
 public:
 	const _float&	Get_Speed() { return m_fSpeed; }
 	const _bool&	Get_ActionCam() { return m_bActionCam; }
+	const _vec3&	Get_EyePos() { return m_vEye; }
+	const _vec3&	Get_AtPos() { return m_vAt; }
 
 public:
 	void			Set_ActionCam(_bool bValue) { m_bActionCam = bValue; }
@@ -28,6 +30,9 @@ public:
 	void			Set_ActionAt(_vec3 vAt) { m_vActionAt = vAt; }
 	void			Set_StalkTarget(_vec3 vTargetPos) { m_vStalkTarget = vTargetPos; }
 	void			Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
+
+public:
+	_vec3&			Get_CamLook();
 
 protected:
 	_vec3			m_vEye, m_vAt, m_vUp;

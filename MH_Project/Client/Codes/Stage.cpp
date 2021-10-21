@@ -30,12 +30,24 @@ HRESULT CStage::Ready_Scene(void)
 
 Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 {
+	m_fTime += fTimeDelta;
+
 	return CScene::Update_Scene(fTimeDelta);
 }
 
 void CStage::Render_Scene(void)
 {
 	// DEBUG ¿ë
+	m_dwRenderCnt++;
+
+	if (m_fTime >= 1.f)
+	{
+		wsprintf(m_szFPS, L"FPS : %d", m_dwRenderCnt);
+		m_dwRenderCnt = 0;
+		m_fTime = 0.f;
+	}
+
+	Render_Font(L"Font_Jinji", m_szFPS, &_vec2(400.f, 10.f), D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
 }
 
 HRESULT CStage::Ready_Layer_Environment(const wstring pLayerTag)
@@ -47,7 +59,7 @@ HRESULT CStage::Ready_Layer_Environment(const wstring pLayerTag)
 
 	// DynamicCamera
 	pGameObject = CDynamicCamera::Create(m_pGraphicDev,
-		&_vec3(0.f, 3.f, -5.f), 
+		&_vec3(0.f, 1.5f, -2.5f), 
 		&_vec3(0.f, 0.f, 1.f),
 		&_vec3(0.f, 1.f, 0.f), 
 		D3DXToRadian(60.f), (_float)WINCX / WINCY, 

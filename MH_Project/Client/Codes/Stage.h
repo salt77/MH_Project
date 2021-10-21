@@ -31,6 +31,11 @@ private:
 	HRESULT				Ready_Prototype(void);
 	HRESULT				Ready_LightInfo(void);
 
+private:
+	_ulong					m_dwRenderCnt = 0;
+	_tchar					m_szFPS[256];
+	_float					m_fTime = 0.f;
+
 public:
 	static CStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

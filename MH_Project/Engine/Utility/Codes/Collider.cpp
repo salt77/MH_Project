@@ -46,7 +46,15 @@ HRESULT CCollider::Ready_Collider(const _float& fRadius, COLLIDERTYPE eColliderT
 		D3DLOCKED_RECT LockRect;
 		m_pTexture[i]->LockRect(0, &LockRect, NULL, 0);
 
-		*((_ulong*)LockRect.pBits) = D3DXCOLOR(1.f * i, 1.f * (1.f - i), 0.f, 1.f);
+		switch (eColliderType)
+		{
+		case Engine::COLTYPE_SPHERE_DAMAGED:
+			*((_ulong*)LockRect.pBits) = D3DXCOLOR(1.f * i, 1.f * (1.f - i), 0.f, 1.f);
+			break;
+		case Engine::COLTYPE_SPHERE_HIT:
+			*((_ulong*)LockRect.pBits) = D3DXCOLOR(1.f * i, 0.f, 1.f * (1.f - i), 1.f);
+			break;
+		}
 
 		m_pTexture[i]->UnlockRect(0);
 	}

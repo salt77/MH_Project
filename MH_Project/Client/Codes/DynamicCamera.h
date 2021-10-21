@@ -21,15 +21,22 @@ public:
 						const _float& fFar);
 	virtual _int Update_Object(const _float& fTimeDelta) override;
 
+public:
+	void		Set_CameraTarget(_vec3 pAt) { m_vAt = pAt; }
+
 private:
+	void		Movement(const _float& fTimeDelta);
 	void		Key_Input(const _float& fTimeDelta);
 	void		Mouse_Move(void);
 	void		Mouse_Fix(void);
 
 private:
-	_float		m_fSpeed = 20.f;
 	_bool		m_bClick = false;
 	_bool		m_bFix   = true;
+
+	_float		m_fSpeed = 20.f;
+	_float		m_fCamAngle = 0.f;
+	_float		m_fDistanceFromTarget = 4.f;
 
 
 public:

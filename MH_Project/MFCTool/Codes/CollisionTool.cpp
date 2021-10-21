@@ -8,6 +8,7 @@
 #include "../Codes/CollisionTool.h"
 #include "afxdialogex.h"
 #include "MFC_Player.h"
+#include "MFC_Ahglan.h"
 
 
 // CCollisionTool 대화 상자입니다.
@@ -82,6 +83,7 @@ BEGIN_MESSAGE_MAP(CCollisionTool, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CREATETIME_OKI, &CCollisionTool::OnBnClickedCreateTimeOK)
 	ON_BN_CLICKED(IDC_BUTTON_DELETETIME_OK, &CCollisionTool::OnBnClickedDeleteTimeOK)
 	ON_LBN_SELCHANGE(IDC_LIST2, &CCollisionTool::OnListSelChangeBoxCol)
+	ON_BN_CLICKED(IDC_BUTTON_Delete_Col, &CCollisionTool::OnBnClickedDeleteCol)
 END_MESSAGE_MAP()
 
 
@@ -131,35 +133,53 @@ void CCollisionTool::OnBnClickedObjectAdd()
 
 	//m_hBoneRoot1 = m_TreeBone.InsertItem((CA2W)pName, 0, 0, TVI_ROOT, TVI_LAST);
 
-	list<D3DXMESHCONTAINER_DERIVED*>	listTemp;
 	if (m_TreeObj.GetSelectedItem() == m_hPlayer)
 	{
 		list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
+		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
+
+		for (; iter != listTemp.end(); ++iter)
+		{
+			char pName[16] = "Player_Bone";
+			string pInt = to_string(iIndex);
+			const char* pTemp = pInt.c_str();
+			strcat_s(pName, sizeof(pName), pTemp);
+
+			HTREEITEM hTemp = m_TreeBone.InsertItem((CA2W)pName);
+
+			for (_uint i = 0; i < (*iter)->dwNumBones; ++i)
+			{
+				const char* pBoneName = (*iter)->pSkinInfo->GetBoneName(i);
+
+				m_TreeBone.InsertItem((CA2W)pBoneName, 0, 0, hTemp, TVI_LAST);
+			}
+
+			++iIndex;
+		}
 	}
 	else if (m_TreeObj.GetSelectedItem() == m_hAhglan)
 	{
 		list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_AHGLAN);
-	}
+		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
 
-	list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
-
-	for (; iter != listTemp.end(); ++iter)
-	{
-		char pName[16] = "Bone";
-		string pInt = to_string(iIndex);
-		const char* pTemp = pInt.c_str();
-		strcat_s(pName, sizeof(pName), pTemp);
-
-		HTREEITEM hTemp = m_TreeBone.InsertItem((CA2W)pName);
-
-		for (_uint i = 0; i < (*iter)->dwNumBones; ++i)
+		for (; iter != listTemp.end(); ++iter)
 		{
-			const char* pBoneName = (*iter)->pSkinInfo->GetBoneName(i);
+			char pName[16] = "Ahglan_Bone";
+			string pInt = to_string(iIndex);
+			const char* pTemp = pInt.c_str();
+			strcat_s(pName, sizeof(pName), pTemp);
 
-			m_TreeBone.InsertItem((CA2W)pBoneName, 0, 0, hTemp, TVI_LAST);
+			HTREEITEM hTemp = m_TreeBone.InsertItem((CA2W)pName);
+
+			for (_uint i = 0; i < (*iter)->dwNumBones; ++i)
+			{
+				const char* pBoneName = (*iter)->pSkinInfo->GetBoneName(i);
+
+				m_TreeBone.InsertItem((CA2W)pBoneName, 0, 0, hTemp, TVI_LAST);
+			}
+
+			++iIndex;
 		}
-
-		++iIndex;
 	}
 }
 
@@ -180,33 +200,100 @@ void CCollisionTool::OnBnClickedAddCollider()
 	UpdateData(TRUE);
 
 	COLLIDERTYPE eSel = (COLLIDERTYPE)m_ComboBox.GetCurSel();
+	
+	HTREEITEM hObjItem = m_TreeObj.GetSelectedItem();
+	CString cstrObjName = m_TreeObj.GetItemText(hObjItem);
+
+	OBJECTADD_MFC eObjType;
+	if (L"Player" == cstrObjName)
+		eObjType = OBJECTADD_MFC_PLAYER;
+	else if (L"Ahglan" == cstrObjName)
+		eObjType = OBJECTADD_MFC_AHGLAN;
 
 	switch (eSel)
 	{
 	case Engine::COLTYPE_BOX_DAMAGED:
-		pToolView->Add_Collider(m_fBoxMinX, m_fBoxMinY, m_fBoxMinZ, m_fBoxMaxX, m_fBoxMaxY, m_fBoxMaxZ, (wstring)m_cstrColName, eSel);
+		pToolView->Add_Collider(m_fBoxMinX, m_fBoxMinY, m_fBoxMinZ, m_fBoxMaxX, m_fBoxMaxY, m_fBoxMaxZ, (wstring)m_cstrColName, eSel, eObjType);
 		m_ListBoxCol.AddString(m_cstrColName);
 		break;
 
 	case Engine::COLTYPE_BOX_HIT:
-		pToolView->Add_Collider(m_fBoxMinX, m_fBoxMinY, m_fBoxMinZ, m_fBoxMaxX, m_fBoxMaxY, m_fBoxMaxZ, (wstring)m_cstrColName, eSel);
+		pToolView->Add_Collider(m_fBoxMinX, m_fBoxMinY, m_fBoxMinZ, m_fBoxMaxX, m_fBoxMaxY, m_fBoxMaxZ, (wstring)m_cstrColName, eSel, eObjType);
 		m_ListBoxCol.AddString(m_cstrColName);
 		break;
 
 	case Engine::COLTYPE_SPHERE_DAMAGED:
-		pToolView->Add_Collider(m_fColScale, (wstring)m_cstrColName, eSel);
+		pToolView->Add_Collider(m_fColScale, (wstring)m_cstrColName, eSel, eObjType);
 		m_ListBoxCollider.AddString(m_cstrColName);
 		break;
 
 	case Engine::COLTYPE_SPHERE_HIT:
-		pToolView->Add_Collider(m_fColScale, (wstring)m_cstrColName, eSel);
+		pToolView->Add_Collider(m_fColScale, (wstring)m_cstrColName, eSel, eObjType);
 		m_ListBoxCollider.AddString(m_cstrColName);
 		break;
 
 	default:
-		pToolView->Add_Collider(m_fColScale, (wstring)m_cstrColName, COLTYPE_SPHERE_DAMAGED);
-		m_ListBoxCollider.AddString(m_cstrColName);
+		MessageBoxW(L"Collider Type Not Selected", L"Error", MB_OK);
 		break;
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CCollisionTool::OnBnClickedDeleteCol()
+{
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMFCToolView* pToolView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
+
+	UpdateData(TRUE);
+
+	HTREEITEM hItemObj = m_TreeObj.GetSelectedItem();
+	CString cstrObjName = m_TreeObj.GetItemText(hItemObj);
+
+	COLLIDERTYPE eSel = (COLLIDERTYPE)m_ComboBox.GetCurSel();
+	_uint iColSel = -1;
+	CString cstrColName = L"";
+
+	switch (eSel)
+	{
+	case Engine::COLTYPE_BOX_DAMAGED:
+		iColSel = m_ListBoxCol.GetCurSel();
+		m_ListBoxCol.GetText(iColSel, cstrColName);
+		m_ListBoxCol.DeleteString(iColSel);
+
+		break;
+
+	case Engine::COLTYPE_BOX_HIT:
+		iColSel = m_ListBoxCol.GetCurSel();
+		m_ListBoxCol.GetText(iColSel, cstrColName);
+		m_ListBoxCol.DeleteString(iColSel);
+
+		break;
+
+	case Engine::COLTYPE_SPHERE_DAMAGED:
+		iColSel = m_ListBoxCollider.GetCurSel();
+		m_ListBoxCollider.GetText(iColSel, cstrColName);
+		m_ListBoxCollider.DeleteString(iColSel);
+
+		break;
+
+	case Engine::COLTYPE_SPHERE_HIT:
+		iColSel = m_ListBoxCollider.GetCurSel();
+		m_ListBoxCollider.GetText(iColSel, cstrColName);
+		m_ListBoxCollider.DeleteString(iColSel);
+
+		break;
+	}
+
+	if (L"Player" == cstrObjName)
+	{
+		pToolView->Delete_Collider((wstring)cstrColName, eSel, OBJECTADD_MFC_PLAYER);
+	}
+
+	else if (L"Ahglan" == cstrObjName)
+	{
+		pToolView->Delete_Collider((wstring)cstrColName, eSel, OBJECTADD_MFC_AHGLAN);
 	}
 
 	UpdateData(FALSE);
@@ -294,7 +381,25 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 		// Bone 찾기
 		CString cstrItemName = m_TreeBone.GetItemText(hItem);
 
-		list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList();
+		HTREEITEM hObjItem = m_TreeObj.GetSelectedItem();
+		CString cstrObjName = m_TreeObj.GetItemText(hObjItem);
+
+		list<D3DXMESHCONTAINER_DERIVED*>	listTemp;
+		if (L"Player" == cstrObjName)
+		{
+			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
+		}
+		else if (L"Ahglan" == cstrObjName)
+		{
+			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_AHGLAN);
+		}
+		else
+		{
+			MessageBoxW(L"Not Selected Obj", L"Error", MB_OK);
+
+			return;
+		}
+
 		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
 
 		for (; iter != listTemp.end(); )
@@ -308,26 +413,58 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 					switch (eColType)
 					{
 					case Engine::COLTYPE_BOX_DAMAGED:
-						dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
-						pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType);
+						if (L"Player" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_PLAYER);
+						}
+						else if (L"Ahglan" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_PLAYER);
+						}
 
 						break;
 
 					case Engine::COLTYPE_BOX_HIT:
-						dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
-						pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType);
+						if (L"Player" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_PLAYER);
+						}
+						else if (L"Ahglan" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_PLAYER);
+						}
 
 						break;
 
 					case Engine::COLTYPE_SPHERE_DAMAGED:
-						dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
-						pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType);
+						if (L"Player" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_AHGLAN);
+						}
+						else if (L"Ahglan" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_AHGLAN);
+						}
 
 						break;
 
 					case Engine::COLTYPE_SPHERE_HIT:
-						dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
-						pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType);
+						if (L"Player" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_AHGLAN);
+						}
+						else if (L"Ahglan" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_AHGLAN);
+						}
 
 						break;
 					}
@@ -451,16 +588,43 @@ void CCollisionTool::OnBtnClickedSave()
 		CString strFilePath = Dlg.GetPathName();
 		HANDLE hFile = CreateFile(strFilePath.GetString(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 
-		CMFC_Player* pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
+		HTREEITEM hItem = m_TreeObj.GetSelectedItem();
+		CString cstrItemName = m_TreeObj.GetItemText(hItem);
+
+		map<const wstring, CCollider*>	mapTemp;
+		map<const wstring, CCollider*>::iterator	iter;
+		map<const wstring, CBoxCollider*>	mapBoxTemp;
+		map<const wstring, CBoxCollider*>::iterator		iterBox;
+
+		if (L"Player" == cstrItemName)
+		{
+			CMFC_Player* pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
+
+			mapTemp = pPlayer->Get_ColliderMap();
+			iter = mapTemp.begin();
+
+			mapBoxTemp = pPlayer->Get_BoxColliderMap();
+			iterBox = mapBoxTemp.begin();
+		}
+
+		else if (L"Ahglan" == cstrItemName)
+		{
+			CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
+
+			mapTemp = pAhglan->Get_ColliderMap();
+			iter = mapTemp.begin();
+
+			mapBoxTemp = pAhglan->Get_BoxColliderMap();
+			iterBox = mapBoxTemp.begin();
+		}
+		
+		else
+		{
+			MessageBoxW(L"Error", L"TreeObj 제대로 선택", MB_OK);
+		}
 
 		if (INVALID_HANDLE_VALUE == hFile)
 			return;
-
-		map<const wstring, CCollider*>	mapTemp = pPlayer->Get_ColliderMap();
-		map<const wstring, CCollider*>::iterator	iter = mapTemp.begin();
-
-		map<const wstring, CBoxCollider*>	mapBoxTemp = pPlayer->Get_BoxColliderMap();
-		map<const wstring, CBoxCollider*>::iterator		iterBox = mapBoxTemp.begin();
 
 		_uint iSize = mapTemp.size();
 		_uint iBoxSize = mapBoxTemp.size();
@@ -533,8 +697,6 @@ void CCollisionTool::OnBtnClickedSave()
 		//	WriteFile(hFile, &m_tTielInfo.pIndices[i], sizeof(INDEX16), &dwbyte, nullptr);
 
 		CloseHandle(hFile);
-
-		pPlayer = nullptr;
 	}
 	else
 	{
@@ -571,7 +733,6 @@ void CCollisionTool::OnBnClickedButtonLoad()
 
 	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	CMFCToolView* pToolView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
-	CMFC_Player* pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
 
 	UpdateData(TRUE);
 
@@ -623,29 +784,69 @@ void CCollisionTool::OnBnClickedButtonLoad()
 			cstrColName = pNameBuff;
 			cstrBoneName = pNameBuff2;
 
-			pPlayer->Add_Collider(fRadius, pNameBuff, eColliderType);
-			m_ListBoxCollider.AddString(pNameBuff);
-
 			// Bone 찾기
-			list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList();
-			list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+			HTREEITEM hItem = m_TreeObj.GetSelectedItem();
+			CString hItemName = m_TreeObj.GetItemText(hItem);
 
-			for (; iterList != listTemp.end(); ++iterList)
-			{ 
-				for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+			if (L"Player" == hItemName)
+			{
+				CMFC_Player* pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
+
+				pPlayer->Add_Collider(fRadius, pNameBuff, eColliderType);
+				m_ListBoxCollider.AddString(pNameBuff);
+
+				list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
 				{
-					_tchar	pTemp[64] = L"";
-					MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
-
-					if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
 					{
-						dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
-						//::g_wstrBoneName = m_pParsing->wstrBoneName;
-						pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType);
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
 
-						break;
+						if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType);
+
+							break;
+						}
 					}
 				}
+			}
+			
+			else if (L"Ahglan" == hItemName)
+			{
+				CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
+
+				pAhglan->Add_Collider(fRadius, pNameBuff, eColliderType);
+				m_ListBoxCollider.AddString(pNameBuff);
+
+				list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_AHGLAN);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
+				{
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+					{
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+						if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_AHGLAN);
+
+							break;
+						}
+					}
+				}
+			}
+
+			else
+			{
+				MessageBoxW(L"Error", L"TreeObj 제대로 선택", MB_OK);
 			}
 
 			Safe_Delete(pNameBuff);
@@ -672,29 +873,73 @@ void CCollisionTool::OnBnClickedButtonLoad()
 			cstrColName = pNameBuff;
 			cstrBoneName = pNameBuff2;
 
-			pPlayer->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
-			m_ListBoxCol.AddString(pNameBuff);
-
 			// Bone 찾기
-			list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList();
-			list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+			HTREEITEM hItem = m_TreeObj.GetSelectedItem();
+			CString hItemName = m_TreeObj.GetItemText(hItem);
 
-			for (; iterList != listTemp.end(); ++iterList)
+			if (L"Player" == hItemName)
 			{
-				for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+				CMFC_Player* pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
+
+				pPlayer->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
+				m_ListBoxCol.AddString(pNameBuff);
+
+				// Bone 찾기
+				list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
 				{
-					_tchar	pTemp[64] = L"";
-					MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
-
-					if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
 					{
-						dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
-						//::g_wstrBoneName = m_pParsing->wstrBoneName;
-						pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType);
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
 
-						break;
+						if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							//::g_wstrBoneName = m_pParsing->wstrBoneName;
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType);
+
+							break;
+						}
 					}
 				}
+			}
+
+			else if (L"Ahglan" == hItemName)
+			{
+				CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
+
+				pAhglan->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
+				m_ListBoxCol.AddString(pNameBuff);
+
+				// Bone 찾기
+				list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
+				{
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+					{
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+						if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							//::g_wstrBoneName = m_pParsing->wstrBoneName;
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType);
+
+							break;
+						}
+					}
+				}
+			}
+
+			else
+			{
+				MessageBoxW(L"Error", L"TreeObj 제대로 선택", MB_OK);
 			}
 
 			Safe_Delete(pNameBuff);

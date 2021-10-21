@@ -76,6 +76,15 @@ Engine::_int Engine::CCamera::Update_Object(const _float& fTimeDelta)
 	return 0;
 }
 
+_vec3 & CCamera::Get_CamLook()
+{
+	_vec3 vEye = m_vEye;
+	vEye.y = m_vAt.y;
+	_vec3 vDir = m_vAt - vEye;
+
+	return *D3DXVec3Normalize(&vDir, &vDir);
+}
+
 void Engine::CCamera::Free(void)
 {
 	CGameObject::Free();

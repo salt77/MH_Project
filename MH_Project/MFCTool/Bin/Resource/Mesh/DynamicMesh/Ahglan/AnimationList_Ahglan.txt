@@ -1,32 +1,25 @@
 Entry_Contact
 Entry_Idle
 
-
-
-
-
-
-
-
-
-
 Atk_Onehand
+Atk_Rolling_Onetime_Begin
+Atk_Rolling_Onetime_End
 Atk_Rolling_Twice
 Atk_Stamp
 Atk_TurnLeft
-Atk_TurnLeft_Fast
-Atk_TurnRight_Fast
+Atk_TurnRight
 Atk_Twohands
 Atk_Twohands_Combo
-Atk_Windmil
-
-Entry_Contact
-Entry_Idle
+Atk_Windmill
 
 Idle
 Low_Health
 Spawn
+Taunt
 TurnLeft
 TurnRight
 Walk
+
+
+
 

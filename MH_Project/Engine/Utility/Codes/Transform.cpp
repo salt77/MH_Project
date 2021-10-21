@@ -130,6 +130,26 @@ void Engine::CTransform::Set_WorldMatrix(const _matrix* pWorld)
 	m_matWorld = *pWorld;
 }
 
+//void CTransform::Set_Dir(INFO eDirInfo, _vec3 vTargetDir)
+//{
+//	D3DXVec3Normalize(&vTargetDir, &vTargetDir);
+//
+//	switch (eDirInfo)
+//	{
+//	case Engine::INFO_RIGHT:
+//		m_vInfo[INFO_RIGHT] = vTargetDir;
+//		break;
+//
+//	case Engine::INFO_UP:
+//		m_vInfo[INFO_UP] = vTargetDir;
+//		break;
+//
+//	case Engine::INFO_LOOK:
+//		m_vInfo[INFO_LOOK] = vTargetDir;
+//		break;
+//	}
+//}
+
 void Engine::CTransform::Move_Pos(const _vec3* pDir, const _float& fSpeed, const _float& fTimeDelta)
 {
 	m_vInfo[INFO_POS] += *pDir * fSpeed * fTimeDelta;

@@ -14,6 +14,8 @@ class CCollider;
 
 END
 
+class CDynamicCamera;
+
 class CPlayer : public CGameObject
 {
 private:
@@ -31,14 +33,20 @@ private:
 	void			Key_Input(const _float& fTimeDelta);
 	void			SetUp_OnTerrain(void);
 	_vec3			PickUp_OnTerrain(void);
+	void			Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector);
 
 private:
+	_uint			m_iAniIndex = 0;
+
 	CDynamicMesh*	m_pMeshCom = nullptr;
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
 	CCalculator*	m_pCalculatorCom = nullptr;
 	CCollider*		m_pColliderCom = nullptr;
+	CDynamicCamera*	m_pMainCam = nullptr;
+
 	_vec3			m_vDir;
+	_vec3			m_vRightDir;
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
