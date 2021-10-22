@@ -12,7 +12,7 @@ private:
 	virtual ~CStaticMesh();
 
 public:
-	HRESULT		Ready_Meshes(const wstring pFilePath, const wstring pFileName);
+	HRESULT		Ready_Meshes(const _tchar* pFilePath, const _tchar* pFileName);
 	void		Render_Meshes();
 
 private:
@@ -32,7 +32,7 @@ private:
 
 
 public:
-	static	CStaticMesh* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pFilePath, const wstring pFileName);
+	static	CStaticMesh* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pFilePath, const _tchar* pFileName);
 	virtual CComponent * Clone(void) override;
 
 private:

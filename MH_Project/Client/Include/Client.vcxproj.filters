@@ -52,6 +52,9 @@
     <Filter Include="02.GameObject\05.SkyBox">
       <UniqueIdentifier>{8d77d238-39c9-4118-8ccf-5993bef891a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\03.StageMesh">
+      <UniqueIdentifier>{8fb7fe41-b783-4568-8e95-bc053acb4b45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -96,6 +99,9 @@
     <ClInclude Include="..\Codes\SkyBox.h">
       <Filter>02.GameObject\05.SkyBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\StageMesh.h">
+      <Filter>02.GameObject\03.StageMesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -130,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SkyBox.cpp">
       <Filter>02.GameObject\05.SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\StageMesh.cpp">
+      <Filter>02.GameObject\03.StageMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

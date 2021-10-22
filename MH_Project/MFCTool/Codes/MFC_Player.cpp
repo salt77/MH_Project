@@ -42,8 +42,6 @@ _int CMFC_Player::Update_Object(const _float & fTimeDelta)
 
 void CMFC_Player::Render_Object(void)
 {
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
-	
 	/*if (m_pColliderCom)
 		m_pColliderCom->Render_Collider(m_pTransformCom->Get_WorldMatrix());*/
 	if (!m_mapColliderCom.empty())
@@ -68,7 +66,6 @@ void CMFC_Player::Render_Object(void)
 	m_pMeshCom->Render_Meshes();
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 

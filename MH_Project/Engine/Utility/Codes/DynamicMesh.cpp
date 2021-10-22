@@ -109,7 +109,7 @@ void CDynamicMesh::Update_FrameMatrices(D3DXFRAME_DERIVED * pFrame, const _matri
 
 	if (nullptr != pFrame->pFrameSibling)
 		Update_FrameMatrices((D3DXFRAME_DERIVED*)pFrame->pFrameSibling, pParentMatrix);
-
+	
 	if (nullptr != pFrame->pFrameFirstChild)
 		Update_FrameMatrices((D3DXFRAME_DERIVED*)pFrame->pFrameFirstChild, &pFrame->CombinedTransformMatrix);
 }
@@ -124,7 +124,7 @@ void CDynamicMesh::SetUp_FrameMatrices(D3DXFRAME_DERIVED * pFrame)
 		{
 			const char* pBoneName = pDerivedMeshContainer->pSkinInfo->GetBoneName(i);
 			D3DXFRAME_DERIVED* pDerivedFrame = (D3DXFRAME_DERIVED*)D3DXFrameFind(m_pRootFrame, pBoneName);
-
+			
 			pDerivedMeshContainer->ppCombinedTransformMatrix[i] = &pDerivedFrame->CombinedTransformMatrix;
 		}
 

@@ -4,6 +4,14 @@
 #include "Camera.h"
 #include "Define.h"
 
+BEGIN(Engine)
+
+class CTransform;
+
+END
+
+class CPlayer;
+
 class CDynamicCamera : public CCamera
 {
 private:
@@ -22,7 +30,10 @@ public:
 	virtual _int Update_Object(const _float& fTimeDelta) override;
 
 public:
-	void		Set_CameraTarget(_vec3 pAt) { m_vAt = pAt; }
+	const _vec3&	Get_CamDirVector(DIR eDir);
+
+public:
+	void		Sync_PlayerPos(_vec3 vDir, _float fSpeed, const _float& fTimeDelta) { m_vEye += vDir * fSpeed * fTimeDelta; }
 
 private:
 	void		Movement(const _float& fTimeDelta);
@@ -36,7 +47,12 @@ private:
 
 	_float		m_fSpeed = 20.f;
 	_float		m_fCamAngle = 0.f;
-	_float		m_fDistanceFromTarget = 4.f;
+	_float		m_fDistanceFromTarget = 3.5f;
+	_float		m_fInterpolY = 0.85f;
+
+	//CTransform*	m_pTransformCom = nullptr;
+	CPlayer*	m_pPlayer = nullptr;
+	CTransform*	m_pPlayerTrans = nullptr;
 
 
 public:

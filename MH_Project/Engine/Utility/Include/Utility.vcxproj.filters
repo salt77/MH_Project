@@ -85,6 +85,24 @@
     <Filter Include="04.Component\00.VIBuffer\04.Navmesh">
       <UniqueIdentifier>{9baa383d-8c32-4fe8-b9f6-9f85424745ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Component\08.Navimesh">
+      <UniqueIdentifier>{ad4791c5-5d2f-4c47-a42c-bfe19e342237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\08.Navimesh\Cell">
+      <UniqueIdentifier>{150faa73-bce8-473c-bbd7-521a514ba1c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\08.Navimesh\Line">
+      <UniqueIdentifier>{25528130-0a29-4efc-b64b-510f34f44956}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\09.Optimization">
+      <UniqueIdentifier>{1d5715f8-40a7-45e9-80fd-231f096ca004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\09.Optimization\QuadTree">
+      <UniqueIdentifier>{4d947986-371b-4465-b813-eda4dbb5216b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\09.Optimization\Frustum">
+      <UniqueIdentifier>{e2e57041-3f48-4da9-9026-c8938b4ee0f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Headers\Export_Utility.h">
@@ -167,6 +185,24 @@
     </ClInclude>
     <ClInclude Include="..\Codes\Navmesh.h">
       <Filter>04.Component\00.VIBuffer\04.Navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Navimesh.h">
+      <Filter>04.Component\08.Navimesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Line.h">
+      <Filter>04.Component\08.Navimesh\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Cell.h">
+      <Filter>04.Component\08.Navimesh\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Optimization.h">
+      <Filter>04.Component\09.Optimization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\QuadTree.h">
+      <Filter>04.Component\09.Optimization\QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Frustum.h">
+      <Filter>04.Component\09.Optimization\Frustum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -252,6 +288,24 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Navmesh.cpp">
       <Filter>04.Component\00.VIBuffer\04.Navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Navimesh.cpp">
+      <Filter>04.Component\08.Navimesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Line.cpp">
+      <Filter>04.Component\08.Navimesh\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Cell.cpp">
+      <Filter>04.Component\08.Navimesh\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Optimization.cpp">
+      <Filter>04.Component\09.Optimization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\QuadTree.cpp">
+      <Filter>04.Component\09.Optimization\QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Frustum.cpp">
+      <Filter>04.Component\09.Optimization\Frustum</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

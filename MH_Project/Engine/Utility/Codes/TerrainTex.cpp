@@ -81,19 +81,18 @@ HRESULT Engine::CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 	//D3DXSaveTextureToFile(L"../Bin/Resources/Texture/Terrain/TestHeight.bmp", D3DXIFF_BMP, pTexture, NULL);
 	
 
-	_ulong		dwByte = 0;
+	//_ulong		dwByte = 0;
+	//m_hFile = CreateFile(L"../Bin/Resource/Texture/Terrain/Height.bmp",
+	//	GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
-	m_hFile = CreateFile(L"../Bin/Resource/Texture/Terrain/Height.bmp",
-		GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//ReadFile(m_hFile, &m_fH, sizeof(BITMAPFILEHEADER), &dwByte, NULL);
+	//ReadFile(m_hFile, &m_iH, sizeof(BITMAPINFOHEADER), &dwByte, NULL);
 
-	ReadFile(m_hFile, &m_fH, sizeof(BITMAPFILEHEADER), &dwByte, NULL);
-	ReadFile(m_hFile, &m_iH, sizeof(BITMAPINFOHEADER), &dwByte, NULL);
+	//_ulong*		pPixel = new _ulong[m_iH.biWidth * m_iH.biHeight];
 
-	_ulong*		pPixel = new _ulong[m_iH.biWidth * m_iH.biHeight];
+	//ReadFile(m_hFile, pPixel, sizeof(_ulong) * m_iH.biWidth * m_iH.biHeight, &dwByte, NULL);
 
-	ReadFile(m_hFile, pPixel, sizeof(_ulong) * m_iH.biWidth * m_iH.biHeight, &dwByte, NULL);
-
-	CloseHandle(m_hFile);
+	//CloseHandle(m_hFile);
 
 	VTXTEX*		pVertex = NULL;
 
@@ -113,13 +112,13 @@ HRESULT Engine::CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 
 			m_pPos[dwIndex] = pVertex[dwIndex].vPosition;
 
-			pVertex[dwIndex].vTexUV = _vec2(_float(j) / (dwCntX - 1) * 20.f,
-											_float(i) / (dwCntZ - 1) * 20.f);
+			pVertex[dwIndex].vTexUV = _vec2(_float(j) / (dwCntX - 1) * 200.f,
+											_float(i) / (dwCntZ - 1) * 200.f);
 		}
 	}	
 	m_pVB->Unlock();
 	
-	Safe_Delete_Array(pPixel);
+	//Safe_Delete_Array(pPixel);
 
 	INDEX32*		pIndex = NULL;
 

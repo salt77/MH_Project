@@ -421,7 +421,7 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 						else if (L"Ahglan" == cstrObjName)
 						{
 							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
-							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_PLAYER);
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_AHGLAN);
 						}
 
 						break;
@@ -435,7 +435,7 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 						else if (L"Ahglan" == cstrObjName)
 						{
 							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
-							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_PLAYER);
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_AHGLAN);
 						}
 
 						break;
@@ -444,7 +444,7 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 						if (L"Player" == cstrObjName)
 						{
 							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
-							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_AHGLAN);
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_PLAYER);
 						}
 						else if (L"Ahglan" == cstrObjName)
 						{
@@ -458,7 +458,7 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 						if (L"Player" == cstrObjName)
 						{
 							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
-							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_AHGLAN);
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_PLAYER);
 						}
 						else if (L"Ahglan" == cstrObjName)
 						{

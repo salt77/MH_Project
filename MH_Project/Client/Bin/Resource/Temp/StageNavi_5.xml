@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="euc-kr" ?>
+<NAVI_MESH>
+    <INFO>
+        <NAVI_TYPE>0</NAVI_TYPE>
+        <POINTA_X>599.9404</POINTA_X>
+        <POINTA_Y>7</POINTA_Y>
+        <POINTA_Z>372.2929</POINTA_Z>
+        <POINTB_X>462.8644</POINTB_X>
+        <POINTB_Y>6.972778</POINTB_Y>
+        <POINTB_Z>374.0306</POINTB_Z>
+        <POINTC_X>462.8594</POINTC_X>
+        <POINTC_Y>7</POINTC_Y>
+        <POINTC_Z>549.3951</POINTC_Z>
+    </INFO>
+    <INFO>
+        <NAVI_TYPE>0</NAVI_TYPE>
+        <POINTA_X>599.9404</POINTA_X>
+        <POINTA_Y>7</POINTA_Y>
+        <POINTA_Z>372.2929</POINTA_Z>
+        <POINTB_X>531.0889</POINTB_X>
+        <POINTB_Y>7</POINTB_Y>
+        <POINTB_Z>350.7461</POINTB_Z>
+        <POINTC_X>462.8644</POINTC_X>
+        <POINTC_Y>6.972778</POINTC_Y>
+        <POINTC_Z>374.0306</POINTC_Z>
+    </INFO>
+    <INFO>
+        <NAVI_TYPE>0</NAVI_TYPE>
+        <POINTA_X>599.9404</POINTA_X>
+        <POINTA_Y>7</POINTA_Y>
+        <POINTA_Z>372.2929</POINTA_Z>
+        <POINTB_X>462.8594</POINTB_X>
+        <POINTB_Y>7</POINTB_Y>
+        <POINTB_Z>549.3951</POINTB_Z>
+        <POINTC_X>600.3741</POINTC_X>
+        <POINTC_Y>7</POINTC_Y>
+        <POINTC_Z>551.1492</POINTC_Z>
+    </INFO>
+</NAVI_MESH>

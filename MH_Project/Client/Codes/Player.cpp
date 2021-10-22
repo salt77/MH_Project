@@ -28,7 +28,7 @@ HRESULT CPlayer::Ready_Object(void)
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_pTransformCom->Set_Scale(0.01f, 0.01f, 0.01f);
-	m_pMeshCom->Set_AnimationIndex(0);
+	//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f));
 
 	return S_OK;
 }
@@ -38,7 +38,6 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
 
 	m_pMainCam = dynamic_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
-	m_pMainCam->Set_CameraTarget(*m_pTransformCom->Get_Info(INFO_POS));
 
 	//SetUp_OnTerrain();
 	Key_Input(fTimeDelta);
@@ -116,14 +115,18 @@ HRESULT CPlayer::Add_Component(void)
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-	m_pTransformCom->Get_INFO(INFO_LOOK, &m_vDir);
-	m_pTransformCom->Get_INFO(INFO_RIGHT, &m_vRightDir);
+	//m_pTransformCom->Get_INFO(INFO_LOOK, &m_vDir);
+	//m_pTransformCom->Get_INFO(INFO_RIGHT, &m_vRightDir);
 
-	_vec3 vCamLook = m_pMainCam->Get_CamLook();
+	_vec3 vMoveDir = _vec3(0.f, 0.f, 0.f);
+	_vec3 m_vDir = m_pMainCam->Get_CamDirVector(DIR_LOOK);
+	_vec3 m_vRightDir = m_pMainCam->Get_CamDirVector(DIR_RIGHT);
 
 	if (/*Get_DIMouseState(DIM_LB) & 0X80*/GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
-		m_iAniIndex = 28;
+		m_eCurAction = PL_ATK;
+		m_iAniIndex = STATE_ATK1;
+
 		/*_vec3	vPickPos = PickUp_OnTerrain();
 		_vec3	vPlayerPos;
 		m_pTransformCom->Get_INFO(INFO_POS, &vPlayerPos);
@@ -131,37 +134,57 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		_vec3	vDir = *D3DXVec3Normalize(&vDir, &(vPickPos - vPlayerPos));
 		m_pTransformCom->Move_Pos(&vDir, 5.f, fTimeDelta);*/
 	}
-	else if (GetAsyncKeyState('W') & 0x8000)
-	{
-		D3DXVec3Normalize(&m_vRightDir, &m_vRightDir);
-		m_pTransformCom->Move_Pos(&-m_vRightDir, 5.f, fTimeDelta);
 
-		m_iAniIndex = 30;
-		
-		Rotate_PlayerLook(fTimeDelta, vCamLook);
-	}
-	else if (GetAsyncKeyState('A') & 0x8000)
+	if (m_eCurAction <= PL_MOVE)
 	{
-		m_iAniIndex = 30;
-	}
-	else if (GetAsyncKeyState('S') & 0x8000)
-	{
-		m_iAniIndex = 30;
-	}
-	else if (GetAsyncKeyState('D') & 0x8000)
-	{
-		m_iAniIndex = 30;
-	}
-	else
-	{
-		m_iAniIndex = 31;
+		// 두 가지 이상의 키 값을 누를 때
+		if ((GetAsyncKeyState('W') & 0x8000) && (GetAsyncKeyState('A') & 0x8000))
+		{
+			vMoveDir = m_vDir - m_vRightDir;
+		}
+		// 한 개의 키 값만 누를 때
+		else
+		{
+			if (GetAsyncKeyState('W') & 0x8000)
+			{
+				vMoveDir = m_vDir;
+			}
+			if (GetAsyncKeyState('A') & 0x8000)
+			{
+				vMoveDir = -m_vRightDir;
+			}
+			if (GetAsyncKeyState('S') & 0x8000)
+			{
+				vMoveDir = -m_vDir;
+			}
+			if (GetAsyncKeyState('D') & 0x8000)
+			{
+				vMoveDir = m_vRightDir;
+			}
+		}
+
+		if (vMoveDir != _vec3(0.f, 0.f, 0.f))
+		{
+			D3DXVec3Normalize(&vMoveDir, &vMoveDir);
+
+			m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed, fTimeDelta);
+			m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed, fTimeDelta);
+
+			m_eCurAction = PL_MOVE;
+			m_iAniIndex = STATE_RUN;
+
+			Rotate_PlayerLook(fTimeDelta, vMoveDir);
+		}
 	}
 	
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
-	
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
+	if (m_eCurAction <= PL_IDLE)
+	{
+		m_iAniIndex = STATE_IDLE;
+	}
+}
+
+void CPlayer::Action_Change()
+{
 }
 
 void CPlayer::SetUp_OnTerrain(void)
@@ -190,18 +213,19 @@ Engine::_vec3 CPlayer::PickUp_OnTerrain(void)
 void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector)
 {
 	_vec3 vUp = _vec3(0.f, 1.f, 0.f);
+	_vec3 vPlayerRight = *m_pTransformCom->Get_Info(INFO_RIGHT);
 	_vec3 vTemp;
 
 	D3DXVec3Normalize(&TargetLookVector, &TargetLookVector);
-	D3DXVec3Normalize(&m_vRightDir, &m_vRightDir);
+	D3DXVec3Normalize(&vPlayerRight, &vPlayerRight);
 
-	if (D3DXToDegree(acos(D3DXVec3Dot(&TargetLookVector, &-m_vRightDir))) > 5.f)
+	if (D3DXToDegree(acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight))) > 5.f)
 	{
-		if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &m_vRightDir)) > 0.f)
+		if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
 		{
 			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * fTimeDelta * 2.f));
 		}
-		else if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &m_vRightDir)) < 0.f)
+		else if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
 		{
 			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * -fTimeDelta * 2.f));
 		}

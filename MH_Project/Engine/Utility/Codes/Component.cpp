@@ -20,12 +20,10 @@ Engine::CComponent::CComponent(void)
 	: m_pGraphicDev(nullptr)
 	, m_bClone(true)
 {
-
 }
 
 Engine::CComponent::~CComponent(void)
 {
-
 }
 
 

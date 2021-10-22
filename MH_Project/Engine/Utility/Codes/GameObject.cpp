@@ -16,7 +16,6 @@ Engine::CGameObject::CGameObject(const CGameObject& rhs)
 
 Engine::CGameObject::~CGameObject(void)
 {
-
 }
 
 

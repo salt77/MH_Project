@@ -1,42 +1,42 @@
-32.	Idle (Battle Mode)
+31.	Idle (Battle Mode)
 
-31.	Run_Lower
-30.	Run_Sprint 
+30.	Run_Lower
+29.	Run_Sprint 
 
-29.	Atk1
-28.	Atk2
-27.	Atk3
-26.	Atk4
+28.	Atk1
+27.	Atk2
+26.	Atk3
+25.	Atk4
 
-25.	SmashAtk1
-24	SmashAtk2
-23.	SmashAtk3 => 2타 스매쉬 추가타
-22	SmashAtk4
-21.	SmashAtk4b
-20.	SmashAtk33 => 진짜 3타 스매쉬
+24.	SmashAtk1
+23.	SmashAtk2
+22.	SmashAtk3 => 2타 스매쉬 추가타
+21.	SmashAtk4
+20.	SmashAtk4b
+19.	SmashAtk33 => 진짜 3타 스매쉬
 
-19.	SpaceDashE
-18.	SpaceDashN
-17.	SpaceDashS
-16.	SpaceDashW
+18.	SpaceDashE
+17.	SpaceDashN
+16.	SpaceDashS
+15.	SpaceDashW
 
-15.	Fury1
-14.	Fury2
+14.	Fury1
+13.	Fury2
 
-13.	DashAtk
+12.	DashAtk
 
-12. 	DoubleCrecsent
-11. 	Windmil
+11. 	DoubleCrecsent
+10. 	Windmil
 
-10. 	DamageFromBack
-9.	DamageFromFront
-8. 	DownIdleBack
-7. 	DownIdleFront
-6. 	DownToIdleBack
-5. 	DownToIdleFront
-4. 	DamageResist
+9. 	DamageFromBack
+8.	DamageFromFront
+7. 	DownIdleBack
+6. 	DownIdleFront
+5. 	DownToIdleBack
+4. 	DownToIdleFront
+3. 	DamageResist
 
-3. 	Dead
-2. 	Revive
+2. 	Dead
+1. 	Revive
 
-1. 	Sprint_Stop
+0. 	Sprint_Stop

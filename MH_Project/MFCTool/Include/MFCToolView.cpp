@@ -480,12 +480,12 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 	Render_Font(L"Font_Jinji", m_szFPS, &_vec2(600.f, 600.f), D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
 
 	Engine::Render_GameObject(m_pGraphicDev);
-	if (m_pTerrain)
-		m_pTerrain->Update_Object(m_fDeltaTime);
-	if (m_pPlayer)
-		m_pPlayer->Update_Object(m_fDeltaTime);
-	if (m_pAhglan)
-		m_pAhglan->Update_Object(m_fDeltaTime);
+	//if (m_pTerrain)
+	//	m_pTerrain->Update_Object(m_fDeltaTime);
+	//if (m_pPlayer)
+	//	m_pPlayer->Update_Object(m_fDeltaTime);
+	//if (m_pAhglan)
+	//	m_pAhglan->Update_Object(m_fDeltaTime);
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	Render_Begin(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f));

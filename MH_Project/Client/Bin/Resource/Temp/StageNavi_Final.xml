@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="euc-kr" ?>
+<NAVI_MESH>
+    <INFO>
+        <NAVI_TYPE>0</NAVI_TYPE>
+        <POINTA_X>418.0797</POINTA_X>
+        <POINTA_Y>0</POINTA_Y>
+        <POINTA_Z>639.0631</POINTA_Z>
+        <POINTB_X>406.4134</POINTB_X>
+        <POINTB_Y>7.45156E-03</POINTB_Y>
+        <POINTB_Z>413.8483</POINTB_Z>
+        <POINTC_X>74.57437</POINTC_X>
+        <POINTC_Y>0</POINTC_Y>
+        <POINTC_Z>404.6888</POINTC_Z>
+    </INFO>
+    <INFO>
+        <NAVI_TYPE>0</NAVI_TYPE>
+        <POINTA_X>74.57437</POINTA_X>
+        <POINTA_Y>0</POINTA_Y>
+        <POINTA_Z>404.6888</POINTA_Z>
+        <POINTB_X>86.0884</POINTB_X>
+        <POINTB_Y>0</POINTB_Y>
+        <POINTB_Z>635.635</POINTB_Z>
+        <POINTC_X>418.0797</POINTC_X>
+        <POINTC_Y>0</POINTC_Y>
+        <POINTC_Z>639.0631</POINTC_Z>
+    </INFO>
+</NAVI_MESH>

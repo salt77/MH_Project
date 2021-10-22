@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DynamicCamera.h"
+#include "Player.h"
 
 #include "Export_Function.h"
 
@@ -49,18 +50,58 @@ Engine::_int CDynamicCamera::Update_Object(const _float& fTimeDelta)
 		Mouse_Move();
 	}	
 
+	//m_matWorld = *m_pTransformCom->Get_WorldMatrix();
+	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
+
 	return iExit;
+}
+
+const _vec3 & CDynamicCamera::Get_CamDirVector(DIR eDir)
+{
+	_vec3 vRight = {};
+
+	_vec3 vTempEye = m_vEye;
+	vTempEye.y = m_vAt.y;
+	_vec3 vDirToPlayer = m_vAt - vTempEye;
+
+	D3DXVec3Normalize(&vDirToPlayer, &vDirToPlayer);
+
+	switch (eDir)
+	{
+	case Engine::DIR_LOOK:
+		return vDirToPlayer;
+		break;
+
+	case Engine::DIR_RIGHT:
+		D3DXVec3Cross(&vRight, &_vec3(0.f, 1.f, 0.f), &vDirToPlayer);
+
+		return vRight;
+		break;
+
+	case Engine::DIR_UP:
+		return _vec3(0.f, 1.f, 0.f);
+		break;
+	}
+
+	return _vec3();
 }
 
 void CDynamicCamera::Movement(const _float & fTimeDelta)
 {
-	//if (D3DXVec3Length(&(m_vEye - m_vAt)) > m_fDistanceFromTarget)
-	//{
-	//	_vec3 vDir = m_vAt - m_vEye;
-	//	D3DXVec3Normalize(&vDir, &vDir);
+	m_pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
 
-	//	m_vEye += vDir * fTimeDelta;
-	//}
+	// 타겟 At 위치 보정
+	m_pPlayerTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
+	_vec3 vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
+	vPlayerPos.y += m_fInterpolY;
+	m_vAt = vPlayerPos;
+
+	// 플레이어 따라다니기
+	_vec3 vDir = m_vEye - m_vAt;
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	_vec3 vPos = vDir * m_fDistanceFromTarget;
+	m_vEye = m_vAt + vPos;
 }
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
@@ -96,25 +137,41 @@ void CDynamicCamera::Mouse_Move(void)
 
 	_long	dwMouse = 0;
 
-	if (dwMouse = Get_DIMouseMove(DIMS_Y))
+	if (m_pPlayerTrans)
 	{
-		_vec3	vRight;
-		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
+		_vec3 vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
+		vPlayerPos.y += m_fInterpolY;
 
-		_matrix		matRot;
-		D3DXMatrixRotationAxis(&matRot, &vRight, D3DXToRadian(dwMouse / 10.f));
+		_vec3 vDirToCam = m_vEye - vPlayerPos;
+		D3DXVec3Normalize(&vDirToCam, &vDirToCam);
 
-		D3DXVec3TransformNormal(&m_vEye, &m_vEye, &matRot);
-	}
+		if (dwMouse = Get_DIMouseMove(DIMS_Y))
+		{
+			_vec3 vRight = {};
+			_vec3 vCamLook = Get_CamLook();
+			D3DXVec3Normalize(&vCamLook, &vCamLook);
 
-	if (dwMouse = Get_DIMouseMove(DIMS_X))
-	{
-		_vec3	vUp = _vec3(0.f,1.f, 0.f);
+			D3DXVec3Cross(&vRight, &_vec3(0.f, 1.f, 0.f), &vCamLook);
+			D3DXVec3Normalize(&vRight, &vRight);
 
-		_matrix		matRot;
-		D3DXMatrixRotationAxis(&matRot, &vUp, D3DXToRadian(dwMouse / 10.f));
+			_matrix matRotate;
+			D3DXMatrixIdentity(&matRotate);
+			D3DXMatrixRotationAxis(&matRotate, &vRight, D3DXToRadian(dwMouse * 0.1f));
+			D3DXVec3TransformNormal(&vDirToCam, &vDirToCam, &matRotate);
+		}
 
-		D3DXVec3TransformNormal(&m_vEye, &m_vEye, &matRot);
+		if (dwMouse = Get_DIMouseMove(DIMS_X))
+		{
+			_vec3 vPlayerUp = *m_pPlayerTrans->Get_Info(INFO_UP);
+			D3DXVec3Normalize(&vPlayerUp, &vPlayerUp);
+
+			_matrix matRotate;
+			D3DXMatrixIdentity(&matRotate);
+			D3DXMatrixRotationAxis(&matRotate, &vPlayerUp, D3DXToRadian(dwMouse * 0.1f));
+			D3DXVec3TransformCoord(&vDirToCam, &vDirToCam, &matRotate);
+		}
+
+		m_vEye = m_vAt + vDirToCam * m_fDistanceFromTarget;
 	}
 }
 

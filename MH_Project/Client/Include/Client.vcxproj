@@ -157,6 +157,7 @@
     <ClInclude Include="..\Codes\Player.h" />
     <ClInclude Include="..\Codes\SkyBox.h" />
     <ClInclude Include="..\Codes\Stage.h" />
+    <ClInclude Include="..\Codes\StageMesh.h" />
     <ClInclude Include="..\Codes\Terrain.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="..\Codes\Player.cpp" />
     <ClCompile Include="..\Codes\SkyBox.cpp" />
     <ClCompile Include="..\Codes\Stage.cpp" />
+    <ClCompile Include="..\Codes\StageMesh.cpp" />
     <ClCompile Include="..\Codes\Terrain.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">

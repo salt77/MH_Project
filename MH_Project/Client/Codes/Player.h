@@ -31,12 +31,17 @@ public:
 private:
 	HRESULT			Add_Component(void);
 	void			Key_Input(const _float& fTimeDelta);
+	void			Action_Change();
 	void			SetUp_OnTerrain(void);
 	_vec3			PickUp_OnTerrain(void);
 	void			Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector);
 
 private:
-	_uint			m_iAniIndex = 0;
+	_bool			m_bIsPlayer = true;
+
+	_uint			m_iAniIndex = 31;		// Idle
+
+	_float			m_fSpeed = 3.5f;
 
 	CDynamicMesh*	m_pMeshCom = nullptr;
 	CTransform*		m_pTransformCom = nullptr;
@@ -47,6 +52,8 @@ private:
 
 	_vec3			m_vDir;
 	_vec3			m_vRightDir;
+
+	PL_ACTION		m_eCurAction = PL_IDLE;
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
