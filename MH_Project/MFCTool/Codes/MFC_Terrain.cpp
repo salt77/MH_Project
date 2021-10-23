@@ -86,6 +86,11 @@ HRESULT CMFC_Terrain::Add_Component()
 	pComponent->AddRef();
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
+	// Calculator
+	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Clone_Prototype(L"Proto_Calculator"));
+	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
+
 	return S_OK;
 }
 

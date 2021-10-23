@@ -82,9 +82,6 @@
     <Filter Include="04.Component\07.Collider\01.Box">
       <UniqueIdentifier>{39c29150-2081-4bc6-a23a-b54b3786534a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Component\00.VIBuffer\04.Navmesh">
-      <UniqueIdentifier>{9baa383d-8c32-4fe8-b9f6-9f85424745ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Component\08.Navimesh">
       <UniqueIdentifier>{ad4791c5-5d2f-4c47-a42c-bfe19e342237}</UniqueIdentifier>
     </Filter>
@@ -183,17 +180,11 @@
     <ClInclude Include="..\Codes\BoxCollider.h">
       <Filter>04.Component\07.Collider\01.Box</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Navmesh.h">
-      <Filter>04.Component\00.VIBuffer\04.Navmesh</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\Navimesh.h">
       <Filter>04.Component\08.Navimesh</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Line.h">
       <Filter>04.Component\08.Navimesh\Line</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Cell.h">
-      <Filter>04.Component\08.Navimesh\Cell</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Optimization.h">
       <Filter>04.Component\09.Optimization</Filter>
@@ -203,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="..\Codes\Frustum.h">
       <Filter>04.Component\09.Optimization\Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Cell.h">
+      <Filter>04.Component\08.Navimesh\Cell</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -285,9 +279,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\BoxCollider.cpp">
       <Filter>04.Component\07.Collider\01.Box</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Navmesh.cpp">
-      <Filter>04.Component\00.VIBuffer\04.Navmesh</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Navimesh.cpp">
       <Filter>04.Component\08.Navimesh</Filter>

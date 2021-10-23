@@ -79,7 +79,7 @@ Engine::CComponent* Engine::CCalculator::Clone(void)
 
 Engine::_vec3 Engine::CCalculator::Picking_OnTerrain(HWND hWnd, 
 													const CTerrainTex* pTerrainBufferCom,
-													const CTransform* pTerrainTransCom)
+													const CTransform*  pTerrainTransCom)
 {
 	POINT		ptMouse{};
 

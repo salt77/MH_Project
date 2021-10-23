@@ -10,6 +10,7 @@ class CCalculator;
 class CDynamicMesh;
 class CCollider;
 class CBoxCollider;
+class CNaviMesh;
 
 END
 
@@ -29,6 +30,9 @@ public:
 	const map<const wstring, CBoxCollider*>	Get_BoxColliderMap() { return m_mapBoxColliderCom; }
 
 public:
+	const vector<CCell*>&	Get_CellVector();
+
+public:
 	void			Set_AniIndex(_uint iIndex) { m_iAniIndex = iIndex; }
 
 private:
@@ -36,6 +40,8 @@ private:
 	void			Key_Input(const _float& fTimeDelta);
 
 public:
+	HRESULT			Add_NaviMesh(_uint iCellCount, vector<_matrix> vecPoint);
+	HRESULT			DeleteAll_NaviMesh();
 	HRESULT			Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
 	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
 								_float vMaxX, _float vMaxY, _float vMaxZ,
@@ -53,6 +59,7 @@ private:
 	CRenderer*		m_pRendererCom = nullptr;
 	CCalculator*	m_pCalculatorCom = nullptr;
 	CDynamicMesh*	m_pMeshCom = nullptr;
+	CNaviMesh*		m_pNaviMeshCom = nullptr;
 	
 	//CCollider*		m_pColliderCom = nullptr;
 	map<const wstring, CCollider*>		m_mapColliderCom;

@@ -33,6 +33,8 @@ _int CMFC_Ahglan::Update_Object(const _float & fTimeDelta)
 
 	Key_Input(fTimeDelta);
 
+	if (m_iAniIndex >= 0 && 
+		m_iAniIndex <= 18)
 	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_pMeshCom->Play_Animation(fTimeDelta);
 

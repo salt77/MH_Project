@@ -39,7 +39,6 @@
     <ClInclude Include="..\Codes\Layer.h" />
     <ClInclude Include="..\Codes\Management.h" />
     <ClInclude Include="..\Codes\Navimesh.h" />
-    <ClInclude Include="..\Codes\Navmesh.h" />
     <ClInclude Include="..\Codes\Optimization.h" />
     <ClInclude Include="..\Codes\ProtoMgr.h" />
     <ClInclude Include="..\Codes\QuadTree.h" />
@@ -76,7 +75,6 @@
     <ClCompile Include="..\Codes\Layer.cpp" />
     <ClCompile Include="..\Codes\Management.cpp" />
     <ClCompile Include="..\Codes\Navimesh.cpp" />
-    <ClCompile Include="..\Codes\Navmesh.cpp" />
     <ClCompile Include="..\Codes\Optimization.cpp" />
     <ClCompile Include="..\Codes\ProtoMgr.cpp" />
     <ClCompile Include="..\Codes\QuadTree.cpp" />

@@ -25,6 +25,8 @@ Engine::CVIBuffer::CVIBuffer(const CVIBuffer& rhs)
 	, m_dwIdxSize(rhs.m_dwIdxSize)
 	, m_dwTriCnt(rhs.m_dwTriCnt)
 	, m_IdxFmt(rhs.m_IdxFmt)
+	, m_dwVtxCntX(rhs.m_dwVtxCntX)
+	, m_dwVtxCntZ(rhs.m_dwVtxCntZ)
 {
 	m_pIB->AddRef();
 	m_pVB->AddRef();

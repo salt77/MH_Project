@@ -1,24 +1,24 @@
-Entry_Contact
-Entry_Idle
+18. Entry_Contact
+17. Entry_Idle
 
-Atk_Onehand
-Atk_Rolling_Onetime_Begin
-Atk_Rolling_Onetime_End
-Atk_Rolling_Twice
-Atk_Stamp
-Atk_TurnLeft
-Atk_TurnRight
-Atk_Twohands
-Atk_Twohands_Combo
-Atk_Windmill
+16. Atk_Onehand
+15. Atk_Rolling_Onetime_Begin
+14. Atk_Rolling_Onetime_End
+13. Atk_Rolling_Twice
+12. Atk_Stamp
+11. Atk_TurnLeft
+10. Atk_TurnRight
+9.  Atk_Twohands
+8.  Atk_Twohands_Combo
+7.  Atk_Windmill
 
-Idle
-Low_Health
-Spawn
-Taunt
-TurnLeft
-TurnRight
-Walk
+6.  Idle
+5.  Low_Health
+4.  Spawn
+3.  Taunt
+2.  TurnLeft
+1.  TurnRight
+0.  Walk
 
 
 

@@ -66,6 +66,7 @@ Engine::_uint CLoading::Loading_ForStage(void)
 
 	lstrcpy(m_szLoading, L"Loading Component...............");
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Calculator", CCalculator::Create(m_pGraphicDev)), E_FAIL);
+	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_NaviMesh", CNaviMesh::Create(m_pGraphicDev)), E_FAIL);
 
 	// 원본을 추가하더라도 충돌체마다 정점의 위치 값이 다를 수 있고, 버텍스의 개수와 간격 또한 다를 수 있기 때문에 복제를 하는 것이 무의미할 수도 있다.
 	// FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Collider", CCollider::Create(m_pGraphicDev, nullptr, 0, 0)), E_FAIL);

@@ -40,9 +40,6 @@
     <Filter Include="02.GameObject\00.MFC_Camera">
       <UniqueIdentifier>{a6b7f68c-ae57-4fdc-866d-3de703cdfb64}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.Terrain">
-      <UniqueIdentifier>{78677be9-bb85-4e1d-94e2-a59582478f1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\02.MFC_Player">
       <UniqueIdentifier>{a5661fbd-ec28-4072-9dd0-dffe66276db5}</UniqueIdentifier>
     </Filter>
@@ -61,11 +58,11 @@
     <Filter Include="02.GameObject\03.MFC_CameraSet\02.MFC_CamInterpol">
       <UniqueIdentifier>{debd9139-71b9-4b80-bc94-98a0fa0471a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\05.MFC_Navmesh">
-      <UniqueIdentifier>{0a902515-7d08-4129-82a9-e92a1fc4f53d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\03.MFC_Ahglan">
       <UniqueIdentifier>{f0ce8fb3-0684-417d-8aab-fe853de19c27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.MFC_Terrain">
+      <UniqueIdentifier>{78677be9-bb85-4e1d-94e2-a59582478f1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -112,7 +109,7 @@
       <Filter>02.GameObject\00.MFC_Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\MFC_Terrain.h">
-      <Filter>02.GameObject\01.Terrain</Filter>
+      <Filter>02.GameObject\01.MFC_Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\MFC_Player.h">
       <Filter>02.GameObject\02.MFC_Player</Filter>
@@ -131,9 +128,6 @@
     </ClInclude>
     <ClInclude Include="..\Codes\MFC_CamInterpol.h">
       <Filter>02.GameObject\03.MFC_CameraSet\02.MFC_CamInterpol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\MFC_Nevmesh.h">
-      <Filter>02.GameObject\05.MFC_Navmesh</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\MFC_Ahglan.h">
       <Filter>02.GameObject\03.MFC_Ahglan</Filter>
@@ -177,7 +171,7 @@
       <Filter>02.GameObject\00.MFC_Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_Terrain.cpp">
-      <Filter>02.GameObject\01.Terrain</Filter>
+      <Filter>02.GameObject\01.MFC_Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_Player.cpp">
       <Filter>02.GameObject\02.MFC_Player</Filter>
@@ -193,9 +187,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_CamInterpol.cpp">
       <Filter>02.GameObject\03.MFC_CameraSet\02.MFC_CamInterpol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\MFC_Nevmesh.cpp">
-      <Filter>02.GameObject\05.MFC_Navmesh</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_Ahglan.cpp">
       <Filter>02.GameObject\03.MFC_Ahglan</Filter>

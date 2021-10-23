@@ -21,6 +21,8 @@ protected:
 	LPDIRECT3DINDEXBUFFER9		m_pIB;
 
 	_ulong						m_dwVtxCnt;
+	_ulong						m_dwVtxCntX;
+	_ulong						m_dwVtxCntZ;
 	_ulong						m_dwVtxSize;
 	_ulong						m_dwTriCnt;
 	_ulong						m_dwFVF;

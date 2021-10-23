@@ -8,6 +8,7 @@ class CTerrainTex;
 class CTexture;
 class CTransform;
 class CRenderer;
+class CCalculator;
 
 END
 
@@ -28,13 +29,14 @@ private:
 	HRESULT		Setup_Material();
 
 public:
-	void	Set_RenderType(RENDERTYPE_MFC _eRenderType) { m_eRenderType = _eRenderType; }
+	void		Set_RenderType(RENDERTYPE_MFC _eRenderType) { m_eRenderType = _eRenderType; }
 
 private:
 	CTerrainTex*	m_pBufferCom = nullptr;
 	CTexture*		m_pTextureCom = nullptr;
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
+	CCalculator*	m_pCalculatorCom = nullptr;
 
 private:
 	RENDERTYPE_MFC	m_eRenderType = RENDERTYPE_MFC_END;

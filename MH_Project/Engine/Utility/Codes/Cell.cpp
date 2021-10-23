@@ -19,9 +19,9 @@ Engine::CCell::~CCell(void)
 }
 
 HRESULT Engine::CCell::Ready_Cell(const _ulong& dwIndex,
-	const _vec3* pPointA,
-	const _vec3* pPointB,
-	const _vec3* pPointC)
+								const _vec3* pPointA,
+								const _vec3* pPointB,
+								const _vec3* pPointC)
 {
 	m_dwIndex = dwIndex;
 
@@ -30,13 +30,13 @@ HRESULT Engine::CCell::Ready_Cell(const _ulong& dwIndex,
 	m_vPoint[POINT_C] = *pPointC;
 
 	m_pLine[LINE_AB] = CLine::Create(&_vec2(m_vPoint[POINT_A].x, m_vPoint[POINT_A].z),
-		&_vec2(m_vPoint[POINT_B].x, m_vPoint[POINT_B].z));
+									&_vec2(m_vPoint[POINT_B].x, m_vPoint[POINT_B].z));
 
 	m_pLine[LINE_BC] = CLine::Create(&_vec2(m_vPoint[POINT_B].x, m_vPoint[POINT_B].z),
-		&_vec2(m_vPoint[POINT_C].x, m_vPoint[POINT_C].z));
+									&_vec2(m_vPoint[POINT_C].x, m_vPoint[POINT_C].z));
 
 	m_pLine[LINE_CA] = CLine::Create(&_vec2(m_vPoint[POINT_C].x, m_vPoint[POINT_C].z),
-		&_vec2(m_vPoint[POINT_A].x, m_vPoint[POINT_A].z));
+									&_vec2(m_vPoint[POINT_A].x, m_vPoint[POINT_A].z));
 
 #ifdef _DEBUG
 	FAILED_CHECK_RETURN(D3DXCreateLine(m_pGraphicDev, &m_pD3DXLine), E_FAIL);
@@ -45,10 +45,9 @@ HRESULT Engine::CCell::Ready_Cell(const _ulong& dwIndex,
 	return S_OK;
 }
 
-Engine::_bool Engine::CCell::Compare_Point(
-	const _vec3* pPointFirst,
-	const _vec3* pPointSecond,
-	CCell* pCell)
+Engine::_bool Engine::CCell::Compare_Point(const _vec3* pPointFirst,
+											const _vec3* pPointSecond,
+											CCell* pCell)
 {
 	if (m_vPoint[POINT_A] == *pPointFirst)
 	{
@@ -176,5 +175,3 @@ Engine::CCell::COMPARE Engine::CCell::Compare_Position(const _vec3* pEndPos, _ul
 
 	return COMPARE_MOVE;
 }
-
-

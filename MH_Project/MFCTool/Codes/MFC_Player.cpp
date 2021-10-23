@@ -23,6 +23,8 @@ HRESULT CMFC_Player::Ready_Object(void)
 	
 	m_pMeshCom->Set_AnimationIndex(0);
 
+	//m_pNaviMeshCom->Set_CellIndex(0);
+
 	return S_OK;
 }
 
@@ -32,7 +34,9 @@ _int CMFC_Player::Update_Object(const _float & fTimeDelta)
 
 	Key_Input(fTimeDelta);
 
-	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
+	if (m_iAniIndex >= 0 && 
+		m_iAniIndex <= 31)
+		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_pMeshCom->Play_Animation(fTimeDelta);
 
 	Add_RenderGroup(RENDER_NONALPHA, this);
@@ -63,10 +67,31 @@ void CMFC_Player::Render_Object(void)
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+
 	m_pMeshCom->Render_Meshes();
+	if (m_pNaviMeshCom)
+		m_pNaviMeshCom->Render_NaviMesh();
+
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+const vector<CCell*>& CMFC_Player::Get_CellVector()
+{
+	map<const wstring, CComponent*>::iterator	iter = m_mapComponent[ID_STATIC].begin();
+
+	for (; iter != m_mapComponent[ID_STATIC].end(); ++iter)
+	{
+		if (L"Com_NaviMesh" == iter->first)
+		{
+			CNaviMesh* pNaviMesh = dynamic_cast<CNaviMesh*>(iter->second);
+
+			return pNaviMesh->Get_CellVector();
+		}
+	}
+
+	return vector<CCell*>();
 }
 
 HRESULT CMFC_Player::Add_Component(void)
@@ -99,6 +124,11 @@ HRESULT CMFC_Player::Add_Component(void)
 	//NULL_CHECK_RETURN(m_pColliderCom, E_FAIL);
 	//m_mapComponent[ID_STATIC].emplace(L"Com_Collider", pComponent);
 
+	//// NaviMesh
+	//pComponent = m_pNaviMeshCom = dynamic_cast<CNaviMesh*>(Clone_Prototype(L"Proto_NaviMesh"));
+	//NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
+	//m_mapComponent[ID_STATIC].emplace(L"Com_NaviMesh", pComponent);
+
 	return S_OK;
 }
 
@@ -106,11 +136,64 @@ void CMFC_Player::Key_Input(const _float & fTimeDelta)
 {
 	m_pTransformCom->Get_INFO(INFO_LOOK, &m_vDir);
 
+	if (m_pNaviMeshCom)
+	{
+		if (GetAsyncKeyState(VK_UP) & 0x8000)
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &m_vDir, 300.f, fTimeDelta));
+	}
+
 	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
 
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
+}
+
+HRESULT CMFC_Player::Add_NaviMesh(_uint iCellCount, vector<_matrix> vecPoint)
+{
+	map<const wstring, CComponent*>::iterator	iter = m_mapComponent[ID_STATIC].begin();
+
+	for (; iter != m_mapComponent[ID_STATIC].end(); ++iter)
+	{
+		if (L"Com_NaviMesh" == iter->first)
+		{
+			Safe_Release(iter->second);
+			m_mapComponent[ID_STATIC].erase(iter);
+
+			break;
+		}
+	}
+
+	// NaviMesh
+	CComponent*		pComponent = nullptr;
+
+	pComponent = m_pNaviMeshCom = dynamic_cast<CNaviMesh*>(Clone_Prototype(L"Proto_NaviMesh"));
+	NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_NaviMesh", pComponent);
+
+	return S_OK;
+}
+
+HRESULT CMFC_Player::DeleteAll_NaviMesh()
+{
+	map<const wstring, CComponent*>::iterator	iter = m_mapComponent[ID_STATIC].begin();
+
+	for (; iter != m_mapComponent[ID_STATIC].end(); ++iter)
+	{
+		if (L"Com_NaviMesh" == iter->first)
+		{
+			dynamic_cast<CNaviMesh*>(iter->second)->DeleteAllCell();
+
+			Safe_Release(iter->second);
+			m_mapComponent[ID_STATIC].erase(iter);
+
+			break;
+		}
+	}
+
+	m_pNaviMeshCom = nullptr;
+
+	return S_OK;
 }
 
 HRESULT CMFC_Player::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType)

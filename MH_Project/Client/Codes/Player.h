@@ -11,6 +11,7 @@ class CTransform;
 class CRenderer;
 class CCalculator;
 class CCollider;
+class CNaviMesh;
 
 END
 
@@ -43,17 +44,21 @@ private:
 
 	_float			m_fSpeed = 3.5f;
 
+	_vec3			m_vDir;
+	_vec3			m_vRightDir;
+
+	PL_ACTION		m_eCurAction = PL_IDLE;
+
+	// Component
 	CDynamicMesh*	m_pMeshCom = nullptr;
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
 	CCalculator*	m_pCalculatorCom = nullptr;
 	CCollider*		m_pColliderCom = nullptr;
+	CNaviMesh*		m_pNaviMeshCom = nullptr;
+
+	// Instance
 	CDynamicCamera*	m_pMainCam = nullptr;
-
-	_vec3			m_vDir;
-	_vec3			m_vRightDir;
-
-	PL_ACTION		m_eCurAction = PL_IDLE;
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

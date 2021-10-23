@@ -18,6 +18,7 @@
 #include "Collider.h"
 #include "BoxCollider.h"
 #include "LightMgr.h"
+#include "Navimesh.h"
 
 #include "Camera.h"
 

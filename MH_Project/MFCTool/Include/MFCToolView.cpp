@@ -37,7 +37,8 @@ BEGIN_MESSAGE_MAP(CMFCToolView, CScrollView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CScrollView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CScrollView::OnFilePrintPreview)
 	ON_WM_LBUTTONDOWN()
-	ON_WM_TIMER()
+	ON_WM_RBUTTONDOWN()
+
 END_MESSAGE_MAP()
 
 // CMFCToolView 생성/소멸
@@ -189,9 +190,14 @@ HRESULT CMFCToolView::Add_Prototype()
 
 	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 
+	// Components
 	Engine::Ready_Prototype(L"Proto_Transform", CTransform::Create(m_pGraphicDev));
 	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 32, 32));
 	Engine::Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", TEX_NORMAL, 2));
+	Engine::Ready_Prototype(L"Proto_Calculator", CCalculator::Create(m_pGraphicDev));
+	//Engine::Ready_Prototype(L"Proto_NaviMesh", CNaviMesh::Create(m_pGraphicDev));
+
+	// Meshes
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Lethita/", L"Lethita.X"));
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Ahglan", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Ahglan/", L"Ahglan.X"));
 	
@@ -236,15 +242,10 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 
 	m_pCamera = dynamic_cast<CMFC_Camera*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Camera"));
 
-	//// Player 추가
-	//pObj = CMFC_Player::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pObj, E_FAIL);
-	//m_pLayer->Add_GameObject(L"MFC_Player", pObj);
-
-	//AddGameObjectInManager(L"GameLogic", m_pLayer);
-
-	//m_pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
-
+	// NavMesh 관련한 것들
+	m_pTerrainTex = dynamic_cast<CTerrainTex*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Terrain", L"Com_Buffer", ID_STATIC));
+	m_pTerrainTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Terrain", L"Com_Transform", ID_DYNAMIC));
+	m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Terrain", L"Com_Calculator", ID_STATIC));
 
 	Ready_Timer(L"Timer_Immediate");
 
@@ -288,6 +289,39 @@ HRESULT CMFCToolView::Add_NewTerrain(_uint iRowX, _uint iColZ, _uint iInterval)
 	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
 	m_pTerrain = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
+
+	return S_OK;
+}
+
+HRESULT CMFCToolView::Add_NewNaviMesh()
+{
+	Engine::Delete_Prototype(L"Proto_NaviMesh");
+
+	Engine::Ready_Prototype(L"Proto_NaviMesh", CNaviMesh::Create(m_pGraphicDev, m_vecPoint.size(), m_vecPoint));
+	m_pPlayer->Add_NaviMesh(m_vecPoint.size(), m_vecPoint);
+
+	return S_OK;
+}
+
+HRESULT CMFCToolView::Add_NewNaviMesh(vector<_matrix> vecSavePoint)
+{
+	Engine::Delete_Prototype(L"Proto_NaviMesh");
+
+	Engine::Ready_Prototype(L"Proto_NaviMesh", CNaviMesh::Create(m_pGraphicDev, vecSavePoint.size(), vecSavePoint));
+	m_pPlayer->Add_NaviMesh(vecSavePoint.size(), vecSavePoint);
+
+	m_vecPoint = vecSavePoint;
+
+	return S_OK;
+}
+
+HRESULT CMFCToolView::DeleteAll_NaviMesh()
+{
+	if (m_pPlayer)
+		m_pPlayer->DeleteAll_NaviMesh();
+
+	m_iClickCount = 0;
+	m_vecPoint.clear();
 
 	return S_OK;
 }
@@ -605,4 +639,84 @@ BOOL CMFCToolView::PreTranslateMessage(MSG* pMsg)
 	Invalidate(FALSE);
 
 	return CScrollView::PreTranslateMessage(pMsg);
+}
+
+
+void CMFCToolView::OnRButtonDown(UINT nFlags, CPoint point)
+{
+	NULL_CHECK_RETURN(m_pTerrainTex, );
+	NULL_CHECK_RETURN(m_pTerrainTrans, );
+	NULL_CHECK_RETURN(m_pCalculatorCom, );
+
+	vector<CCell*>	vecCell = m_pPlayer->Get_CellVector();
+	//vector<CCell*>::iterator	iter = vecCell.begin();
+
+	_vec3 vPoint = m_pCalculatorCom->Picking_OnTerrain(g_hWnd, m_pTerrainTex, m_pTerrainTrans);
+
+	//for (; iter != vecCell.end(); ++iter)
+	//{
+	//	for (_uint i = 0; i < CCell::POINT_END; ++i)
+	//	{
+	//		if (D3DXVec3Length(&(vPoint - iter->Get_Point((CCell::POINT) i)) <= 3.f))
+	//		{
+	//			vPoint = iter->Get_Point((CCell::POINT) i);
+	//		}
+	//	}
+	//}
+
+	for (_uint i = 0; i < vecCell.size(); ++i)
+	{
+		for (_uint j = 0; j < CCell::POINT_END; ++j)
+		{
+			if (D3DXVec3Length(&(vPoint - *(vecCell[i]->Get_Point((CCell::POINT) j)))) <= 1.f)
+			{
+				vPoint = *(vecCell[i]->Get_Point((CCell::POINT) j));
+			}
+		}
+	}
+
+	if (vPoint == _vec3(0.f, 0.f, 0.f))
+	{
+		return;
+	}
+	else
+	{
+		switch (m_iClickCount)
+		{
+		case 0:
+			m_matPoint._11 = vPoint.x;
+			m_matPoint._12 = vPoint.y;
+			m_matPoint._13 = vPoint.z;
+
+			++m_iClickCount;
+
+			break;
+
+		case 1:
+			m_matPoint._21 = vPoint.x;
+			m_matPoint._22 = vPoint.y;
+			m_matPoint._23 = vPoint.z;
+
+			++m_iClickCount;
+
+			break;
+
+		case 2:
+			m_matPoint._31 = vPoint.x;
+			m_matPoint._32 = vPoint.y;
+			m_matPoint._33 = vPoint.z;
+
+			m_iClickCount = 0;
+
+			m_vecPoint.push_back(m_matPoint);
+
+			Add_NewNaviMesh();
+
+			D3DXMatrixIdentity(&m_matPoint);
+
+			break;
+		}
+	}
+
+	CScrollView::OnRButtonDown(nFlags, point);
 }

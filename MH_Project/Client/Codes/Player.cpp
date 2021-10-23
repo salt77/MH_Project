@@ -2,7 +2,6 @@
 #include "Player.h"
 
 #include "Export_Function.h"
-#include "DynamicMesh.h"
 #include "DynamicCamera.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -29,6 +28,8 @@ HRESULT CPlayer::Ready_Object(void)
 
 	m_pTransformCom->Set_Scale(0.01f, 0.01f, 0.01f);
 	//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f));
+
+	m_pNaviMeshCom->Set_CellIndex(0);
 
 	return S_OK;
 }
@@ -59,7 +60,10 @@ void CPlayer::Render_Object(void)
 	//m_pColliderCom->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 	
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+	m_pNaviMeshCom->Render_NaviMesh();
 	m_pMeshCom->Render_Meshes();
+
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
@@ -104,6 +108,11 @@ HRESULT CPlayer::Add_Component(void)
 	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Clone_Prototype(L"Proto_Calculator"));
 	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
+
+	//// NaviMesh
+	//pComponent = m_pNaviMeshCom = dynamic_cast<CNaviMesh*>(Clone_Prototype(L"Proto_NaviMesh"));
+	//NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
+	//m_mapComponent[ID_STATIC].emplace(L"Com_NaviMesh", pComponent);
 
 	//// Collider
 	//pComponent = m_pColliderCom = CCollider::Create(m_pGraphicDev, m_pMeshCom->Get_VtxPos(), m_pMeshCom->Get_VtxCnt(), m_pMeshCom->Get_Stride());
@@ -167,7 +176,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		{
 			D3DXVec3Normalize(&vMoveDir, &vMoveDir);
 
-			m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed, fTimeDelta);
+			//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed, fTimeDelta);
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta));
 			m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed, fTimeDelta);
 
 			m_eCurAction = PL_MOVE;

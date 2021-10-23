@@ -198,7 +198,6 @@
     <ClInclude Include="..\Codes\MFC_CamEye.h" />
     <ClInclude Include="..\Codes\MFC_CamInterpol.h" />
     <ClInclude Include="..\Codes\MFC_Line.h" />
-    <ClInclude Include="..\Codes\MFC_Nevmesh.h" />
     <ClInclude Include="..\Codes\MFC_Player.h" />
     <ClInclude Include="..\Codes\MFC_Terrain.h" />
     <ClInclude Include="..\Codes\NavmeshTool.h" />
@@ -223,7 +222,6 @@
     <ClCompile Include="..\Codes\MFC_CamEye.cpp" />
     <ClCompile Include="..\Codes\MFC_CamInterpol.cpp" />
     <ClCompile Include="..\Codes\MFC_Line.cpp" />
-    <ClCompile Include="..\Codes\MFC_Nevmesh.cpp" />
     <ClCompile Include="..\Codes\MFC_Player.cpp" />
     <ClCompile Include="..\Codes\MFC_Terrain.cpp" />
     <ClCompile Include="..\Codes\NavmeshTool.cpp" />

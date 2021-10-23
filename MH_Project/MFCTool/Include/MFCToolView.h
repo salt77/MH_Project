@@ -47,14 +47,17 @@ public:
 	HRESULT	Ready_LightInfo();
 
 	HRESULT Add_NewTerrain(_uint iRowX, _uint iColZ, _uint iInterval);
+	HRESULT	Add_NewNaviMesh();
+	HRESULT Add_NewNaviMesh(vector<_matrix>	vecSavePoint);
+	HRESULT	DeleteAll_NaviMesh();
 
 	HRESULT	Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag = L"");
 	HRESULT	Delete_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag = L"");
 
 	HRESULT Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
 	HRESULT	Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
-							_float vMaxX, _float vMaxY, _float vMaxZ,
-							wstring wstrName, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
+						_float vMaxX, _float vMaxY, _float vMaxZ,
+						wstring wstrName, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
 	HRESULT	Delete_Collider(wstring wstrName, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType);
 	HRESULT Apply_Collider(_float fColScale, _uint iAniIndex);
 
@@ -69,6 +72,16 @@ private:
 	CMFC_Ahglan*		m_pAhglan = nullptr;
 	CLayer*				m_pLayer = nullptr;
 
+	// NavMesh Tool 관련 변수들
+	CTerrainTex*		m_pTerrainTex = nullptr;
+	CTransform*			m_pTerrainTrans = nullptr;
+	CCalculator*		m_pCalculatorCom = nullptr;
+
+	_uint				m_iClickCount = 0;
+	_matrix				m_matPoint;
+	vector<_matrix>		m_vecPoint;
+	////////////////
+
 	_uint		m_iRenderTerrain = 0;
 
 	_float		m_fDeltaTime = 0.f;
@@ -80,20 +93,11 @@ private:
 
 // 재정의입니다.
 public:
-	virtual void OnDraw(CDC* pDC);  // 이 뷰를 그리기 위해 재정의되었습니다.
-//	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-//protected:
-//	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
-//	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
-//	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
+	virtual void OnDraw(CDC* pDC);
 
 // 구현입니다.
 public:
 	virtual ~CMFCToolView();
-#ifdef _DEBUG
-	//virtual void AssertValid() const;
-	//virtual void Dump(CDumpContext& dc) const;
-#endif
 
 protected:
 
@@ -103,6 +107,7 @@ protected:
 public:
 	virtual void OnInitialUpdate();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // MFCToolView.cpp의 디버그 버전
