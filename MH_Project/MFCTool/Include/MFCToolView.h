@@ -18,6 +18,8 @@ class CLayer;
 
 END
 
+#include "NavmeshTool.h"
+
 class CMFCToolView : public CScrollView
 {
 protected: // serialization에서만 만들어집니다.
@@ -26,6 +28,7 @@ protected: // serialization에서만 만들어집니다.
 
 // 특성입니다.
 public:
+	void AssertValid() const;
 	CMFCToolDoc* GetDocument() const;
 
 // 작업입니다.
@@ -40,6 +43,8 @@ public:
 	void	Set_ColliderMatrixInterpolX(_float fX, wstring cstrColName);
 	void	Set_ColliderMatrixInterpolY(_float fY, wstring cstrColName);
 	void	Set_ColliderMatrixInterpolZ(_float fZ, wstring cstrColName);
+	void	Set_NavMeshToolPointer(CNavmeshTool* pNavmeshToolPointer) { m_pNavMeshTool = pNavmeshToolPointer; }
+	void	Set_ObjectToolMode(_bool bObjOnMouse, OBJECTADD_MFC eObjMode) { m_bObjOnMouse = bObjOnMouse;  m_eObjMode = eObjMode; }
 
 public:
 	HRESULT	Add_Prototype();
@@ -72,7 +77,15 @@ private:
 	CMFC_Ahglan*		m_pAhglan = nullptr;
 	CLayer*				m_pLayer = nullptr;
 
+	// Object Tool 관련 변수들
+	_bool				m_bObjOnMouse = false;
+	OBJECTADD_MFC		m_eObjMode = OBJECTADD_MFC_END;
+
+	////////////////
+
 	// NavMesh Tool 관련 변수들
+	CNavmeshTool*		m_pNavMeshTool = nullptr;
+
 	CTerrainTex*		m_pTerrainTex = nullptr;
 	CTransform*			m_pTerrainTrans = nullptr;
 	CCalculator*		m_pCalculatorCom = nullptr;
@@ -108,6 +121,8 @@ public:
 	virtual void OnInitialUpdate();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // MFCToolView.cpp의 디버그 버전

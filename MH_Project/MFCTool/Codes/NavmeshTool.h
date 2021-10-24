@@ -27,6 +27,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
+	HRESULT		 AddNaviMeshString(_uint iVecPointSize);
+
+public:
 	virtual BOOL OnInitDialog();
 
 	afx_msg void OnTreeSelChangeNavmesh(NMHDR *pNMHDR, LRESULT *pResult);

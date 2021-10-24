@@ -65,6 +65,8 @@ void CNavmeshTool::OnBnClickedDeleteAllNav()
 	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	CMFCToolView* pToolView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
 
+	m_TreeNavmesh.DeleteAllItems();
+
 	pToolView->DeleteAll_NaviMesh();
 	m_vecSavePoint.clear();
 }
@@ -137,7 +139,7 @@ void CNavmeshTool::OnBnClickedSave()
 			CloseHandle(hFile);
 		}
 	}
-
+	
 	return;
 }
 
@@ -183,16 +185,33 @@ void CNavmeshTool::OnBnClickedLoad()
 		CloseHandle(hFile);
 	}
 
+	AddNaviMeshString(m_vecSavePoint.size());
 	pToolView->Add_NewNaviMesh(m_vecSavePoint);
-	pToolView->Invalidate(FALSE);
+	//pToolView->Invalidate(FALSE);
 
 	return;
 }
 
 
+HRESULT CNavmeshTool::AddNaviMeshString(_uint iVecPointSize)
+{
+	m_TreeNavmesh.DeleteAllItems();
+
+	for (_uint i = 0; i < iVecPointSize; ++i)
+	{
+		string strName = to_string(i);
+
+		m_TreeNavmesh.InsertItem((CA2W)strName.c_str());
+	}
+
+	return S_OK;
+}
+
 BOOL CNavmeshTool::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	SetTimer(1, 10, NULL);
 
 	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	CMFCToolView* pToolView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
@@ -201,6 +220,8 @@ BOOL CNavmeshTool::OnInitDialog()
 	m_pTerrainTex = dynamic_cast<CTerrainTex*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Terrain", L"Com_Buffer", ID_STATIC));
 	m_pTerrainTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Terrain", L"Com_Transform", ID_DYNAMIC));
 	m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Terrain", L"Com_Calculator", ID_STATIC));
+
+	pToolView->Set_NavMeshToolPointer(this);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.

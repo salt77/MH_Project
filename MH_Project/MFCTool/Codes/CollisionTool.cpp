@@ -135,7 +135,7 @@ void CCollisionTool::OnBnClickedObjectAdd()
 
 	if (m_TreeObj.GetSelectedItem() == m_hPlayer)
 	{
-		list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
+		list<D3DXMESHCONTAINER_DERIVED*>		listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
 		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
 
 		for (; iter != listTemp.end(); ++iter)

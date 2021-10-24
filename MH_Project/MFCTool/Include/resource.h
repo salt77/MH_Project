@@ -68,10 +68,23 @@
 #define IDC_LIST2                       1074
 #define IDC_COMBO1                      1075
 #define IDC_TREE1                       1076
+#define IDC_TREE_NAVIMESH               1076
 #define IDC_BUTTON_DeleteNav            1079
 #define IDC_BUTTON_DeleteAllNav         1080
 #define IDC_BUTTON_Delete_Col           1081
-#define IDC_EDIT_INDEXCNT               1082
+#define IDC_LIST1                       1083
+#define IDC_EDIT_OBJ_ROTX               1084
+#define IDC_EDIT_OBJ_ROTY               1085
+#define IDC_EDIT_OBJ_ROTZ               1086
+#define IDC_EDIT_OBJ_SCLX               1087
+#define IDC_EDIT_OBJ_SCLY               1088
+#define IDC_EDIT_OBJ_SCLZ               1089
+#define IDC_BUTTON3                     1090
+#define IDC_BUTTON4                     1091
+#define IDC_EDIT_OBJNAME                1092
+#define IDC_EDIT_OBJ_POSX               1093
+#define IDC_EDIT3_OBJ_POSY              1094
+#define IDC_EDIT_OBJ_POSZ               1095
 
 // Next default values for new objects
 // 
@@ -79,7 +92,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        321
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1083
+#define _APS_NEXT_CONTROL_VALUE         1096
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

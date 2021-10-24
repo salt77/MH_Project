@@ -21,7 +21,7 @@ HRESULT CMFC_Player::Ready_Object(void)
 	m_pTransformCom->Set_Pos(1.f, 0.f, 1.f);
 	m_pTransformCom->Set_Scale(0.01f, 0.01f, 0.01f);
 	
-	m_pMeshCom->Set_AnimationIndex(0);
+	m_pMeshCom->Set_AnimationIndex(31);
 
 	//m_pNaviMeshCom->Set_CellIndex(0);
 

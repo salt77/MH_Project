@@ -38,7 +38,9 @@ BEGIN_MESSAGE_MAP(CMFCToolView, CScrollView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CScrollView::OnFilePrintPreview)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_RBUTTONDOWN()
+	ON_WM_TIMER()
 
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CMFCToolView 생성/소멸
@@ -46,7 +48,6 @@ END_MESSAGE_MAP()
 CMFCToolView::CMFCToolView()
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
-
 }
 
 CMFCToolView::~CMFCToolView()
@@ -54,16 +55,6 @@ CMFCToolView::~CMFCToolView()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);
 }
-
-//BOOL CMFCToolView::PreCreateWindow(CREATESTRUCT& cs)
-//{
-//	// TODO: CREATESTRUCT cs를 수정하여 여기에서
-//	//  Window 클래스 또는 스타일을 수정합니다.
-//
-//	return CView::PreCreateWindow(cs);
-//}
-
-// CMFCToolView 그리기
 
 list<D3DXMESHCONTAINER_DERIVED*> CMFCToolView::Get_MeshContainerList(OBJECTADD_MFC eObjType)
 {
@@ -248,6 +239,8 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 	m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Terrain", L"Com_Calculator", ID_STATIC));
 
 	Ready_Timer(L"Timer_Immediate");
+
+	SetTimer(1, 10, NULL);
 
 	return S_OK;
 }
@@ -501,28 +494,22 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 	if (!pDoc)
 		return;
 
-	m_fTime += m_fDeltaTime;
-	++m_dwRenderCnt;
+	//m_fTime += m_fDeltaTime;
+	//++m_dwRenderCnt;
 
-	if (m_fTime >= 1.f)
-	{
-		wsprintf(m_szFPS, L"FPS : %d", m_dwRenderCnt);
-		m_dwRenderCnt = 0;
-		m_fTime = 0.f;
-	}
+	//if (m_fTime >= 1.f)
+	//{
+	//	wsprintf(m_szFPS, L"FPS : %d", m_dwRenderCnt);
+	//	m_dwRenderCnt = 0;
+	//	m_fTime = 0.f;
+	//}
 
-	Render_Font(L"Font_Jinji", m_szFPS, &_vec2(600.f, 600.f), D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
+	//Render_Font(L"Font_Jinji", m_szFPS, &_vec2(600.f, 600.f), D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
 
-	Engine::Render_GameObject(m_pGraphicDev);
-	//if (m_pTerrain)
-	//	m_pTerrain->Update_Object(m_fDeltaTime);
-	//if (m_pPlayer)
-	//	m_pPlayer->Update_Object(m_fDeltaTime);
-	//if (m_pAhglan)
-	//	m_pAhglan->Update_Object(m_fDeltaTime);
+	/*Engine::Render_GameObject(m_pGraphicDev);*/
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
-	Render_Begin(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f));
+	/*Render_Begin(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f));*/
 
 	//CMFC_Terrain* pTerrain = static_cast<CMFC_Terrain*>(Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
 	//if (m_pTerrain)
@@ -541,55 +528,22 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 	//}
 
 	// Terrain은 선택적으로 보이게 해야하는데 어차피 안쓸거라 놔둔다. 
-	m_pLayer->Update_Layer(m_fDeltaTime);
-	m_pLayer->Render_Layer(m_fDeltaTime);
+	/*m_pLayer->Update_Layer(m_fDeltaTime);
+	m_pLayer->Render_Layer(m_fDeltaTime);*/
 
-	//if (m_pPlayer)
-	//	m_pPlayer->Render_Object();
+	//Render_End();//
 
-	//if (m_pCamEye)
-	//	m_pCamEye->Render_Object();
-
-	//if (m_pCamAt)
-	//	m_pCamAt->Render_Object();
-
-	Render_End();
-
-	Invalidate(FALSE);
+	//Invalidate(FALSE);
 }
 
-
-// CMFCToolView 인쇄
-
-//BOOL CMFCToolView::OnPreparePrinting(CPrintInfo* pInfo)
-//{
-//	// 기본적인 준비
-//	return DoPreparePrinting(pInfo);
-//}
-//
-//void CMFCToolView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-//{
-//	// TODO: 인쇄하기 전에 추가 초기화 작업을 추가합니다.
-//}
-//
-//void CMFCToolView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-//{
-//	// TODO: 인쇄 후 정리 작업을 추가합니다.
-//}
-//
 
 // CMFCToolView 진단
 
 #ifdef _DEBUG
-//void CMFCToolView::AssertValid() const
-//{
-//	CView::AssertValid();
-//}
-//
-//void CMFCToolView::Dump(CDumpContext& dc) const
-//{
-//	CView::Dump(dc);
-//}
+void CMFCToolView::AssertValid() const
+{
+	CView::AssertValid();
+}
 
 CMFCToolDoc* CMFCToolView::GetDocument() const // 디버그되지 않은 버전은 인라인으로 지정됩니다.
 {
@@ -629,14 +583,14 @@ void CMFCToolView::OnInitialUpdate()
 
 BOOL CMFCToolView::PreTranslateMessage(MSG* pMsg)
 {
-	Set_TimeDelta(L"Timer_Immediate");
+	/*Set_TimeDelta(L"Timer_Immediate");
 	m_fDeltaTime = Get_TimeDelta(L"Timer_Immediate");
 
-	m_pCamera->Update_Object(m_fDeltaTime);
+	m_pCamera->Update_Object(m_fDeltaTime);*/
 	//if (m_pTerrain)
 	//	m_pTerrain->Update_Object(fDeltaTime);
 
-	Invalidate(FALSE);
+	//Invalidate(FALSE);
 
 	return CScrollView::PreTranslateMessage(pMsg);
 }
@@ -711,6 +665,7 @@ void CMFCToolView::OnRButtonDown(UINT nFlags, CPoint point)
 			m_vecPoint.push_back(m_matPoint);
 
 			Add_NewNaviMesh();
+			m_pNavMeshTool->AddNaviMeshString(m_vecPoint.size());
 
 			D3DXMatrixIdentity(&m_matPoint);
 
@@ -719,4 +674,71 @@ void CMFCToolView::OnRButtonDown(UINT nFlags, CPoint point)
 	}
 
 	CScrollView::OnRButtonDown(nFlags, point);
+}
+
+
+void CMFCToolView::OnTimer(UINT_PTR nIDEvent)
+{
+	switch (nIDEvent)
+	{
+	case 1:
+		Set_TimeDelta(L"Timer_Immediate");
+		m_fDeltaTime = Get_TimeDelta(L"Timer_Immediate");
+
+		m_pCamera->Update_Object(m_fDeltaTime);
+		m_pLayer->Update_Layer(m_fDeltaTime);
+
+		Render_Begin(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f));
+
+		Engine::Render_GameObject(m_pGraphicDev);
+		//m_pLayer->Render_Layer(m_fDeltaTime);
+
+		Render_End();
+
+		// Object Tool 관련 기능
+		if (m_bObjOnMouse)
+		{
+			_vec3 vPoint = m_pCalculatorCom->Picking_OnTerrain(g_hWnd, m_pTerrainTex, m_pTerrainTrans);
+
+			CTransform*	pPlayerTrans = nullptr;
+			CTransform*	pAhglanTrans = nullptr;
+
+			switch (m_eObjMode)
+			{
+			case OBJECTADD_MFC_PLAYER:
+				pPlayerTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+				pPlayerTrans->Set_Pos(&vPoint);
+
+				break;
+
+			case OBJECTADD_MFC_AHGLAN:
+				pAhglanTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+				pAhglanTrans->Set_Pos(&vPoint);
+
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		break;
+
+	default:
+		break;
+	}
+
+	CScrollView::OnTimer(nIDEvent);
+}
+
+
+void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	if (m_bObjOnMouse)
+	{
+		m_bObjOnMouse = false;
+		m_eObjMode = OBJECTADD_MFC_END;
+	}
+
+	CScrollView::OnLButtonDown(nFlags, point);
 }

@@ -223,5 +223,5 @@ void CForm::OnDraw(CDC* /*pDC*/)
 		break;
 	}
 
-	Invalidate(FALSE);
+	//Invalidate(FALSE);
 }
