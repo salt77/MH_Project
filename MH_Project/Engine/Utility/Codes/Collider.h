@@ -18,8 +18,10 @@ public:
 	const _float&		Get_Radius() { return m_fRadius; }
 	const wstring		Get_BoneName() { return m_cstrBoneName; }
 	const COLLIDERTYPE&	Get_ColldierType() { return m_eColliderType; }
+	const _bool&		Get_CanCollision() { return m_bCanCollision; }
 
 public:
+	void	Set_CanCollision(_bool bValue) { m_bCanCollision = bValue; }
 	void	Set_RenderColType(COLTYPE _eColType) { m_eColType = _eColType; }
 	void	Set_BoneName(wstring eBoneName) { m_cstrBoneName = eBoneName; }
 	void	Set_Matrix(_matrix* matInfo) { m_matColParts = matInfo; *m_matColParts *= 0.01f; }
@@ -32,6 +34,8 @@ public:
 	void			Render_Collider(COLTYPE eType, const _matrix* pColliderMatrix);
 
 private:
+	_bool			m_bCanCollision = true;
+
 	_matrix			m_matColMatrix;
 	_matrix*		m_matColParts = nullptr;
 

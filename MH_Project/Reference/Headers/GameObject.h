@@ -2,6 +2,8 @@
 #define GameObject_h__
 
 #include "Component.h"
+#include "Collider.h"
+#include "BoxCollider.h"
 
 BEGIN(Engine)
 
@@ -24,6 +26,8 @@ public:
 protected:
 	LPDIRECT3DDEVICE9					m_pGraphicDev;
 	map<const wstring, CComponent*>		m_mapComponent[ID_END];
+	map<const wstring, CCollider*>		m_mapColliderCom;
+	map<const wstring, CBoxCollider*>	m_mapBoxColliderCom;
 
 private:
 	CComponent*		Find_Component(const wstring pComponentTag, COMPONENTID eID);

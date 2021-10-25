@@ -49,6 +49,7 @@ void CObjectTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_OBJ_SCLX, m_fObjSclX);
 	DDX_Text(pDX, IDC_EDIT_OBJ_SCLY, m_fObjSclY);
 	DDX_Text(pDX, IDC_EDIT_OBJ_SCLZ, m_fObjSclZ);
+	DDX_Control(pDX, IDC_COMBO1, m_ComboObjScene);
 }
 
 
@@ -142,14 +143,23 @@ void CObjectTool::OnEditChangePosY()
 
 	HTREEITEM	hItem = m_TreeObjectTool.GetSelectedItem();
 	CString		cstrItemName = m_TreeObjectTool.GetItemText(hItem);
+	_vec3		vPos = {};
 
 	if (L"Player" == cstrItemName)
 	{
 		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.y = m_fObjPosY;
+		pObjTrans->Set_Pos(&vPos);
 	}
 	else if (L"Ahglan" == cstrItemName)
 	{
 		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.y = m_fObjPosY;
+		pObjTrans->Set_Pos(&vPos);
 	}
 
 	UpdateData(FALSE);
@@ -162,14 +172,23 @@ void CObjectTool::OnEditChangePosZ()
 
 	HTREEITEM	hItem = m_TreeObjectTool.GetSelectedItem();
 	CString		cstrItemName = m_TreeObjectTool.GetItemText(hItem);
+	_vec3		vPos = {};
 
 	if (L"Player" == cstrItemName)
 	{
 		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.z = m_fObjPosZ;
+		pObjTrans->Set_Pos(&vPos);
 	}
 	else if (L"Ahglan" == cstrItemName)
 	{
 		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.z = m_fObjPosZ;
+		pObjTrans->Set_Pos(&vPos);
 	}
 
 	UpdateData(FALSE);
@@ -180,16 +199,27 @@ void CObjectTool::OnEditChangeRotX()
 {
 	UpdateData(TRUE);
 
-	HTREEITEM	hItem = m_TreeObjectTool.GetSelectedItem();
-	CString		cstrItemName = m_TreeObjectTool.GetItemText(hItem);
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
 
-	if (L"Player" == cstrItemName)
+	if (pView->Get_ObjMouseMode())
 	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
-	}
-	else if (L"Ahglan" == cstrItemName)
-	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+		if (OBJECTADD_MFC_PLAYER == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_AHGLAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
 	}
 
 	UpdateData(FALSE);
@@ -200,16 +230,27 @@ void CObjectTool::OnEditChangeRotY()
 {
 	UpdateData(TRUE);
 
-	HTREEITEM	hItem = m_TreeObjectTool.GetSelectedItem();
-	CString		cstrItemName = m_TreeObjectTool.GetItemText(hItem);
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
 
-	if (L"Player" == cstrItemName)
+	if (pView->Get_ObjMouseMode())
 	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
-	}
-	else if (L"Ahglan" == cstrItemName)
-	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+		if (OBJECTADD_MFC_PLAYER == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_AHGLAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
 	}
 
 	UpdateData(FALSE);
@@ -220,16 +261,27 @@ void CObjectTool::OnEditChangeRotZ()
 {
 	UpdateData(TRUE);
 
-	HTREEITEM	hItem = m_TreeObjectTool.GetSelectedItem();
-	CString		cstrItemName = m_TreeObjectTool.GetItemText(hItem);
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
 
-	if (L"Player" == cstrItemName)
+	if (pView->Get_ObjMouseMode()) 
 	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
-	}
-	else if (L"Ahglan" == cstrItemName)
-	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+		if (OBJECTADD_MFC_PLAYER == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_AHGLAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
 	}
 
 	UpdateData(FALSE);
@@ -240,16 +292,23 @@ void CObjectTool::OnEditChangeSclX()
 {
 	UpdateData(TRUE);
 
-	HTREEITEM	hItem = m_TreeObjectTool.GetSelectedItem();
-	CString		cstrItemName = m_TreeObjectTool.GetItemText(hItem);
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
 
-	if (L"Player" == cstrItemName)
+	if (pView->Get_ObjMouseMode())
 	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
-	}
-	else if (L"Ahglan" == cstrItemName)
-	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+		if (OBJECTADD_MFC_PLAYER == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleX(m_fObjSclX);
+		}
+		else if (OBJECTADD_MFC_AHGLAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleX(m_fObjSclX);
+		}
 	}
 
 	UpdateData(FALSE);
@@ -260,16 +319,23 @@ void CObjectTool::OnEditChangeSclY()
 {
 	UpdateData(TRUE);
 
-	HTREEITEM	hItem = m_TreeObjectTool.GetSelectedItem();
-	CString		cstrItemName = m_TreeObjectTool.GetItemText(hItem);
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
 
-	if (L"Player" == cstrItemName)
+	if (pView->Get_ObjMouseMode())
 	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
-	}
-	else if (L"Ahglan" == cstrItemName)
-	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+		if (OBJECTADD_MFC_PLAYER == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleY(m_fObjSclY);
+		}
+		else if (OBJECTADD_MFC_AHGLAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleY(m_fObjSclY);
+		}
 	}
 
 	UpdateData(FALSE);
@@ -280,16 +346,23 @@ void CObjectTool::OnEditChangeSclZ()
 {
 	UpdateData(TRUE);
 
-	HTREEITEM	hItem = m_TreeObjectTool.GetSelectedItem();
-	CString		cstrItemName = m_TreeObjectTool.GetItemText(hItem);
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
 
-	if (L"Player" == cstrItemName)
+	if (pView->Get_ObjMouseMode())
 	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
-	}
-	else if (L"Ahglan" == cstrItemName)
-	{
-		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+		if (OBJECTADD_MFC_PLAYER == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleZ(m_fObjSclZ);
+		}
+		else if (OBJECTADD_MFC_AHGLAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleZ(m_fObjSclZ);
+		}
 	}
 
 	UpdateData(FALSE);
@@ -298,11 +371,150 @@ void CObjectTool::OnEditChangeSclZ()
 
 void CObjectTool::OnBnClickedObjSave()
 {
+	CFileDialog Dlg(FALSE,// FALSE가 다른이름으로 저장. 
+		L"dat",
+		L"*.dat",
+		OFN_OVERWRITEPROMPT,
+		L"Data File(*.dat) | *.dat||",
+		this, 0, 0);
+	TCHAR szFilePath[MAX_PATH] = L"";
+
+	GetCurrentDirectory(MAX_PATH, szFilePath);
+	Dlg.m_ofn.lpstrInitialDir = szFilePath;
+
+	/*
+	1. SceneType
+	2. 객체의 갯수
+	3. 객체별 정보
+	 => Name, Position, Rotation, Scale
+	*/
+	if (IDOK == Dlg.DoModal())
+	{
+		CString strFilePath = Dlg.GetPathName();
+		HANDLE hFile = CreateFile(strFilePath.GetString(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+		DWORD	dwbyte = 0;
+
+		CTransform* pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+		// SceneType : 0. Ahglan	1. Normal	2. MidBoss
+		_uint iComboSel = m_ComboObjScene.GetCurSel();
+		_uint iListCount = m_ListObjAdd.GetCount() - 1;
+
+		WriteFile(hFile, &iComboSel, sizeof(_uint), &dwbyte, nullptr);
+		WriteFile(hFile, &iListCount, sizeof(_uint), &dwbyte, nullptr);
+		WriteFile(hFile, pPlayerTrans->Get_Info(INFO_POS), sizeof(_vec3), &dwbyte, nullptr);
+		WriteFile(hFile, pPlayerTrans->Get_ScaleInfo(), sizeof(_vec3), &dwbyte, nullptr);
+		WriteFile(hFile, pPlayerTrans->Get_RotateInfo(), sizeof(_vec3), &dwbyte, nullptr);
+
+		for (_uint i = 0; i < iListCount; ++i)
+		{
+			CTransform* pTrans = nullptr;
+
+			switch (iComboSel)
+			{
+			case 0:
+				pTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+				break;
+
+			case 1:
+				break;
+
+			case 2:
+				break;
+			}
+
+			WriteFile(hFile, pTrans->Get_Info(INFO_POS), sizeof(_vec3), &dwbyte, nullptr);
+			WriteFile(hFile, pTrans->Get_ScaleInfo(), sizeof(_vec3), &dwbyte, nullptr);
+			WriteFile(hFile, pTrans->Get_RotateInfo(), sizeof(_vec3), &dwbyte, nullptr);
+		}
+
+		CloseHandle(hFile);
+	}
 }
 
 
 void CObjectTool::OnBnClickedObjLoad()
 {
+	CFileDialog Dlg(TRUE,// FALSE가 다른이름으로 저장. 
+		L"dat",
+		L"*.dat",
+		OFN_OVERWRITEPROMPT,
+		0, 0, 0, 0);
+	TCHAR szFilePath[MAX_PATH]{};
+
+	UpdateData(TRUE);
+
+	if (IDOK == Dlg.DoModal())
+	{
+		CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+		CMFCToolView* pToolView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
+
+		CString strFilePath = Dlg.GetPathName();
+		HANDLE hFile = CreateFile(strFilePath.GetString(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+		if (INVALID_HANDLE_VALUE == hFile)
+			return;
+
+		DWORD dwbyte = 0;
+
+		_uint iSceneType = -1;
+		_uint iObjCount = -1;
+
+		_vec3	vPos, vScale, vRotate;
+
+		ReadFile(hFile, &iSceneType, sizeof(_uint), &dwbyte, nullptr);
+		ReadFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
+
+		ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
+		ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
+		ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
+
+		pToolView->Add_Object(OBJECTADD_MFC_PLAYER, L"MFC_Player");
+		CTransform* pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+		pPlayerTrans->Set_Pos(&vPos);
+		pPlayerTrans->Set_Scale(vScale.x, vScale.y, vScale.z);
+		pPlayerTrans->RotationFromOriginAngle(ROT_X, vRotate.x);
+		pPlayerTrans->RotationFromOriginAngle(ROT_Y, vRotate.y);
+		pPlayerTrans->RotationFromOriginAngle(ROT_Z, vRotate.z);
+
+		for (_uint i = 0; i < iObjCount; ++i)
+		{
+			if (0 == dwbyte)
+				return;
+
+			ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
+			ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
+			ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
+
+			CTransform* pTrans = nullptr;
+
+			switch (iSceneType)
+			{
+			case 0:
+				pToolView->Add_Object(OBJECTADD_MFC_AHGLAN, L"MFC_Ahglan");
+				pTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+				if (pTrans)
+				{
+					pTrans->Set_Pos(&vPos);
+					pTrans->Set_Scale(vScale.x, vScale.y, vScale.z);
+					pTrans->RotationFromOriginAngle(ROT_X, vRotate.x);
+					pTrans->RotationFromOriginAngle(ROT_Y, vRotate.y);
+					pTrans->RotationFromOriginAngle(ROT_Z, vRotate.z);
+				}
+				break;
+
+			case 1:
+				break;
+
+			case 2:
+				break;
+			}
+		}
+
+		CloseHandle(hFile);
+	}
+
+	UpdateData(FALSE);
 }
 
 
@@ -321,6 +533,10 @@ BOOL CObjectTool::OnInitDialog()
 
 	m_hPlayer = m_TreeObjectTool.InsertItem(TEXT("Player"), 0, 0, m_hMainObj, TVI_LAST);
 	m_hAhglan = m_TreeObjectTool.InsertItem(TEXT("Ahglan"), 0, 0, m_hMainObj, TVI_LAST);
+
+	m_ComboObjScene.AddString(L"1_Ahglan");
+	m_ComboObjScene.AddString(L"2_Normal");
+	m_ComboObjScene.AddString(L"3_MidBoss");
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.

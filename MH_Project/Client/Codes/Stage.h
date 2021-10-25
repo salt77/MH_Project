@@ -7,11 +7,9 @@
 #include "BackGround.h"
 
 #include "Player.h"
-//#include "Monster.h"
 #include "Terrain.h"
 #include "DynamicCamera.h"
 #include "SkyBox.h"
-//#include "Stone.h"
 #include "StageMesh.h"
 
 class CStage : public CScene
@@ -22,7 +20,8 @@ private:
 
 public:
 	virtual HRESULT Ready_Scene(void) override;
-	virtual _int	 Update_Scene(const _float& fTimeDelta) override;
+	virtual HRESULT LateReady_Scene() override;
+	virtual _int    Update_Scene(const _float& fTimeDelta) override;
 	virtual void	Render_Scene(void) override;
 
 private:
@@ -31,6 +30,8 @@ private:
 	HRESULT				Ready_Layer_UI(const wstring pLayerTag);
 	HRESULT				Ready_Prototype(void);
 	HRESULT				Ready_LightInfo(void);
+
+	HRESULT				Load_Data();
 
 private:
 	_ulong					m_dwRenderCnt = 0;

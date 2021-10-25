@@ -18,6 +18,11 @@ HRESULT Engine::CScene::Ready_Scene(void)
 	return S_OK;
 }
 
+HRESULT CScene::LateReady_Scene()
+{
+	return S_OK;
+}
+
 Engine::_int Engine::CScene::Update_Scene(const _float& fTimeDelta)
 {
 	_int iResult = 0;

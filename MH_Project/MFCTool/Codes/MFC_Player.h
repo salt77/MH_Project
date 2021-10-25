@@ -51,7 +51,7 @@ public:
 
 private:
 	_uint			m_iColliderNum = 0;
-	_uint			m_iAniIndex = 0;
+	_uint			m_iAniIndex = 31;
 
 	_vec3			m_vDir;
 

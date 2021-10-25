@@ -26,6 +26,8 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+
 public:
 	afx_msg void OnTreeObjSelChanged(NMHDR *pNMHDR, LRESULT *pResult);
 
@@ -84,4 +86,9 @@ public:
 
 	float m_fBoxCreateTime;
 	float m_fBoxDeleteTime;
+
+	float m_fAniTime;
+	float m_fAniEndTime;
+	CEdit m_EditFrameTime;
+	CEdit m_EditEndTime;
 };

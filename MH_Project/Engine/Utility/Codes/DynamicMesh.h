@@ -15,9 +15,14 @@ private:
 
 public:
 	list<D3DXMESHCONTAINER_DERIVED*>	Get_MeshContainerList() { return m_MeshContainerList; }
+	const	_float&						Get_AniFrameTime() { return m_pAniCtrl->Get_AniFrameTime(); }
+	const	_double&					Get_AniFrameEndTime() { return m_pAniCtrl->Get_AniFrameEndTime(); }
 
 public:
+	void			Set_TrackSpeed(_float fSpeed) { m_pAniCtrl->Set_TrackSpeed(fSpeed); }
 	void			Set_AnimationIndex(const _uint& iIndex);
+
+public:
 	void			Play_Animation(const _float& fTimeDelta);
 
 public:

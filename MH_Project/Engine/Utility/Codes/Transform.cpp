@@ -3,9 +3,10 @@
 USING(Engine)
 
 Engine::CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphicDev)
-	:	CComponent(pGraphicDev)
+	: CComponent(pGraphicDev)
 	, m_vAngle(0.f, 0.f, 0.f)
 	, m_vScale(1.f, 1.f, 1.f)
+	, m_vOriginAngle(0.f, 0.f, 0.f)
 {
 	D3DXMatrixIdentity(&m_matWorld);
 }
@@ -23,7 +24,6 @@ Engine::CTransform::CTransform(const CTransform& rhs)
 
 Engine::CTransform::~CTransform(void)
 {
-
 }
 
 HRESULT Engine::CTransform::Ready_Transform(void)
@@ -160,6 +160,27 @@ void Engine::CTransform::Rotation(ROTATION eType, const _float& fAngle)
 	*(((_float*)&m_vAngle) + eType) += fAngle;
 }
 
+void CTransform::RotationFromOriginAngle(ROTATION eType, const _float & fAngle)
+{
+	switch (eType)
+	{
+	case Engine::ROT_X:
+		m_vOriginAngle.x = 0.f;
+		break;
+
+	case Engine::ROT_Y:
+		m_vOriginAngle.y = 0.f;
+		break;
+
+	case Engine::ROT_Z:
+		m_vOriginAngle.z = 0.f;
+		break;
+	}
+
+	*(((_float*)&m_vOriginAngle) + eType) += fAngle;
+	m_vAngle = m_vOriginAngle;
+}
+
 void Engine::CTransform::Get_INFO(INFO eType, _vec3* pInfo)
 {
 	memcpy(pInfo, &m_matWorld.m[eType][0], sizeof(_vec3));
@@ -169,7 +190,6 @@ const _vec3 * CTransform::Get_Info(INFO eType)
 {
 	return &m_vInfo[eType];
 }
-
 
 
 Engine::CTransform* Engine::CTransform::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -32,6 +32,8 @@ CCollisionTool::CCollisionTool(CWnd* pParent /*=NULL*/)
 	, m_fBoxMaxZ(0)
 	, m_fBoxCreateTime(0)
 	, m_fBoxDeleteTime(0)
+	, m_fAniTime(0)
+	, m_fAniEndTime(0)
 {
 	//m_vecParsing.reserve(16);
 }
@@ -64,6 +66,10 @@ void CCollisionTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_CREATE_TIME, m_fBoxCreateTime);
 	DDX_Text(pDX, IDC_EDIT_DELETE_TIME, m_fBoxDeleteTime);
 	DDX_Control(pDX, IDC_LIST2, m_ListBoxCol);
+	DDX_Text(pDX, IDC_EDIT3, m_fAniTime);
+	DDX_Text(pDX, IDC_EDIT4, m_fAniEndTime);
+	DDX_Control(pDX, IDC_EDIT3, m_EditFrameTime);
+	DDX_Control(pDX, IDC_EDIT4, m_EditEndTime);
 }
 
 
@@ -84,6 +90,7 @@ BEGIN_MESSAGE_MAP(CCollisionTool, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_DELETETIME_OK, &CCollisionTool::OnBnClickedDeleteTimeOK)
 	ON_LBN_SELCHANGE(IDC_LIST2, &CCollisionTool::OnListSelChangeBoxCol)
 	ON_BN_CLICKED(IDC_BUTTON_Delete_Col, &CCollisionTool::OnBnClickedDeleteCol)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -93,6 +100,8 @@ END_MESSAGE_MAP()
 BOOL CCollisionTool::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	SetTimer(1, 10, NULL);
 
 	m_hRoot = m_TreeObj.InsertItem(TEXT("Object"), 0, 0, TVI_ROOT, TVI_LAST);
 	m_hPlayer = m_TreeObj.InsertItem(TEXT("Player"), 0, 0, m_hRoot, TVI_LAST);
@@ -966,4 +975,76 @@ void CCollisionTool::OnBnClickedCreateTimeOK()
 void CCollisionTool::OnBnClickedDeleteTimeOK()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CCollisionTool::OnTimer(UINT_PTR nIDEvent)
+{
+	HTREEITEM		hItem;
+	CString			cstrObjName;
+	CDynamicMesh*	pMeshCom = nullptr;
+	CGameObject*	pGameObj = nullptr;
+	WCHAR			pBuff;
+
+	_uint iComboSel = m_ComboBox.GetCurSel();
+
+	switch (nIDEvent)
+	{
+	case 1:
+		hItem = m_TreeObj.GetSelectedItem();
+
+		if (!m_TreeObj.ItemHasChildren(hItem))
+		{
+			cstrObjName = m_TreeObj.GetItemText(hItem);
+
+			if (L"Player" == cstrObjName)
+			{
+				pMeshCom = static_cast<CDynamicMesh*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Mesh", ID_STATIC));
+
+				if (pMeshCom && 
+					iComboSel != 0 && 
+					iComboSel != 1)
+				{
+					UpdateData(TRUE);
+
+					m_fAniTime = pMeshCom->Get_AniFrameTime();
+					m_fAniEndTime = (_float)pMeshCom->Get_AniFrameEndTime() * 0.5f;
+
+					pBuff = (WCHAR)m_fAniTime;
+					m_EditFrameTime.SetWindowText(&pBuff);
+					pBuff = (WCHAR)m_fAniEndTime;
+					m_EditEndTime.SetWindowText(&pBuff);
+
+					UpdateData(FALSE);
+				}
+			}
+			else if (L"Ahglan" == cstrObjName)
+			{
+				pMeshCom = static_cast<CDynamicMesh*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Mesh", ID_STATIC));
+
+				if (pMeshCom &&
+					iComboSel != 0 &&
+					iComboSel != 1)
+				{
+					UpdateData(TRUE);
+
+					m_fAniTime = pMeshCom->Get_AniFrameTime();
+					m_fAniEndTime = (_float)pMeshCom->Get_AniFrameEndTime() * 0.5f;
+
+					pBuff = (WCHAR)m_fAniTime;
+					m_EditFrameTime.SetWindowText(&pBuff);
+					pBuff = (WCHAR)m_fAniEndTime;
+					m_EditEndTime.SetWindowText(&pBuff);
+
+					UpdateData(FALSE);
+				}
+			}
+		}
+		break;
+
+	default:
+		break;
+	}
+
+	CDialogEx::OnTimer(nIDEvent);
 }

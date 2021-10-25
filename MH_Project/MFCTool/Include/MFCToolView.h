@@ -35,6 +35,10 @@ public:
 public:
 	list<D3DXMESHCONTAINER_DERIVED*>	Get_MeshContainerList(OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
 
+	// Object Tool 관련 Get 함수들
+	const _bool&						Get_ObjMouseMode() { return m_bObjOnMouse; }
+	const OBJECTADD_MFC&				Get_ObjMode() { return m_eObjMode; }
+
 public:
 	void	Set_RenderTerrain(_uint _iRenderType) { m_iRenderTerrain = _iRenderType; }
 	void	Set_ChangeColType(wstring cstrName, COLTYPE eColType, COLLIDERTYPE eColliderType = COLTYPE_SPHERE_DAMAGED, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
@@ -80,7 +84,6 @@ private:
 	// Object Tool 관련 변수들
 	_bool				m_bObjOnMouse = false;
 	OBJECTADD_MFC		m_eObjMode = OBJECTADD_MFC_END;
-
 	////////////////
 
 	// NavMesh Tool 관련 변수들
@@ -117,12 +120,13 @@ protected:
 // 생성된 메시지 맵 함수
 protected:
 	DECLARE_MESSAGE_MAP()
+
 public:
 	virtual void OnInitialUpdate();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
 
 #ifndef _DEBUG  // MFCToolView.cpp의 디버그 버전

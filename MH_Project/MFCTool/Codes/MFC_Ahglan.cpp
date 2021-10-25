@@ -110,13 +110,13 @@ HRESULT CMFC_Ahglan::Add_Component(void)
 
 void CMFC_Ahglan::Key_Input(const _float & fTimeDelta)
 {
-	m_pTransformCom->Get_INFO(INFO_LOOK, &m_vDir);
+	//m_pTransformCom->Get_INFO(INFO_LOOK, &m_vDir);
 
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
+	//if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	//	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
 
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
+	//if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	//	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
 }
 
 HRESULT CMFC_Ahglan::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType)

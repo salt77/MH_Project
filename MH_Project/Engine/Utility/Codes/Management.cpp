@@ -21,6 +21,8 @@ HRESULT Engine::CManagement::Set_Scene(CScene* pScene)
 
 	m_pScene = pScene;
 
+	m_pScene->LateReady_Scene();
+
 	return S_OK;
 }
 

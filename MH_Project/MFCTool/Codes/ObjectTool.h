@@ -29,6 +29,8 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+
 	afx_msg void OnBnClickedObjAdd();
 	afx_msg void OnBnClickedObjDelete();
 	afx_msg void OnEditChangePosX();
@@ -49,6 +51,7 @@ public:
 
 	CTreeCtrl m_TreeObjectTool;
 	CListBox m_ListObjAdd;
+	CComboBox m_ComboObjScene;
 
 	CTerrainTex*	m_pTerrainTex = nullptr;
 	CTransform*		m_pTerrainTrans = nullptr;
@@ -67,5 +70,4 @@ public:
 	float m_fObjSclX;
 	float m_fObjSclY;
 	float m_fObjSclZ;
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

@@ -24,7 +24,14 @@ HRESULT CStage::Ready_Scene(void)
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
-	
+
+	return S_OK;
+}
+
+HRESULT CStage::LateReady_Scene()
+{
+	FAILED_CHECK_RETURN(Load_Data(), E_FAIL);
+
 	return S_OK;
 }
 
@@ -59,10 +66,10 @@ HRESULT CStage::Ready_Layer_Environment(const wstring pLayerTag)
 
 	// DynamicCamera
 	pGameObject = CDynamicCamera::Create(m_pGraphicDev,
-		&_vec3(0.f, 1.5f, -2.5f), 
+		&_vec3(0.f, 1.5f, -2.5f),
 		&_vec3(0.f, 0.f, 1.f),
-		&_vec3(0.f, 1.f, 0.f), 
-		D3DXToRadian(60.f), (_float)WINCX / WINCY, 
+		&_vec3(0.f, 1.f, 0.f),
+		D3DXToRadian(60.f), (_float)WINCX / WINCY,
 		0.1f, 1000.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"DynamicCamera", pGameObject), E_FAIL);
@@ -134,6 +141,196 @@ HRESULT CStage::Ready_LightInfo(void)
 	tLightInfo.Direction = _vec3(1.f, -1.f, 0.f);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
+
+	return S_OK;
+}
+
+HRESULT CStage::Load_Data()
+{
+	HANDLE hFile = CreateFile(L"../../Data/Lethita_HitBox.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	DWORD dwbyte = 0;
+	DWORD dwStringSize = 0;
+	DWORD dwStringSize2 = 0;
+	_float fRadius = 0.f;
+	TCHAR*	pNameBuff = nullptr;
+	TCHAR*	pNameBuff2 = nullptr;
+	wstring wstrColName, wstrBoneName;
+	COLLIDERTYPE	eColliderType;
+	_vec3	vMin = {};
+	_vec3	vMax = {};
+
+	_uint iSize = 0;
+	_uint iBoxSize = 0;
+
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iBoxSize, sizeof(_uint), &dwbyte, nullptr);
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		if (0 == dwbyte)
+			break;
+
+		ReadFile(hFile, &dwStringSize, sizeof(DWORD), &dwbyte, nullptr);
+		ReadFile(hFile, &dwStringSize2, sizeof(DWORD), &dwbyte, nullptr);
+
+		pNameBuff = new TCHAR[dwStringSize];
+		pNameBuff2 = new TCHAR[dwStringSize2];
+
+		ReadFile(hFile, pNameBuff, dwStringSize, &dwbyte, nullptr);
+		ReadFile(hFile, pNameBuff2, dwStringSize2, &dwbyte, nullptr);
+		ReadFile(hFile, &fRadius, sizeof(_float), &dwbyte, nullptr);
+		ReadFile(hFile, &eColliderType, sizeof(COLLIDERTYPE), &dwbyte, nullptr);
+
+		wstrColName = pNameBuff;
+		wstrBoneName = pNameBuff2;
+
+		// Bone 찾기
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+		CDynamicMesh* pMeshCom = dynamic_cast<CDynamicMesh*>(pPlayer->Get_Component(L"Com_Mesh", ID_STATIC));
+
+		pPlayer->Add_Collider(fRadius, pNameBuff, eColliderType);
+
+		list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pMeshCom->Get_MeshContainerList();
+		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+		for (; iterList != listTemp.end(); ++iterList)
+		{
+			for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+			{
+				_tchar	pTemp[64] = L"";
+				MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+				if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!wcscmp(pTemp, pNameBuff2))
+				{
+					dynamic_cast<CCollider*>(Engine::Get_Component(L"GameLogic", L"Player", wstrColName, ID_STATIC))->Set_BoneName(wstrBoneName);
+					dynamic_cast<CCollider*>(pPlayer->Get_Component((wstring)wstrColName, ID_STATIC))->Set_Matrix((*iterList)->ppCombinedTransformMatrix[i]);
+
+					break;
+				}
+			}
+		}
+
+		//CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
+
+		//pAhglan->Add_Collider(fRadius, pNameBuff, eColliderType);
+		//m_ListBoxCollider.AddString(pNameBuff);
+
+		//list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_AHGLAN);
+		//list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+		//for (; iterList != listTemp.end(); ++iterList)
+		//{
+		//	for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+		//	{
+		//		_tchar	pTemp[64] = L"";
+		//		MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+		//		if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
+		//		{
+		//			dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+		//			pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_AHGLAN);
+
+		//			break;
+		//		}
+		//	}
+		//}
+
+		Safe_Delete(pNameBuff);
+		Safe_Delete(pNameBuff2);
+
+	}
+
+	CloseHandle(hFile);
+
+	hFile = CreateFile(L"../../Data/Lethita_WeaponHitBox.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iBoxSize, sizeof(_uint), &dwbyte, nullptr);
+
+	for (_uint i = 0; i < iBoxSize; ++i)
+	{
+		if (0 == dwbyte)
+			break;
+
+		ReadFile(hFile, &dwStringSize, sizeof(DWORD), &dwbyte, nullptr);
+		ReadFile(hFile, &dwStringSize2, sizeof(DWORD), &dwbyte, nullptr);
+
+		pNameBuff = new TCHAR[dwStringSize];
+		pNameBuff2 = new TCHAR[dwStringSize2];
+
+		ReadFile(hFile, pNameBuff, dwStringSize, &dwbyte, nullptr);
+		ReadFile(hFile, pNameBuff2, dwStringSize2, &dwbyte, nullptr);
+		ReadFile(hFile, &vMin, sizeof(_vec3), &dwbyte, nullptr);
+		ReadFile(hFile, &vMax, sizeof(_vec3), &dwbyte, nullptr);
+		ReadFile(hFile, &eColliderType, sizeof(COLLIDERTYPE), &dwbyte, nullptr);
+
+		wstrColName = pNameBuff;
+		wstrBoneName = pNameBuff2;
+
+		// Bone 찾기
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+		CDynamicMesh* pMeshCom = dynamic_cast<CDynamicMesh*>(pPlayer->Get_Component(L"Com_Mesh", ID_STATIC));
+
+		pPlayer->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
+
+		// Bone 찾기
+		list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pMeshCom->Get_MeshContainerList();
+		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+		for (; iterList != listTemp.end(); ++iterList)
+		{
+			for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+			{
+				_tchar	pTemp[64] = L"";
+				MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+				if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!wcscmp(pTemp, pNameBuff2))
+				{
+					dynamic_cast<CBoxCollider*>(Engine::Get_Component(L"GameLogic", L"Player", wstrColName, ID_STATIC))->Set_BoneName(wstrBoneName);
+					dynamic_cast<CBoxCollider*>(pPlayer->Get_Component((wstring)wstrColName, ID_STATIC))->Set_Matrix((*iterList)->ppCombinedTransformMatrix[i]);
+
+					break;
+				}
+			}
+		}
+
+
+		//CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
+
+		//pAhglan->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
+		//m_ListBoxCol.AddString(pNameBuff);
+
+		//// Bone 찾기
+		//list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
+		//list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+		//for (; iterList != listTemp.end(); ++iterList)
+		//{
+		//	for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+		//	{
+		//		_tchar	pTemp[64] = L"";
+		//		MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+		//		if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
+		//		{
+		//			dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+		//			//::g_wstrBoneName = m_pParsing->wstrBoneName;
+		//			pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType);
+
+		//			break;
+		//		}
+		//	}
+		//}
+
+		Safe_Delete(pNameBuff);
+		Safe_Delete(pNameBuff2);
+	}
+
+	CloseHandle(hFile);	
 
 	return S_OK;
 }

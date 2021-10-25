@@ -21,8 +21,6 @@ HRESULT CMFC_Player::Ready_Object(void)
 	m_pTransformCom->Set_Pos(1.f, 0.f, 1.f);
 	m_pTransformCom->Set_Scale(0.01f, 0.01f, 0.01f);
 	
-	m_pMeshCom->Set_AnimationIndex(31);
-
 	//m_pNaviMeshCom->Set_CellIndex(0);
 
 	return S_OK;
@@ -142,11 +140,11 @@ void CMFC_Player::Key_Input(const _float & fTimeDelta)
 			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &m_vDir, 300.f, fTimeDelta));
 	}
 
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
+	//if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	//	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
 
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
+	//if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	//	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
 }
 
 HRESULT CMFC_Player::Add_NaviMesh(_uint iCellCount, vector<_matrix> vecPoint)

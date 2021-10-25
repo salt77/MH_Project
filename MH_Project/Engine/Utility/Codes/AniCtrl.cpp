@@ -70,7 +70,7 @@ void CAniCtrl::Set_AnimationIndex(const _uint & iIndex)
 
 	// 트랙의 활성화 유무를 결정하는 함수
 	m_pAniCtrl->SetTrackEnable(m_iNewTrack, TRUE);
-	m_pAniCtrl->KeyTrackSpeed(m_iNewTrack, 2.5f, m_fAccTime, 0.25, D3DXTRANSITION_LINEAR);
+	m_pAniCtrl->KeyTrackSpeed(m_iNewTrack, m_fAniSpeed, m_fAccTime, 0.25, D3DXTRANSITION_LINEAR);
 	m_pAniCtrl->KeyTrackWeight(m_iNewTrack, 0.95f, m_fAccTime, 0.2, D3DXTRANSITION_LINEAR);
 
 	// advancedtime 함수 호출시 증가하던 시간 값을 초기화
