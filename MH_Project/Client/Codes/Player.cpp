@@ -31,6 +31,8 @@ HRESULT CPlayer::Ready_Object(void)
 
 	//m_pNaviMeshCom->Set_CellIndex(0);
 
+	m_vDir = *m_pTransformCom->Get_Info(INFO_LOOK);
+
 	return S_OK;
 }
 
@@ -41,14 +43,16 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	m_pMainCam = dynamic_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
 
 	//SetUp_OnTerrain();
+	Compute_CanAction();
 	Key_Input(fTimeDelta);
+
+	Animation_Control();
+	WeaponCollision_Control();
+	MoveOn_Skill(fTimeDelta);
 
 	/*_int iExit = CGameObject::Update_Object(fTimeDelta);*/
 	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_pMeshCom->Play_Animation(fTimeDelta);
-
-	Animation_Control();
-	WeaponCollision_Control();
 
 	Add_RenderGroup(RENDER_NONALPHA, this);
 
@@ -178,87 +182,129 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	//m_pTransformCom->Get_INFO(INFO_RIGHT, &m_vRightDir);
 
 	_vec3 vMoveDir = _vec3(0.f, 0.f, 0.f);
-	_vec3 m_vDir = m_pMainCam->Get_CamDirVector(DIR_LOOK);
+	_vec3 m_vLookDir = m_pMainCam->Get_CamDirVector(DIR_LOOK);
 	_vec3 m_vRightDir = m_pMainCam->Get_CamDirVector(DIR_RIGHT);
 
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+	// 두 가지 이상의 키 값을 누를 때
+	if (Key_Pressing('W') && Key_Pressing('A'))
 	{
-		m_eCurAction = PL_SMASH;
-		m_iAniIndex = m_eNextSmash;
+		vMoveDir = m_vDir = m_vLookDir - m_vRightDir;
 	}
-	else if (/*Get_DIMouseState(DIM_LB) & 0X80*/GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	else if (Key_Pressing('A') && Key_Pressing('S'))
 	{
-		m_eCurAction = PL_ATK;
-		m_iAniIndex = m_eNextAtk;
+		vMoveDir = m_vDir = -m_vLookDir - m_vRightDir;
+	}
+	else if (Key_Pressing('S') && Key_Pressing('D'))
+	{
+		vMoveDir = m_vDir = -m_vLookDir + m_vRightDir;
+	}
+	else if (Key_Pressing('W') && Key_Pressing('D'))
+	{
+		vMoveDir = m_vDir = m_vLookDir + m_vRightDir;
+	}
+	// 한 개의 키 값만 누를 때
+	else
+	{
+		if (Key_Pressing('W'))
+		{
+			vMoveDir = m_vDir = m_vLookDir;
+		}
+		else if (Key_Pressing('A'))
+		{
+			vMoveDir = m_vDir = -m_vRightDir;
+		}
+		else if (Key_Pressing('S'))
+		{
+			vMoveDir = m_vDir = -m_vLookDir;
+		}
+		else if (Key_Pressing('D'))
+		{
+			vMoveDir = m_vDir = m_vRightDir;
+		}
+		else if (PL_MOVE >= m_eCurAction)
+		{
+			m_eCurAction = PL_IDLE;
+		}
 	}
 
-	if (m_eCurAction <= PL_MOVE)
+	// 스매쉬
+	if (PL_SMASH >= m_eCurAction)
 	{
-		// 두 가지 이상의 키 값을 누를 때
-		if ((GetAsyncKeyState('W') & 0x8000) && (GetAsyncKeyState('A') & 0x8000))
+		if (Key_Down(VK_RBUTTON))
 		{
-			vMoveDir = m_vDir - m_vRightDir;
+			if (m_bCanAction)
+			{
+				m_eCurAction = PL_SMASH;
+				m_iAniIndex = m_eNextSmash;
+
+				Rotate_PlayerLook(vMoveDir);
+			}
 		}
-		else if ((GetAsyncKeyState('A') & 0x8000) && (GetAsyncKeyState('S') & 0x8000))
+	}
+
+	// 슬립대쉬
+	if (PL_DASH >= m_eCurAction)
+	{
+		if (Key_Down(VK_SPACE))
 		{
-			vMoveDir = -m_vDir - m_vRightDir;
+			if (m_bCanAction)
+			{
+				m_eCurAction = PL_DASH;
+				m_iAniIndex = STATE_DASH_S;
+
+				SKILL_MOVE(150, 1250.f, 100);
+			}
 		}
-		else if ((GetAsyncKeyState('S') & 0x8000) && (GetAsyncKeyState('D') & 0x8000))
+	}
+
+	// 평타
+	if (PL_ATK >= m_eCurAction)
+	{
+		if (Key_Down(VK_LBUTTON))
 		{
-			vMoveDir = -m_vDir + m_vRightDir;
+			if (m_bCanAction)
+			{
+				m_eCurAction = PL_ATK;
+				m_iAniIndex = m_eNextAtk;
+
+				Rotate_PlayerLook(vMoveDir);
+			}
 		}
-		else if ((GetAsyncKeyState('W') & 0x8000) && (GetAsyncKeyState('D') & 0x8000))
+	}
+
+	// 움직임
+	if (PL_MOVE >= m_eCurAction &&
+		vMoveDir != _vec3(0.f, 0.f, 0.f))
+	{
+		D3DXVec3Normalize(&vMoveDir, &vMoveDir);
+
+		if (Key_Pressing(VK_SHIFT))
 		{
-			vMoveDir = m_vDir + m_vRightDir;
+			m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
+			//m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta));
+			m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
+
+			m_iAniIndex = STATE_SPRINT;
 		}
-		// 한 개의 키 값만 누를 때
 		else
 		{
-			if (GetAsyncKeyState('W') & 0x8000)
-			{
-				vMoveDir = m_vDir;
-			}
-			else if (GetAsyncKeyState('A') & 0x8000)
-			{
-				vMoveDir = -m_vRightDir;
-			}
-			else if (GetAsyncKeyState('S') & 0x8000)
-			{
-				vMoveDir = -m_vDir;
-			}
-			else if (GetAsyncKeyState('D') & 0x8000)
-			{
-				vMoveDir = m_vRightDir;
-			}
-			else
-			{
-				m_eCurAction = PL_IDLE;
-			}
-		}
-
-		if (vMoveDir != _vec3(0.f, 0.f, 0.f))
-		{
-			D3DXVec3Normalize(&vMoveDir, &vMoveDir);
-
 			m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed, fTimeDelta);
 			//m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta));
 			m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed, fTimeDelta);
 
-			m_eCurAction = PL_MOVE;
 			m_iAniIndex = STATE_RUN;
-
-			Rotate_PlayerLook(fTimeDelta, vMoveDir);
 		}
+
+		m_eCurAction = PL_MOVE;
+
+		Rotate_PlayerLook(fTimeDelta, vMoveDir);
 	}
 
-	if (m_eCurAction <= PL_IDLE)
+	// 대기
+	if (PL_IDLE >= m_eCurAction)
 	{
 		m_iAniIndex = STATE_IDLE;
 	}
-}
-
-void CPlayer::Action_Change()
-{
 }
 
 void CPlayer::SetUp_OnTerrain(void)
@@ -284,6 +330,28 @@ Engine::_vec3 CPlayer::PickUp_OnTerrain(void)
 	return m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
 }
 
+void CPlayer::Compute_CanAction()
+{
+	if (m_eCurAction == PL_ATK ||
+		m_eCurAction == PL_SMASH ||
+		m_eCurAction == PL_SKILL || 
+		m_eCurAction == PL_DASH)
+	{
+		if (m_fAniTime < (m_lfAniEnd * 0.25f))
+		{
+			m_bCanAction = false;
+		}
+		else
+		{
+			m_bCanAction = true;
+		}
+	}
+	else
+	{
+		m_bCanAction = true;
+	}
+}
+
 void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector)
 {
 	_vec3 vUp = _vec3(0.f, 1.f, 0.f);
@@ -297,22 +365,81 @@ void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVecto
 	{
 		if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
 		{
-			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * fTimeDelta * 2.f));
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * fTimeDelta * 2.25f));
 		}
 		else if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
 		{
-			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * -fTimeDelta * 2.f));
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * -fTimeDelta * 2.25f));
+		}
+	}
+}
+
+void CPlayer::Rotate_PlayerLook(_vec3 & TargetLookVector)
+{
+	_vec3 vUp = _vec3(0.f, 1.f, 0.f);
+	_vec3 vPlayerRight = *m_pTransformCom->Get_Info(INFO_RIGHT);
+	_vec3 vTemp;
+
+	D3DXVec3Normalize(&TargetLookVector, &TargetLookVector);
+	D3DXVec3Normalize(&vPlayerRight, &vPlayerRight);
+
+	_float fAngle = D3DXToDegree(acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
+
+	if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
+	{
+		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(fAngle));
+	}
+	else if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
+	{
+		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-fAngle));
+	}
+
+	// 디버그용
+	_matrix vInfo = *m_pTransformCom->Get_WorldMatrix();
+	if (vInfo._11 >= -360.f &&
+		vInfo._11 <= 360.f)
+	{
+		int a = 0;
+	}
+	else
+	{
+		int a = 0;
+	}
+}
+
+void CPlayer::MoveOn_Skill(const _float& fTimeDelta)
+{
+	if (m_bSkillMove)
+	{
+		if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
+		{
+			m_dwSkillMoveReady = GetTickCount();
+			m_dwSkillMoveReadyTime = 9999999;
+			m_dwSkillMoveStart = GetTickCount();
+		}
+
+		if (m_dwSkillMoveStart + m_dwSkillMoveTime >= GetTickCount())
+		{
+			m_pTransformCom->Move_Pos(&(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta);
+		}
+		else if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
+		{
+			m_bSkillMove = false;
 		}
 	}
 }
 
 void CPlayer::Animation_Control()
 {
-	_float fAniTime = m_pMeshCom->Get_AniFrameTime();
-	_double lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
+	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
+	m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 
 	// Speed 조절
-	if (m_eCurAction == (PL_ATK || PL_SMASH || PL_SKILL))
+	if (m_eCurAction == PL_ATK)
+	{
+		m_pMeshCom->Set_TrackSpeed(3.2f);
+	}
+	else if (m_eCurAction == PL_SMASH || m_eCurAction == PL_SKILL || m_eCurAction == PL_DASH)
 	{
 		m_pMeshCom->Set_TrackSpeed(2.5f);
 	}
@@ -322,7 +449,7 @@ void CPlayer::Animation_Control()
 	}
 
 	// State 자동 변경
-	if (fAniTime >= lfAniEnd)
+	if (m_fAniTime >= m_lfAniEnd)
 	{
 		m_eCurAction = PL_IDLE;
 
@@ -331,117 +458,148 @@ void CPlayer::Animation_Control()
 	}
 
 	// 각 Animation 별 디테일
-	switch (m_iAniIndex)
+	m_eCurState = (PL_STATE)m_iAniIndex;
+	if (m_eCurState != m_ePreState)
 	{
-	case STATE_SPRINT_STOP:
-		break;
+		switch (m_eCurState)
+		{
+		case STATE_SPRINT_STOP:
+			break;
 
-	case STATE_REVIVE:
-		break;
+		case STATE_REVIVE:
+			break;
 
-	case STATE_DEAD:
-		break;
+		case STATE_DEAD:
+			break;
 
-	case STATE_DAMAGE_RESIST:
-		break;
+		case STATE_DAMAGE_RESIST:
+			break;
 
-	case STATE_DOWNTOIDLE_FRONT:
-		break;
+		case STATE_DOWNTOIDLE_FRONT:
+			break;
 
-	case STATE_DOWNTOIDLE_BACK:
-		break;
+		case STATE_DOWNTOIDLE_BACK:
+			break;
 
-	case STATE_DOWNIDLE_FRONT:
-		break;
+		case STATE_DOWNIDLE_FRONT:
+			break;
 
-	case STATE_DOWNIDLE_BACK:
-		break;
+		case STATE_DOWNIDLE_BACK:
+			break;
 
-	case STATE_DAMAGEFROM_FRONT:
-		break;
+		case STATE_DAMAGEFROM_FRONT:
+			break;
 
-	case STATE_DAMAGEFROM_BACK:
-		break;
+		case STATE_DAMAGEFROM_BACK:
+			break;
 
-	case STATE_WINDMILL:
-		break;
+		case STATE_WINDMILL:
+			break;
 
-	case STATE_DOUBLE_CRECSENT:
-		break;
+		case STATE_DOUBLE_CRECSENT:
+			break;
 
-	case STATE_DASHATK:
-		break;
+		case STATE_DASHATK:
+			SKILL_MOVE(10, 1100.f, 150);
 
-	case STATE_FURY2:
-		break;
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
 
-	case STATE_FURY:
-		break;
+		case STATE_FURY2:
+			break;
 
-	case STATE_DASH_W:
-		break;
+		case STATE_FURY:
+			break;
 
-	case STATE_DASH_S:
-		break;
+		case STATE_DASH_W:
+			break;
 
-	case STATE_DASH_N:
-		break;
+		case STATE_DASH_S:
+			break;
 
-	case STATE_DASH_E:
-		break;
+		case STATE_DASH_N:
+			break;
 
-	case STATE_SMASH3:
-		m_eNextAtk = STATE_ATK1;
-		m_eNextSmash = STATE_SMASH1;
-		break;
+		case STATE_DASH_E:
+			break;
 
-	case STATE_SMASH4_B:
-		m_eNextAtk = STATE_ATK1;
-		m_eNextSmash = STATE_SMASH1;
-		break;
+		case STATE_SMASH3:
+			SKILL_MOVE(180, 750.f, 275);
 
-	case STATE_SMASH4:
-		m_eNextAtk = STATE_ATK1;
-		m_eNextSmash = STATE_SMASH4_B;
-		break;
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_SMASH1;
+			break;
 
-	case STATE_SMASH2_B:
-		m_eNextAtk = STATE_ATK1;
-		m_eNextSmash = STATE_SMASH1;
-		break;
+		case STATE_SMASH4_B:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_SMASH1;
+			break;
 
-	case STATE_SMASH2:
-		m_eNextAtk = STATE_ATK1;
-		m_eNextSmash = STATE_SMASH2_B;
-		break;
+		case STATE_SMASH4:
+			SKILL_MOVE(450, 600.f, 60);
 
-	case STATE_SMASH1:
-		m_eNextAtk = STATE_ATK1;
-		m_eNextSmash = STATE_SMASH1;
-		break;
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_SMASH4_B;
+			break;
 
-	case STATE_ATK4:
-		m_eNextAtk = STATE_ATK1;
-		m_eNextSmash = STATE_SMASH4;
-		break;
+		case STATE_SMASH2_B:
+			SKILL_MOVE(300, 1100.f, 185);
 
-	case STATE_ATK3:
-		m_eNextAtk = STATE_ATK4;
-		m_eNextSmash = STATE_SMASH3;
-		break;
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_SMASH1;
+			break;
 
-	case STATE_ATK2:
-		m_eNextAtk = STATE_ATK3;
-		m_eNextSmash = STATE_SMASH2;
-		break;
+		case STATE_SMASH2:
+			SKILL_MOVE(250, 600.f, 80);
 
-	case STATE_ATK1:
-		m_eNextAtk = STATE_ATK2;
-		m_eNextSmash = STATE_SMASH1;
-		break;
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_SMASH2_B;
+			break;
 
-	default:
-		break;
+		case STATE_SMASH1:
+			SKILL_MOVE(150, 600.f, 80);
+
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_SMASH1;
+			break;
+
+		case STATE_ATK4:
+			SKILL_MOVE(135, 650.f, 80);
+
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_SMASH4;
+			break;
+
+		case STATE_ATK3:
+			SKILL_MOVE(150, 650.f, 80);
+
+			m_eNextAtk = STATE_ATK4;
+			m_eNextSmash = STATE_SMASH3;
+			break;
+
+		case STATE_ATK2:
+			SKILL_MOVE(150, 650.f, 80);
+
+			m_eNextAtk = STATE_ATK3;
+			m_eNextSmash = STATE_SMASH2;
+			break;
+
+		case STATE_ATK1:
+			SKILL_MOVE(150, 650.f, 50);
+
+			m_eNextAtk = STATE_ATK2;
+			m_eNextSmash = STATE_SMASH1;
+			break;
+
+		default:
+			SKILL_MOVE_END;
+
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
+			break;
+		}
+
+		m_ePreState = m_eCurState;
 	}
 }
 
@@ -455,183 +613,51 @@ void CPlayer::WeaponCollision_Control()
 		switch (m_iAniIndex)
 		{
 		case STATE_DOUBLE_CRECSENT:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.25f <= fAniTime &&
-					0.7f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.25f, 0.7f);
 			break;
 
 		case STATE_DASHATK:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.1f <= fAniTime &&
-					0.65f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.1f, 0.65f);
 			break;
 
 		case STATE_FURY2:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.45f <= fAniTime &&
-					0.9f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.45f, 0.9f);
 			break;
 
 		case STATE_FURY:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.45f <= fAniTime &&
-					0.9f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.45f, 0.9f);
 			break;
 
 		case STATE_SMASH3:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.05f <= fAniTime &&
-					0.8f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.05f, 0.8f);
 			break;
 
 		case STATE_SMASH4:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.6f <= fAniTime &&
-					0.85f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.55f, 0.85f);
 			break;
 
 		case STATE_SMASH2_B:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.45f <= fAniTime &&
-					0.7f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.45f, 0.7f);
 			break;
 
 		case STATE_SMASH1:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.35f <= fAniTime &&
-					0.6f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.35f, 0.6f);
 			break;
 
 		case STATE_ATK4:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.3f <= fAniTime &&
-					0.7f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.3f, 0.7f);
 			break;
 
 		case STATE_ATK3:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.3f <= fAniTime &&
-					0.6f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.3f, 0.6f);
 			break;
 
 		case STATE_ATK2:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.25f <= fAniTime &&
-					0.6f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.25f, 0.6f);
 			break;
 
 		case STATE_ATK1:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (0.25f <= fAniTime &&
-					0.5f >= fAniTime)
-				{
-					iter->second->Set_CanCollision(true);
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}
+			HITBOX_CONTROLL(0.25f, 0.5f);
 			break;
 
 		default:

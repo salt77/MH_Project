@@ -7,6 +7,21 @@
 extern	HWND		 g_hWnd;
 extern	HINSTANCE	 g_hInst;
 
+
+#define HITBOX_CONTROLL(StartTime, EndTime)					\
+for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
+{															\
+	if (StartTime <= fAniTime &&							\
+		EndTime >= fAniTime)								\
+	{														\
+		iter->second->Set_CanCollision(true);				\
+	}														\
+	else													\
+	{														\
+		iter->second->Set_CanCollision(false);				\
+	}														\
+}
+
 //#ifdef _DEBUG
 //
 //#define _CRTDBG_MAP_ALLOC

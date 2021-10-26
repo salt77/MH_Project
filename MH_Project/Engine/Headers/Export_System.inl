@@ -1,3 +1,4 @@
+#include "Export_System.h"
 
 HRESULT		Ready_GraphicDev(HWND hWnd, WINMODE eMode, const _uint& iSizeX, const _uint& iSizeY, CGraphicDev** ppGraphicDev)
 {
@@ -73,8 +74,24 @@ void		Update_InputDev(void)
 	CInputDev::GetInstance()->Update_InputDev();
 }
 
+inline _bool Key_Pressing(int _key)
+{
+	return CKeyMgr::GetInstance()->Key_Pressing(_key);
+}
+
+inline _bool Key_Down(int _key)
+{
+	return CKeyMgr::GetInstance()->Key_Down(_key);
+}
+
+inline _bool Key_Up(int _key)
+{
+	return CKeyMgr::GetInstance()->Key_Up(_key);
+}
+
 void		Release_System(void)
 {
+	CKeyMgr::GetInstance()->DestroyInstance();
 	CInputDev::GetInstance()->DestroyInstance();
 	CFontMgr::GetInstance()->DestroyInstance();
 	CFrameMgr::GetInstance()->DestroyInstance();

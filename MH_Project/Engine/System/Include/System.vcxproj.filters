@@ -28,6 +28,9 @@
     <Filter Include="03.Font\Manager">
       <UniqueIdentifier>{0d99a957-0273-4c7a-b799-709a82871cb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.KeyMgr">
+      <UniqueIdentifier>{8ba37c0f-7220-4150-9a8b-f4f140d2f6b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Headers\Export_System.h">
@@ -56,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="..\Codes\InputDev.h">
       <Filter>04.InputDev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\KeyMgr.h">
+      <Filter>05.KeyMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +93,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\InputDev.cpp">
       <Filter>04.InputDev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\KeyMgr.cpp">
+      <Filter>05.KeyMgr</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

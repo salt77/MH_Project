@@ -47,7 +47,7 @@ private:
 
 	_float		m_fSpeed = 20.f;
 	_float		m_fCamAngle = 0.f;
-	_float		m_fDistanceFromTarget = 3.5f;
+	_float		m_fDistanceFromTarget = 3.f;
 	_float		m_fInterpolY = 0.85f;
 
 	//CTransform*	m_pTransformCom = nullptr;
