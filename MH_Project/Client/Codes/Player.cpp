@@ -91,7 +91,8 @@ void CPlayer::Render_Object(void)
 
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 
-	//m_pNaviMeshCom->Render_NaviMesh();
+	if (m_pNaviMeshCom)
+		m_pNaviMeshCom->Render_NaviMesh();
 	m_pMeshCom->Render_Meshes();
 
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -176,6 +177,31 @@ HRESULT CPlayer::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float v
 	return S_OK;
 }
 
+HRESULT CPlayer::Add_NaviMesh(_uint iCellCount, vector<_matrix> vecPoint)
+{
+	//map<const wstring, CComponent*>::iterator	iter = m_mapComponent[ID_STATIC].begin();
+
+	//for (; iter != m_mapComponent[ID_STATIC].end(); ++iter)
+	//{
+	//	if (L"Com_NaviMesh" == iter->first)
+	//	{
+	//		Safe_Release(iter->second);
+	//		m_mapComponent[ID_STATIC].erase(iter);
+
+	//		break;
+	//	}
+	//}
+
+	// NaviMesh
+	CComponent*		pComponent = nullptr;
+
+	pComponent = m_pNaviMeshCom = dynamic_cast<CNaviMesh*>(Clone_Prototype(L"Proto_NaviMesh"));
+	NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_NaviMesh", pComponent);
+
+	return S_OK;
+}
+
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
 	//m_pTransformCom->Get_INFO(INFO_LOOK, &m_vDir);
@@ -237,6 +263,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_eCurAction = PL_SMASH;
 				m_iAniIndex = m_eNextSmash;
 
+				D3DXVec3Normalize(&vMoveDir, &vMoveDir);
 				Rotate_PlayerLook(vMoveDir);
 			}
 		}
@@ -250,9 +277,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			if (m_bCanAction)
 			{
 				m_eCurAction = PL_DASH;
-				m_iAniIndex = STATE_DASH_S;
-
-				SKILL_MOVE(150, 1250.f, 100);
+				m_iAniIndex = STATE_DASH_N;
 			}
 		}
 	}
@@ -267,6 +292,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_eCurAction = PL_ATK;
 				m_iAniIndex = m_eNextAtk;
 
+				D3DXVec3Normalize(&vMoveDir, &vMoveDir);
 				Rotate_PlayerLook(vMoveDir);
 			}
 		}
@@ -280,16 +306,16 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		if (Key_Pressing(VK_SHIFT))
 		{
-			m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
-			//m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta));
+			//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed * 1.35f, fTimeDelta));
 			m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
 
 			m_iAniIndex = STATE_SPRINT;
 		}
 		else
 		{
-			m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed, fTimeDelta);
-			//m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta));
+			//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed, fTimeDelta);
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta));
 			m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed, fTimeDelta);
 
 			m_iAniIndex = STATE_RUN;
@@ -420,7 +446,8 @@ void CPlayer::MoveOn_Skill(const _float& fTimeDelta)
 
 		if (m_dwSkillMoveStart + m_dwSkillMoveTime >= GetTickCount())
 		{
-			m_pTransformCom->Move_Pos(&(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta);
+			//qm_pTransformCom->Move_Pos(&(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta);
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
 		}
 		else if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
 		{
@@ -448,55 +475,67 @@ void CPlayer::Animation_Control()
 		m_pMeshCom->Set_TrackSpeed(2.f);
 	}
 
-	// State 자동 변경
-	if (m_fAniTime >= m_lfAniEnd)
-	{
-		m_eCurAction = PL_IDLE;
-
-		m_eNextAtk = STATE_ATK1;
-		m_eNextSmash = STATE_SMASH1;
-	}
-
 	// 각 Animation 별 디테일
 	m_eCurState = (PL_STATE)m_iAniIndex;
 	if (m_eCurState != m_ePreState)
 	{
 		switch (m_eCurState)
 		{
-		case STATE_SPRINT_STOP:
-			break;
-
+		//case STATE_SPRINT_STOP:
+		//	break;
 		case STATE_REVIVE:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_SMASH1;
 			break;
 
 		case STATE_DEAD:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DAMAGE_RESIST:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DOWNTOIDLE_FRONT:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DOWNTOIDLE_BACK:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DOWNIDLE_FRONT:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DOWNIDLE_BACK:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DAMAGEFROM_FRONT:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DAMAGEFROM_BACK:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_WINDMILL:
 			break;
 
 		case STATE_DOUBLE_CRECSENT:
+			SKILL_MOVE(135, 300.f, 250);
+
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DASHATK:
@@ -511,17 +550,18 @@ void CPlayer::Animation_Control()
 		case STATE_FURY:
 			break;
 
-		case STATE_DASH_W:
-			break;
-
-		case STATE_DASH_S:
-			break;
-
+		//case STATE_DASH_W:
+		//	break;
+		//case STATE_DASH_S:
+		//	break;
 		case STATE_DASH_N:
-			break;
+			SKILL_MOVE(135, 1200.f, 100);
 
-		case STATE_DASH_E:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DOUBLE_CRECSENT;
 			break;
+		//case STATE_DASH_E:
+		//	break;
 
 		case STATE_SMASH3:
 			SKILL_MOVE(180, 750.f, 275);
@@ -532,7 +572,7 @@ void CPlayer::Animation_Control()
 
 		case STATE_SMASH4_B:
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_SMASH1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_SMASH4:
@@ -546,7 +586,7 @@ void CPlayer::Animation_Control()
 			SKILL_MOVE(300, 1100.f, 185);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_SMASH1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_SMASH2:
@@ -560,7 +600,7 @@ void CPlayer::Animation_Control()
 			SKILL_MOVE(150, 600.f, 80);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_SMASH1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_ATK4:
@@ -599,7 +639,17 @@ void CPlayer::Animation_Control()
 			break;
 		}
 
+		m_fAniTime = 0.f;
 		m_ePreState = m_eCurState;
+	}
+
+	// State 자동 변경
+	if (m_fAniTime >= m_lfAniEnd)
+	{
+		m_eCurAction = PL_IDLE;
+
+		m_eNextAtk = STATE_ATK1;
+		m_eNextSmash = STATE_SMASH1;
 	}
 }
 

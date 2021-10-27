@@ -40,7 +40,8 @@ void CTerrainTex::Copy_Indices(INDEX32 * pIndex, const _ulong & dwTriCnt)
 
 HRESULT Engine::CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 										const _ulong& dwCntZ, 
-										const _ulong& dwVtxItv)
+										const _ulong& dwVtxItv, 
+										const _uint& iGrass)
 {
 	m_dwTriCnt = (dwCntX - 1) * (dwCntZ - 1) * 2;
 	m_dwVtxCnt = dwCntX * dwCntZ;
@@ -112,11 +113,30 @@ HRESULT Engine::CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 			pVertex[dwIndex].vPosition = _vec3(_float(j) * dwVtxItv, 
 										/*(pPixel[dwIndex] & 0x000000ff) / 20.f*/0.f,
 										_float(i) * dwVtxItv);
+			if (0 == iGrass)
+				pVertex[dwIndex].vPosition -= _vec3(18.f, 0.f, 20.f);
+			else if (1 == iGrass)
+				pVertex[dwIndex].vPosition -= _vec3(103.f, 0.f, 20.f);
+			else
+				pVertex[dwIndex].vPosition -= _vec3(-6.f, 0.f, 20.f);
 
 			m_pPos[dwIndex] = pVertex[dwIndex].vPosition;
 
-			pVertex[dwIndex].vTexUV = _vec2(_float(j) / (dwCntX - 1) * 200.f,
-											_float(i) / (dwCntZ - 1) * 200.f);
+			if (0 == iGrass)
+			{
+				pVertex[dwIndex].vTexUV = _vec2(_float(j) / (dwCntX - 1) * 50.f,
+					_float(i) / (dwCntZ - 1) * 50.f);
+			}
+			else if (1 == iGrass)
+			{
+				pVertex[dwIndex].vTexUV = _vec2(_float(j) / (dwCntX - 1) * 100.f,
+					_float(i) / (dwCntZ - 1) * 30.f);
+			}
+			else
+			{
+				pVertex[dwIndex].vTexUV = _vec2(_float(j) / (dwCntX - 1) * 100.f,
+					_float(i) / (dwCntZ - 1) * 30.f);
+			}
 		}
 	}	
 	m_pVB->Unlock();
@@ -175,11 +195,12 @@ CComponent* Engine::CTerrainTex::Clone(void)
 CTerrainTex* Engine::CTerrainTex::Create(LPDIRECT3DDEVICE9 pGraphicDev,
 										const _ulong& dwCntX,
 										const _ulong& dwCntZ,
-										const _ulong& dwVtxItv)
+										const _ulong& dwVtxItv,
+										const _uint& iGrass)
 {
 	CTerrainTex*	pInstance = new CTerrainTex(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Buffer(dwCntX, dwCntZ, dwVtxItv)))
+	if (FAILED(pInstance->Ready_Buffer(dwCntX, dwCntZ, dwVtxItv, iGrass)))
 		Safe_Release(pInstance);
 
 	return pInstance;

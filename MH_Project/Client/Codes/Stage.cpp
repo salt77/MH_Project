@@ -6,13 +6,13 @@
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
 {
-
+	m_vecSavePoint.reserve(32);
 }
 
 CStage::~CStage(void)
 {
-
 }
+
 
 HRESULT CStage::Ready_Scene(void)
 {
@@ -30,7 +30,8 @@ HRESULT CStage::Ready_Scene(void)
 
 HRESULT CStage::LateReady_Scene()
 {
-	FAILED_CHECK_RETURN(Load_Data(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_Navimesh(), E_FAIL);
 
 	return S_OK;
 }
@@ -92,10 +93,18 @@ HRESULT CStage::Ready_Layer_GameLogic(const wstring pLayerTag)
 
 	CGameObject*			pGameObject = nullptr;
 
-	// Terrain
-	pGameObject = CTerrain::Create(m_pGraphicDev);
+	// Terrain 추가
+	pGameObject = CTerrain::Create(m_pGraphicDev, 0);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
+
+	// Terrain_Grass 추가
+	pGameObject = CTerrain::Create(m_pGraphicDev, 1);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain2", pGameObject), E_FAIL);
+	pGameObject = CTerrain::Create(m_pGraphicDev, 2);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain3", pGameObject), E_FAIL);
 
 	// StageMesh
 	pGameObject = CStageMesh::Create(m_pGraphicDev);
@@ -145,7 +154,7 @@ HRESULT CStage::Ready_LightInfo(void)
 	return S_OK;
 }
 
-HRESULT CStage::Load_Data()
+HRESULT CStage::Load_PlayerCol()
 {
 	HANDLE hFile = CreateFile(L"../../Data/Lethita_HitBox.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
@@ -214,31 +223,6 @@ HRESULT CStage::Load_Data()
 			}
 		}
 
-		//CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
-
-		//pAhglan->Add_Collider(fRadius, pNameBuff, eColliderType);
-		//m_ListBoxCollider.AddString(pNameBuff);
-
-		//list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_AHGLAN);
-		//list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
-
-		//for (; iterList != listTemp.end(); ++iterList)
-		//{
-		//	for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
-		//	{
-		//		_tchar	pTemp[64] = L"";
-		//		MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
-
-		//		if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
-		//		{
-		//			dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
-		//			pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_AHGLAN);
-
-		//			break;
-		//		}
-		//	}
-		//}
-
 		Safe_Delete(pNameBuff);
 		Safe_Delete(pNameBuff2);
 
@@ -288,7 +272,7 @@ HRESULT CStage::Load_Data()
 				_tchar	pTemp[64] = L"";
 				MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
 
-				if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!wcscmp(pTemp, pNameBuff2))
+				if (!wcscmp(pTemp, pNameBuff2))
 				{
 					dynamic_cast<CBoxCollider*>(Engine::Get_Component(L"GameLogic", L"Player", wstrColName, ID_STATIC))->Set_BoneName(wstrBoneName);
 					dynamic_cast<CBoxCollider*>(pPlayer->Get_Component((wstring)wstrColName, ID_STATIC))->Set_Matrix((*iterList)->ppCombinedTransformMatrix[i]);
@@ -298,39 +282,46 @@ HRESULT CStage::Load_Data()
 			}
 		}
 
-
-		//CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
-
-		//pAhglan->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
-		//m_ListBoxCol.AddString(pNameBuff);
-
-		//// Bone 찾기
-		//list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
-		//list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
-
-		//for (; iterList != listTemp.end(); ++iterList)
-		//{
-		//	for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
-		//	{
-		//		_tchar	pTemp[64] = L"";
-		//		MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
-
-		//		if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
-		//		{
-		//			dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
-		//			//::g_wstrBoneName = m_pParsing->wstrBoneName;
-		//			pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType);
-
-		//			break;
-		//		}
-		//	}
-		//}
-
 		Safe_Delete(pNameBuff);
 		Safe_Delete(pNameBuff2);
 	}
 
-	CloseHandle(hFile);	
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CStage::Load_Navimesh()
+{
+	HANDLE hFile = CreateFile(L"../../Data/Navi.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	DWORD dwbyte = 0;
+	_uint iSize = 0;
+	_matrix matPoint;
+	ZeroMemory(matPoint, sizeof(_matrix));
+
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwbyte, nullptr);
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		if (0 == dwbyte)
+			break;
+
+		ReadFile(hFile, &matPoint, sizeof(_matrix), &dwbyte, nullptr);
+
+		m_vecSavePoint.push_back(matPoint);
+	}
+
+	CloseHandle(hFile);
+
+	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_NaviMesh", CNaviMesh::Create(m_pGraphicDev, m_vecSavePoint.size(), m_vecSavePoint)), E_FAIL);
+
+	CPlayer*	pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+	if (pPlayer)
+		pPlayer->Add_NaviMesh(m_vecSavePoint.size(), m_vecSavePoint);
 
 	return S_OK;
 }
@@ -349,5 +340,3 @@ void CStage::Free(void)
 {
 	CScene::Free();
 }
-
-

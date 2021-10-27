@@ -32,7 +32,6 @@ HRESULT CSkyBox::Ready_Object(void)
 
 _int CSkyBox::Update_Object(const _float& fTimeDelta)
 {
-
 	_matrix matView;
 
 	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);

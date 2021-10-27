@@ -64,6 +64,9 @@
     <Filter Include="02.GameObject\01.MFC_Terrain">
       <UniqueIdentifier>{78677be9-bb85-4e1d-94e2-a59582478f1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.MFC_Stage">
+      <UniqueIdentifier>{7016874e-8e45-4cb0-a869-60594f58372e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -132,6 +135,9 @@
     <ClInclude Include="..\Codes\MFC_Ahglan.h">
       <Filter>02.GameObject\03.MFC_Ahglan</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Stage.h">
+      <Filter>02.GameObject\05.MFC_Stage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -190,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_Ahglan.cpp">
       <Filter>02.GameObject\03.MFC_Ahglan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Stage.cpp">
+      <Filter>02.GameObject\05.MFC_Stage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

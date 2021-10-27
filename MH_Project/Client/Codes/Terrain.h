@@ -20,7 +20,7 @@ private:
 	virtual ~CTerrain(void);
 
 public:
-	virtual HRESULT Ready_Object(void) override;
+	virtual HRESULT Ready_Object(_uint iGrass = 0);
 	virtual _int Update_Object(const _float& fTimeDelta) override;
 	virtual void Render_Object(void) override;
 
@@ -29,13 +29,15 @@ private:
 	HRESULT				SetUp_Material(void);
 
 private:
+	_uint			m_iGrass = 0;
+
 	CTerrainTex*		m_pBufferCom = nullptr;
 	CTexture*			m_pTextureCom = nullptr;
 	CTransform*			m_pTransformCom = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
 
 public:
-	static CTerrain*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CTerrain*		Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iGrass = 0);
 	virtual void			Free(void);
 };
 

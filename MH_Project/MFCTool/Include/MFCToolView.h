@@ -11,6 +11,7 @@ class CMFC_Player;
 class CMFC_CamEye;
 class CMFC_CamAt;
 class CMFC_Ahglan;
+class CMFC_Stage;
 
 BEGIN(Engine)
 
@@ -75,10 +76,13 @@ private:
 	LPDIRECT3DDEVICE9	m_pGraphicDev = nullptr;
 	CMFC_Camera*		m_pCamera = nullptr;
 	CMFC_Terrain*		m_pTerrain = nullptr;
+	CMFC_Terrain*		m_pTerrain2 = nullptr;
+	CMFC_Terrain*		m_pTerrain3 = nullptr;
 	CMFC_Player*		m_pPlayer = nullptr;
 	CMFC_CamEye*		m_pCamEye = nullptr;
 	CMFC_CamAt*			m_pCamAt = nullptr;
 	CMFC_Ahglan*		m_pAhglan = nullptr;
+	CMFC_Stage*			m_pStage = nullptr;
 	CLayer*				m_pLayer = nullptr;
 
 	// Object Tool 관련 변수들

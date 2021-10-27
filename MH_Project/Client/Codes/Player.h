@@ -49,6 +49,7 @@ public:
 	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
 								_float vMaxX, _float vMaxY, _float vMaxZ,
 								wstring wstrName, COLLIDERTYPE eColliderType);
+	HRESULT			Add_NaviMesh(_uint iCellCount, vector<_matrix> vecPoint);
 
 private:
 	_bool			m_bIsPlayer = true;

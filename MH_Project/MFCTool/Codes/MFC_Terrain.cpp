@@ -17,8 +17,10 @@ CMFC_Terrain::~CMFC_Terrain()
 }
 
 
-HRESULT CMFC_Terrain::Ready_Object()
+HRESULT CMFC_Terrain::Ready_Object(_uint iGrass)
 {
+	m_iGrass = iGrass;
+
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
@@ -66,14 +68,38 @@ HRESULT CMFC_Terrain::Add_Component()
 	CComponent*		pComponent = nullptr;
 
 	// buffer
-	pComponent = m_pBufferCom = dynamic_cast<CTerrainTex*>(Clone_Prototype(L"Proto_Buffer_TerrainTex"));
-	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
+	if (0 == m_iGrass)
+	{
+		pComponent = m_pBufferCom = dynamic_cast<CTerrainTex*>(Clone_Prototype(L"Proto_Buffer_TerrainTex"));
+		NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
+	}
+	else if (1 == m_iGrass)
+	{
+		pComponent = m_pBufferCom = dynamic_cast<CTerrainTex*>(Clone_Prototype(L"Proto_Buffer_TerrainTex2"));
+		NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
+	}
+	else if (2 == m_iGrass)
+	{
+		pComponent = m_pBufferCom = dynamic_cast<CTerrainTex*>(Clone_Prototype(L"Proto_Buffer_TerrainTex3"));
+		NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
+	}
 
 	// texture
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Terrain"));
-	NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	if (0 == m_iGrass)
+	{
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Terrain"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	}
+	else if (1 == m_iGrass || 2 == m_iGrass)
+	{
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Terrain2"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	}
 
 	// Transform
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Clone_Prototype(L"Proto_Transform"));
@@ -110,11 +136,11 @@ HRESULT CMFC_Terrain::Setup_Material()
 	return S_OK;
 }
 
-CMFC_Terrain * CMFC_Terrain::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CMFC_Terrain * CMFC_Terrain::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iGrass)
 {
 	CMFC_Terrain*	pInstance = new CMFC_Terrain(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Object()))
+	if (FAILED(pInstance->Ready_Object(iGrass)))
 		Safe_Release(pInstance);
 
 	return pInstance;

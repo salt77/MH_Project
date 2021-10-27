@@ -21,7 +21,7 @@ public:
 	void				Copy_Indices(INDEX32* pIndex, const _ulong& dwTriCnt); 
 
 public:
-	HRESULT				Ready_Buffer(const _ulong& dwCntX, const _ulong& dwCntZ, const _ulong& dwVtxItv) ;
+	HRESULT				Ready_Buffer(const _ulong& dwCntX, const _ulong& dwCntZ, const _ulong& dwVtxItv, const _uint& iGrass);
 	virtual void		Render_Buffer(void) override;
 
 private:
@@ -35,7 +35,8 @@ public:
 	static CTerrainTex*	Create(LPDIRECT3DDEVICE9 pGraphicDev,
 								const _ulong& dwCntX, 
 								const _ulong& dwCntZ, 
-								const _ulong& dwVtxItv = 1);
+								const _ulong& dwVtxItv = 1, 
+								const _uint& iGrass = 0);
 
 	virtual void		Free(void) override;
 	virtual CComponent* Clone(void) override;	

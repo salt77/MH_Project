@@ -19,6 +19,7 @@
 #include "MFC_CamEye.h"
 #include "MFC_CamAt.h"
 #include "MFC_CamInterpol.h"
+#include "MFC_Stage.h"
 #include "Layer.h"
 
 #ifdef _DEBUG
@@ -183,12 +184,20 @@ HRESULT CMFCToolView::Add_Prototype()
 
 	// Components
 	Engine::Ready_Prototype(L"Proto_Transform", CTransform::Create(m_pGraphicDev));
-	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 32, 32));
-	Engine::Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", TEX_NORMAL, 2));
+
+	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 48, 48));
+	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex2", CTerrainTex::Create(m_pGraphicDev, 96, 48, 1, 1));
+	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex3", CTerrainTex::Create(m_pGraphicDev, 96, 48, 1, 2));
+
+	Engine::Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Ortel_%d.png", TEX_NORMAL));
+	Engine::Ready_Prototype(L"Proto_Texture_Terrain2", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Ortel2_%d.png", TEX_NORMAL));
+
 	Engine::Ready_Prototype(L"Proto_Calculator", CCalculator::Create(m_pGraphicDev));
 	//Engine::Ready_Prototype(L"Proto_NaviMesh", CNaviMesh::Create(m_pGraphicDev));
 
 	// Meshes
+	Engine::Ready_Prototype(L"Proto_StaticMesh_Stage", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Stage/", L"Stage.X"));
+
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Lethita/", L"Lethita.X"));
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Ahglan", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Ahglan/", L"Ahglan.X"));
 	
@@ -210,14 +219,36 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 
 	CGameObject* pObj = nullptr;
 
+	// Terrain_Grass 추가
+	pObj = CMFC_Terrain::Create(m_pGraphicDev, 1);
+	NULL_CHECK_RETURN(pObj, E_FAIL);
+	m_pLayer->Add_GameObject(L"MFC_Terrain2", pObj);
+	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+	m_pTerrain2 = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain2"));
+
+	pObj = CMFC_Terrain::Create(m_pGraphicDev, 2);
+	NULL_CHECK_RETURN(pObj, E_FAIL);
+	m_pLayer->Add_GameObject(L"MFC_Terrain3", pObj);
+	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+	m_pTerrain3 = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain3"));
+
 	// Terrain 추가
-	pObj = CMFC_Terrain::Create(m_pGraphicDev);
+	pObj = CMFC_Terrain::Create(m_pGraphicDev, 0);
 	NULL_CHECK_RETURN(pObj, E_FAIL);
 	m_pLayer->Add_GameObject(L"MFC_Terrain", pObj);
-
 	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
 	m_pTerrain = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
+
+	// Stage 추가
+	pObj = CMFC_Stage::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pObj, E_FAIL);
+	m_pLayer->Add_GameObject(L"MFC_Stage", pObj);
+	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+	m_pStage = dynamic_cast<CMFC_Stage*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Stage"));
 
 	// Camera 추가 
 	pObj = CMFC_Camera::Create(m_pGraphicDev,
@@ -228,7 +259,6 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 		0.1f, 1000.f);
 	NULL_CHECK_RETURN(pObj, E_FAIL);
 	m_pLayer->Add_GameObject(L"MFC_Camera", pObj);
-
 	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
 	m_pCamera = dynamic_cast<CMFC_Camera*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Camera"));
@@ -691,6 +721,7 @@ void CMFCToolView::OnTimer(UINT_PTR nIDEvent)
 		Render_Begin(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f));
 
 		Engine::Render_GameObject(m_pGraphicDev);
+		m_pTerrain->Render_Object();
 		//m_pLayer->Render_Layer(m_fDeltaTime);
 
 		Render_End();

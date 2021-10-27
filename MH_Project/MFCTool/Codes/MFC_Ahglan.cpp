@@ -20,7 +20,7 @@ HRESULT CMFC_Ahglan::Ready_Object(void)
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_pTransformCom->Set_Pos(3.f, 0.f, 3.f);
-	m_pTransformCom->Set_Scale(0.05f, 0.05f, 0.05f);
+	m_pTransformCom->Set_Scale(0.07f, 0.07f, 0.07f);
 	
 	m_pMeshCom->Set_AnimationIndex(0);
 

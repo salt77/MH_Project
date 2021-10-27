@@ -20,7 +20,7 @@ public:
 	virtual ~CMFC_Terrain();
 
 public:
-	virtual HRESULT Ready_Object() override;
+	virtual HRESULT Ready_Object(_uint iGrass = 0);
 	virtual _int Update_Object(const _float& fTimeDelta) override;
 	virtual void Render_Object() override;
 
@@ -32,6 +32,8 @@ public:
 	void		Set_RenderType(RENDERTYPE_MFC _eRenderType) { m_eRenderType = _eRenderType; }
 
 private:
+	_uint			m_iGrass = 0;
+
 	CTerrainTex*	m_pBufferCom = nullptr;
 	CTexture*		m_pTextureCom = nullptr;
 	CTransform*		m_pTransformCom = nullptr;
@@ -42,7 +44,7 @@ private:
 	RENDERTYPE_MFC	m_eRenderType = RENDERTYPE_MFC_END;
 
 public:
-	static	CMFC_Terrain*	Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static	CMFC_Terrain*	Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iGrass = 0);
 	virtual void			Free();
 };
 

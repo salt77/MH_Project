@@ -18,8 +18,10 @@ CTerrain::~CTerrain(void)
 }
 
 
-HRESULT CTerrain::Ready_Object(void)
+HRESULT CTerrain::Ready_Object(_uint iGrass)
 {
+	m_iGrass = iGrass;
+
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
@@ -49,11 +51,11 @@ void CTerrain::Render_Object(void)
 
 }
 
-CTerrain* CTerrain::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CTerrain* CTerrain::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iGrass)
 {
 	CTerrain*	pInstance = new CTerrain(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Object()))
+	if (FAILED(pInstance->Ready_Object(iGrass)))
 		Safe_Release(pInstance);
 
 	return pInstance;
@@ -69,14 +71,38 @@ HRESULT CTerrain::Add_Component(void)
 	CComponent*		pComponent = nullptr;
 	
 	// buffer
-	pComponent = m_pBufferCom = dynamic_cast<CTerrainTex*>(Clone_Prototype(L"Proto_Buffer_TerrainTex"));
-	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
+	if (0 == m_iGrass)
+	{
+		pComponent = m_pBufferCom = dynamic_cast<CTerrainTex*>(Clone_Prototype(L"Proto_Buffer_TerrainTex"));
+		NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
+	}
+	else if (1 == m_iGrass)
+	{
+		pComponent = m_pBufferCom = dynamic_cast<CTerrainTex*>(Clone_Prototype(L"Proto_Buffer_TerrainTex2"));
+		NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
+	}
+	else if (2 == m_iGrass)
+	{
+		pComponent = m_pBufferCom = dynamic_cast<CTerrainTex*>(Clone_Prototype(L"Proto_Buffer_TerrainTex3"));
+		NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
+	}
 
 	// texture
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Terrain"));
-	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	if (0 == m_iGrass)
+	{
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Terrain"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	}
+	else if (1 == m_iGrass || 2 == m_iGrass)
+	{
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Terrain2"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	}
 
 	// Transform
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Clone_Prototype(L"Proto_Transform"));
@@ -99,7 +125,7 @@ HRESULT CTerrain::SetUp_Material(void)
 
 	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f);
+	tMtrl.Ambient = D3DXCOLOR(0.65f, 0.65f, 0.65f, 1.f);
 	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
 	tMtrl.Power = 0.f;
 

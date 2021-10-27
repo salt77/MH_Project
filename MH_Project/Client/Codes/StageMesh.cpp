@@ -6,19 +6,17 @@
 CStageMesh::CStageMesh(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
-
 }
 
 CStageMesh::CStageMesh(const CStageMesh& rhs)
 	: CGameObject(rhs)
 {
-
 }
 
 CStageMesh::~CStageMesh(void)
 {
-
 }
+
 
 HRESULT CStageMesh::Ready_Object(void)
 {
@@ -26,7 +24,7 @@ HRESULT CStageMesh::Ready_Object(void)
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
-	m_pTransformCom->Set_Scale(0.02f, 0.02f, 0.02f);
+	m_pTransformCom->Set_Scale(0.025f, 0.02f, 0.02f);
 
 	return S_OK;
 }
@@ -112,7 +110,7 @@ HRESULT CStageMesh::SetUp_Material()
 
 	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.f);
+	tMtrl.Ambient = D3DXCOLOR(0.45f, 0.45f, 0.45f, 1.f);
 	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
 	tMtrl.Power = 0.f;
 

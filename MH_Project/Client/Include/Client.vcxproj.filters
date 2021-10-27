@@ -55,6 +55,9 @@
     <Filter Include="02.GameObject\03.StageMesh">
       <UniqueIdentifier>{8fb7fe41-b783-4568-8e95-bc053acb4b45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\06.Ahglan">
+      <UniqueIdentifier>{4cc3c394-9057-4bf1-9b09-4e1133ce99c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -102,6 +105,9 @@
     <ClInclude Include="..\Codes\StageMesh.h">
       <Filter>02.GameObject\03.StageMesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Ahglan.h">
+      <Filter>02.GameObject\06.Ahglan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -139,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\StageMesh.cpp">
       <Filter>02.GameObject\03.StageMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Ahglan.cpp">
+      <Filter>02.GameObject\06.Ahglan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

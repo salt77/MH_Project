@@ -1,0 +1,25 @@
+18. Entry_Contact
+17. Entry_Idle
+
+16. Atk_Onehand
+15. Atk_Rolling_Onetime_Begin
+14. Atk_Rolling_Onetime_End
+13. Atk_Rolling_Twice
+12. Atk_Stamp
+11. Atk_TurnLeft
+10. Atk_TurnRight
+9.  Atk_Twohands
+8.  Atk_Twohands_Combo
+7.  Atk_Windmill
+
+6.  Idle
+5.  Low_Health
+4.  Spawn
+3.  Taunt
+2.  TurnLeft
+1.  TurnRight
+0.  Walk
+
+
+
+

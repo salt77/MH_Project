@@ -31,12 +31,15 @@ private:
 	HRESULT				Ready_Prototype(void);
 	HRESULT				Ready_LightInfo(void);
 
-	HRESULT				Load_Data();
+	HRESULT				Load_PlayerCol();
+	HRESULT				Load_Navimesh();
 
 private:
 	_ulong					m_dwRenderCnt = 0;
 	_tchar					m_szFPS[256];
 	_float					m_fTime = 0.f;
+
+	vector<_matrix>			m_vecSavePoint;
 
 public:
 	static CStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

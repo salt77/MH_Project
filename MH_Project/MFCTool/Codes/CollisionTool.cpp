@@ -842,7 +842,7 @@ void CCollisionTool::OnBnClickedButtonLoad()
 						_tchar	pTemp[64] = L"";
 						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
 
-						if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
+						if (!StrCmpCW(pTemp, pNameBuff2))
 						{
 							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
 							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_AHGLAN);
