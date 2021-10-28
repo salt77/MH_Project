@@ -24,6 +24,7 @@ Engine::CTerrainTex::~CTerrainTex(void)
 {
 
 }
+
 // 이거 나중에 쓰니까 걱정마세요 호호호
 void CTerrainTex::Copy_Indices(INDEX32 * pIndex, const _ulong & dwTriCnt)
 {
@@ -56,48 +57,6 @@ HRESULT Engine::CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 
 	FAILED_CHECK_RETURN(CVIBuffer::Ready_Buffer(), E_FAIL);
 
-	/////////////////////////////////////////////////////////////////////
-	//LPDIRECT3DTEXTURE9			pTexture = nullptr;
-
-	//D3DXCreateTexture(m_pGraphicDev,
-	//	129,
-	//	129,
-	//	1, // miplevel
-	//	0,	// 텍스처의 용도, D3DUSAGE_RENDERTARGET
-	//	D3DFMT_A8R8G8B8,
-	//	D3DPOOL_MANAGED,
-	//	&pTexture);
-
-	//D3DLOCKED_RECT LockRect;
-	//pTexture->LockRect(0, &LockRect, NULL, 0);
-
-	//for (_int i = 0; i < 129; ++i)
-	//{
-	//	for (_int j = 0; j < 129; ++j)
-	//	{
-	//		_int	iIndex = i * 129 + j;
-
-	//		*(((_ulong*)LockRect.pBits) + iIndex) = D3DCOLOR_ARGB(255, 255, 0, 0);
-	//	}
-	//}
-
-	//pTexture->UnlockRect(0);
-	//D3DXSaveTextureToFile(L"../Bin/Resources/Texture/Terrain/TestHeight.bmp", D3DXIFF_BMP, pTexture, NULL);
-	
-
-	//_ulong		dwByte = 0;
-	//m_hFile = CreateFile(L"../Bin/Resource/Texture/Terrain/Height.bmp",
-	//	GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-
-	//ReadFile(m_hFile, &m_fH, sizeof(BITMAPFILEHEADER), &dwByte, NULL);
-	//ReadFile(m_hFile, &m_iH, sizeof(BITMAPINFOHEADER), &dwByte, NULL);
-
-	//_ulong*		pPixel = new _ulong[m_iH.biWidth * m_iH.biHeight];
-
-	//ReadFile(m_hFile, pPixel, sizeof(_ulong) * m_iH.biWidth * m_iH.biHeight, &dwByte, NULL);
-
-	//CloseHandle(m_hFile);
-
 	VTXTEX*		pVertex = NULL;
 
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
@@ -114,11 +73,11 @@ HRESULT Engine::CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 										/*(pPixel[dwIndex] & 0x000000ff) / 20.f*/0.f,
 										_float(i) * dwVtxItv);
 			if (0 == iGrass)
-				pVertex[dwIndex].vPosition -= _vec3(18.f, 0.f, 20.f);
+				pVertex[dwIndex].vPosition -= _vec3(30.f, 0.f, 20.f);
 			else if (1 == iGrass)
 				pVertex[dwIndex].vPosition -= _vec3(103.f, 0.f, 20.f);
 			else
-				pVertex[dwIndex].vPosition -= _vec3(-6.f, 0.f, 20.f);
+				pVertex[dwIndex].vPosition -= _vec3(-7.f, 0.f, 20.f);
 
 			m_pPos[dwIndex] = pVertex[dwIndex].vPosition;
 

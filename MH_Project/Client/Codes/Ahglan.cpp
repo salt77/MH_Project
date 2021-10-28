@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Ahglan.h"
+#include "Player.h"
 
 #include "Export_Utility.h"
 
@@ -20,16 +21,30 @@ HRESULT CAhglan::Ready_Object(void)
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_pTransformCom->Set_Pos(0.f, 0.f, -7.f);
 	m_pTransformCom->Set_Scale(0.07f, 0.07f, 0.07f);
-
-	return S_OK;
+	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180));
 
 	return S_OK;
 }
 
 _int CAhglan::Update_Object(const _float & fTimeDelta)
 {
-	return _int();
+	_int iExit = CGameObject::Update_Object(fTimeDelta);
+
+	m_fTimeDelta = fTimeDelta;
+
+	Movement();
+	Animation_Control();
+	MoveOn_Skill();
+	RotationOn_Skill();
+
+	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
+	m_pMeshCom->Play_Animation(fTimeDelta);
+
+	Add_RenderGroup(RENDER_NONALPHA, this);
+
+	return iExit;
 }
 
 void CAhglan::Render_Object(void)
@@ -76,7 +91,7 @@ HRESULT CAhglan::Add_Component(void)
 	CComponent*		pComponent = nullptr;
 
 	// Mesh
-	pComponent = m_pMeshCom = dynamic_cast<CDynamicMesh*>(Clone_Prototype(L"Proto_Mesh_Player"));
+	pComponent = m_pMeshCom = dynamic_cast<CDynamicMesh*>(Clone_Prototype(L"Proto_Mesh_Ahglan"));
 	NULL_CHECK_RETURN(m_pMeshCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Mesh", pComponent);
 
@@ -99,6 +114,459 @@ HRESULT CAhglan::Add_Component(void)
 	return S_OK;
 }
 
+void CAhglan::Contact()
+{
+	if (BS_ENTRY >= m_eBossAction &&
+		m_fDistance <= DIS_MID)
+	{
+		m_iAniIndex = ENTRY_CONTACT;
+
+		Animation_Control();
+	}
+}
+
+void CAhglan::Movement()
+{
+	m_pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+	if (m_pPlayer)
+		m_pPlayerTrans = static_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
+
+	m_vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
+	if (m_pPlayerTrans)
+		m_vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
+	m_fDistance = D3DXVec3Length(&(m_vMyPos - m_vPlayerPos));
+
+	_vec3	vPlayerDir = m_vPlayerPos - m_vMyPos;
+	m_vDir = -(*m_pTransformCom->Get_Info(INFO_LOOK));
+	D3DXVec3Normalize(&m_vDir, &m_vDir);
+	D3DXVec3Normalize(&vPlayerDir, &vPlayerDir);
+
+	m_fAngle = D3DXToDegree(acos(D3DXVec3Dot(&m_vDir, &vPlayerDir)));
+
+	// 아글란 메쉬의 축이 반대로 뒤틀려있다. 그래서 계산도 반대로 함. Look == Back, Right == Left;
+	if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) > 0.f)
+		m_bTargetIsRight = false;
+	else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) < 0.f)
+		m_bTargetIsRight = true;
+
+
+	if (m_bCanAction && m_pPlayerTrans)
+	{
+		if (BS_DAMAGED <= m_eBossAction)
+		{
+
+		}
+		else if (BS_ATK <= m_eBossAction)
+		{
+			if (DIS_SHORT > m_fDistance)
+			{
+				if (m_dwWindmillCoolDown + m_dwWindmillDelay < GetTickCount())
+				{
+					m_iAniIndex = ATK_WINDMILL;
+				}
+				else if (35.f <= m_fAngle && 
+						 70.f >= m_fAngle)
+				{
+					if (m_bTargetIsRight)
+					{
+						m_iAniIndex = ATK_TURNRIGHT;
+					}
+					else
+					{
+						m_iAniIndex = ATK_TURNLEFT;
+					}
+				}
+				else if (70.f < m_fAngle)
+				{
+					if (m_bTargetIsRight)
+					{
+						m_iAniIndex = TURN_RIGHT;
+					}
+					else
+					{
+						m_iAniIndex = TURN_LEFT;
+					}
+				}
+				else
+				{
+					_uint iRandSkill = rand() % 3;
+
+					switch (iRandSkill)
+					{
+					case 0:
+						m_iAniIndex = ATK_TWOHANDS;
+						break;
+					case 1:
+						m_iAniIndex = ATK_ONEHAND;
+						break;
+					case 2:
+						m_iAniIndex = ATK_STAMP;
+						break;
+					}
+				}
+			}
+			else
+			{
+				m_iAniIndex = ATK_ROLLING_ONETIME_BEGIN;
+			}
+		}
+		else if (BS_IDLE <= m_eBossAction)
+		{
+			if (35.f <= m_fAngle)
+			{
+				if (m_bTargetIsRight)
+				{
+					m_iAniIndex = TURN_RIGHT;
+				}
+				else
+				{
+					m_iAniIndex = TURN_LEFT;
+				}
+			}
+			else if (DIS_SHORT <= m_fDistance)
+			{
+				if (/*m_dwRollingAtkCoolDown + m_dwRollingAtkDelay < GetTickCount()*/1)
+				{
+					m_eBossAction = BS_ATK;
+				}
+				else
+				{
+					m_iAniIndex = WALK;
+				}
+			}
+		}
+	}
+}
+
+void CAhglan::MoveOn_Skill()
+{
+	if (m_bSkillMove)
+	{
+		if (m_fSkillMoveStartTime <= m_fAniTime && 
+			m_fSkillMoveEndTime >= m_fAniTime)
+		{
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, &m_vDir, m_fSkillMoveSpeed, m_fTimeDelta));
+		}
+		else if (m_fSkillMoveEndTime < m_fAniTime)
+		{
+			m_bSkillMove = false;
+		}
+	}
+}
+
+void CAhglan::RotationOn_Skill()
+{
+	if (m_bSkillRotation)
+	{
+		if (m_fSkillRotStartTime <= m_fAniTime &&
+			m_fSkillRotEndTime >= m_fAniTime)
+		{
+			if (10.f <= m_fAngle)
+			{
+				if (m_bTargetIsRight)
+				{
+					m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(m_fSkillRotSpeed * m_fTimeDelta));
+				}
+				else
+				{
+					m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-m_fSkillRotSpeed * m_fTimeDelta));
+				}
+			}
+		}
+		else if (m_fSkillRotEndTime < m_fAniTime)
+		{
+			m_bSkillRotation = false;
+		}
+	}
+}
+
+void CAhglan::Animation_Control()
+{
+	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
+	m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
+
+	// 상태 변경 시 한번만 실행
+	m_eCurState = (STATE)m_iAniIndex;
+	if (m_eCurState != m_ePreState)
+	{
+		m_fAniTime = 0.f;
+
+		switch (m_eCurState)
+		{
+		case WALK:
+			m_eBossAction = BS_IDLE;
+
+			m_pMeshCom->Set_TrackSpeed(2.15f);
+			break;
+
+		case TURN_RIGHT:
+			m_eBossAction = BS_IDLE;
+			break;
+
+		case TURN_LEFT:
+			m_eBossAction = BS_IDLE;
+			break;
+
+		case TAUNT:
+			m_eBossAction = BS_IDLE;
+			break;
+
+		case SPAWN:
+			break;
+
+		case LOW_HEALTH:
+			m_eBossAction = BS_IDLE;
+			break;
+
+		case IDLE:
+			m_eBossAction = BS_IDLE;
+			break;
+
+		case ATK_WINDMILL:
+			m_eBossAction = BS_ATK;
+
+			m_bCanAction = false;
+
+			m_dwWindmillCoolDown = GetTickCount();
+			m_dwCoolDownInterpol += 5000;
+			m_dwWindmillDelay = m_dwCoolDownInterpol + rand() % 20000;
+			break;
+
+		case ATK_TWOHANDS_COMBO:
+			m_eBossAction = BS_ATK;
+
+			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
+
+			m_bCanAction = false;
+			break;
+
+		case ATK_TWOHANDS:
+			m_eBossAction = BS_ATK;
+
+			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 0.8f);
+			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.8f);
+
+			m_bCanAction = false;
+			break;
+
+		case ATK_TURNRIGHT:
+			m_eBossAction = BS_ATK;
+
+			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
+			BS_SKILL_ROTATION((_float)m_lfAniEnd * 0.3f, 270.f, (_float)m_lfAniEnd * 0.6f);
+
+			m_bCanAction = false;
+			break;
+
+		case ATK_TURNLEFT:
+			m_eBossAction = BS_ATK;
+
+			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
+			BS_SKILL_ROTATION((_float)m_lfAniEnd * 0.3f, 270.f, (_float)m_lfAniEnd * 0.6f);
+
+			m_bCanAction = false;
+			break;
+
+		case ATK_STAMP:
+			m_eBossAction = BS_ATK;
+
+			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 0.9f);
+			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.9f);
+
+			m_bCanAction = false;
+			break;
+
+		case ATK_ROLLING_TWICE:
+			break;
+
+		case ATK_ROLLING_ONETIME_END:
+			m_pMeshCom->Set_TrackSpeed(1.9f);
+
+			m_fAniEndDelay = 0.95f;
+			m_bCanAction = false;
+			break;
+
+		case ATK_ROLLING_ONETIME_BEGIN:
+			m_eBossAction = BS_ATK;
+
+			/*BS_SKILL_MOVE((_float)m_lfAniEnd * 1.1f, 20.f, (_float)m_lfAniEnd * 1.5f);
+			BS_SKILL_ROTATION(0.f, 360.f, (_float)m_lfAniEnd * 1.1f);
+			m_pMeshCom->Set_TrackSpeed(1.9f);*/
+
+			m_dwRollingAtkCoolDown = GetTickCount();
+			m_dwRollingAtkDelay = m_dwCoolDownInterpol + rand() % 10000;
+			m_fAniEndDelay = 0.95f;
+			m_bCanAction = false;
+			break;
+
+		case ATK_ONEHAND:
+			m_eBossAction = BS_ATK;
+
+			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.25f, 3.f, (_float)m_lfAniEnd * 0.5f);
+			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.5f);
+
+			m_bCanAction = false;
+			break;
+
+		case DAMAGE_FROM_FRONT:
+			m_eBossAction = BS_DAMAGED;
+
+			m_bCanAction = false;
+			break;
+
+		case DAMAGE_FROM_BACK:
+			m_eBossAction = BS_DAMAGED;
+
+			m_bCanAction = false;
+			break;
+
+		case ENTRY_IDLE:
+			m_eBossAction = BS_ENTRY;
+			m_lfAniEnd = 1.f;
+			break;
+
+		case ENTRY_CONTACT:
+			m_fAniEndDelay = 1.08f;
+			break;
+		}
+
+		m_ePreState = m_eCurState;
+	}
+
+	// 상태 변경 시 매 프레임 실행
+	switch (m_eCurState)
+	{
+	case WALK:
+		m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, &m_vDir, m_fSpeed, m_fTimeDelta));
+
+		if (5.f <= m_fAngle)
+		{
+			if (m_bTargetIsRight)
+			{
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * m_fTimeDelta));
+			}
+			else
+			{
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * -m_fTimeDelta));
+			}
+		}
+
+		if (DIS_SHORT > m_fDistance)
+		{
+			// 강제로 다음 행동이 ATK을 수행하게 한다. 
+			m_eBossAction = BS_ATK;
+		}
+		break;
+
+	case TURN_RIGHT:
+		if (5.f <= m_fAngle)
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * m_fTimeDelta));
+		break;
+
+	case TURN_LEFT:
+		if (5.f <= m_fAngle)
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * -m_fTimeDelta));
+		break;
+
+	case TAUNT:
+		break;
+
+	case SPAWN:
+		break;
+
+	case LOW_HEALTH:
+		break;
+
+	case IDLE:
+		if (DIS_SHORT > m_fDistance)
+		{
+			// 강제로 다음 행동이 ATK을 수행하게 한다. 
+			m_eBossAction = BS_ATK;
+		}
+		break;
+
+	case ATK_WINDMILL:
+		break;
+
+	case ATK_TWOHANDS_COMBO:
+		break;
+
+	case ATK_TWOHANDS:
+		break;
+
+	case ATK_TURNRIGHT:
+		break;
+
+	case ATK_TURNLEFT:
+		break;
+
+	case ATK_STAMP:
+		break;
+
+	case ATK_ROLLING_TWICE:
+		break;
+
+	case ATK_ROLLING_ONETIME_END:
+		break;
+
+	case ATK_ROLLING_ONETIME_BEGIN:
+		break;
+
+	case ATK_ONEHAND:
+		break;
+
+	case DAMAGE_FROM_FRONT:
+		break;
+
+	case DAMAGE_FROM_BACK:
+		break;
+
+	case ENTRY_IDLE:
+		Contact();
+		break;
+
+	case ENTRY_CONTACT:
+		break;
+
+	default:
+		break;
+	}
+
+	if (m_fAniTime >= m_lfAniEnd * m_fAniEndDelay + m_fRandSpeed)
+	{
+		if (m_iAniIndex == (_uint)ATK_ROLLING_ONETIME_BEGIN)
+		{
+			m_iAniIndex = (_uint)ATK_ROLLING_ONETIME_END;
+		}
+		else if (m_iAniIndex != _uint(ENTRY_IDLE && ENTRY_CONTACT && WALK))
+		{
+			if (m_iAniIndex == (_uint)ATK_TURNLEFT)
+			{
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f));
+			}
+			else if (m_iAniIndex == (_uint)ATK_TURNRIGHT)
+			{
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f));
+			}
+
+			m_iAniIndex = (_uint)IDLE;
+			m_eBossAction = BS_IDLE;
+
+			m_pMeshCom->Set_TrackSpeed(2.f);
+			m_fRandSpeed = (rand() % 300) * 0.001f;
+
+			m_bCanAction = true;
+		}
+		else if (m_iAniIndex == (_uint)ENTRY_CONTACT)
+		{
+			m_iAniIndex = (_uint)SPAWN;
+		}
+	}
+}
+
 HRESULT CAhglan::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType)
 {
 	return S_OK;
@@ -109,8 +577,15 @@ HRESULT CAhglan::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float v
 	return S_OK;
 }
 
-HRESULT CAhglan::Add_NaviMesh(_uint iCellCount, vector<_matrix> vecPoint)
+HRESULT CAhglan::Add_NaviMesh()
 {
+	// NaviMesh
+	CComponent*		pComponent = nullptr;
+
+	pComponent = m_pNaviMeshCom = dynamic_cast<CNaviMesh*>(Clone_Prototype(L"Proto_NaviMesh"));
+	NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_NaviMesh", pComponent);
+
 	return S_OK;
 }
 

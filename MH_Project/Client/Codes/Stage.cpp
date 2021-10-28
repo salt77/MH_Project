@@ -116,6 +116,11 @@ HRESULT CStage::Ready_Layer_GameLogic(const wstring pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player", pGameObject), E_FAIL);
 
+	// Ahglan
+	pGameObject = CAhglan::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Ahglan", pGameObject), E_FAIL);
+
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
 	return S_OK;
@@ -320,8 +325,11 @@ HRESULT CStage::Load_Navimesh()
 	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_NaviMesh", CNaviMesh::Create(m_pGraphicDev, m_vecSavePoint.size(), m_vecSavePoint)), E_FAIL);
 
 	CPlayer*	pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+	CAhglan*	pAhglan = dynamic_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"));
 	if (pPlayer)
-		pPlayer->Add_NaviMesh(m_vecSavePoint.size(), m_vecSavePoint);
+		pPlayer->Add_NaviMesh();
+	if (pAhglan)
+		pAhglan->Add_NaviMesh();
 
 	return S_OK;
 }

@@ -22,6 +22,10 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 	}														\
 }
 
+#define DIS_SHORT	6.f
+#define DIS_MID		11.f
+#define DIS_LONG	15.f
+
 //#ifdef _DEBUG
 //
 //#define _CRTDBG_MAP_ALLOC

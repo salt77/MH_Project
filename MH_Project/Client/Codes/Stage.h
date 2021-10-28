@@ -7,6 +7,7 @@
 #include "BackGround.h"
 
 #include "Player.h"
+#include "Ahglan.h"
 #include "Terrain.h"
 #include "DynamicCamera.h"
 #include "SkyBox.h"

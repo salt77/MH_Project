@@ -26,6 +26,7 @@ HRESULT CPlayer::Ready_Object(void)
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_pTransformCom->Set_Pos(0.f, 0.f, 10.f);
 	m_pTransformCom->Set_Scale(0.01f, 0.01f, 0.01f);
 	//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f));
 
@@ -177,7 +178,7 @@ HRESULT CPlayer::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float v
 	return S_OK;
 }
 
-HRESULT CPlayer::Add_NaviMesh(_uint iCellCount, vector<_matrix> vecPoint)
+HRESULT CPlayer::Add_NaviMesh()
 {
 	//map<const wstring, CComponent*>::iterator	iter = m_mapComponent[ID_STATIC].begin();
 
@@ -419,18 +420,6 @@ void CPlayer::Rotate_PlayerLook(_vec3 & TargetLookVector)
 	{
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-fAngle));
 	}
-
-	// 디버그용
-	_matrix vInfo = *m_pTransformCom->Get_WorldMatrix();
-	if (vInfo._11 >= -360.f &&
-		vInfo._11 <= 360.f)
-	{
-		int a = 0;
-	}
-	else
-	{
-		int a = 0;
-	}
 }
 
 void CPlayer::MoveOn_Skill(const _float& fTimeDelta)
@@ -446,7 +435,6 @@ void CPlayer::MoveOn_Skill(const _float& fTimeDelta)
 
 		if (m_dwSkillMoveStart + m_dwSkillMoveTime >= GetTickCount())
 		{
-			//qm_pTransformCom->Move_Pos(&(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta);
 			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
 		}
 		else if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
@@ -576,56 +564,56 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_SMASH4:
-			SKILL_MOVE(450, 600.f, 60);
+			SKILL_MOVE(450, 600.f, 80);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_SMASH4_B;
 			break;
 
 		case STATE_SMASH2_B:
-			SKILL_MOVE(300, 1100.f, 185);
+			SKILL_MOVE(300, 1100.f, 200);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_SMASH2:
-			SKILL_MOVE(250, 600.f, 80);
+			SKILL_MOVE(250, 600.f, 95);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_SMASH2_B;
 			break;
 
 		case STATE_SMASH1:
-			SKILL_MOVE(150, 600.f, 80);
+			SKILL_MOVE(150, 600.f, 95);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_ATK4:
-			SKILL_MOVE(135, 650.f, 80);
+			SKILL_MOVE(135, 650.f, 95);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_SMASH4;
 			break;
 
 		case STATE_ATK3:
-			SKILL_MOVE(150, 650.f, 80);
+			SKILL_MOVE(150, 650.f, 95);
 
 			m_eNextAtk = STATE_ATK4;
 			m_eNextSmash = STATE_SMASH3;
 			break;
 
 		case STATE_ATK2:
-			SKILL_MOVE(150, 650.f, 80);
+			SKILL_MOVE(150, 650.f, 95);
 
 			m_eNextAtk = STATE_ATK3;
 			m_eNextSmash = STATE_SMASH2;
 			break;
 
 		case STATE_ATK1:
-			SKILL_MOVE(150, 650.f, 50);
+			SKILL_MOVE(150, 650.f, 70);
 
 			m_eNextAtk = STATE_ATK2;
 			m_eNextSmash = STATE_SMASH1;

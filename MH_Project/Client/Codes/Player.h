@@ -35,13 +35,13 @@ private:
 	void			Key_Input(const _float& fTimeDelta);
 	void			SetUp_OnTerrain(void);
 	_vec3			PickUp_OnTerrain(void);
+	void			Animation_Control();
 
 	// 플레이어 객체만의 특수한 함수들
 	void			Compute_CanAction();
 	void			Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector);
 	void			Rotate_PlayerLook(_vec3& TargetLookVector);
 	void			MoveOn_Skill(const _float& fTimeDelta);
-	void			Animation_Control();
 	void			WeaponCollision_Control();
 
 public:
@@ -49,14 +49,14 @@ public:
 	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
 								_float vMaxX, _float vMaxY, _float vMaxZ,
 								wstring wstrName, COLLIDERTYPE eColliderType);
-	HRESULT			Add_NaviMesh(_uint iCellCount, vector<_matrix> vecPoint);
+	HRESULT			Add_NaviMesh();
 
 private:
 	_bool			m_bIsPlayer = true;
 	_bool			m_bCanAction = true;
 	_bool			m_bSkillMove = false;
 
-	_uint			m_iAniIndex = 31;		// Idle
+	_uint			m_iAniIndex = (_uint)STATE_IDLE;
 
 	_float			m_fSpeed = 3.f;
 	_float			m_fSkillMoveSpeed = 0.f;
@@ -79,7 +79,7 @@ private:
 	PL_STATE		m_ePreState = (PL_STATE)m_iAniIndex;
 
 	PL_STATE		m_eNextAtk = STATE_ATK1;
-	PL_STATE		m_eNextSmash = STATE_SMASH1;
+	PL_STATE		m_eNextSmash = STATE_DASHATK;
 
 	// Component
 	CDynamicMesh*	m_pMeshCom = nullptr;
@@ -97,8 +97,8 @@ public:
 	virtual void		Free(void);
 };
 
-#define	SKILL_MOVE(ReadyTime, Speed, StartTime)		m_bSkillMove = TRUE; m_dwSkillMoveReady = GetTickCount();		\
-													m_dwSkillMoveReadyTime = ReadyTime;	m_fSkillMoveSpeed = Speed; m_dwSkillMoveTime = StartTime;
+#define	SKILL_MOVE(ReadyTime, Speed, Time)		m_bSkillMove = TRUE; m_dwSkillMoveReady = GetTickCount();		\
+												m_dwSkillMoveReadyTime = ReadyTime;	m_fSkillMoveSpeed = Speed; m_dwSkillMoveTime = Time;
 #define SKILL_MOVE_END				m_bSkillMove = FALSE; m_fSkillMoveSpeed = 0.f; m_dwSkillMoveTime = 0;
 
 #endif // Player_h__
