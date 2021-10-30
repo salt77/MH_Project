@@ -58,6 +58,12 @@
     <Filter Include="02.GameObject\06.Ahglan">
       <UniqueIdentifier>{4cc3c394-9057-4bf1-9b09-4e1133ce99c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Manager">
+      <UniqueIdentifier>{f6921372-5d52-43e1-ac0a-37510c790150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\00.CollisionMgr">
+      <UniqueIdentifier>{d71f251f-3002-479b-ae40-b880eede389e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -108,6 +114,9 @@
     <ClInclude Include="..\Codes\Ahglan.h">
       <Filter>02.GameObject\06.Ahglan</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\CollisionMgr.h">
+      <Filter>97.Manager\00.CollisionMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -148,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Ahglan.cpp">
       <Filter>02.GameObject\06.Ahglan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\CollisionMgr.cpp">
+      <Filter>97.Manager\00.CollisionMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

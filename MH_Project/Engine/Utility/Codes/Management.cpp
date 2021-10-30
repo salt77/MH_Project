@@ -93,6 +93,14 @@ Engine::CComponent* Engine::CManagement::Get_Component(const wstring pLayerTag, 
 	return m_pScene->Get_Component(pLayerTag, pObjTag, pComponentTag, eID);
 }
 
+const SCENE_ID & CManagement::Get_SceneID()
+{
+	if (nullptr == m_pScene)
+		return SCENE_END;
+
+	return m_pScene->Get_SceneID();
+}
+
 HRESULT CManagement::Set_RenderColType(const wstring pColName, COLTYPE eColType, COLLIDERTYPE eColliderType)
 {
 	CCollider*	pCollider = nullptr;

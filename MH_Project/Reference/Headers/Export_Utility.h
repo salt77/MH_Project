@@ -1,6 +1,8 @@
 #ifndef Export_Utility_h__
 #define Export_Utility_h__
 
+#include <random>
+
 #include "Management.h"
 #include "ProtoMgr.h"
 
@@ -34,10 +36,13 @@ inline HRESULT		Set_RenderColType(const wstring pColType, COLTYPE eColType, COLL
 
 inline CGameObject*	Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
 inline CComponent*	Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
+inline const SCENE_ID& Get_SceneID();
 inline HRESULT		Create_Management(CManagement** ppManagement);
 inline HRESULT		Set_Scene(CScene* pScene);
 inline _int			Update_Scene(const _float& fTimeDelta);
 inline void			Render_Scene(LPDIRECT3DDEVICE9& pGraphicDev);
+
+inline _float		Random(_float _fMin, _float _fMax);
 
 // ProtoMgr
 inline HRESULT		Ready_Prototype(const wstring pProtoTag, CComponent* pInstance);

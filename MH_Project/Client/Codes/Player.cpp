@@ -3,6 +3,7 @@
 
 #include "Export_Function.h"
 #include "DynamicCamera.h"
+#include "Ahglan.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -27,8 +28,8 @@ HRESULT CPlayer::Ready_Object(void)
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_pTransformCom->Set_Pos(0.f, 0.f, 10.f);
-	m_pTransformCom->Set_Scale(0.01f, 0.01f, 0.01f);
-	//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f));
+	m_pTransformCom->Set_Scale(SCALE_PLAYER, SCALE_PLAYER, SCALE_PLAYER);
+	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(270.f));
 
 	//m_pNaviMeshCom->Set_CellIndex(0);
 
@@ -48,7 +49,7 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	Key_Input(fTimeDelta);
 
 	Animation_Control();
-	WeaponCollision_Control();
+	Collision_Control();
 	MoveOn_Skill(fTimeDelta);
 
 	/*_int iExit = CGameObject::Update_Object(fTimeDelta);*/
@@ -154,46 +155,8 @@ HRESULT CPlayer::Add_Component(void)
 	return S_OK;
 }
 
-HRESULT CPlayer::Add_Collider(_float fRadius, wstring wstrName, COLLIDERTYPE eColliderType)
-{
-	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius, eColliderType);
-	m_mapColliderCom.emplace(wstrName, dynamic_cast<CCollider*>(pComponent));
-	if (m_mapColliderCom.empty())
-		return E_FAIL;
-
-	m_mapComponent[ID_STATIC].emplace(wstrName, pComponent);
-
-	return S_OK;
-}
-
-HRESULT CPlayer::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType)
-{
-	CComponent*		pComponent = CBoxCollider::Create(m_pGraphicDev, vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, eColliderType);
-	m_mapBoxColliderCom.emplace(wstrName, dynamic_cast<CBoxCollider*>(pComponent));
-	if (m_mapBoxColliderCom.empty())
-		return E_FAIL;
-
-	m_mapComponent[ID_STATIC].emplace(wstrName, pComponent);
-
-	return S_OK;
-}
-
 HRESULT CPlayer::Add_NaviMesh()
 {
-	//map<const wstring, CComponent*>::iterator	iter = m_mapComponent[ID_STATIC].begin();
-
-	//for (; iter != m_mapComponent[ID_STATIC].end(); ++iter)
-	//{
-	//	if (L"Com_NaviMesh" == iter->first)
-	//	{
-	//		Safe_Release(iter->second);
-	//		m_mapComponent[ID_STATIC].erase(iter);
-
-	//		break;
-	//	}
-	//}
-
-	// NaviMesh
 	CComponent*		pComponent = nullptr;
 
 	pComponent = m_pNaviMeshCom = dynamic_cast<CNaviMesh*>(Clone_Prototype(L"Proto_NaviMesh"));
@@ -251,6 +214,25 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		else if (PL_MOVE >= m_eCurAction)
 		{
 			m_eCurAction = PL_IDLE;
+		}
+	}
+
+	// Damaged
+	if (PL_DAMAGED >= m_eCurAction)
+	{
+		if (Key_Down('V'))
+		{
+			if (m_bCanAction)
+			{
+				if (STATE_DOWNIDLE_FRONT == m_iAniIndex)
+				{
+					m_iAniIndex = STATE_DOWNTOIDLE_FRONT;
+				}
+				else if (STATE_DOWNIDLE_BACK == m_iAniIndex)
+				{
+					m_iAniIndex = STATE_DOWNTOIDLE_BACK;
+				}
+			}
 		}
 	}
 
@@ -361,7 +343,7 @@ void CPlayer::Compute_CanAction()
 {
 	if (m_eCurAction == PL_ATK ||
 		m_eCurAction == PL_SMASH ||
-		m_eCurAction == PL_SKILL || 
+		m_eCurAction == PL_SKILL ||
 		m_eCurAction == PL_DASH)
 	{
 		if (m_fAniTime < (m_lfAniEnd * 0.25f))
@@ -450,13 +432,17 @@ void CPlayer::Animation_Control()
 	m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 
 	// Speed 조절
-	if (m_eCurAction == PL_ATK)
+	if (PL_ATK == m_eCurAction)
 	{
 		m_pMeshCom->Set_TrackSpeed(3.2f);
 	}
-	else if (m_eCurAction == PL_SMASH || m_eCurAction == PL_SKILL || m_eCurAction == PL_DASH)
+	else if (PL_SMASH == m_eCurAction || PL_SKILL == m_eCurAction || PL_DASH == m_eCurAction)
 	{
 		m_pMeshCom->Set_TrackSpeed(2.5f);
+	}
+	else if (STATE_DAMAGE_RESIST == m_eCurState)
+	{
+		m_pMeshCom->Set_TrackSpeed(1.75f);
 	}
 	else
 	{
@@ -469,8 +455,8 @@ void CPlayer::Animation_Control()
 	{
 		switch (m_eCurState)
 		{
-		//case STATE_SPRINT_STOP:
-		//	break;
+			//case STATE_SPRINT_STOP:
+			//	break;
 		case STATE_REVIVE:
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_SMASH1;
@@ -538,18 +524,19 @@ void CPlayer::Animation_Control()
 		case STATE_FURY:
 			break;
 
-		//case STATE_DASH_W:
-		//	break;
-		//case STATE_DASH_S:
-		//	break;
+			//case STATE_DASH_W:
+			//	break;
+		case STATE_DASH_S:
+			break;
+
 		case STATE_DASH_N:
-			SKILL_MOVE(135, 1200.f, 100);
+			SKILL_MOVE(125, 1200.f, 125);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DOUBLE_CRECSENT;
 			break;
-		//case STATE_DASH_E:
-		//	break;
+			//case STATE_DASH_E:
+			//	break;
 
 		case STATE_SMASH3:
 			SKILL_MOVE(180, 750.f, 275);
@@ -628,24 +615,75 @@ void CPlayer::Animation_Control()
 		}
 
 		m_fAniTime = 0.f;
+		m_bCanHit = true;
 		m_ePreState = m_eCurState;
 	}
 
 	// State 자동 변경
 	if (m_fAniTime >= m_lfAniEnd)
 	{
-		m_eCurAction = PL_IDLE;
+		switch (m_eCurState)
+		{
+		case Engine::STATE_DEAD:
+			break;
 
-		m_eNextAtk = STATE_ATK1;
-		m_eNextSmash = STATE_SMASH1;
+		case Engine::STATE_DOWNIDLE_FRONT:
+			break;
+			
+		case Engine::STATE_DOWNIDLE_BACK:
+			break;
+
+		case Engine::STATE_DAMAGEFROM_FRONT:
+			m_iAniIndex = STATE_DOWNIDLE_FRONT;
+			break;
+
+		case Engine::STATE_DAMAGEFROM_BACK:
+			m_iAniIndex = STATE_DOWNIDLE_BACK;
+			break;
+
+		default:
+			m_eCurAction = PL_IDLE;
+
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
+			break;
+		}
 	}
 }
 
-void CPlayer::WeaponCollision_Control()
+void CPlayer::Collision_Control()
 {
+	_float	fAniTime = m_pMeshCom->Get_AniFrameTime();
+
+	if (!m_mapColliderCom.empty())
+	{
+		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+
+		for (; iter != m_mapColliderCom.end(); ++iter)
+		{
+			if (STATE_DASH_N == m_iAniIndex ||
+				STATE_DASH_S == m_iAniIndex ||
+				STATE_DAMAGE_RESIST == m_iAniIndex ||
+				STATE_DAMAGEFROM_BACK == m_iAniIndex ||
+				STATE_DAMAGEFROM_FRONT == m_iAniIndex ||
+				STATE_DOWNIDLE_BACK == m_iAniIndex ||
+				STATE_DOWNIDLE_FRONT == m_iAniIndex ||
+				STATE_DOWNTOIDLE_BACK == m_iAniIndex ||
+				STATE_DOWNTOIDLE_FRONT == m_iAniIndex ||
+				STATE_REVIVE == m_iAniIndex ||
+				STATE_DEAD == m_iAniIndex)
+			{
+				iter->second->Set_CanCollision(false);
+			}
+			else
+			{
+				iter->second->Set_CanCollision(true);
+			}
+		}
+	}
+
 	if (!m_mapBoxColliderCom.empty())
 	{
-		_float	fAniTime = m_pMeshCom->Get_AniFrameTime();
 		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
 
 		switch (m_iAniIndex)
@@ -705,5 +743,121 @@ void CPlayer::WeaponCollision_Control()
 			}
 			break;
 		}
+	}
+
+	// 실제 충돌 처리 
+	m_eSceneID = Engine::Get_SceneID();
+
+	map<const wstring, CCollider*>::iterator		iter_PlayerDamaged = m_mapColliderCom.begin();
+	map<const wstring, CCollider*>::iterator		iter_BossHit;
+	map<const wstring, CCollider*>					mapBossSphereCol;
+
+	map<const wstring, CBoxCollider*>::iterator		iter_PlayerHit = m_mapBoxColliderCom.begin();
+	map<const wstring, CBoxCollider*>::iterator		iter_BossDamaged;
+	map<const wstring, CBoxCollider*>				mapBossBoxCol;
+
+	switch (m_eSceneID)
+	{
+	case Engine::SCENE_STAGE:
+		// Player 공격
+		if (m_bCanHit)
+		{
+			mapBossBoxCol = static_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"))->Get_MapBoxCollider();
+
+			for (_uint i = 0; i < m_mapBoxColliderCom.size(); ++i)
+			{
+				iter_BossDamaged = mapBossBoxCol.begin();
+
+				for (_uint j = 0; j < mapBossBoxCol.size(); ++j)
+				{
+					iter_PlayerHit->second->Set_RenderColType(COL_FALSE);
+					iter_BossDamaged->second->Set_RenderColType(COL_FALSE);
+
+					if (iter_PlayerHit->second->Get_CanCollision() &&
+						iter_BossDamaged->second->Get_CanCollision())
+					{
+						if (m_pCalculatorCom->Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
+							&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
+						{
+							iter_PlayerHit->second->Set_RenderColType(COL_TRUE);
+							iter_BossDamaged->second->Set_RenderColType(COL_TRUE);
+
+							m_bCanHit = false;
+
+							break;
+						}
+					}
+
+					++iter_BossDamaged;
+				}
+
+				++iter_PlayerHit;
+			}
+		}
+
+		// Monster 공격
+
+		mapBossSphereCol = static_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"))->Get_MapCollider();
+
+		for (_uint i = 0; i < m_mapColliderCom.size(); ++i)
+		{
+			iter_BossHit = mapBossSphereCol.begin();
+
+			for (_uint j = 0; j < mapBossSphereCol.size(); ++j)
+			{
+				iter_PlayerDamaged->second->Set_RenderColType(COL_FALSE);
+				iter_BossHit->second->Set_RenderColType(COL_FALSE);
+
+				if (iter_PlayerDamaged->second->Get_CanCollision() &&
+					iter_BossHit->second->Get_CanCollision())
+				{
+					if (m_pCalculatorCom->Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
+						iter_BossHit->second->Get_Center(), iter_BossHit->second->Get_Radius() * SCALE_AHGLAN))
+					{	
+						if (80.f <= Engine::Random(0.f, 100.f))
+						{
+							m_eCurAction = PL_DAMAGED;
+							m_iAniIndex = STATE_DAMAGE_RESIST;
+						}
+						else
+						{
+							CTransform*	pBossTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+							if (pBossTrans)
+							{
+								_vec3 vLookDir = *m_pTransformCom->Get_Info(INFO_RIGHT);
+								_vec3 vToBossDir = iter_BossHit->second->Get_Center() - *m_pTransformCom->Get_Info(INFO_POS);
+								D3DXVec3Normalize(&vLookDir, &vLookDir);
+								D3DXVec3Normalize(&vToBossDir, &vToBossDir);
+
+								if (D3DXVec3Dot(&vToBossDir, &vLookDir) > 0.f)
+								{
+									m_eCurAction = PL_DAMAGED;
+									m_iAniIndex = STATE_DAMAGEFROM_FRONT;
+								}
+								else
+								{
+									m_eCurAction = PL_DAMAGED;
+									m_iAniIndex = STATE_DAMAGEFROM_BACK;
+								}
+							}
+						}
+
+						iter_PlayerDamaged->second->Set_RenderColType(COL_TRUE);
+						iter_BossHit->second->Set_RenderColType(COL_TRUE);
+
+						break;
+					}
+				}
+
+				++iter_BossHit;
+			}
+
+			++iter_PlayerDamaged;
+		}
+		break;
+
+	default:
+		break;
 	}
 }

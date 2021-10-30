@@ -185,3 +185,126 @@ Engine::_vec3 Engine::CCalculator::Picking_OnTerrain(HWND hWnd,
 	return _vec3(0.f, 0.f, 0.f);
 }
 
+_bool CCalculator::Collision_Sphere(const _vec3& vDstCenter, const _float& fDstRadius, const _vec3& vSrcCenter, const _float& fSrcRadius)
+{
+	_float fRadius = fDstRadius + fSrcRadius;
+	_float fCenterDis = D3DXVec3Length(&(vDstCenter - vSrcCenter));
+	if ((fDstRadius + fSrcRadius) < D3DXVec3Length(&(vDstCenter - vSrcCenter)))
+		return false;
+
+	return true;
+}
+
+_bool CCalculator::Collision_AABB(const _vec3 * pDestMin, const _vec3 * pDestMax, const _matrix * pDestWorld, const _vec3 * pSourMin, const _vec3 * pSourMax, const _matrix * pSourWorld)
+{
+	_vec3	vDestMin, vDestMax, vSourMin, vSourMax;
+	_float	fDest, fSour;
+
+	D3DXVec3TransformCoord(&vDestMin, pDestMin, pDestWorld);
+	D3DXVec3TransformCoord(&vDestMax, pDestMax, pDestWorld);
+
+	D3DXVec3TransformCoord(&vSourMin, pSourMin, pSourWorld);
+	D3DXVec3TransformCoord(&vSourMax, pSourMax, pSourWorld);
+
+	// x축에서 바라봤을 때
+
+	fDest = max(vDestMin.x, vSourMin.x);
+	fSour = min(vDestMax.x, vSourMax.x);
+
+	if (fSour < fDest)
+		return false;
+
+	// y축에서 바라봤을 때
+
+	fDest = max(vDestMin.y, vSourMin.y);
+	fSour = min(vDestMax.y, vSourMax.y);
+
+	if (fSour < fDest)
+		return false;
+
+	// z축에서 바라봤을 때
+
+	fDest = max(vDestMin.z, vSourMin.z);
+	fSour = min(vDestMax.z, vSourMax.z);
+
+	if (fSour < fDest)
+		return false;
+
+	return true;
+}
+
+_bool CCalculator::Collision_OBB(const _vec3 * pDestMin, const _vec3 * pDestMax, const _matrix * pDestWorld, const _vec3 * pSourMin, const _vec3 * pSourMax, const _matrix * pSourWorld)
+{
+	OBB		tObb[2];
+	ZeroMemory(tObb, sizeof(OBB) * 2);
+
+	Set_Point(&tObb[0], pDestMin, pDestMax);
+	Set_Point(&tObb[1], pSourMin, pSourMax);
+
+	for (_ulong i = 0; i < 8; ++i)
+	{
+		D3DXVec3TransformCoord(&tObb[0].vPoint[i], &tObb[0].vPoint[i], pDestWorld);
+		D3DXVec3TransformCoord(&tObb[1].vPoint[i], &tObb[1].vPoint[i], pSourWorld);
+	}
+
+	D3DXVec3TransformCoord(&tObb[0].vCenter, &tObb[0].vCenter, pDestWorld);
+	D3DXVec3TransformCoord(&tObb[1].vCenter, &tObb[1].vCenter, pSourWorld);
+
+	for (_ulong i = 0; i < 2; ++i)
+		Set_Axis(&tObb[i]);
+
+	_float		fDistance[3];	// 0번 ; 첫번째 박스에서 각 벡터를 임의의 축으로 투영시킨 길이의 합
+								// 1번 ; 두번째 박스에서 각 벡터를 임의의 축으로 투영시킨 길이의 합
+								// 2번 ; 박스와 박스의 중점 간의 거리를 임의의 축으로 투영시킨 길이의 합		
+	for (_ulong i = 0; i < 2; ++i)
+	{
+		for (_ulong j = 0; j < 3; ++j)
+		{
+			fDistance[0] = fabs(D3DXVec3Dot(&tObb[0].vProjAxis[0], &tObb[i].vAxis[j])) +
+				fabs(D3DXVec3Dot(&tObb[0].vProjAxis[1], &tObb[i].vAxis[j])) +
+				fabs(D3DXVec3Dot(&tObb[0].vProjAxis[2], &tObb[i].vAxis[j]));
+
+			fDistance[1] = fabs(D3DXVec3Dot(&tObb[1].vProjAxis[0], &tObb[i].vAxis[j])) +
+				fabs(D3DXVec3Dot(&tObb[1].vProjAxis[1], &tObb[i].vAxis[j])) +
+				fabs(D3DXVec3Dot(&tObb[1].vProjAxis[2], &tObb[i].vAxis[j]));
+
+			fDistance[2] = fabs(D3DXVec3Dot(&(tObb[0].vCenter - tObb[1].vCenter), &tObb[i].vAxis[j]));
+
+			if (fDistance[0] + fDistance[1] < fDistance[2])
+				return false;
+		}
+	}
+
+	return true;
+}
+
+void CCalculator::Set_Point(OBB * pObb, const _vec3 * pMin, const _vec3 * pMax)
+{
+	pObb->vPoint[0] = _vec3(pMin->x, pMax->y, pMin->z);
+	pObb->vPoint[1] = _vec3(pMax->x, pMax->y, pMin->z);
+	pObb->vPoint[2] = _vec3(pMax->x, pMin->y, pMin->z);
+	pObb->vPoint[3] = _vec3(pMin->x, pMin->y, pMin->z);
+
+	// 뒷면
+	pObb->vPoint[4] = _vec3(pMin->x, pMax->y, pMax->z);
+	pObb->vPoint[5] = _vec3(pMax->x, pMax->y, pMax->z);
+	pObb->vPoint[6] = _vec3(pMax->x, pMin->y, pMax->z);
+	pObb->vPoint[7] = _vec3(pMin->x, pMin->y, pMax->z);
+
+	pObb->vCenter = (*pMin + *pMax) * 0.5f;
+}
+
+void CCalculator::Set_Axis(OBB * pObb)
+{
+	pObb->vProjAxis[0] = (pObb->vPoint[2] + pObb->vPoint[5]) * 0.5f - pObb->vCenter;
+	pObb->vProjAxis[1] = (pObb->vPoint[0] + pObb->vPoint[5]) * 0.5f - pObb->vCenter;
+	pObb->vProjAxis[2] = (pObb->vPoint[7] + pObb->vPoint[5]) * 0.5f - pObb->vCenter;
+
+	pObb->vAxis[0] = pObb->vPoint[2] - pObb->vPoint[3];
+	pObb->vAxis[1] = pObb->vPoint[0] - pObb->vPoint[3];
+	pObb->vAxis[2] = pObb->vPoint[7] - pObb->vPoint[3];
+
+	for (_ulong i = 0; i < 3; ++i)
+		D3DXVec3Normalize(&pObb->vAxis[i], &pObb->vAxis[i]);
+}
+

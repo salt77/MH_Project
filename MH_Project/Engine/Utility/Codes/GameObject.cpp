@@ -39,6 +39,30 @@ Engine::_int Engine::CGameObject::Update_Object(const _float& fTimeDelta)
 	return iResult;
 }
 
+HRESULT CGameObject::Add_Collider(_float fRadius, wstring wstrName, COLLIDERTYPE eColliderType)
+{
+	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius, eColliderType);
+	m_mapColliderCom.emplace(wstrName, dynamic_cast<CCollider*>(pComponent));
+	if (m_mapColliderCom.empty())
+		return E_FAIL;
+
+	m_mapComponent[ID_STATIC].emplace(wstrName, pComponent);
+
+	return S_OK;
+}
+
+HRESULT CGameObject::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType)
+{
+	CComponent*		pComponent = CBoxCollider::Create(m_pGraphicDev, vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, eColliderType);
+	m_mapBoxColliderCom.emplace(wstrName, dynamic_cast<CBoxCollider*>(pComponent));
+	if (m_mapBoxColliderCom.empty())
+		return E_FAIL;
+
+	m_mapComponent[ID_STATIC].emplace(wstrName, pComponent);
+
+	return S_OK;
+}
+
 CComponent * CGameObject::Find_Component(const wstring pComponentTag, COMPONENTID eID)
 {
 	auto	iter = find_if(m_mapComponent[eID].begin(), m_mapComponent[eID].end(), CTag_Finder(pComponentTag));

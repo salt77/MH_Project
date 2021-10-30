@@ -22,7 +22,7 @@ HRESULT CAhglan::Ready_Object(void)
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_pTransformCom->Set_Pos(0.f, 0.f, -7.f);
-	m_pTransformCom->Set_Scale(0.07f, 0.07f, 0.07f);
+	m_pTransformCom->Set_Scale(SCALE_AHGLAN, SCALE_AHGLAN, SCALE_AHGLAN);
 	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180));
 
 	return S_OK;
@@ -36,6 +36,7 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 
 	Movement();
 	Animation_Control();
+	Collision_Control();
 	MoveOn_Skill();
 	RotationOn_Skill();
 
@@ -164,55 +165,53 @@ void CAhglan::Movement()
 				{
 					m_iAniIndex = ATK_WINDMILL;
 				}
-				else if (35.f <= m_fAngle && 
-						 70.f >= m_fAngle)
-				{
-					if (m_bTargetIsRight)
-					{
-						m_iAniIndex = ATK_TURNRIGHT;
-					}
-					else
-					{
-						m_iAniIndex = ATK_TURNLEFT;
-					}
-				}
-				else if (70.f < m_fAngle)
-				{
-					if (m_bTargetIsRight)
-					{
-						m_iAniIndex = TURN_RIGHT;
-					}
-					else
-					{
-						m_iAniIndex = TURN_LEFT;
-					}
-				}
 				else
 				{
-					_uint iRandSkill = rand() % 3;
-
-					switch (iRandSkill)
+					if (30.f >= m_fRand)
 					{
-					case 0:
 						m_iAniIndex = ATK_TWOHANDS;
-						break;
-					case 1:
+					}
+					else if (50.f >= m_fRand)
+					{
 						m_iAniIndex = ATK_ONEHAND;
-						break;
-					case 2:
+					}
+					else if (60.f >= m_fRand)
+					{
+						m_iAniIndex = TAUNT;
+					}
+					else if (90.f >= m_fRand)
+					{
 						m_iAniIndex = ATK_STAMP;
-						break;
+					}
+					else
+					{
+						if (m_bTargetIsRight)
+						{
+							m_iAniIndex = ATK_TURNRIGHT;
+						}
+						else
+						{
+							m_iAniIndex = ATK_TURNLEFT;
+						}
 					}
 				}
-			}
-			else
-			{
-				m_iAniIndex = ATK_ROLLING_ONETIME_BEGIN;
 			}
 		}
 		else if (BS_IDLE <= m_eBossAction)
 		{
-			if (35.f <= m_fAngle)
+			if (DIS_SHORTEST >= m_fDistance &&
+				20.f >= m_fRand)
+			{
+				if (m_bTargetIsRight)
+				{
+					m_iAniIndex = ATK_TURNRIGHT;
+				}
+				else
+				{
+					m_iAniIndex = ATK_TURNLEFT;
+				}
+			}
+			else if (60.f <= m_fAngle)
 			{
 				if (m_bTargetIsRight)
 				{
@@ -223,11 +222,11 @@ void CAhglan::Movement()
 					m_iAniIndex = TURN_LEFT;
 				}
 			}
-			else if (DIS_SHORT <= m_fDistance)
+			else if (DIS_SHORT < m_fDistance)
 			{
-				if (/*m_dwRollingAtkCoolDown + m_dwRollingAtkDelay < GetTickCount()*/1)
+				if (m_dwRollingAtkCoolDown + m_dwRollingAtkDelay < GetTickCount())
 				{
-					m_eBossAction = BS_ATK;
+					m_iAniIndex = ATK_ROLLING_ONETIME_BEGIN;
 				}
 				else
 				{
@@ -242,7 +241,7 @@ void CAhglan::MoveOn_Skill()
 {
 	if (m_bSkillMove)
 	{
-		if (m_fSkillMoveStartTime <= m_fAniTime && 
+		if (m_fSkillMoveStartTime <= m_fAniTime &&
 			m_fSkillMoveEndTime >= m_fAniTime)
 		{
 			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, &m_vDir, m_fSkillMoveSpeed, m_fTimeDelta));
@@ -308,7 +307,7 @@ void CAhglan::Animation_Control()
 			break;
 
 		case TAUNT:
-			m_eBossAction = BS_IDLE;
+			m_eBossAction = BS_ATK;
 			break;
 
 		case SPAWN:
@@ -330,13 +329,18 @@ void CAhglan::Animation_Control()
 			m_dwWindmillCoolDown = GetTickCount();
 			m_dwCoolDownInterpol += 5000;
 			m_dwWindmillDelay = m_dwCoolDownInterpol + rand() % 20000;
+
+			m_fAniEndDelay = 1.05f;
 			break;
 
 		case ATK_TWOHANDS_COMBO:
 			m_eBossAction = BS_ATK;
 
 			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 0.8f);
+			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.8f);
 
+			m_fAniEndDelay = 1.05f;
 			m_bCanAction = false;
 			break;
 
@@ -347,24 +351,25 @@ void CAhglan::Animation_Control()
 			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 0.8f);
 			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.8f);
 
+			m_fAniEndDelay = 1.05f;
 			m_bCanAction = false;
 			break;
 
 		case ATK_TURNRIGHT:
 			m_eBossAction = BS_ATK;
 
-			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
-			BS_SKILL_ROTATION((_float)m_lfAniEnd * 0.3f, 270.f, (_float)m_lfAniEnd * 0.6f);
+			m_pMeshCom->Set_TrackSpeed(2.15f + m_fRandSpeed);
 
+			m_fAniEndDelay = 1.05f;
 			m_bCanAction = false;
 			break;
 
 		case ATK_TURNLEFT:
 			m_eBossAction = BS_ATK;
 
-			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
-			BS_SKILL_ROTATION((_float)m_lfAniEnd * 0.3f, 270.f, (_float)m_lfAniEnd * 0.6f);
+			m_pMeshCom->Set_TrackSpeed(2.15f + m_fRandSpeed);
 
+			m_fAniEndDelay = 1.05f;
 			m_bCanAction = false;
 			break;
 
@@ -372,9 +377,13 @@ void CAhglan::Animation_Control()
 			m_eBossAction = BS_ATK;
 
 			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
-			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 0.9f);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd);
 			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.9f);
 
+			if (30.f >= m_fRand)
+				m_fAniEndDelay = 0.95f;
+			else
+				m_fAniEndDelay = 1.05f;
 			m_bCanAction = false;
 			break;
 
@@ -382,22 +391,20 @@ void CAhglan::Animation_Control()
 			break;
 
 		case ATK_ROLLING_ONETIME_END:
-			m_pMeshCom->Set_TrackSpeed(1.9f);
+			m_pMeshCom->Set_TrackSpeed(2.1f);
 
-			m_fAniEndDelay = 0.95f;
+			m_fAniEndDelay = 1.1f;
 			m_bCanAction = false;
 			break;
 
 		case ATK_ROLLING_ONETIME_BEGIN:
 			m_eBossAction = BS_ATK;
 
-			/*BS_SKILL_MOVE((_float)m_lfAniEnd * 1.1f, 20.f, (_float)m_lfAniEnd * 1.5f);
-			BS_SKILL_ROTATION(0.f, 360.f, (_float)m_lfAniEnd * 1.1f);
-			m_pMeshCom->Set_TrackSpeed(1.9f);*/
-
+			m_pMeshCom->Set_TrackSpeed(1.8f);
+			m_dwRollingStartTime = GetTickCount();
 			m_dwRollingAtkCoolDown = GetTickCount();
 			m_dwRollingAtkDelay = m_dwCoolDownInterpol + rand() % 10000;
-			m_fAniEndDelay = 0.95f;
+
 			m_bCanAction = false;
 			break;
 
@@ -408,6 +415,7 @@ void CAhglan::Animation_Control()
 			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.25f, 3.f, (_float)m_lfAniEnd * 0.5f);
 			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.5f);
 
+			m_fAniEndDelay = 1.05f;
 			m_bCanAction = false;
 			break;
 
@@ -513,6 +521,25 @@ void CAhglan::Animation_Control()
 		break;
 
 	case ATK_ROLLING_ONETIME_BEGIN:
+		if (m_dwRollingStartTime + 1800 > GetTickCount())
+		{
+			if (10.f <= m_fAngle)
+			{
+				if (m_bTargetIsRight)
+				{
+					m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(270.f * m_fTimeDelta));
+				}
+				else
+				{
+					m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-270.f * m_fTimeDelta));
+				}
+			}
+		}
+		if (m_dwRollingStartTime + 1800 < GetTickCount() &&
+			m_dwRollingStartTime + 2700 > GetTickCount())
+		{
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, &m_vDir, 22.5f, m_fTimeDelta));
+		}
 		break;
 
 	case ATK_ONEHAND:
@@ -541,6 +568,22 @@ void CAhglan::Animation_Control()
 		{
 			m_iAniIndex = (_uint)ATK_ROLLING_ONETIME_END;
 		}
+		else if (m_iAniIndex == (_uint)ATK_STAMP &&
+			0.95f == m_fAniEndDelay)
+		{
+			if (m_bTargetIsRight)
+			{
+				m_iAniIndex = ATK_TURNRIGHT;
+			}
+			else
+			{
+				m_iAniIndex = ATK_TURNLEFT;
+			}
+		}
+		else if (m_iAniIndex == (_uint)TAUNT)
+		{
+			m_iAniIndex = ATK_TWOHANDS_COMBO;
+		}
 		else if (m_iAniIndex != _uint(ENTRY_IDLE && ENTRY_CONTACT && WALK))
 		{
 			if (m_iAniIndex == (_uint)ATK_TURNLEFT)
@@ -551,6 +594,8 @@ void CAhglan::Animation_Control()
 			{
 				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f));
 			}
+
+			m_fRand = Engine::Random(0.f, 100.f);
 
 			m_iAniIndex = (_uint)IDLE;
 			m_eBossAction = BS_IDLE;
@@ -567,19 +612,146 @@ void CAhglan::Animation_Control()
 	}
 }
 
-HRESULT CAhglan::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType)
+void CAhglan::Collision_Control()
 {
-	return S_OK;
-}
+	_float	fAniTime = m_pMeshCom->Get_AniFrameTime();
 
-HRESULT CAhglan::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType)
-{
-	return S_OK;
+	map<const wstring, CBoxCollider*>::iterator	iter_Damaged = m_mapBoxColliderCom.begin();
+	map<const wstring, CCollider*>::iterator	iter_Hit = m_mapColliderCom.begin();
+
+	// DamagedBox
+	if (!m_mapBoxColliderCom.empty())
+	{
+		for (; iter_Damaged != m_mapBoxColliderCom.end(); ++iter_Damaged)
+		{
+			if (ATK_WINDMILL == m_iAniIndex)
+			{
+				iter_Damaged->second->Set_CanCollision(false);
+			}
+			else
+			{
+				iter_Damaged->second->Set_CanCollision(true);
+			}
+		}
+	}
+
+	// HitBox
+	switch (m_eCurState)
+	{
+	case CAhglan::ATK_WINDMILL:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.13f, m_lfAniEnd * 0.8f);
+		}
+		break;
+
+	case CAhglan::ATK_TWOHANDS_COMBO:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			if (L"Hit_BodyAtk" == iter_Hit->first ||
+				L"Hit_LHand" == iter_Hit->first ||
+				L"Hit_RHand" == iter_Hit->first)
+			{
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.3f, m_lfAniEnd * 0.5f);
+			}
+		}
+		break;
+
+	case CAhglan::ATK_TWOHANDS:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			if (L"Hit_BodyAtk" == iter_Hit->first ||
+				L"Hit_LHand" == iter_Hit->first ||
+				L"Hit_RHand" == iter_Hit->first)
+			{
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.4f, m_lfAniEnd * 0.5f);
+			}
+		}
+		break;
+
+	case CAhglan::ATK_TURNRIGHT:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			if (L"Hit_LHand" == iter_Hit->first ||
+				L"Hit_RHand" == iter_Hit->first)
+			{
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.35f, m_lfAniEnd * 0.55f);
+			}
+		}
+		break;
+
+	case CAhglan::ATK_TURNLEFT:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			if (L"Hit_LHand" == iter_Hit->first ||
+				L"Hit_RHand" == iter_Hit->first)
+			{
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.4f, m_lfAniEnd * 0.65f);
+			}
+		}
+		break;
+
+	case CAhglan::ATK_STAMP:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			if (L"Hit_LFoot" == iter_Hit->first)
+			{
+				if (m_lfAniEnd * 0.1f <= fAniTime &&
+					m_lfAniEnd * 0.23f >= fAniTime)
+				{
+					iter_Hit->second->Set_CanCollision(true);
+				}
+				else if (m_lfAniEnd * 0.55f <= fAniTime &&
+					m_lfAniEnd * 0.65f >= fAniTime)
+				{
+					iter_Hit->second->Set_CanCollision(true);
+				}
+				else
+				{
+					iter_Hit->second->Set_CanCollision(false);
+				}
+			}
+			else if (L"Hit_RFoot" == iter_Hit->first)
+			{
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.35f, m_lfAniEnd * 0.43f);
+			}
+		}
+		break;
+
+	case CAhglan::ATK_ROLLING_TWICE:
+		break;
+
+	case CAhglan::ATK_ROLLING_ONETIME_END:
+		break;
+
+	case CAhglan::ATK_ROLLING_ONETIME_BEGIN:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.55f, m_lfAniEnd);
+		}
+		break;
+
+	case CAhglan::ATK_ONEHAND:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			if (L"Hit_RHand" == iter_Hit->first)
+			{
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.3f, m_lfAniEnd * 0.42f);
+			}
+		}
+		break;
+
+	default:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			iter_Hit->second->Set_CanCollision(false);
+		}
+		break;
+	}
 }
 
 HRESULT CAhglan::Add_NaviMesh()
 {
-	// NaviMesh
 	CComponent*		pComponent = nullptr;
 
 	pComponent = m_pNaviMeshCom = dynamic_cast<CNaviMesh*>(Clone_Prototype(L"Proto_NaviMesh"));

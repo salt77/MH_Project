@@ -30,7 +30,10 @@ HRESULT CStage::Ready_Scene(void)
 
 HRESULT CStage::LateReady_Scene()
 {
+	m_eSceneID = SCENE_STAGE;
+
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_AhglanCol(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_Navimesh(), E_FAIL);
 
 	return S_OK;
@@ -281,6 +284,143 @@ HRESULT CStage::Load_PlayerCol()
 				{
 					dynamic_cast<CBoxCollider*>(Engine::Get_Component(L"GameLogic", L"Player", wstrColName, ID_STATIC))->Set_BoneName(wstrBoneName);
 					dynamic_cast<CBoxCollider*>(pPlayer->Get_Component((wstring)wstrColName, ID_STATIC))->Set_Matrix((*iterList)->ppCombinedTransformMatrix[i]);
+
+					break;
+				}
+			}
+		}
+
+		Safe_Delete(pNameBuff);
+		Safe_Delete(pNameBuff2);
+	}
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CStage::Load_AhglanCol()
+{
+	HANDLE hFile = CreateFile(L"../../Data/Ahglan_AtkHitBox.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	DWORD dwbyte = 0;
+	DWORD dwStringSize = 0;
+	DWORD dwStringSize2 = 0;
+	_float fRadius = 0.f;
+	TCHAR*	pNameBuff = nullptr;
+	TCHAR*	pNameBuff2 = nullptr;
+	wstring wstrColName, wstrBoneName;
+	COLLIDERTYPE	eColliderType;
+	_vec3	vMin = {};
+	_vec3	vMax = {};
+
+	_uint iSize = 0;
+	_uint iBoxSize = 0;
+
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iBoxSize, sizeof(_uint), &dwbyte, nullptr);
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		if (0 == dwbyte)
+			break;
+
+		ReadFile(hFile, &dwStringSize, sizeof(DWORD), &dwbyte, nullptr);
+		ReadFile(hFile, &dwStringSize2, sizeof(DWORD), &dwbyte, nullptr);
+
+		pNameBuff = new TCHAR[dwStringSize];
+		pNameBuff2 = new TCHAR[dwStringSize2];
+
+		ReadFile(hFile, pNameBuff, dwStringSize, &dwbyte, nullptr);
+		ReadFile(hFile, pNameBuff2, dwStringSize2, &dwbyte, nullptr);
+		ReadFile(hFile, &fRadius, sizeof(_float), &dwbyte, nullptr);
+		ReadFile(hFile, &eColliderType, sizeof(COLLIDERTYPE), &dwbyte, nullptr);
+
+		wstrColName = pNameBuff;
+		wstrBoneName = pNameBuff2;
+
+		// Bone 찾기
+		CAhglan* pAhglan = dynamic_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"));
+		CDynamicMesh* pMeshCom = dynamic_cast<CDynamicMesh*>(pAhglan->Get_Component(L"Com_Mesh", ID_STATIC));
+
+		pAhglan->Add_Collider(fRadius, pNameBuff, eColliderType);
+
+		list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pMeshCom->Get_MeshContainerList();
+		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+		for (; iterList != listTemp.end(); ++iterList)
+		{
+			for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+			{
+				_tchar	pTemp[64] = L"";
+				MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+				if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!wcscmp(pTemp, pNameBuff2))
+				{
+					dynamic_cast<CCollider*>(Engine::Get_Component(L"GameLogic", L"Ahglan", wstrColName, ID_STATIC))->Set_BoneName(wstrBoneName);
+					dynamic_cast<CCollider*>(pAhglan->Get_Component((wstring)wstrColName, ID_STATIC))->Set_Matrix((*iterList)->ppCombinedTransformMatrix[i]);
+
+					break;
+				}
+			}
+		}
+
+		Safe_Delete(pNameBuff);
+		Safe_Delete(pNameBuff2);
+
+	}
+
+	CloseHandle(hFile);
+
+	hFile = CreateFile(L"../../Data/Ahglan_HitBox.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iBoxSize, sizeof(_uint), &dwbyte, nullptr);
+
+	for (_uint i = 0; i < iBoxSize; ++i)
+	{
+		if (0 == dwbyte)
+			break;
+
+		ReadFile(hFile, &dwStringSize, sizeof(DWORD), &dwbyte, nullptr);
+		ReadFile(hFile, &dwStringSize2, sizeof(DWORD), &dwbyte, nullptr);
+
+		pNameBuff = new TCHAR[dwStringSize];
+		pNameBuff2 = new TCHAR[dwStringSize2];
+
+		ReadFile(hFile, pNameBuff, dwStringSize, &dwbyte, nullptr);
+		ReadFile(hFile, pNameBuff2, dwStringSize2, &dwbyte, nullptr);
+		ReadFile(hFile, &vMin, sizeof(_vec3), &dwbyte, nullptr);
+		ReadFile(hFile, &vMax, sizeof(_vec3), &dwbyte, nullptr);
+		ReadFile(hFile, &eColliderType, sizeof(COLLIDERTYPE), &dwbyte, nullptr);
+
+		wstrColName = pNameBuff;
+		wstrBoneName = pNameBuff2;
+
+		// Bone 찾기
+		CAhglan* pAhglan = dynamic_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"));
+		CDynamicMesh* pMeshCom = dynamic_cast<CDynamicMesh*>(pAhglan->Get_Component(L"Com_Mesh", ID_STATIC));
+
+		pAhglan->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
+
+		// Bone 찾기
+		list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pMeshCom->Get_MeshContainerList();
+		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+		for (; iterList != listTemp.end(); ++iterList)
+		{
+			for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+			{
+				_tchar	pTemp[64] = L"";
+				MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+				if (!wcscmp(pTemp, pNameBuff2))
+				{
+					dynamic_cast<CBoxCollider*>(Engine::Get_Component(L"GameLogic", L"Ahglan", wstrColName, ID_STATIC))->Set_BoneName(wstrBoneName);
+					dynamic_cast<CBoxCollider*>(pAhglan->Get_Component((wstring)wstrColName, ID_STATIC))->Set_Matrix((*iterList)->ppCombinedTransformMatrix[i]);
 
 					break;
 				}

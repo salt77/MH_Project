@@ -20,6 +20,16 @@ namespace Engine
 		STATE_IDLE, 
 		STATE_END
 	};
+	enum OBJECT
+	{
+		OBJ_PLAYER, OBJ_AHGLAN,
+		OBJ_END
+	};
+	enum SCENE_ID
+	{
+		SCENE_LOGO, SCENE_LOADING, SCENE_STAGE,
+		SCENE_END
+	};
 
 	// ********************************************* //
 	enum WINMODE { MODE_FULL, MODE_WIN };

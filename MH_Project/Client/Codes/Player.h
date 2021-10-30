@@ -36,25 +36,22 @@ private:
 	void			SetUp_OnTerrain(void);
 	_vec3			PickUp_OnTerrain(void);
 	void			Animation_Control();
+	void			Collision_Control();
 
-	// 플레이어 객체만의 특수한 함수들
+	// 객체 함수들
 	void			Compute_CanAction();
 	void			Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector);
 	void			Rotate_PlayerLook(_vec3& TargetLookVector);
 	void			MoveOn_Skill(const _float& fTimeDelta);
-	void			WeaponCollision_Control();
 
 public:
-	HRESULT			Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
-	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
-								_float vMaxX, _float vMaxY, _float vMaxZ,
-								wstring wstrName, COLLIDERTYPE eColliderType);
 	HRESULT			Add_NaviMesh();
 
 private:
 	_bool			m_bIsPlayer = true;
 	_bool			m_bCanAction = true;
 	_bool			m_bSkillMove = false;
+	_bool			m_bCanHit = true;
 
 	_uint			m_iAniIndex = (_uint)STATE_IDLE;
 
@@ -72,6 +69,8 @@ private:
 	_vec3			m_vDir;
 	_vec3			m_vLookDir;
 	_vec3			m_vRightDir;
+
+	SCENE_ID		m_eSceneID = SCENE_END;
 
 	PL_ACTION		m_eCurAction = PL_IDLE;
 

@@ -18,10 +18,19 @@ protected:
 public:
 	CComponent*		Get_Component(const wstring pComponentTag, COMPONENTID eID);
 
+	const map<const wstring, CCollider*>&		Get_MapCollider() { return m_mapColliderCom; }
+	const map<const wstring, CBoxCollider*>&	Get_MapBoxCollider() { return m_mapBoxColliderCom; }
+
 public:
 	virtual		HRESULT		Ready_Object(void);
 	virtual		_int		Update_Object(const _float& fTimeDelta);
 	virtual		void		Render_Object(void) {};
+
+public:
+	HRESULT			Add_Collider(_float fRadius, wstring wstrName, COLLIDERTYPE eColliderType);
+	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
+								 _float vMaxX, _float vMaxY, _float vMaxZ,
+								 wstring wstrName, COLLIDERTYPE eColliderType);
 
 protected:
 	LPDIRECT3DDEVICE9					m_pGraphicDev;

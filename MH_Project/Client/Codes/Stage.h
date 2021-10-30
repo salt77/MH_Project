@@ -33,6 +33,7 @@ private:
 	HRESULT				Ready_LightInfo(void);
 
 	HRESULT				Load_PlayerCol();
+	HRESULT				Load_AhglanCol();
 	HRESULT				Load_Navimesh();
 
 private:

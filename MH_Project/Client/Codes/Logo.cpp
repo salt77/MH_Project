@@ -28,6 +28,13 @@ HRESULT CLogo::Ready_Scene(void)
 	return S_OK;
 }
 
+HRESULT CLogo::LateReady_Scene()
+{
+	m_eSceneID = SCENE_LOGO;
+
+	return S_OK;
+}
+
 Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 {
 	_int		iExit = CScene::Update_Scene(fTimeDelta);

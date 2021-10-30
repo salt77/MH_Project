@@ -22,9 +22,25 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 	}														\
 }
 
-#define DIS_SHORT	6.f
-#define DIS_MID		11.f
-#define DIS_LONG	15.f
+#define HITBOX_CONTROLL_SPHERE(StartTime, EndTime)			\
+	if (StartTime <= fAniTime &&							\
+		EndTime >= fAniTime)								\
+	{														\
+		iter_Hit->second->Set_CanCollision(true);			\
+	}														\
+	else													\
+	{														\
+		iter_Hit->second->Set_CanCollision(false);			\
+	}
+
+
+#define DIS_SHORTEST	3.5f
+#define DIS_SHORT		5.5f
+#define DIS_MID			10.f
+#define DIS_LONG		15.f
+
+#define SCALE_PLAYER	0.01f
+#define SCALE_AHGLAN	0.07f
 
 //#ifdef _DEBUG
 //

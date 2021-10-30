@@ -72,6 +72,8 @@ void CCollider::Render_Collider(COLTYPE eType, const _matrix * pColliderMatrix)
 	if (m_matColParts)
 		m_matColMatrix = (*m_matColParts) * m_matColMatrix;
 
+	memcpy(&m_vCenter, &m_matColMatrix._41, sizeof(_vec3));
+
 	if (0.f != m_fInterpolX)
 		m_matColMatrix._41 += m_fInterpolX;
 	if (0.f != m_fInterpolY)

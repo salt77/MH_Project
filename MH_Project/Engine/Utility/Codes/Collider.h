@@ -15,6 +15,7 @@ public:
 	//const _vec3*		Get_Min() { return &m_vMin; }
 	//const _vec3*		Get_Max() { return &m_vMax; }
 	const _matrix*		Get_ColliderWorld() { return &m_matColMatrix; }
+	const _vec3&		Get_Center() { return m_vCenter; }
 	const _float&		Get_Radius() { return m_fRadius; }
 	const wstring		Get_BoneName() { return m_cstrBoneName; }
 	const COLLIDERTYPE&	Get_ColldierType() { return m_eColliderType; }
@@ -43,6 +44,8 @@ private:
 	_float			m_fInterpolX = 0.f;
 	_float			m_fInterpolY = 0.f;
 	_float			m_fInterpolZ = 0.f;
+
+	_vec3			m_vCenter;
 
 	wstring			m_cstrBoneName;
 
