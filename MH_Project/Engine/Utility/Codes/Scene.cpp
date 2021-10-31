@@ -38,6 +38,21 @@ Engine::_int Engine::CScene::Update_Scene(const _float& fTimeDelta)
 	return iResult;
 }
 
+_int CScene::LateUpdate_Scene(const _float & fTimeDelta)
+{
+	_int iResult = 0;
+
+	for (auto& iter : m_mapLayer)
+	{
+		iResult = iter.second->LateUpdate_Layer(fTimeDelta);
+
+		if (iResult & 0x80000000)
+			return iResult;
+	}
+
+	return iResult;
+}
+
 
 void Engine::CScene::Free(void)
 {

@@ -17,6 +17,7 @@ protected:
 public:
 	virtual HRESULT Ready_Object(void) override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
+	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 
 public:
 	const _float&	Get_Speed() { return m_fSpeed; }

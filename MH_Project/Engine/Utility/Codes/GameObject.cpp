@@ -39,6 +39,11 @@ Engine::_int Engine::CGameObject::Update_Object(const _float& fTimeDelta)
 	return iResult;
 }
 
+_int CGameObject::LateUpdate_Object(const _float & fTimeDelta)
+{
+	return _int();
+}
+
 HRESULT CGameObject::Add_Collider(_float fRadius, wstring wstrName, COLLIDERTYPE eColliderType)
 {
 	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius, eColliderType);

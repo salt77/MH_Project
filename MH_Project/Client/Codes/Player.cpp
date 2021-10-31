@@ -8,19 +8,17 @@
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
-
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
 	: CGameObject(rhs)
 {
-
 }
 
 CPlayer::~CPlayer(void)
 {
-
 }
+
 
 HRESULT CPlayer::Ready_Object(void)
 {
@@ -53,10 +51,20 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	MoveOn_Skill(fTimeDelta);
 
 	/*_int iExit = CGameObject::Update_Object(fTimeDelta);*/
+	StopMotion();
+
 	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
-	m_pMeshCom->Play_Animation(fTimeDelta);
+	if (!m_bStopMotion)
+		m_pMeshCom->Play_Animation(fTimeDelta);
 
 	Add_RenderGroup(RENDER_NONALPHA, this);
+
+	return iExit;
+}
+
+_int CPlayer::LateUpdate_Object(const _float & fTimeDelta)
+{
+	_int iExit = CGameObject::LateUpdate_Object(fTimeDelta);
 
 	return iExit;
 }
@@ -418,10 +426,22 @@ void CPlayer::MoveOn_Skill(const _float& fTimeDelta)
 		if (m_dwSkillMoveStart + m_dwSkillMoveTime >= GetTickCount())
 		{
 			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
+			m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT), m_fSkillMoveSpeed, fTimeDelta);
 		}
 		else if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
 		{
 			m_bSkillMove = false;
+		}
+	}
+}
+
+void CPlayer::StopMotion()
+{
+	if (m_bStopMotion)
+	{
+		if (m_dwStopMotionStart + m_dwStopMotionTime < GetTickCount())
+		{
+			STOP_MOTION_END;
 		}
 	}
 }
@@ -468,16 +488,20 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_DAMAGE_RESIST:
+			SKILL_MOVE(0, -350.f, 700);
+
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DOWNTOIDLE_FRONT:
-			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DOWNTOIDLE_BACK:
+			Rotate_PlayerLook(m_vDir);
+
+			SKILL_MOVE(200, 350.f, 800);
+
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
 			break;
@@ -493,11 +517,15 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_DAMAGEFROM_FRONT:
+			SKILL_MOVE(0, -350.f, 700);
+
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DAMAGEFROM_BACK:
+			SKILL_MOVE(0, 350.f, 700);
+
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
 			break;
@@ -634,7 +662,7 @@ void CPlayer::Animation_Control()
 			break;
 
 		case Engine::STATE_DAMAGEFROM_FRONT:
-			m_iAniIndex = STATE_DOWNIDLE_FRONT;
+			m_iAniIndex = STATE_DOWNIDLE_BACK;
 			break;
 
 		case Engine::STATE_DAMAGEFROM_BACK:
@@ -689,51 +717,51 @@ void CPlayer::Collision_Control()
 		switch (m_iAniIndex)
 		{
 		case STATE_DOUBLE_CRECSENT:
-			HITBOX_CONTROLL(0.25f, 0.7f);
+			HITBOX_CONTROLL(0.25f, 0.7f, TRUE);
 			break;
 
 		case STATE_DASHATK:
-			HITBOX_CONTROLL(0.1f, 0.65f);
+			HITBOX_CONTROLL(0.1f, 0.65f, FALSE);
 			break;
 
 		case STATE_FURY2:
-			HITBOX_CONTROLL(0.45f, 0.9f);
+			HITBOX_CONTROLL(0.45f, 0.8f, TRUE);
 			break;
 
 		case STATE_FURY:
-			HITBOX_CONTROLL(0.45f, 0.9f);
+			HITBOX_CONTROLL(0.45f, 0.8f, TRUE);
 			break;
 
 		case STATE_SMASH3:
-			HITBOX_CONTROLL(0.05f, 0.8f);
+			HITBOX_CONTROLL(0.2f, 0.6f, TRUE);
 			break;
 
 		case STATE_SMASH4:
-			HITBOX_CONTROLL(0.55f, 0.85f);
+			HITBOX_CONTROLL(0.55f, 0.8f, TRUE);
 			break;
 
 		case STATE_SMASH2_B:
-			HITBOX_CONTROLL(0.45f, 0.7f);
+			HITBOX_CONTROLL(0.45f, 0.7f, TRUE);
 			break;
 
 		case STATE_SMASH1:
-			HITBOX_CONTROLL(0.35f, 0.6f);
+			HITBOX_CONTROLL(0.35f, 0.6f, TRUE);
 			break;
 
 		case STATE_ATK4:
-			HITBOX_CONTROLL(0.3f, 0.7f);
+			HITBOX_CONTROLL(0.3f, 0.7f, FALSE);
 			break;
 
 		case STATE_ATK3:
-			HITBOX_CONTROLL(0.3f, 0.6f);
+			HITBOX_CONTROLL(0.3f, 0.6f, FALSE);
 			break;
 
 		case STATE_ATK2:
-			HITBOX_CONTROLL(0.25f, 0.6f);
+			HITBOX_CONTROLL(0.25f, 0.6f, FALSE);
 			break;
 
 		case STATE_ATK1:
-			HITBOX_CONTROLL(0.25f, 0.5f);
+			HITBOX_CONTROLL(0.25f, 0.5f, FALSE);
 			break;
 
 		default:
@@ -779,6 +807,21 @@ void CPlayer::Collision_Control()
 						if (m_pCalculatorCom->Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
 							&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
 						{
+							switch (m_eCurState)
+							{
+							case Engine::STATE_DOUBLE_CRECSENT:
+								STOP_MOTION(100);
+								break;
+
+							case Engine::STATE_SMASH4:
+								STOP_MOTION(100);
+								break;
+
+							case Engine::STATE_SMASH1:
+								STOP_MOTION(75);
+								break;
+							}
+
 							iter_PlayerHit->second->Set_RenderColType(COL_TRUE);
 							iter_BossDamaged->second->Set_RenderColType(COL_TRUE);
 

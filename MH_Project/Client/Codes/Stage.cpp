@@ -46,6 +46,13 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 	return CScene::Update_Scene(fTimeDelta);
 }
 
+_int CStage::LateUpdate_Scene(const _float & fTimeDelta)
+{
+	_int iExit = CScene::LateUpdate_Scene(fTimeDelta);
+
+	return iExit;
+}
+
 void CStage::Render_Scene(void)
 {
 	// DEBUG ¿ë
@@ -70,7 +77,7 @@ HRESULT CStage::Ready_Layer_Environment(const wstring pLayerTag)
 
 	// DynamicCamera
 	pGameObject = CDynamicCamera::Create(m_pGraphicDev,
-		&_vec3(0.f, 1.5f, -2.5f),
+		&_vec3(0.f, 1.5f, 13.f),
 		&_vec3(0.f, 0.f, 1.f),
 		&_vec3(0.f, 1.f, 0.f),
 		D3DXToRadian(60.f), (_float)WINCX / WINCY,

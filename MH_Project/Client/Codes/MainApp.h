@@ -22,6 +22,7 @@ private:		// 생성자, 소멸자
 public:
 	HRESULT			Ready_MainApp(void);
 	_int			Update_MainApp(const _float& fTimeDelta);
+	_int			LateUpdate_MainApp(const _float& fTimeDelta);
 	void			Render_MainApp(void);
 	// protected 함수, 변수
 	// private 함수, 변수

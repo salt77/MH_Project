@@ -36,6 +36,16 @@ Engine::_int Engine::CManagement::Update_Scene(const _float& fTimeDelta)
 	return 0;
 }
 
+_int CManagement::LateUpdate_Scene(const _float & fTimeDelta)
+{
+	if (nullptr == m_pScene)
+		return -1;
+
+	m_pScene->LateUpdate_Scene(fTimeDelta);
+
+	return 0;
+}
+
 void Engine::CManagement::Render_Scene(LPDIRECT3DDEVICE9& pGraphicDev)
 {
 	Render_GameObject(pGraphicDev);

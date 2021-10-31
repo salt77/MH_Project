@@ -42,6 +42,21 @@ int Engine::CLayer::Update_Layer(const _float& fTimeDelta)
 	return iResult;
 }
 
+_int CLayer::LateUpdate_Layer(const _float & fTimeDelta)
+{
+	_int	iResult = 0;
+
+	for (auto& iter : m_mapObject)
+	{
+		iResult = iter.second->LateUpdate_Object(fTimeDelta);
+
+		if (iResult & 0x8000000)
+			return iResult;
+	}
+
+	return iResult;
+}
+
 _uint CLayer::Render_Layer(const _float & fTimeDelta)
 {
 	for (auto& iter : m_mapObject)

@@ -17,6 +17,7 @@ public:
 	list<D3DXMESHCONTAINER_DERIVED*>	Get_MeshContainerList() { return m_MeshContainerList; }
 	const	_float&						Get_AniFrameTime() { return m_pAniCtrl->Get_AniFrameTime(); }
 	const	_double&					Get_AniFrameEndTime() { return m_pAniCtrl->Get_AniFrameEndTime(); }
+	const	_float&						Get_AniSpeed() { return m_pAniCtrl->Get_AniSpeed(); }
 
 public:
 	void			Set_TrackSpeed(_float fSpeed) { m_pAniCtrl->Set_TrackSpeed(fSpeed); }

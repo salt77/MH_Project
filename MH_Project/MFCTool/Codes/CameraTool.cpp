@@ -26,12 +26,12 @@ CCameraTool::CCameraTool(CWnd* pParent /*=NULL*/)
 	, m_fAtZ(0)
 	, m_fSectionSpeed(0)
 {
-
 }
 
 CCameraTool::~CCameraTool()
 {
 }
+
 
 void CCameraTool::DoDataExchange(CDataExchange* pDX)
 {

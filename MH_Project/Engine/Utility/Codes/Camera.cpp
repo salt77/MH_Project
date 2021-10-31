@@ -76,6 +76,13 @@ Engine::_int Engine::CCamera::Update_Object(const _float& fTimeDelta)
 	return 0;
 }
 
+_int CCamera::LateUpdate_Object(const _float & fTimeDelta)
+{
+	CGameObject::LateUpdate_Object(fTimeDelta);
+
+	return 0;
+}
+
 _vec3 & CCamera::Get_CamLook()
 {
 	_vec3 vEye = m_vEye;

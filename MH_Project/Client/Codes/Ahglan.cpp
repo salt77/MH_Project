@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Ahglan.h"
 #include "Player.h"
+#include "DynamicCamera.h"
 
 #include "Export_Utility.h"
 
@@ -117,9 +118,13 @@ HRESULT CAhglan::Add_Component(void)
 
 void CAhglan::Contact()
 {
-	if (BS_ENTRY >= m_eBossAction &&
-		m_fDistance <= DIS_MID)
+	if (BS_ENTRY <= m_eBossAction &&
+		m_fDistance <= DIS_LONG)
 	{
+		CDynamicCamera* pCamera = static_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
+		if (pCamera)
+			pCamera->Set_CameraMode(CDynamicCamera::MODE_AHGLAN_START);
+
 		m_iAniIndex = ENTRY_CONTACT;
 
 		Animation_Control();
@@ -437,6 +442,7 @@ void CAhglan::Animation_Control()
 			break;
 
 		case ENTRY_CONTACT:
+			m_pMeshCom->Set_TrackSpeed(1.85f);
 			m_fAniEndDelay = 1.08f;
 			break;
 		}
@@ -583,8 +589,12 @@ void CAhglan::Animation_Control()
 		else if (m_iAniIndex == (_uint)TAUNT)
 		{
 			m_iAniIndex = ATK_TWOHANDS_COMBO;
+
+			m_fRand = Engine::Random(0.f, 100.f);
 		}
-		else if (m_iAniIndex != _uint(ENTRY_IDLE && ENTRY_CONTACT && WALK))
+		else if (m_iAniIndex != (_uint)ENTRY_IDLE &&
+				 m_iAniIndex != (_uint)ENTRY_CONTACT &&
+				 m_iAniIndex != (_uint)WALK)
 		{
 			if (m_iAniIndex == (_uint)ATK_TURNLEFT)
 			{

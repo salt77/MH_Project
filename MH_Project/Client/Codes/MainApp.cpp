@@ -35,6 +35,15 @@ _int CMainApp::Update_MainApp(const _float& fTimeDelta)
 	return 0;
 }
 
+_int CMainApp::LateUpdate_MainApp(const _float & fTimeDelta)
+{
+	NULL_CHECK_RETURN(m_pManagementClass, -1);
+
+	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
+
+	return 0;
+}
+
 void CMainApp::Render_MainApp(void)
 {
 	NULL_CHECK(m_pManagementClass);

@@ -88,6 +88,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			//}
 
 			pMainApp->Update_MainApp(Timer_Immediate);
+			//pMainApp->LateUpdate_MainApp(Timer_Immediate);
 			pMainApp->Render_MainApp();
 		}
 	}

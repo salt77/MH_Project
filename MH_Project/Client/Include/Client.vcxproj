@@ -150,7 +150,6 @@
   <ItemGroup>
     <ClInclude Include="..\Codes\Ahglan.h" />
     <ClInclude Include="..\Codes\BackGround.h" />
-    <ClInclude Include="..\Codes\CollisionMgr.h" />
     <ClInclude Include="..\Codes\Define.h" />
     <ClInclude Include="..\Codes\DynamicCamera.h" />
     <ClInclude Include="..\Codes\Loading.h" />
@@ -169,7 +168,6 @@
   <ItemGroup>
     <ClCompile Include="..\Codes\Ahglan.cpp" />
     <ClCompile Include="..\Codes\BackGround.cpp" />
-    <ClCompile Include="..\Codes\CollisionMgr.cpp" />
     <ClCompile Include="..\Codes\DynamicCamera.cpp" />
     <ClCompile Include="..\Codes\Loading.cpp" />
     <ClCompile Include="..\Codes\Logo.cpp" />

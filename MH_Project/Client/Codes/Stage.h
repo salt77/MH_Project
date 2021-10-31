@@ -23,6 +23,7 @@ public:
 	virtual HRESULT Ready_Scene(void) override;
 	virtual HRESULT LateReady_Scene() override;
 	virtual _int    Update_Scene(const _float& fTimeDelta) override;
+	virtual	_int	LateUpdate_Scene(const _float& fTimeDelta) override;
 	virtual void	Render_Scene(void) override;
 
 private:

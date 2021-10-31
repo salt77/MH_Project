@@ -1,24 +1,55 @@
 #ifndef Define_h__
 #define Define_h__
 
-#define	WINCX	800
-#define	WINCY	600
+#define	WINCX	1100
+#define	WINCY	800
 
 extern	HWND		 g_hWnd;
 extern	HINSTANCE	 g_hInst;
 
 
-#define HITBOX_CONTROLL(StartTime, EndTime)					\
+#define HITBOX_CONTROLL(StartTime, EndTime, Smash)			\
 for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 {															\
-	if (StartTime <= fAniTime &&							\
-		EndTime >= fAniTime)								\
+	if (Smash)												\
 	{														\
-		iter->second->Set_CanCollision(true);				\
+		if (L"Hit_LHandLong" == iter->first ||				\
+			L"Hit_RHandLong" == iter->first)				\
+		{													\
+			if (StartTime <= fAniTime &&					\
+				EndTime >= fAniTime)						\
+			{												\
+				iter->second->Set_CanCollision(true);		\
+			}												\
+			else                                            \
+			{												\
+				iter->second->Set_CanCollision(false);		\
+			}												\
+		}													\
+		else                                                \
+		{													\
+			iter->second->Set_CanCollision(false);			\
+		}													\
 	}														\
-	else													\
+	else                                                    \
 	{														\
-		iter->second->Set_CanCollision(false);				\
+		if (L"Hit_LHand" == iter->first ||					\
+			L"Hit_RHand" == iter->first)					\
+		{													\
+			if (StartTime <= fAniTime &&					\
+				EndTime >= fAniTime)						\
+			{												\
+				iter->second->Set_CanCollision(true);		\
+			}												\
+			else											\
+			{												\
+				iter->second->Set_CanCollision(false);		\
+			}												\
+		}													\
+		else                                                \
+		{													\
+			iter->second->Set_CanCollision(false);			\
+		}													\
 	}														\
 }
 

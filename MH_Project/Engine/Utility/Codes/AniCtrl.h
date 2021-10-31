@@ -16,6 +16,7 @@ public:
 	LPD3DXANIMATIONCONTROLLER		Get_AnimationCtrl(void) { return m_pAniCtrl; }
 	const	_float&					Get_AniFrameTime() { return m_fAccTime; }
 	const	_double&				Get_AniFrameEndTime() { return m_dPeriod / (m_fAniSpeed * 1.1f); }
+	const	_float&					Get_AniSpeed() { return m_fAniSpeed; }
 
 public:
 	void	Set_TrackSpeed(_float fSpeed) { m_fAniSpeed = fSpeed; }

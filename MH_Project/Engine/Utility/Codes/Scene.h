@@ -20,6 +20,7 @@ public:
 	virtual HRESULT		Ready_Scene(void);
 	virtual HRESULT		LateReady_Scene();
 	virtual _int		Update_Scene(const _float& fTimeDelta);
+	virtual _int		LateUpdate_Scene(const _float& fTimeDelta);
 	virtual void		Render_Scene(void) PURE;
 
 protected:

@@ -27,6 +27,7 @@ private:
 public:
 	virtual HRESULT Ready_Object(void) override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
+	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 
 private:
@@ -43,6 +44,7 @@ private:
 	void			Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector);
 	void			Rotate_PlayerLook(_vec3& TargetLookVector);
 	void			MoveOn_Skill(const _float& fTimeDelta);
+	void			StopMotion();
 
 public:
 	HRESULT			Add_NaviMesh();
@@ -52,6 +54,7 @@ private:
 	_bool			m_bCanAction = true;
 	_bool			m_bSkillMove = false;
 	_bool			m_bCanHit = true;
+	_bool			m_bStopMotion = false;
 
 	_uint			m_iAniIndex = (_uint)STATE_IDLE;
 
@@ -65,6 +68,8 @@ private:
 	_ulong			m_dwSkillMoveReadyTime = 0;
 	_ulong			m_dwSkillMoveStart = GetTickCount();
 	_ulong			m_dwSkillMoveTime = 0;
+	_ulong			m_dwStopMotionStart = GetTickCount();
+	_ulong			m_dwStopMotionTime = 0;
 
 	_vec3			m_vDir;
 	_vec3			m_vLookDir;
@@ -98,6 +103,8 @@ public:
 
 #define	SKILL_MOVE(ReadyTime, Speed, Time)		m_bSkillMove = TRUE; m_dwSkillMoveReady = GetTickCount();		\
 												m_dwSkillMoveReadyTime = ReadyTime;	m_fSkillMoveSpeed = Speed; m_dwSkillMoveTime = Time;
-#define SKILL_MOVE_END				m_bSkillMove = FALSE; m_fSkillMoveSpeed = 0.f; m_dwSkillMoveTime = 0;
+#define SKILL_MOVE_END							m_bSkillMove = FALSE; m_fSkillMoveSpeed = 0.f; m_dwSkillMoveTime = 0;
+#define STOP_MOTION(Time)			m_bStopMotion = TRUE; m_dwStopMotionStart = GetTickCount();	m_dwStopMotionTime = Time;
+#define STOP_MOTION_END							m_bStopMotion = FALSE; m_dwStopMotionTime = 0;
 
 #endif // Player_h__
