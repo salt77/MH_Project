@@ -13,6 +13,58 @@ Engine::CManagement::~CManagement(void)
 	Free();
 }
 
+HRESULT CManagement::Ready_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
+{
+	CShader*		pShader = nullptr;
+
+	D3DVIEWPORT9		ViewPort;
+	pGraphicDev->GetViewport(&ViewPort);
+
+	// 렌더 타겟 생성
+	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Albedo", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 0.f)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Albedo", 0.f, 0.f, 200.f, 200.f), E_FAIL);
+
+	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Normal", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 1.f)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Normal", 0.f, 200.f, 200.f, 200.f), E_FAIL);
+
+	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Shade", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 1.f)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Shade", 200.f, 0.f, 200.f, 200.f), E_FAIL);
+
+	// 멀티 렌더 그룹 편성
+	FAILED_CHECK_RETURN(Ready_MRT(L"MRT_Deferred", L"Target_Albedo"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_MRT(L"MRT_Deferred", L"Target_Normal"), E_FAIL);
+
+	FAILED_CHECK_RETURN(Ready_MRT(L"MRT_LightAcc", L"Target_Shade"), E_FAIL);
+
+
+	// shader_sample
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Sample.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Sample", pShader), E_FAIL);
+
+	//shader_terrain
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Terrain.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Terrain", pShader), E_FAIL);
+
+	// shader_mesh
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Mesh.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Mesh", pShader), E_FAIL);
+
+	// shader_shade
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Shade.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Shade", pShader), E_FAIL);
+
+	// shader_shade
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Blend.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Blend", pShader), E_FAIL);
+
+	return S_OK;
+}
+
 HRESULT Engine::CManagement::Set_Scene(CScene* pScene)
 {
 	Safe_Release(m_pScene);	// 주의합시다!!!!!!!!!!!!

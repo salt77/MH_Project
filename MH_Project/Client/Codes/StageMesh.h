@@ -9,6 +9,7 @@ class CTransform;
 class CRenderer;
 class CStaticMesh;
 class COptimization;
+class CShader;
 
 END
 
@@ -27,13 +28,14 @@ public:
 private:
 	HRESULT			Add_Component(void);
 	HRESULT			SetUp_Material();
+	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 private:
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
 	CStaticMesh*	m_pMeshCom = nullptr;
+	CShader*		m_pShaderCom = nullptr;
 	//COptimization*	m_pOptimizationCom = nullptr;
-
 
 	_vec3		m_vDir;
 	_bool		m_bColl = false;

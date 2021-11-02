@@ -24,7 +24,7 @@ HRESULT CLogo::Ready_Scene(void)
 
 	m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
 	NULL_CHECK_RETURN(m_pLoading, E_FAIL);
-			
+
 	return S_OK;
 }
 
@@ -41,17 +41,14 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 
 	if (true == m_pLoading->Get_Finish())
 	{
-		if (GetAsyncKeyState(VK_RETURN) & 0x8000)
-		{
-			CScene*		pScene = nullptr;
+		CScene*		pScene = nullptr;
 
-			pScene = CStage::Create(m_pGraphicDev);
-			NULL_CHECK_RETURN(pScene, E_FAIL);
+		pScene = CStage::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pScene, E_FAIL);
 
-			FAILED_CHECK_RETURN(Set_Scene(pScene), E_FAIL);
+		FAILED_CHECK_RETURN(Set_Scene(pScene), E_FAIL);
 
-			return iExit;
-		}
+		return iExit;
 	}
 
 	return iExit;
@@ -61,7 +58,6 @@ void CLogo::Render_Scene(void)
 {
 	// DEBUG ¿ë
 	Render_Font(L"Font_Jinji", m_pLoading->Get_String(), &_vec2(10.f, 15.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
-
 }
 
 HRESULT CLogo::Ready_Layer_Environment(const wstring pLayerTag)
@@ -75,7 +71,7 @@ HRESULT CLogo::Ready_Layer_Environment(const wstring pLayerTag)
 	pGameObject = CBackGround::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BackGround", pGameObject), E_FAIL);
-	
+
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
 	return S_OK;
@@ -86,7 +82,7 @@ HRESULT CLogo::Ready_Prototype(void)
 	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Buffer_TriCol", CTriCol::Create(m_pGraphicDev)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Buffer_RcTex", CRcTex::Create(m_pGraphicDev)), E_FAIL);
 
-	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Texture_Logo", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Logo/sana.jpg", TEX_NORMAL, 1)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Texture_Logo", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Logo/Stage1.dds", TEX_NORMAL, 1)), E_FAIL);
 	//FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Texture_Player", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Player/Ma.jpg", TEX_NORMAL, 1)), E_FAIL);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Transform", CTransform::Create(m_pGraphicDev)), E_FAIL);

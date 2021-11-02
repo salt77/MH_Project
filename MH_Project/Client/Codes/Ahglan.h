@@ -14,6 +14,7 @@ class CRenderer;
 class CCalculator;
 class CCollider;
 class CNaviMesh;
+class CShader;
 
 END
 
@@ -57,6 +58,7 @@ public:
 private:
 	// 기본 함수들
 	HRESULT			Add_Component(void);
+	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Animation_Control();
 	void			Collision_Control();
 
@@ -125,6 +127,7 @@ private:
 	CCalculator*	m_pCalculatorCom = nullptr;
 	CCollider*		m_pColliderCom = nullptr;
 	CNaviMesh*		m_pNaviMeshCom = nullptr;
+	CShader*		m_pShaderCom = nullptr;
 
 public:
 	static CAhglan*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

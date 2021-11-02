@@ -13,6 +13,9 @@ protected:
 	virtual ~CVIBuffer(void);
 
 public:
+	const _ulong&			Get_TriCnt(void) { return m_dwTriCnt; }
+
+public:
 	virtual HRESULT			Ready_Buffer(void);
 	virtual void			Render_Buffer(void);
 

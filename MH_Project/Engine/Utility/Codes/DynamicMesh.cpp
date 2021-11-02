@@ -100,6 +100,40 @@ void CDynamicMesh::Render_Meshes(void)
 	}
 }
 
+void CDynamicMesh::Render_Meshes(LPD3DXEFFECT & pEffect)
+{
+	for (auto& iter : m_MeshContainerList)
+	{
+		D3DXMESHCONTAINER_DERIVED*		pDerivedMeshContainer = iter;
+
+		for (_ulong i = 0; i < pDerivedMeshContainer->dwNumBones; ++i)
+			pDerivedMeshContainer->pRenderingMatrix[i] = pDerivedMeshContainer->pFrameOffSetMatrix[i]
+			* *pDerivedMeshContainer->ppCombinedTransformMatrix[i];
+
+		void*			pSrcVtx = nullptr; // 고정 불변의 메쉬 정점 정보
+		void*			pDestVtx = nullptr; // 애니메이션 적용에 따른 변환된 메쉬 정점 정보
+
+		pDerivedMeshContainer->pOriMesh->LockVertexBuffer(0, &pSrcVtx);
+		pDerivedMeshContainer->MeshData.pMesh->LockVertexBuffer(0, &pDestVtx);
+
+		//소프트웨어 스키닝을 수행하는 함수(스키닝뿐 아니라 애니메이션 변경 시, 뼈와 정점들의 정보도 동시에 변경해줌)
+		pDerivedMeshContainer->pSkinInfo->UpdateSkinnedMesh(pDerivedMeshContainer->pRenderingMatrix, NULL, pSrcVtx, pDestVtx);
+
+		for (_ulong i = 0; i < pDerivedMeshContainer->NumMaterials; ++i)
+		{
+			pEffect->SetTexture("g_BaseTexture", pDerivedMeshContainer->ppTexture[i]);
+			if (pDerivedMeshContainer->ppNormalTexture[i])
+				pEffect->SetTexture("g_NormalTexture", pDerivedMeshContainer->ppNormalTexture[i]);
+			pEffect->CommitChanges();
+
+			pDerivedMeshContainer->MeshData.pMesh->DrawSubset(i);
+		}
+
+		pDerivedMeshContainer->pOriMesh->UnlockVertexBuffer();
+		pDerivedMeshContainer->MeshData.pMesh->UnlockVertexBuffer();
+	}
+}
+
 void CDynamicMesh::Update_FrameMatrices(D3DXFRAME_DERIVED * pFrame, const _matrix * pParentMatrix)
 {
 	if (nullptr == pFrame)

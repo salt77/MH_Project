@@ -100,6 +100,18 @@
     <Filter Include="04.Component\09.Optimization\Frustum">
       <UniqueIdentifier>{e2e57041-3f48-4da9-9026-c8938b4ee0f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Component\10.Shader">
+      <UniqueIdentifier>{6f09ad37-9be9-428c-adc4-b93996648aa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.RenderTarget">
+      <UniqueIdentifier>{7689b1ad-9f1e-4acb-8283-c8a2e9056c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.RenderTarget\Manager">
+      <UniqueIdentifier>{7d7b95b4-9dbe-4dc2-8c34-bff3aa4b1187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\10.Shader\hpp">
+      <UniqueIdentifier>{6a363f39-84c6-423f-8b6c-dd3bf48daaa9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Headers\Export_Utility.h">
@@ -197,6 +209,36 @@
     </ClInclude>
     <ClInclude Include="..\Codes\Cell.h">
       <Filter>04.Component\08.Navimesh\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\RenderTarget.h">
+      <Filter>07.RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\RenderTargetMgr.h">
+      <Filter>07.RenderTarget\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader.h">
+      <Filter>04.Component\10.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_Blend.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_Mesh.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_Sample.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_Shade.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_Terrain.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_Ahglan.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_Player.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -297,6 +339,15 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Frustum.cpp">
       <Filter>04.Component\09.Optimization\Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\RenderTarget.cpp">
+      <Filter>07.RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\RenderTargetMgr.cpp">
+      <Filter>07.RenderTarget\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Shader.cpp">
+      <Filter>04.Component\10.Shader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

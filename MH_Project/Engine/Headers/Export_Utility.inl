@@ -40,10 +40,12 @@ inline const SCENE_ID & Get_SceneID()
 	return CManagement::GetInstance()->Get_SceneID();
 }
 
-HRESULT		Create_Management(CManagement** ppManagement)
+HRESULT		Create_Management(LPDIRECT3DDEVICE9& pGraphicDev, CManagement** ppManagement)
 {
 	CManagement*		pManagement = CManagement::GetInstance();
 	NULL_CHECK_RETURN(pManagement, E_FAIL);
+
+	FAILED_CHECK_RETURN(pManagement->Ready_Shader(pGraphicDev), E_FAIL);
 
 	*ppManagement = pManagement;
 
@@ -112,8 +114,55 @@ inline HRESULT Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev, const D3DLIGHT9 * pLig
 	return CLightMgr::GetInstance()->Ready_Light(pGraphicDev, pLightInfo, iIndex);
 }
 
+inline void Render_Light(LPD3DXEFFECT & pEffect)
+{
+	CLightMgr::GetInstance()->Render_Light(pEffect);
+}
+
+inline const D3DLIGHT9 * Get_Light(const _uint & iIndex)
+{
+	return CLightMgr::GetInstance()->Get_Light(iIndex);
+}
+
+inline HRESULT Ready_RenderTarget(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pTargetTag, const _uint & iWidth, const _uint & iHeight, D3DFORMAT Format, D3DXCOLOR Color)
+{
+	return CRenderTargetMgr::GetInstance()->Ready_RenderTarget(pGraphicDev, pTargetTag, iWidth, iHeight, Format, Color);
+}
+
+inline HRESULT Ready_MRT(const wstring pMRTTag, const wstring pTargetTag)
+{
+	return CRenderTargetMgr::GetInstance()->Ready_MRT(pMRTTag, pTargetTag);
+}
+
+inline HRESULT Begin_MRT(const wstring pMRTTag)
+{
+	return CRenderTargetMgr::GetInstance()->Begin_MRT(pMRTTag);
+}
+
+inline HRESULT End_MRT(const wstring pMRTTag)
+{
+	return CRenderTargetMgr::GetInstance()->End_MRT(pMRTTag);
+}
+
+inline HRESULT Ready_DebugBuffer(const wstring pTargetTag, const _float & fX, const _float & fY, const _float & fSizeX, const _float & fSizeY)
+{
+	return CRenderTargetMgr::GetInstance()->Ready_DebugBuffer(pTargetTag, fX, fY, fSizeX, fSizeY);
+}
+
+inline void Render_DebugBuffer(const wstring pMRTTag)
+{
+	CRenderTargetMgr::GetInstance()->Render_DebugBuffer(pMRTTag);
+}
+
+inline void Get_RenderTargetTexture(LPD3DXEFFECT & pEffect, const wstring pTargetTag, const char * pConstantTable)
+{
+	CRenderTargetMgr::GetInstance()->Get_RenderTargetTexture(pEffect, pTargetTag, pConstantTable);
+}
+
+
 void			Release_Utility(void)
 {
+	CRenderTargetMgr::GetInstance()->DestroyInstance();
 	CLightMgr::GetInstance()->DestroyInstance();
 	CRenderer::GetInstance()->DestroyInstance();
 	CProtoMgr::GetInstance()->DestroyInstance();

@@ -12,6 +12,7 @@ class ENGINE_DLL CManagement : public CBase
 private:
 	explicit CManagement(void);
 	virtual ~CManagement(void);
+
 public:
 	HRESULT			AddGameObjectInManager(const wstring LayerTag, CLayer* pLayer);
 	HRESULT			DeleteGameObjectInManager(const wstring LayerTag);
@@ -24,6 +25,8 @@ public:
 	HRESULT			Set_RenderColType(const wstring pColName, COLTYPE eColType, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
 
 public:
+	HRESULT			Ready_Shader(LPDIRECT3DDEVICE9& pGraphicDev);
+
 	HRESULT			Set_Scene(CScene* pScene);
 	_int			Update_Scene(const _float& fTimeDelta);
 	_int			LateUpdate_Scene(const _float& fTimeDelta);

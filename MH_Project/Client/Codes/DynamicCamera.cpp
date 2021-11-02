@@ -50,7 +50,7 @@ Engine::_int CDynamicCamera::Update_Object(const _float& fTimeDelta)
 		Mouse_Move();
 	}
 
-	Camera_Shake();
+	//Camera_Shake();
 
 	//m_matWorld = *m_pTransformCom->Get_WorldMatrix();
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);

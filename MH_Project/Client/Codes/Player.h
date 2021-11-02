@@ -12,6 +12,7 @@ class CRenderer;
 class CCalculator;
 class CCollider;
 class CNaviMesh;
+class CShader;
 
 END
 
@@ -33,6 +34,7 @@ public:
 private:
 	// 기본 함수들
 	HRESULT			Add_Component(void);
+	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Key_Input(const _float& fTimeDelta);
 	void			SetUp_OnTerrain(void);
 	_vec3			PickUp_OnTerrain(void);
@@ -92,6 +94,7 @@ private:
 	CCalculator*	m_pCalculatorCom = nullptr;
 	CCollider*		m_pColliderCom = nullptr;
 	CNaviMesh*		m_pNaviMeshCom = nullptr;
+	CShader*		m_pShaderCom = nullptr;
 
 	// Instance
 	CDynamicCamera*	m_pMainCam = nullptr;

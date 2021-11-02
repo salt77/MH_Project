@@ -68,6 +68,15 @@ void Engine::CTexture::Set_Texture(const _uint& iIndex /*= 0*/)
 	m_pGraphicDev->SetTexture(0, m_vecTexture[iIndex]);
 }
 
+void CTexture::Set_Texture(LPD3DXEFFECT pEffect, const char * pConstantTable, const _uint & iIndex)
+{
+	if (m_vecTexture.size() < iIndex)
+		return;
+
+	// 텍스쳐를 그리기 하는 함수
+	pEffect->SetTexture(pConstantTable, m_vecTexture[iIndex]);
+}
+
 
 CTexture* Engine::CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
 									const wstring pPath, 

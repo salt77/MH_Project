@@ -21,6 +21,8 @@
 #include "BoxCollider.h"
 #include "LightMgr.h"
 #include "Navimesh.h"
+#include "Shader.h"
+#include "RenderTargetMgr.h"
 
 #include "Camera.h"
 
@@ -37,7 +39,7 @@ inline HRESULT		Set_RenderColType(const wstring pColType, COLTYPE eColType, COLL
 inline CGameObject*	Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
 inline CComponent*	Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
 inline const SCENE_ID& Get_SceneID();
-inline HRESULT		Create_Management(CManagement** ppManagement);
+inline HRESULT		Create_Management(LPDIRECT3DDEVICE9& pGraphicDev, CManagement** ppManagement);
 inline HRESULT		Set_Scene(CScene* pScene);
 inline _int			Update_Scene(const _float& fTimeDelta);
 inline void			Render_Scene(LPDIRECT3DDEVICE9& pGraphicDev);
@@ -59,6 +61,18 @@ inline void			Clear_RenderGroup(void);
 inline HRESULT		Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev,
 								const D3DLIGHT9* pLightInfo,
 								const _uint& iIndex);
+inline void			Render_Light(LPD3DXEFFECT& pEffect);
+inline const D3DLIGHT9*	Get_Light(const _uint& iIndex = 0);
+
+// RenderTarget
+inline HRESULT		Ready_RenderTarget(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pTargetTag, const _uint& iWidth, const _uint& iHeight, D3DFORMAT Format, D3DXCOLOR Color);
+inline HRESULT		Ready_MRT(const wstring pMRTTag, const wstring pTargetTag);
+inline HRESULT		Begin_MRT(const wstring pMRTTag);
+inline HRESULT		End_MRT(const wstring pMRTTag);
+
+inline HRESULT		Ready_DebugBuffer(const wstring pTargetTag, const _float& fX, const _float& fY, const _float& fSizeX, const _float& fSizeY);
+inline void			Render_DebugBuffer(const wstring pMRTTag);
+inline void			Get_RenderTargetTexture(LPD3DXEFFECT& pEffect, const wstring pTargetTag, const char* pConstantTable);
 
 inline void			Release_Utility(void);
 

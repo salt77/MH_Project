@@ -82,7 +82,7 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9& pGraphicDev, CManagement** ppMa
 {
 	CScene*	pScene = nullptr;
 
-	FAILED_CHECK_RETURN(Create_Management(ppManagement), E_FAIL);
+	FAILED_CHECK_RETURN(Create_Management(pGraphicDev, ppManagement), E_FAIL);
 	(*ppManagement)->AddRef();
 	
 	pScene = CLogo::Create(pGraphicDev);

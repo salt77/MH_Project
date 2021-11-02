@@ -13,7 +13,11 @@ private:
 	virtual ~CLight(void);
 
 public:
+	const D3DLIGHT9*			Get_Light(void) { return &m_tLightInfo; }
+
+public:
 	HRESULT			Ready_Light(const D3DLIGHT9* pLightInfo, const _uint& iIndex);
+	void			Render_Light(LPD3DXEFFECT& pEffect);
 
 private:
 	LPDIRECT3DDEVICE9			m_pGraphicDev;
@@ -21,10 +25,13 @@ private:
 
 	_uint						m_iIndex = 0;
 
+	LPDIRECT3DVERTEXBUFFER9		m_pVB;
+	LPDIRECT3DINDEXBUFFER9		m_pIB;
+
 public:
 	static CLight*		Create(LPDIRECT3DDEVICE9 pGraphicDev,
-								const D3DLIGHT9* pLightInfo,
-								const _uint& iIndex);
+							   const D3DLIGHT9* pLightInfo,
+							   const _uint& iIndex);
 
 private:
 	virtual void	Free(void);

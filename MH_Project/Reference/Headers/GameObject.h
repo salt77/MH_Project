@@ -17,6 +17,7 @@ protected:
 
 public:
 	CComponent*		Get_Component(const wstring pComponentTag, COMPONENTID eID);
+	_float			Get_ViewZ(void) { return m_fViewZ; }
 
 	const map<const wstring, CCollider*>&		Get_MapCollider() { return m_mapColliderCom; }
 	const map<const wstring, CBoxCollider*>&	Get_MapBoxCollider() { return m_mapBoxColliderCom; }
@@ -28,6 +29,7 @@ public:
 	virtual		void		Render_Object(void) {};
 
 public:
+	void			Compute_ViewZ(const _vec3* pPos);
 	HRESULT			Add_Collider(_float fRadius, wstring wstrName, COLLIDERTYPE eColliderType);
 	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
 								 _float vMaxX, _float vMaxY, _float vMaxZ,
@@ -39,12 +41,13 @@ protected:
 	map<const wstring, CCollider*>		m_mapColliderCom;
 	map<const wstring, CBoxCollider*>	m_mapBoxColliderCom;
 
+	_float								m_fViewZ;
+
 private:
 	CComponent*		Find_Component(const wstring pComponentTag, COMPONENTID eID);
 
 public:
 	virtual void	Free(void);
-
 };
 
 END

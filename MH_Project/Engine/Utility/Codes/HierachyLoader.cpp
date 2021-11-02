@@ -87,6 +87,7 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppTexture[i])))
 				return E_FAIL;
 
+			// Player Normal Texture
 			if (!lstrcmp(szFileName, L"pc_male_plate_chain.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
@@ -136,6 +137,35 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_upper_body_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+
+			// Ahglan Normal Texture
+			else if (!lstrcmp(szFileName, L"golem_ahglan.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"golem_ahglan_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+			else if (!lstrcmp(szFileName, L"golem_ahglan_inner.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"golem_ahglan_inner_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+			else if (!lstrcmp(szFileName, L"golem_ahglan_ore.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"golem_ahglan_ore_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
 				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))

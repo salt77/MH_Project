@@ -18,6 +18,7 @@ public:
 								const _uint& iCnt);
 
 	void		Set_Texture(const _uint& iIndex = 0);		// 텍스처 그리기 함수
+	void		Set_Texture(LPD3DXEFFECT pEffect, const char* pConstantTable, const _uint& iIndex = 0);
 
 private:
 	vector<IDirect3DBaseTexture9*>			m_vecTexture;

@@ -6,19 +6,17 @@
 CSkyBox::CSkyBox(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
-
 }
 
 CSkyBox::CSkyBox(const CSkyBox& rhs)
 	: CGameObject(rhs)
 {
-
 }
 
 CSkyBox::~CSkyBox(void)
 {
-
 }
+
 
 HRESULT CSkyBox::Ready_Object(void)
 {
