@@ -67,10 +67,10 @@ HRESULT CCollider::Ready_Collider(const _float& fRadius, COLLIDERTYPE eColliderT
 
 void CCollider::Render_Collider(COLTYPE eType, const _matrix * pColliderMatrix)
 {
-	m_matColMatrix = *pColliderMatrix;
-
 	if (m_matColParts)
-		m_matColMatrix = (*m_matColParts) * m_matColMatrix;
+		m_matColMatrix = (*m_matColParts) * *pColliderMatrix;
+	else
+		m_matColMatrix = *pColliderMatrix;
 
 	memcpy(&m_vCenter, &m_matColMatrix._41, sizeof(_vec3));
 

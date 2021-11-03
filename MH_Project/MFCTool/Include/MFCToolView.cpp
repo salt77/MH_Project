@@ -180,6 +180,8 @@ HRESULT CMFCToolView::Add_Prototype()
 	m_pGraphicDev = m_pDeviceClass->GetDevice();
 	m_pGraphicDev->AddRef();
 
+	Engine::Create_Management(m_pGraphicDev, &m_pManagementClass);
+
 	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 
 	// Components

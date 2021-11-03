@@ -101,8 +101,9 @@ void CRenderer::Render_Blend(LPDIRECT3DDEVICE9 & pGraphicDev)
 	LPD3DXEFFECT	pEffect = pShader->Get_EffectHandle();
 	pEffect->AddRef();
 
-	Get_RenderTargetTexture(pEffect, L"Target_Albedo", "g_AlbedoTexture");
-	Get_RenderTargetTexture(pEffect, L"Target_Shade", "g_ShadeTexture");
+	Engine::Get_RenderTargetTexture(pEffect, L"Target_Albedo", "g_AlbedoTexture");
+	Engine::Get_RenderTargetTexture(pEffect, L"Target_Shade", "g_ShadeTexture");
+	Engine::Get_RenderTargetTexture(pEffect, L"Target_Specular", "g_SpecularTexture");
 
 	pEffect->Begin(NULL, 0);
 	pEffect->BeginPass(0);

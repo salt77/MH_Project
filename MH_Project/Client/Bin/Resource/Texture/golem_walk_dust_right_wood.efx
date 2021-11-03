@@ -1,0 +1,522 @@
+//빠른먼지
+"particle"
+{
+
+	"bone_1"			"ValveBiped.Bip01_R_Foot"
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"30 30 0"
+	"angle_offset_1"       "-90 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	
+	{
+		"0"	"-10"
+		"0.5"	"-10"
+		"1"	"30"
+	}
+
+	"material"		"effects/dust"
+
+	"particle_count"	
+	{
+		"0.1"	"7 10"
+		"0.5"	"10 7"
+	}
+
+	"color_min"		
+	{	
+		"0"	"190 182 165"
+	}
+	
+	"die_time"		
+	{
+		"0"	"0.5 0.7"
+	}
+
+	"speed"	
+	{
+		"0"	"30 50"	
+	}
+	"speed_delta"
+	{
+		"0"	"180"	
+		"0.3"	"100"
+		"1"	"0"
+	}
+	"start_roll"
+	{
+		"0"	"-60 60"
+	}
+
+	"spread_angle"	"70"
+	"spread_radius" "20"
+	"spread_radius_angle" "30"
+	"use_spread_direction"	"1"
+	"use_light"		"0.5"		
+	
+	"color_ramp"	
+	{
+		"0"	"0.8 1"
+	}
+
+	"size_delta"
+	{
+		"0"	"10"
+		"0.5"	"15"
+		"1"	"17"
+	}
+	"alpha_delta"	
+	{
+		"0.3"	"200"
+		"0.7"	"100"
+		"1"	"0"
+	}
+	
+	"roll_delta"	
+	{
+		"0"	"0"
+		"0.5"	"100"
+		"1"	"150"
+	}
+}
+
+//뾰족먼지
+
+"particle"
+{
+
+	"bone_1"			"ValveBiped.Bip01_R_Foot"
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"30 30 0"
+	"angle_offset_1"       "-90 0 0" 
+
+	"emitter"	"trail"
+	"gravity"	
+	{
+		"0"	"0"
+		"0.5"	"0"
+		"1"	"-50"
+	}
+
+	"material"		"effects/dust"
+
+	"particle_count"	"20"
+
+	"color_min"	"190 182 165"
+	"die_time"	"0.4 0.6"
+
+	"speed"		"10"
+	"speed_delta"
+	{
+		"0"	"70"	
+		"0.3"	"80"
+		"1"	"10"
+	}
+	"spread_angle"	"40"
+	"spread_radius" "20"
+	"spread_radius_angle" "30"
+	"use_spread_direction"	"1"
+	"use_light"		"0.5"		
+
+	"color_ramp"	"0.8 1"
+	"alpha_delta"	
+	{
+		"0.3"	"200"
+		"0.7"	"150"
+		"1"	"0"
+	}
+	
+	"start_length" "1.3 0.7"
+	"start_width" "10"
+}
+
+//가루
+
+"particle"
+{
+
+
+	"bone_1"			"ValveBiped.Bip01_R_Foot"
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"30 30 0"
+	"angle_offset_1"       "-90 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	
+	{
+		"0"	"100"
+	}
+
+	"material"		"effects/yellowflare1"
+
+	"particle_count"	
+	{
+		"0.5"	"15"
+	}
+
+	"color_min"		
+	{	
+		"0"	"190 182 165"
+
+	}
+
+	
+	"die_time"		
+	{
+		"0"	"1 0.6"
+	}
+
+	"speed"	
+	{
+		"0"	"30 100"	
+	}
+	"speed_delta"
+	{
+		"0"	"100"	
+		"0.3"	"150"
+		"1"	"1"
+	}
+
+	"spread_angle"	"80"	
+	"spread_radius"	"20"
+	"spread_radius_angle"	"30"
+	"use_light"		"0.5"
+	"use_spread_direction"	"1"
+
+	"color_ramp"	
+	{
+		"0"	"0.5 0.3"
+	}
+
+	"size_delta"
+	{
+		"0"	"3"
+		"0.5"	"5"
+	}
+	"alpha_delta"	
+	{
+		"0.3"	"250"
+		"0.7"	"200"
+		"1"	"50"
+	}
+  "start_roll"    "-60  60"	
+	"roll_delta"	
+	{
+		"0"	"50"
+		"0.5"	"100"
+		"1"	"150"
+	}
+}
+
+//느린먼지
+
+"particle"
+{
+
+
+	"bone_1"			"ValveBiped.Bip01_R_Foot"
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"30 30 0"
+	"angle_offset_1"       "-90 0 0" 
+
+	"emitter"		"simple"
+
+	"gravity"	
+	{
+		"0"	"-2"
+		"0.5"	"-5"
+		"1"	"250"
+	}
+
+	"material"		"effects/dust"
+
+	"particle_count"	"5 10"
+
+	"color_min"		
+	{	
+		"0"	"190 182 165"
+	}
+
+	
+	"die_time"		
+	{
+		"0"	"2 1.5"
+	}
+
+	"speed"	
+	{
+		"0"	"15 15"	
+	}
+	"speed_delta"
+	{
+		"0"	"20"	
+		"0.3"	"10"
+		"1"	"0"
+	}
+	
+  "spread_angle"	"70"	
+	"spread_radius" "20"
+	"spread_radius_angle" "30"
+	"use_light"		"0.5"	
+	"use_spread_direction"	"1"
+
+	"color_ramp"	
+	{
+		"0"	"1 0.8"
+	}
+
+	"size_delta"
+	{
+		"0"	"10"
+		"0.5"	"16"
+		"1"	"24"
+	}
+	"alpha_delta"	
+	{
+		"0.3"	"200"
+		"0.7"	"100"
+		"1"	"20"
+	}
+	
+  "start_roll"    "-60  60"
+	"roll_delta"	
+	{
+		"0"	"0"
+		"0.5"	"50"
+		"1"	"100"
+	}
+}
+
+
+
+//얼음조각1
+
+"particle"
+{
+
+	"bone_1"			"ValveBiped.Bip01_R_Foot"
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"30 30 0"
+	"angle_offset_1"       "-90 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	
+	{
+		"0"	"400"
+	}
+	
+	"material"	"effects/wood"
+
+	"particle_count"    "3 5"
+
+	"color_min"		
+	{	
+		"0"	"255 255 255"
+	}
+	
+	"die_time"		
+	{
+		"0"	"1"
+	}
+
+	"speed"	
+	{
+		"0"	"200 250"	
+	}
+	"speed_delta"
+	{
+		"0"	"100"	
+		"0.3"	"50"
+		"0.6"	"20"
+		"1"	"10"
+	}
+
+	"spread_angle"	"100"
+	"spread_radius" "20"
+	"spread_radius_angle" "10"
+	"use_spread_direction"	"1"
+    "delay" "0.1"
+	"use_light"		"0.5"
+
+	"color_ramp"	
+	{
+		"0"	"0.6 0.8"
+	}
+
+	"start_size"	"2 5"
+
+	"alpha_delta"	
+	{
+		"0.3"	"255"
+		"0.7"	"100"
+		"1"	"50"
+	}
+    "start_roll"    "-360  360"	
+	"roll_delta"	
+	{
+		"0"	"50"
+		"0.5"	"200"
+		"1"	"350"
+	}
+
+}
+
+//얼을조각2
+"particle"
+{
+
+	"bone_1"			"ValveBiped.Bip01_R_Foot"
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"30 30 0"
+	"angle_offset_1"       "-90 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	
+	{
+		"0"	"400"
+	}
+	
+	"material"	"effects/wood1"
+
+	"particle_count"    "5 3"
+
+	"color_min"		
+	{	
+		"0"	"255 255 255"
+	}
+	
+	"die_time"		
+	{
+		"0"	"1"
+	}
+
+	"speed"	
+	{
+		"0"	"100"	
+	}
+	"speed_delta"
+	{
+		"0"	"100"	
+		"0.3"	"50"
+		"0.6"	"20"
+		"1"	"10"
+	}
+
+	"spread_angle"	"180"
+	"spread_radius" "20"
+	"spread_radius_angle" "10"
+	"use_spread_direction"	"1"
+    "delay" "0.1"
+	"use_light"		"0.5"
+	"color_ramp"	
+	{
+		"0"	"1 0.8"
+	}
+
+	"start_size"	"2 3"
+
+	"alpha_delta"	
+	{
+		"0.3"	"255"
+		"0.7"	"100"
+		"1"	"50"
+	}
+    "start_roll"    "-360  360"	
+	"roll_delta"	
+	{
+		"0"	"50"
+		"0.5"	"200"
+		"1"	"350"
+	}
+
+}
+
+
+//얼음조각3
+
+"particle"
+{
+
+	"bone_1"			"ValveBiped.Bip01_R_Foot"
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"30 30 0"
+	"angle_offset_1"       "-90 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	
+	{
+		"0"	"300"
+	}
+	
+	"material"	"effects/wood2"
+
+	"particle_count"	
+	{
+		"0.5"	"3 5"
+	}
+
+	"color_min"		
+	{	
+		"0"	"255 255 255"
+	}
+	
+	"die_time"		
+	{
+		"0"	"1.5"
+	}
+
+	"speed"	
+	{
+		"0"	"50 150"	
+	}
+	"speed_delta"
+	{
+		"0"	"80"	
+		"0.3"	"50"
+		"0.6"	"20"
+		"1"	"10"
+	}
+
+	"spread_angle"	"90"
+	"spread_radius" "20"
+	"spread_radius_angle" "10"
+	"use_spread_direction"	"1"
+	"use_light"		"0.5"
+	"color_ramp"	
+	{
+		"0"	"1 0.8"
+	}
+
+	"start_size"	"2 5"
+
+	"alpha_delta"	
+	{
+		"0.3"	"255"
+		"0.7"	"200"
+		"1"	"50"
+	}
+        "start_roll"    "0  360"	
+	"roll_delta"	
+	{
+		"0"	"100"
+		"0.5"	"200"
+		"1"	"350"
+	}
+
+}
+
+

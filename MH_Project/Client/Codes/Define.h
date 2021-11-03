@@ -64,6 +64,16 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 		iter_Hit->second->Set_CanCollision(false);			\
 	}
 
+#define	SoundMgr(SoundName, ChannelID)		CSoundMgr::GetInstance()->PlaySound(SoundName, ChannelID);
+#define SoundMgrBGM(SoundName, ChannelID)	CSoundMgr::GetInstance()->StopSound(ChannelID);				\
+											CSoundMgr::GetInstance()->PlayBGM(SoundName, ChannelID);
+#define SoundMgrStop					    CSoundMgr::GetInstance()->StopAll();
+#define SoundMgrStopChannel(ChannelID)		CSoundMgr::GetInstance()->StopSound(ChannelID);
+
+#define SoundMgrHalfVol(SoundName, ChannelID)			CSoundMgr::GetInstance()->PlaySoundLowerVol(SoundName, ChannelID);
+#define SoundMgrLowerVol(SoundName, ChannelID, Volume)	CSoundMgr::GetInstance()->PlaySoundLowerVol(SoundName, ChannelID, Volume);
+#define SoundMgrHigherVol(SoundName, ChannelID, Volume) CSoundMgr::GetInstance()->PlaySoundHigherVol(SoundName, ChannelID, Volume);
+
 
 #define DIS_SHORTEST	3.5f
 #define DIS_SHORT		5.5f
@@ -72,6 +82,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 
 #define SCALE_PLAYER	0.01f
 #define SCALE_AHGLAN	0.07f
+
+#define CAMSHAKE_POWER	0.025f
 
 //#ifdef _DEBUG
 //

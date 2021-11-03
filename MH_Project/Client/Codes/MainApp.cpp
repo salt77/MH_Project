@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MainApp.h"
 #include "Logo.h"
+#include "SoundMgr.h"
 
 
 CMainApp::CMainApp(void)
@@ -75,6 +76,9 @@ HRESULT CMainApp::SetUp_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	// Input 추가
 	FAILED_CHECK_RETURN(Ready_InputDev(g_hInst, g_hWnd), E_FAIL);
 
+	// Sound 추가
+	FAILED_CHECK_RETURN(CSoundMgr::GetInstance()->Ready_Sound_Manager(), E_FAIL);
+
 	return S_OK;
 }
 
@@ -105,6 +109,8 @@ CMainApp* CMainApp::Create(void)
 
 void CMainApp::Free(void)
 {
+	CSoundMgr::GetInstance()->DestroyInstance();
+
 	Safe_Release(m_pGraphicDev);
 
 	Safe_Release(m_pManagementClass);

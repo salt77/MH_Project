@@ -29,6 +29,32 @@ HRESULT CAhglan::Ready_Object(void)
 	return S_OK;
 }
 
+HRESULT CAhglan::LateReady_Object()
+{
+	CGameObject::LateReady_Object();
+
+	m_pMainCamera = static_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
+
+	list<D3DXMESHCONTAINER_DERIVED*>listTemp = m_pMeshCom->Get_MeshContainerList();
+	list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
+	for (_uint i = 0; i < (*iter)->dwNumBones; ++i)
+	{
+		_tchar	pTemp[64] = L"";
+		MultiByteToWideChar(CP_ACP, 0, (*iter)->pSkinInfo->GetBoneName(i), strlen((*iter)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+		if (!wcscmp(L"ValveBiped_Bip01_R_Foot", pTemp))
+		{
+			memcpy(&m_vRFootPos, &((*iter)->ppCombinedTransformMatrix[i]->_41), sizeof(_vec3));
+		}
+		else if (!wcscmp(L"ValveBiped_Bip01_L_Foot", pTemp))
+		{
+			memcpy(&m_vLFootPos, &((*iter)->ppCombinedTransformMatrix[i]->_41), sizeof(_vec3));
+		}
+	}
+
+	return S_OK;
+}
+
 _int CAhglan::Update_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
@@ -44,7 +70,7 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_pMeshCom->Play_Animation(fTimeDelta);
 
-	Add_RenderGroup(RENDER_NONALPHA, this);
+	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
 
 	return iExit;
 }
@@ -109,12 +135,12 @@ HRESULT CAhglan::Add_Component(void)
 	CComponent*		pComponent = nullptr;
 
 	// Mesh
-	pComponent = m_pMeshCom = dynamic_cast<CDynamicMesh*>(Clone_Prototype(L"Proto_Mesh_Ahglan"));
+	pComponent = m_pMeshCom = dynamic_cast<CDynamicMesh*>(Engine::Clone_Prototype(L"Proto_Mesh_Ahglan"));
 	NULL_CHECK_RETURN(m_pMeshCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Mesh", pComponent);
 
 	// Transform
-	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Clone_Prototype(L"Proto_Transform"));
+	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Prototype(L"Proto_Transform"));
 	NULL_CHECK_RETURN(m_pTransformCom, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].emplace(L"Com_Transform", pComponent);
 
@@ -125,12 +151,12 @@ HRESULT CAhglan::Add_Component(void)
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
 	// Calculator
-	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Clone_Prototype(L"Proto_Calculator"));
+	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Prototype(L"Proto_Calculator"));
 	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
 
 	// Shader
-	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Clone_Prototype(L"Proto_Shader_Mesh"));
+	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Mesh"));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Shader", pComponent);
 
@@ -405,7 +431,7 @@ void CAhglan::Animation_Control()
 			m_eBossAction = BS_ATK;
 
 			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
-			BS_SKILL_MOVE(0.f, 4.f, (_float)m_lfAniEnd * 0.5f);
+			BS_SKILL_MOVE(0.f, 3.5f, (_float)m_lfAniEnd * 0.45f);
 			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.8f);
 
 			m_fAniEndDelay = 1.05f;
@@ -461,7 +487,7 @@ void CAhglan::Animation_Control()
 		case ATK_ROLLING_ONETIME_END:
 			m_pMeshCom->Set_TrackSpeed(2.1f);
 
-			m_fAniEndDelay = 1.1f;
+			m_fAniEndDelay = 1.125f;
 			m_bCanAction = false;
 			break;
 
@@ -567,6 +593,10 @@ void CAhglan::Animation_Control()
 		break;
 
 	case ATK_WINDMILL:
+		if (m_fAniTime <= m_lfAniEnd * 0.3f)
+		{
+			m_pMainCamera->Set_CameraShake(true, CAMSHAKE_POWER * 0.5f, 4000, 3.f);
+		}
 		break;
 
 	case ATK_TWOHANDS_COMBO:
@@ -715,7 +745,7 @@ void CAhglan::Collision_Control()
 	case CAhglan::ATK_WINDMILL:
 		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
 		{
-			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.13f, m_lfAniEnd * 0.8f);
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.13f, m_lfAniEnd * 0.7f);
 		}
 		break;
 
@@ -726,7 +756,7 @@ void CAhglan::Collision_Control()
 				L"Hit_LHand" == iter_Hit->first ||
 				L"Hit_RHand" == iter_Hit->first)
 			{
-				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.3f, m_lfAniEnd * 0.5f);
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.3f, m_lfAniEnd * 0.4f);
 			}
 		}
 		break;
@@ -775,7 +805,7 @@ void CAhglan::Collision_Control()
 				{
 					iter_Hit->second->Set_CanCollision(true);
 				}
-				else if (m_lfAniEnd * 0.55f <= fAniTime &&
+				else if (m_lfAniEnd * 0.5f <= fAniTime &&
 					m_lfAniEnd * 0.65f >= fAniTime)
 				{
 					iter_Hit->second->Set_CanCollision(true);
@@ -801,7 +831,7 @@ void CAhglan::Collision_Control()
 	case CAhglan::ATK_ROLLING_ONETIME_BEGIN:
 		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
 		{
-			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.55f, m_lfAniEnd);
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.55f, m_lfAniEnd * 0.95f);
 		}
 		break;
 
@@ -828,7 +858,7 @@ HRESULT CAhglan::Add_NaviMesh()
 {
 	CComponent*		pComponent = nullptr;
 
-	pComponent = m_pNaviMeshCom = dynamic_cast<CNaviMesh*>(Clone_Prototype(L"Proto_NaviMesh"));
+	pComponent = m_pNaviMeshCom = dynamic_cast<CNaviMesh*>(Engine::Clone_Prototype(L"Proto_NaviMesh"));
 	NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_NaviMesh", pComponent);
 

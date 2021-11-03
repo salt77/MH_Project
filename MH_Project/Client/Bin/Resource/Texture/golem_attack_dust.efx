@@ -1,0 +1,345 @@
+//퍼지는먼지
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"0"
+	"position_offset_1"	"0 0 20"
+	"angle_offset_1"     "180 0 0" 
+	"emitter"	"simple"
+	
+	"gravity"	"-10"
+
+	
+	"emit_interval"	"0.01"
+	"emit_duration" "0.3"
+
+	
+	"material"		"effects/dust"
+
+	"particle_count"	"2"
+
+	"color_min"	"208 169 100"	
+	
+	"die_time"		"1 0.7"
+
+
+	"use_spread_direction"	"1"
+
+	"speed"		"80 50"
+	"spread_angle"	"90"
+	
+	"color_ramp"	"1 0.7"
+
+	"start_size" "13 6"
+		
+	"size_delta"
+	{
+		"0"	"7"
+		"0.3"	"10"		
+		"1"	"15"
+	}
+
+	"alpha_delta"	
+	{
+		"0"	"255"
+		"0.7" "255"
+		"1"	"0"
+	}
+	
+    "spread_cylinder_radius"
+	{
+	    "0"	"10"
+		"0.2" "80"
+		"1" "110"
+    }
+
+    "spread_cylinder_height"
+	{
+	    "0"	"5"
+		"1"	"10"	
+    }
+	"start_roll"	"-365 365"
+
+	"length" "0.5 1"
+	"width" "2 2"
+	"wind_blown"		"0"
+	"use_light"		"0.5"
+	"no_screen"		"0"
+}
+
+//뽀족먼지
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"0"
+	"position_offset_1"	"0 0 50"
+	"angle_offset_1"     "180 0 0" 
+	
+	"emitter"	"trail"
+	
+	"gravity"	"0"
+
+	"start_length" "0.7 1.2"
+	"start_width" "25 16"
+	
+	"emit_interval"	"0.01"
+	"emit_duration" "0.2"
+
+	"material"		"effects/dust"
+
+	"particle_count"	"3"
+
+	"color_min"	"208 169 100"	
+	
+	"die_time"		"0.2 0.3"
+
+	"use_spread_direction"	"1"
+	
+	"color_ramp"	"0.6 0.7"
+	"speed"		"50"
+	"speed_delta"
+	{
+		"0"	"60"	
+		"0.2" "70"
+		"1" "80"
+	}
+
+	"start_size" "3 6"
+	"size_delta"
+	{
+		"0"	"7"
+		"0.3"	"10"		
+		"1"	"15"
+	}
+
+	"alpha_delta"	
+	{
+		"0"	"250"
+		"0.6" "250"
+		"1"	"0"
+	}
+	"spread_angle"	"60"	
+    "spread_cylinder_radius"
+	{
+	    "0"	"10"
+		"0.2" "70"
+		"1" "80"
+    }
+
+    "spread_cylinder_height"
+	{
+	    "0"	"5"
+		"1"	"10"	
+    }
+	"start_roll"	"-365 365"
+
+	"length" "0.5 1"
+	"width" "2 2"
+	"wind_blown"		"0"
+	"use_light"		"0.5"
+	"no_screen"		"0"
+}
+
+
+//돌가루1
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"0"
+	"position_offset_1"	"0 0 20"
+	"angle_offset_1"     "180 0 0" 
+	"emitter"	"simple"
+	
+	"gravity"	"400"
+
+	"emit_interval"	"0.05"
+	"emit_duration" "0.3"
+
+	"material"	"effects/stone_01b"
+
+	"particle_count"	"1"
+
+	"color_min"	"255 255 255"	
+	
+	"die_time"		"0.8 1.3"
+
+	"use_spread_direction"	"1"
+	
+	"color_ramp"	"0.6 0.8"
+	"speed"		"170 220"
+	"speed_delta"
+	{
+		"0"	"130"	
+		"1" "80"
+	}
+
+	"start_size" "1 4"
+	"size_delta"
+	{
+		"0"	"1"
+		"0.3"	"3"		
+		"1"	"3"
+	}
+
+	"alpha_delta"	
+	{
+		"0"	"250"
+		"0.7" "250"
+		"1"	"0"
+	}
+	"spread_angle"	"60"	
+    "spread_cylinder_radius"
+	{
+	    "0"	"10"
+		"0.2" "80"
+		"1" "100"
+    }
+
+    "spread_cylinder_height"
+	{
+	    "0"	"5"
+		"1"	"10"	
+    }
+	"start_roll"	"-365 365"
+
+	"length" "0.5 1"
+	"width" "2 2"
+	"wind_blown"		"0"
+	"use_light"		"0.5"
+	"no_screen"		"0"
+}
+
+//돌가루2
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"0"
+	"position_offset_1"	"0 0 20"
+	"angle_offset_1"     "180 0 0" 
+	"emitter"	"simple"
+	
+	"gravity"	"400"
+
+	"emit_interval"	"0.05"
+	"emit_duration" "0.3"
+
+	"material"	"effects/stone_01a"
+
+	"particle_count"	"1"
+
+	"color_min"	"255 255 255"	
+	
+	"die_time"		"0.8 1.3"
+
+	"use_spread_direction"	"1"
+	
+	"color_ramp"	"0.6 0.9"
+	"speed"		"170"
+	"speed_delta"
+	{
+		"0"	"130"	
+		"1" "80"
+	}
+
+	"start_size" "1 4"
+	"size_delta"
+	{
+		"0"	"1"
+		"0.3"	"3"		
+		"1"	"3"
+	}
+
+	"alpha_delta"	
+	{
+		"0"	"250"
+		"0.7" "250"
+		"1"	"0"
+	}
+	"spread_angle"	"60"	
+    "spread_cylinder_radius"
+	{
+	    "0"	"10"
+		"0.2" "80"
+		"1" "100"
+    }
+
+    "spread_cylinder_height"
+	{
+	    "0"	"5"
+		"1"	"10"	
+    }
+	"start_roll"	"-365 365"
+
+	"length" "0.5 1"
+	"width" "2 2"
+	"wind_blown"		"0"
+	"use_light"		"0.5"
+	"no_screen"		"0"
+}
+//돌가루2
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"0"
+	"position_offset_1"	"0 0 20"
+	"angle_offset_1"     "180 0 0" 
+	"emitter"	"simple"
+	
+	"gravity"	"400"
+
+	"emit_interval"	"0.01"
+	"emit_duration" "0.3"
+
+	"material"	"effects/particle_stone"
+
+	"particle_count"	"3"
+
+	"color_min"	"255 255 255"	
+	
+	"die_time"		"0.8 1.3"
+
+	"use_spread_direction"	"1"
+	
+	"color_ramp"	"0.6 0.3"
+	"speed"		"140 180"
+	"speed_delta"
+	{
+		"0"	"130 40"	
+		"1" "80 20"
+	}
+
+	"start_size" "1 2"
+	"size_delta"
+	{
+		"0"	"1"
+		"0.3"	"3"		
+		"1"	"3"
+	}
+
+	"alpha_delta"	
+	{
+		"0"	"150"
+		"0.3" "150"
+		"1"	"0"
+	}
+	"spread_angle"	"60"	
+    "spread_cylinder_radius"
+	{
+	    "0"	"10"
+		"0.2" "70"
+		"1" "80"
+    }
+
+    "spread_cylinder_height"
+	{
+	    "0"	"5"
+		"1"	"10"	
+    }
+	"start_roll"	"-365 365"
+
+	"length" "0.5 1"
+	"width" "2 2"
+	"wind_blown"		"0"
+	"use_light"		"0.5"
+	"no_screen"		"0"
+}

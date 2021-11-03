@@ -1,0 +1,67 @@
+//퍼지는먼지
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"0 0 0"
+
+	"emitter"	"simple"
+	
+	"gravity"	"-10"
+
+	
+	"emit_interval"	"0.01"
+	"emit_duration" "3"
+
+	
+	"material"		"effects/dust"
+
+	"particle_count"	"3"
+
+	"color_min"	"208 169 100"	
+	
+	"die_time"		"1 1.5"
+
+
+	"use_spread_direction"	"1"
+
+	"speed"		"80 50"
+	"spread_angle"	"90"
+	
+	"color_ramp"	"1 0.7"
+
+	"start_size" "13 36"
+		
+	"size_delta"
+	{
+		"0"	"7"
+		"0.3"	"10"		
+		"1"	"15"
+	}
+
+	"alpha_delta"	
+	{
+		"0"	"10"
+		"0.5" "200"
+		"1"	"0"
+	}
+	
+    "spread_cylinder_radius"
+	{
+	    "0"	"50"
+		"1" "150"
+    }
+
+    "spread_cylinder_height"
+	{
+	    "0"	"5"
+		"1"	"10"	
+    }
+	"start_roll"	"-365 365"
+
+	"length" "0.5 1"
+	"width" "2 2"
+	"wind_blown"		"0"
+	"use_light"		"0.5"
+	"no_screen"		"0"
+}

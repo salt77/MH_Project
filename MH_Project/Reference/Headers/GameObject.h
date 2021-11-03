@@ -24,6 +24,7 @@ public:
 
 public:
 	virtual		HRESULT		Ready_Object(void);
+	virtual		HRESULT		LateReady_Object();
 	virtual		_int		Update_Object(const _float& fTimeDelta);
 	virtual		_int		LateUpdate_Object(const _float& fTimeDelta);
 	virtual		void		Render_Object(void) {};
@@ -40,6 +41,8 @@ protected:
 	map<const wstring, CComponent*>		m_mapComponent[ID_END];
 	map<const wstring, CCollider*>		m_mapColliderCom;
 	map<const wstring, CBoxCollider*>	m_mapBoxColliderCom;
+
+	_bool								m_bLateReady = false;
 
 	_float								m_fViewZ;
 

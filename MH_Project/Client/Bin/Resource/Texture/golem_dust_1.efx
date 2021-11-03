@@ -1,0 +1,150 @@
+//가루
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"0 0 -15"
+	"angle_offset_1"       "0 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	
+	{
+		"0"	"70"
+	}
+
+	"material"		"effects/yellowflare1"
+
+	"particle_count"	"10"
+	"color_min"		
+	{	
+		"0"	"39 35 27"
+	}
+	
+	"die_time"		
+	{
+		"0"	"0.5"
+	}
+
+	"speed"	
+	{
+		"0"	"30 100"	
+	}
+	"speed_delta"
+	{
+		"0"	"60"	
+		"0.3"	"60"
+		"1"	"1"
+	}
+
+	"spread_angle"	"360"	
+	"spread_radius"	"50"
+	"spread_radius_angle"	"30"
+
+	"use_spread_direction"	"1"
+
+	"color_ramp"	
+	{
+		"0"	"0.7 0.5"
+	}
+
+	
+	
+	"size_delta"
+	{
+		"0"	"3"
+		"0.5"	"5"
+	}
+	"alpha_delta"	
+	{
+		"0.3"	"250"
+		"0.7"	"200"
+		"1"	"50"
+	}
+  "start_roll"    "-60  60"	
+	"roll_delta"	
+	{
+		"0"	"50"
+		"0.5"	"100"
+		"1"	"200"
+	}
+}
+
+
+//먼지
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"0 0 -15"
+	"angle_offset_1"       "0 0 0" 
+
+	"emitter"		"simple"
+
+	"gravity"	
+	{
+		"0"	"-2"
+		"0.5"	"-5"
+		"1"	"0"
+	}
+
+	"material"		"effects/dust"
+
+	"particle_count"	"7"
+
+	"color_min"		
+	{	
+		"0"	"220 200 141"
+	}
+
+	
+	"die_time"		
+	{
+		"0"	"1 0.8"
+	}
+
+	"speed"	
+	{
+		"0"	"30 10"	
+	}
+	"speed_delta"
+	{
+		"0"	"5"	
+		"0.3"	"3"
+		"1"	"0"
+	}
+	
+  "spread_angle"	"360"	
+	"spread_radius" "50"
+	"spread_radius_angle" "40"
+	
+	"use_spread_direction"	"1"
+
+	"color_ramp"	
+	{
+		"0"	"0.7 1"
+	}
+
+	"start_size" "10 15"
+	
+	"size_delta"
+	{
+		"0"	"18"
+		"0.5"	"19"
+		"1"	"20"
+	}
+	"alpha_delta"	
+	{
+		"0.3"	"255"
+		"0.7"	"200"
+		"1"	"20"
+	}
+	"use_light"		"0.5"	
+	"use_light"		"0.5"	
+  "start_roll"    "-60  60"
+	"roll_delta"	
+	{
+		"0"	"0"
+		"0.5"	"40"
+		"1"	"80"
+	}
+}

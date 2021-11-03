@@ -1,0 +1,677 @@
+//퍼지는 먼지
+
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"120 0 5"
+	"emitter"	"simple"
+	"gravity"	"-20"
+
+	"emit_interval"	"0.01"
+	"emit_duration" "0.6"
+
+	"material"		"effects/dust"
+	"particle_count" "2"
+	"color_min" "208 169 100"
+	// "color_min" "220 180 115"
+	"die_time"		"0.7 0.4"
+	
+	"use_spread_direction"	"1"
+	
+	"color_ramp"	"1 0.7"
+	"size_delta"
+	{
+	    "0"	"4"
+		"0.3" "14"
+		"0.6" "16"
+		"1" "22"
+	}
+	"alpha_delta"	
+	{
+		"0"	"120"
+		"0.3" "100"
+		// "0.8" "20"
+		"1"	"0"
+	}
+   "spread_cylinder_radius"
+	// {
+	    // "0"	"35"
+		// "0.2" "80"
+		// "0.6" "100"
+		// "1" "120"
+    // }
+	{
+	    "0"	"5"
+		"0.15" "50"
+		"0.4" "80"
+		".7" "100"
+	}
+	"spread_cylinder_height"
+	{
+	    "0"	"1"
+		"0.3" "7"
+		"0.6" "9"
+		"1" "14"
+    }
+	"start_roll"	"-365 365"
+	"roll_delta"	
+	{
+		"0"	"0"
+		"0.5"	"50"
+		"1"	"100"
+	}
+
+	"length" "0.5 1"
+	"width" "2 2"
+	"wind_blown"		"0"
+	"use_light"		"0.5"
+	"no_screen"		"0"
+}
+
+
+// 연기 퍼짐 Big ==========================================================================
+"particle"
+{
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"120 0 -10"
+	"angle_offset_1"	"0 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	"130"
+
+	"material"		"effects/dust"
+
+	"particle_count"	
+	{
+		"0.1"	"20 25"
+		"0.5"	"15 10"
+	}
+	
+	"color_min"		
+	{	
+		"0"	"242 198 121"
+	}
+
+
+	
+	"die_time"		
+	{
+		"0"	"1 1"
+	}
+
+	"speed"	
+	{
+		"0"	"70 30"	
+	}
+	"speed_delta"
+	{
+		"0"	"180"	
+		"0.3"	"100"
+		"1"	"0"
+	}
+	"start_roll"
+	{
+		"0"	"-60 60"
+	}
+
+	"spread_angle"	"130"
+	"spread_radius" "20"
+	"spread_radius_angle" "30"
+	"use_spread_direction"	"1"
+	"use_light"		"0.5"		
+	
+	"color_ramp"	
+	{
+		"0"	"0.8 1.5"
+	}
+
+	"start_size"	"8 10"
+	"size_delta"
+	{
+		"0"		"1"
+		".3"	"10" 
+		"1"		"12"
+	}
+	
+	"alpha_delta"	
+	{
+		"0"	"220"
+		".6" "120"
+		"1"	"0"
+	}
+	"use_light" "0.5"	
+	"roll_delta"	
+	{
+		"0"	"0"
+		"0.5"	"130"
+		"1"	"150"	}
+}
+
+// 연기 퍼짐 Small ==========================================================================
+"particle"
+{
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"120 0 -10"
+	"angle_offset_1"	"0 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	"20"
+	"material"		"effects/dust"
+
+	"particle_count" "10 15"
+	
+	"color_min"		
+	{	
+		"0"	"242 198 121"
+	}
+
+
+	
+	"die_time"		
+	{
+		"0"	"1 2"
+	}
+
+	"speed"	
+	{
+		"0"	"30"	
+	}
+	"speed_delta"
+	{
+		"0"	"50"	
+		"0.3"	"70"
+		"1"	"0"
+	}
+	"start_roll"
+	{
+		"0"	"-60 60"
+	}
+
+	"spread_angle"	"100"
+	"spread_radius" "30"
+	"spread_radius_angle" "30"
+	"use_spread_direction"	"1"
+	"use_light"		"0.5"		
+	
+	"color_ramp" ".7 1"
+
+	"start_size"	"6 14"
+
+	"size_delta"
+	{
+		"0"		"5"
+		"1"		"10"
+	}
+	
+	"alpha_delta"	
+	{
+		"0"	"200"
+		".6" "150"
+		"1"	"0"
+	}
+	"use_light" "0.5"	
+	"roll_delta"	
+	{
+		"0"	"0"
+		"0.5"	"70"
+		"1"	"120"
+	}
+}
+
+
+
+// 연기 퍼짐 날카로움 ==========================================================================
+"particle"
+{
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+		"position_offset_1"	"120 0 -10"
+	"angle_offset_1"       "0 0 0" 
+
+	"emitter"	"trail"
+	"gravity"	
+	{
+		"0"	"0"
+		"0.5"	"0"
+		"1"	"-50"
+	}
+
+	"material"		"effects/dust"
+
+	"particle_count"	"20"
+
+	"color_min"	"208 169 100"
+	"die_time"	"0.4 0.6"
+
+	"speed"		"1"
+	"speed_delta"
+	{
+		"0"	"100"	
+		"0.3"	"200"
+		"1"	"100"
+	}
+	"spread_angle"	"80"
+	"spread_radius" "20"
+	"spread_radius_angle" "30"
+	"use_spread_direction"	"1"
+	"use_light"		"0.5"		
+
+	"color_ramp"	"0.8 1"
+	"alpha_delta"	
+	{
+		"0"	"250"
+		".3" "250"
+		".5"	"0"
+	}
+	
+	"start_length" ".2 .3"
+	"start_width" "5 15"
+	
+	"length_delta"	
+	{
+		"0"	".1"
+		".8"	".1"
+		"1"		"0"
+	}
+	
+}
+
+
+// 파편 _기본 ==========================================================================
+"particle"
+{
+
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+		"position_offset_1"	"120 0 -10"
+	"angle_offset_1"       "0 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	"100"
+	
+
+	"material"		"effects/stone_01b"
+
+	"particle_count" "10"	
+
+	"color_min"		
+	{	
+		"0"	"255 255 255"
+	}
+
+
+	"die_time"		
+	{
+		"0"	"1 0.7"
+	}
+
+	"speed"	"130 50"
+	
+	"speed_delta"
+	{
+		"0"	"100"	
+		"0.3"	"150"
+		"1"	"1"
+	}
+
+	"spread_angle"	"80"	
+	"spread_radius"	"20"
+	"spread_radius_angle"	"30"
+
+	"use_spread_direction"	"1"
+
+	"color_ramp"	".5"
+
+
+	"start_size" "1 9"
+	
+	// "size_delta"
+	// {
+		// "0"	"3"
+		// "0.5"	"5"
+	// }
+	"alpha_delta"	
+	{
+		"0.3"	"250"
+		"0.7"	"200"
+		"1"	"50"
+	}
+  "start_roll"    "-60  80"	
+	"roll_delta"	
+	{
+		"0"	"50"
+		"1"	"500"
+	}
+}
+
+// 파편 _큰거 A ==========================================================================
+
+"particle"
+{
+
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+		"position_offset_1"	"120 0 -10"
+	"angle_offset_1"       "0 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	"200"
+	
+
+	"material"		"effects/stone_05"
+
+	"particle_count"	
+	{
+		"0.5"	"4"
+	}
+
+	"color_min"		
+	{	
+		"0"	"255 255 255"
+	}
+
+
+	"die_time"		
+	{
+		"0"	"1 0.7"
+	}
+
+	"speed"	"30"
+	
+	"speed_delta"
+	{
+		"0"	"100"	
+		"0.3"	"150"
+		"1"	"1"
+	}
+
+	"spread_angle"	"80"	
+	"spread_radius"	"20"
+	"spread_radius_angle"	"30"
+
+	"use_spread_direction"	"1"
+
+	"color_ramp"	".5 .8"
+
+
+	"start_size" "1 8"
+	
+	"use_light" "0.3"
+	"alpha_delta"	
+	{
+		"0.3"	"250"
+		"0.7"	"200"
+		"1"	"50"
+	}
+  "start_roll"    "-60  60"	
+	"roll_delta"	
+	{
+		"0"	"50"
+		"1"	"330"
+	}
+}
+
+// 파편 _큰거 B ==========================================================================
+
+"particle"
+{
+
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+		"position_offset_1"	"120 0 -10"
+	"angle_offset_1"       "30 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	"10"
+	
+
+	"material"		"effects/stone_brick"
+
+	"particle_count"	
+	{
+		"0.5"	"2"
+	}
+
+	"color_min"		
+	{	
+		"0"	"238 220 197"
+	}
+
+	
+	"die_time"		
+	{
+		"0"	"1 0.7"
+	}
+
+	"speed"	"30"
+	
+	"speed_delta"
+	{
+		"0"	"100"	
+		"0.3"	"150"
+		"1"	"1"
+	}
+
+	"spread_angle"	"80"	
+	"spread_radius"	"20"
+	"spread_radius_angle"	"30"
+
+	"use_spread_direction"	"1"
+
+	"color_ramp"	".5 .9"
+
+
+	"start_size" "3 11"
+	
+	"use_light" "0.3"
+	"alpha_delta"	
+	{
+		"0.3"	"250"
+		"0.7"	"200"
+		"1"	"50"
+	}
+  "start_roll"    "-60  60"	
+	"roll_delta"	
+	{
+		"0"	"50"
+		"1"	"330"
+	}
+}
+
+// 파편 _작은거 멀리 ==========================================================================
+
+"particle"
+{
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+		"position_offset_1"	"120 0 -10"
+	"angle_offset_1"       "0 0 0" 
+
+	"emitter"	"simple"
+	"gravity"	
+	{
+		"0"	"500"
+	}
+	
+	"material"	"effects/stone_01a"
+
+	"particle_count"	
+	{
+		"0.5"	"10"
+	}
+
+	"color_min"		
+	{	
+		"0"	"255 255 255"
+	}
+	
+	"die_time"		
+	{
+		"0"	"1.5"
+	}
+
+	"speed"	
+	{
+		"0"	"100 200"	
+	}
+	"speed_delta"
+	{
+		"0"	"300"	
+		"0.3"	"200"
+		"0.6"	"100"
+		"1"	"100"
+	}
+
+	"spread_angle"	"70"
+	"spread_radius" "20"
+	"spread_radius_angle" "10"
+	"use_spread_direction"	"1"
+	"use_light"		"0.5"	
+	
+	"color_ramp"	".6 1"
+
+
+	"start_size"	".4 1.6"
+
+	"alpha_delta"	
+	{
+		"0.3"	"255"
+		"0.7"	"200"
+		"1"	"50"
+	}
+  "start_roll"    "-60  60"	
+  "use_light" "0.3"
+	"roll_delta"	
+	{
+		"0"	"100"
+		
+		"1"	"1000"
+	}
+}
+
+//노란링//////////////////////////////////////////////
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"120 30 20"
+
+	"material"		"effects/shork_ring"
+
+	"emitter"	"simple"
+
+	"gravity"	"0"
+
+	"particle_count"	"2"
+	
+	"die_time"		"0.08"
+
+	"speed"			"5"
+
+	"spread_angle" "5"
+	"spread_radius" "0"
+	"spread_radius_angle" "0"
+
+	"use_spread_direction"	"1"	
+	
+	"color_ramp"	"1.3 0.7"
+
+	"color_min"	"255 242 197"
+
+	"use_light"		"0"
+
+	"use_local"		"1"
+    "start_size"  "1"
+	"size_delta"
+	{
+		"0"	"3"
+		"0.3" "15"
+		"1"	"30"
+	}
+	"alpha_delta"	
+	{
+		"0.1"	"150"
+		"0.3"	"60"
+		"1"	"0"
+	}
+	"start_roll"
+	{
+		"0"	"-360 360"
+	}	
+	"roll_delta"	
+	{
+		"0"	"100"
+		"1"	"400"
+	}
+
+	"no_screen"	"1"
+}
+
+
+
+// 불줄////////////////////////////////////////////////////////////
+"particle"
+{
+
+	"follow_parent_1"	"1"
+	"direction_axis_1"	"2"
+	"position_offset_1"	"120 20 0"
+
+	"emitter"	"trail"
+	"gravity"	
+	{
+		"0"	"8"
+	}
+
+	"material"		"effects/yellowflare5"
+	
+	"particle_count"	"3 4"
+
+	"emit_interval"		"0.03"
+	"emit_duration"		"0.1"	
+	
+	"color_min"
+	{
+		"0"	"255 242 197"
+		"0.3"	"255 242 197"
+		"1" "255 184 107"
+	}
+
+	"die_time"	"0.08"
+
+	"speed"		"50"
+	"speed_delta"
+	{
+		"0"	"60"	
+		"0.2" "70"
+		"1" "80"
+	}
+	"spread_angle"	"80"
+	"spread_radius" "1"
+	"spread_radius_angle" "60"
+	"use_spread_direction"	"1"
+
+	"color_ramp"	"1"
+
+	"alpha_delta"	
+	{
+		"0.0"	"255"
+		"0.3"	"255"
+		"0.7"	"55"
+		"1"	"0"
+	}
+	
+	"start_length" "1"
+	"start_width" "20"
+}
+

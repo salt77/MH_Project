@@ -42,6 +42,12 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 
 	m_pMainCam = dynamic_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
 
+	_vec3	vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
+	if (!(-100.f <= vMyPos.y && 100.f >= vMyPos.y))
+	{
+		_vec3 vPos = vMyPos;
+	}
+
 	//SetUp_OnTerrain();
 	Compute_CanAction();
 	Key_Input(fTimeDelta);
@@ -298,7 +304,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			{
 				if (STATE_DOWNIDLE_FRONT == m_iAniIndex)
 				{
-					m_iAniIndex = STATE_DOWNTOIDLE_FRONT;
+					m_iAniIndex = STATE_DOWNTOIDLE_BACK;
 				}
 				else if (STATE_DOWNIDLE_BACK == m_iAniIndex)
 				{
@@ -457,20 +463,25 @@ void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVecto
 
 void CPlayer::Rotate_PlayerLook(_vec3 & TargetLookVector)
 {
-	_vec3 vUp = _vec3(0.f, 1.f, 0.f);
 	_vec3 vPlayerRight = *m_pTransformCom->Get_Info(INFO_RIGHT);
 	_vec3 vTemp;
 
 	D3DXVec3Normalize(&TargetLookVector, &TargetLookVector);
 	D3DXVec3Normalize(&vPlayerRight, &vPlayerRight);
 
-	if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
+	if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
 	{
 		m_pTransformCom->Rotation(ROT_Y, acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
 	}
-	else if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
+	else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
 	{
 		m_pTransformCom->Rotation(ROT_Y, -acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
+	}
+
+	_vec3	vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
+	if (!(-100.f <= vMyPos.y && 100.f >= vMyPos.y))
+	{
+		_vec3 vPos = vMyPos;
 	}
 }
 
@@ -535,6 +546,8 @@ void CPlayer::Animation_Control()
 	m_eCurState = (PL_STATE)m_iAniIndex;
 	if (m_eCurState != m_ePreState)
 	{
+		_uint	iRandSound;
+
 		switch (m_eCurState)
 		{
 			//case STATE_SPRINT_STOP:
@@ -547,6 +560,7 @@ void CPlayer::Animation_Control()
 		case STATE_DEAD:
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
+
 			break;
 
 		case STATE_DAMAGE_RESIST:
@@ -554,6 +568,24 @@ void CPlayer::Animation_Control()
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
+
+			iRandSound = rand() % 4;
+			if (0 == iRandSound)
+			{
+				SoundMgrLowerVol(L"lethita_hurt1.wav", CSoundMgr::PLAYER, 0.2f);
+			}
+			else if (1 == iRandSound)
+			{
+				SoundMgrLowerVol(L"lethita_hurt2.wav", CSoundMgr::PLAYER, 0.2f);
+			}
+			else if (2 == iRandSound)
+			{
+				SoundMgrLowerVol(L"lethita_hurt3.wav", CSoundMgr::PLAYER, 0.2f);
+			}
+			else if (3 == iRandSound)
+			{
+				SoundMgrLowerVol(L"lethita_hurt4.wav", CSoundMgr::PLAYER, 0.2f);
+			}
 			break;
 
 		case STATE_DOWNTOIDLE_FRONT:
@@ -607,6 +639,7 @@ void CPlayer::Animation_Control()
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
+			break;
 
 		case STATE_FURY2:
 			break;
@@ -724,7 +757,7 @@ void CPlayer::Animation_Control()
 			break;
 
 		case Engine::STATE_DAMAGEFROM_FRONT:
-			m_iAniIndex = STATE_DOWNIDLE_BACK;
+			m_iAniIndex = STATE_DOWNIDLE_FRONT;
 			break;
 
 		case Engine::STATE_DAMAGEFROM_BACK:
@@ -779,7 +812,7 @@ void CPlayer::Collision_Control()
 		switch (m_iAniIndex)
 		{
 		case STATE_DOUBLE_CRECSENT:
-			HITBOX_CONTROLL(0.25f, 0.7f, TRUE);
+			HITBOX_CONTROLL(0.35f, 0.7f, TRUE);
 			break;
 
 		case STATE_DASHATK:
@@ -795,7 +828,7 @@ void CPlayer::Collision_Control()
 			break;
 
 		case STATE_SMASH3:
-			HITBOX_CONTROLL(0.2f, 0.55f, TRUE);
+			HITBOX_CONTROLL(0.25f, 0.55f, TRUE);
 			break;
 
 		case STATE_SMASH4:
@@ -807,7 +840,7 @@ void CPlayer::Collision_Control()
 			break;
 
 		case STATE_SMASH1:
-			HITBOX_CONTROLL(0.35f, 0.6f, TRUE);
+			HITBOX_CONTROLL(0.4f, 0.6f, TRUE);
 			break;
 
 		case STATE_ATK4:
@@ -867,7 +900,7 @@ void CPlayer::Collision_Control()
 						iter_BossDamaged->second->Get_CanCollision())
 					{
 						if (m_pCalculatorCom->Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
-							&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
+															&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
 						{
 							switch (m_eCurState)
 							{

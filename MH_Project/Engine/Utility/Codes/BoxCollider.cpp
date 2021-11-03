@@ -192,10 +192,10 @@ HRESULT Engine::CBoxCollider::Ready_Collider(_float vMinX, _float vMinY, _float 
 
 void Engine::CBoxCollider::Render_Collider(COLTYPE eType, const _matrix* pColliderMatrix)
 {
-	m_matColMatrix = *pColliderMatrix;
-
 	if (m_matColParts)
-		m_matColMatrix = (*m_matColParts) * m_matColMatrix;
+		m_matColMatrix = (*m_matColParts) * *pColliderMatrix;
+	else
+		m_matColMatrix = *pColliderMatrix;
 
 #ifdef _DEBUG
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matColMatrix);

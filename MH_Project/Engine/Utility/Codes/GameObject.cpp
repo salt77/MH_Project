@@ -24,8 +24,20 @@ HRESULT Engine::CGameObject::Ready_Object(void)
 	return S_OK;
 }
 
+HRESULT CGameObject::LateReady_Object()
+{
+	return S_OK;
+}
+
 Engine::_int Engine::CGameObject::Update_Object(const _float& fTimeDelta)
 {
+	if (!m_bLateReady)
+	{
+		m_bLateReady = true;
+
+		LateReady_Object();
+	}
+
 	_int iResult = 0;
 
 	for (auto& iter : m_mapComponent[ID_DYNAMIC])

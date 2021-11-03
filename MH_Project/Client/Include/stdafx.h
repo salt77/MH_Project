@@ -33,6 +33,12 @@
 
 #include <process.h>
 
+// »ç¿îµå
+#include <io.h>
+#include "fmod.h"
+#pragma comment (lib, "fmodex_vc.lib")
+#include "SoundMgr.h"
+
 #ifdef _DEBUG
 
 #define _CRTDBG_MAP_ALLOC

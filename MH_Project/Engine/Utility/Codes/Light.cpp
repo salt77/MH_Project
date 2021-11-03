@@ -85,6 +85,17 @@ void CLight::Render_Light(LPD3DXEFFECT & pEffect)
 	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&m_tLightInfo.Diffuse);
 	pEffect->SetVector("g_vLightAmbient", (_vec4*)&m_tLightInfo.Ambient);
 
+	_matrix	matView, matProj;
+
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	D3DXMatrixInverse(&matView, NULL, &matView);
+
+	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+	D3DXMatrixInverse(&matProj, NULL, &matProj);
+
+	pEffect->SetMatrix("g_matInvView", &matView);
+	pEffect->SetMatrix("g_matInvProj", &matProj);
+
 	pEffect->CommitChanges();
 
 	pEffect->BeginPass(0);

@@ -38,8 +38,10 @@ HRESULT Engine::CLightMgr::Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev,
 
 void CLightMgr::Render_Light(LPD3DXEFFECT & pEffect)
 {
+#ifndef _AFX
 	for (auto& iter : m_LightList)
 		iter->Render_Light(pEffect);
+#endif
 }
 
 void Engine::CLightMgr::Free(void)

@@ -41,16 +41,16 @@ Engine::_int CDynamicCamera::Update_Object(const _float& fTimeDelta)
 	_int	iExit = CCamera::Update_Object(fTimeDelta);
 
 	Key_Input(fTimeDelta);
-	At_Update();
+	Camera_Shake();
+	At_Update(fTimeDelta);
 	Mode_Change();
 
 	if (true == m_bFix)
 	{
 		Mouse_Fix();
-		Mouse_Move();
-	}
 
-	//Camera_Shake();
+	}
+	Mouse_Move();
 
 	//m_matWorld = *m_pTransformCom->Get_WorldMatrix();
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
@@ -95,15 +95,73 @@ const _vec3 & CDynamicCamera::Get_CamDirVector(DIR eDir)
 	return _vec3();
 }
 
+void CDynamicCamera::Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwEndTime, _float fWaveInterpol)
+{
+	if (!bShakeType)
+	{
+		m_bShake = true;
+		m_fShakePower = fPower;
+		m_dwShakeTime = GetTickCount();
+		m_dwShakeDelay = dwEndTime;
+		m_fShakeWaveX = 0.f;
+		m_fShakeWaveY = 0.f;
+		m_fFXProgress = 0.f;
+		m_fFYProgress = 0.f;
+		m_fLongWaveInterpol = fWaveInterpol;
+		m_vShakeInterpol = _vec3(0.f, 0.f, 0.f);
+	}
+	else
+	{
+		m_bLongShake = true;
+		m_fShakePower = fPower;
+		m_dwShakeTime = GetTickCount();
+		m_dwShakeDelay = dwEndTime;
+		m_fShakeWaveX = 0.f;
+		m_fShakeWaveY = 0.f;
+		m_fFXProgress = 0.f;
+		m_fFYProgress = 0.f;
+		m_fLongWaveInterpol = fWaveInterpol;
+		m_vShakeInterpol = _vec3(0.f, 0.f, 0.f);
+	}
+}
+
 void CDynamicCamera::Camera_Shake()
 {
-	_vec3	vRandomTarget = _vec3(Engine::Random(-2.f, 2.f), Engine::Random(-2.f, 2.f), Engine::Random(-2.f, 2.f));
-	_vec3	vTargetMove = m_vEye + vRandomTarget;
-	_vec3	vTargetDir = vTargetMove - m_vEye;
-
-	D3DXVec3Normalize(&vTargetDir, &vTargetDir);
-
-	m_vEye += vTargetDir;
+	if (m_bShake && 
+		m_dwShakeTime + m_dwShakeDelay >= GetTickCount())
+	{
+		m_fFXProgress += WaveFxProgressive + Engine::Random(-0.001f, 0.002f);
+		m_fShakeWaveX += m_fFXProgress;
+		m_fFYProgress += WaveFyProgressive + Engine::Random(-0.001f, 0.002f);
+		m_fShakeWaveY += m_fFYProgress;
+		m_vShakeInterpol.x = sin(m_fShakeWaveX * 10.f) * powf(0.5f, m_fShakeWaveX) * m_fShakePower;
+		m_vShakeInterpol.y = sin(m_fShakeWaveY * 5.f) * powf(0.5f, m_fShakeWaveY) * m_fShakePower;
+		m_vShakeInterpol.z = sin(m_fShakeWaveX * 10.f) * powf(0.5f, m_fShakeWaveX) * m_fShakePower;
+	}
+	else if (m_bLongShake &&
+			 m_dwShakeTime + m_dwShakeDelay >= GetTickCount())
+	{
+		m_fFXProgress += WaveFxProgressive + Engine::Random(-0.001f, 0.002f);
+		m_fShakeWaveX += m_fFXProgress;
+		m_fFYProgress += WaveFyProgressive + Engine::Random(-0.001f, 0.002f);
+		m_fShakeWaveY += m_fFYProgress;
+		m_vShakeInterpol.x = sin(m_fShakeWaveX * m_fLongWaveInterpol) * powf(0.9f, m_fShakeWaveX * 0.02f) * m_fShakePower;
+		m_vShakeInterpol.y = sin(m_fShakeWaveY * m_fLongWaveInterpol * 0.5f) * powf(0.9f, m_fShakeWaveY * 0.02f) * m_fShakePower;
+		m_vShakeInterpol.z = sin(m_fShakeWaveX * m_fLongWaveInterpol) * powf(0.9f, m_fShakeWaveX * 0.02f) * m_fShakePower;
+	}
+	else if (m_bShake &&
+			 m_dwShakeTime + m_dwShakeDelay < GetTickCount())
+	{
+		m_bShake = false;
+		m_bLongShake = false;
+		m_fShakePower = 0.025f;
+		m_fShakeWaveX = 0.f;
+		m_fShakeWaveY = 0.f;
+		m_fFXProgress = 0.f;
+		m_fFYProgress = 0.f;
+		m_fLongWaveInterpol = 0.5f;
+		m_vShakeInterpol = _vec3(0.f, 0.f, 0.f);
+	}
 }
 
 void CDynamicCamera::Mode_Change()
@@ -115,6 +173,13 @@ void CDynamicCamera::Mode_Change()
 		switch (m_eCurMode)
 		{
 		case CDynamicCamera::MODE_NORMAL:
+			if (SCENE_ID::SCENE_STAGE == Engine::Get_SceneID())
+			{
+				_vec3	vDir = *m_pPlayerTrans->Get_Info(INFO_POS) - *pBossTrans->Get_Info(INFO_POS);
+				D3DXVec3Normalize(&vDir, &vDir);
+
+				m_vEye = vDir * 100.f;
+			}
 			break;
 
 		case CDynamicCamera::MODE_AHGLAN_START:
@@ -123,10 +188,12 @@ void CDynamicCamera::Mode_Change()
 			break;
 
 		case CDynamicCamera::MODE_AHGLAN_RISE:
+			Set_CameraShake(true, CAMSHAKE_POWER * 3.f, 3000);
 			m_dwRiseTime = GetTickCount();
 			break;
 
 		case CDynamicCamera::MODE_AHGLAN_STAND:
+			Set_CameraShake(true, CAMSHAKE_POWER * 3.f, 650, 1.75f);
 			m_dwStandTime = GetTickCount();
 			m_vEye = *D3DXVec3Normalize(&(+*pBossTrans->Get_Info(INFO_RIGHT)), &(+*pBossTrans->Get_Info(INFO_RIGHT))) * (m_fDistanceFromTarget);
 			break;
@@ -164,7 +231,7 @@ void CDynamicCamera::Mode_Change()
 	}
 }
 
-void CDynamicCamera::At_Update()
+void CDynamicCamera::At_Update(const _float& fTimeDelta)
 {
 	if (MODE_NORMAL == m_eCurMode)
 	{
@@ -174,11 +241,9 @@ void CDynamicCamera::At_Update()
 		m_pPlayerTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
 		_vec3 vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
 		vPlayerPos.y += m_fInterpolY;
-		m_vAt = vPlayerPos;
 
-		// 플레이어 이동 전 m_vEye 위치 저장
-		m_vFollowDir = m_vEye - m_vAt;
-		D3DXVec3Normalize(&m_vFollowDir, &m_vFollowDir);
+		m_vAt = vPlayerPos + m_vShakeInterpol - m_vPreShakeInterpol;
+		m_vPreShakeInterpol = m_vShakeInterpol;
 	}
 	else if (MODE_AHGLAN_START == m_eCurMode)
 	{
@@ -186,7 +251,8 @@ void CDynamicCamera::At_Update()
 
 		if (pBossTrans)
 		{
-			m_vAt = *pBossTrans->Get_Info(INFO_POS);
+			m_vAt = *pBossTrans->Get_Info(INFO_POS) + m_vShakeInterpol - m_vPreShakeInterpol;
+			m_vPreShakeInterpol = m_vShakeInterpol;
 		}
 	}
 	else if (MODE_AHGLAN_RISE == m_eCurMode)
@@ -198,18 +264,31 @@ void CDynamicCamera::At_Update()
 			_vec3	vAtTarget = *pBossTrans->Get_Info(INFO_POS);
 			vAtTarget.y += m_fRiseUp;
 
-			m_vAt = vAtTarget;
+			m_vAt = vAtTarget + m_vShakeInterpol - m_vPreShakeInterpol;
+			m_vPreShakeInterpol = m_vShakeInterpol;
 
 			m_fRiseUp += 0.0075f;
 		}
 	}
 	else if (MODE_AHGLAN_STAND == m_eCurMode)
 	{
+		CTransform*	pBossTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
 
+		_vec3	vAtTarget = *pBossTrans->Get_Info(INFO_POS);
+		vAtTarget.y += m_fRiseUp;
+
+		m_vAt = vAtTarget + m_vShakeInterpol - m_vPreShakeInterpol;
+		m_vPreShakeInterpol = m_vShakeInterpol;
 	}
 	else if (MODE_AHGLAN_COMPLETE == m_eCurMode)
 	{
+		CTransform*	pBossTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
 
+		_vec3	vAtTarget = *pBossTrans->Get_Info(INFO_POS);
+		vAtTarget.y += m_fRiseUp;
+
+		m_vAt = vAtTarget + m_vShakeInterpol - m_vPreShakeInterpol;
+		m_vPreShakeInterpol = m_vShakeInterpol;
 	}
 }
 
@@ -218,7 +297,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 	_matrix		matCamWorld;
 	D3DXMatrixInverse(&matCamWorld, NULL, &m_matView);
 
-	if (Get_DIKeyState(DIK_Q) & 0x80)
+	if (Engine::Key_Down('Q'))
 	{
 		if (true == m_bClick)
 			return;
@@ -282,7 +361,8 @@ void CDynamicCamera::Mouse_Move(void)
 				D3DXVec3TransformCoord(&vDirToCam, &vDirToCam, &matRotate);
 			}
 
-			m_vEye = m_vAt + vDirToCam * m_fDistanceFromTarget;
+			m_vEye = (m_vAt + vDirToCam * m_fDistanceFromTarget);// + (m_vShakeInterpol - m_vPreShakeInterpol);
+			//m_vPreShakeInterpol = m_vShakeInterpol;
 		}
 	}
 	else if (MODE_AHGLAN_START == m_eCurMode)
@@ -376,6 +456,8 @@ void CDynamicCamera::Mouse_Move(void)
 
 				m_vEye = m_vAt + vDirToCam * (m_fDistanceFromTarget + 2.f + m_fFarAway);
 				m_fFarAway += 0.0015f;
+
+				Set_CameraShake(true, CAMSHAKE_POWER * 6.f, 800, 3.5f);
 			}
 			else
 			{

@@ -1,0 +1,19 @@
+
+"ground_effect_bind"
+{
+	"bind_name"
+	{
+		"C"			"effects/player/golem_walk_dust_left_soil.efx"
+		"D"			"effects/player/golem_walk_dust_left_soil.efx"
+		"W"			"effects/player/golem_walk_dust_left_wood.efx"
+		
+		// P∞° ICE, SNOW ¿”
+		"P"			"effects/player/golem_walk_dust_left_ice.efx"
+	}
+	
+	"replace_param"
+	{
+	}
+
+	"follow_parent_1"	"1"
+}

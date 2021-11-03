@@ -19,6 +19,7 @@ class CShader;
 END
 
 class CPlayer;
+class CDynamicCamera;
 
 class CAhglan : public CGameObject
 {
@@ -52,6 +53,7 @@ public:
 
 public:
 	virtual HRESULT Ready_Object(void) override;
+	virtual HRESULT	LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 
@@ -111,6 +113,8 @@ private:
 	_vec3			m_vDir;
 	_vec3			m_vMyPos;
 	_vec3			m_vPlayerPos;
+	_vec3			m_vLFootPos;
+	_vec3			m_vRFootPos;
 
 	BOSS_ACTION		m_eBossAction = BS_END;
 
@@ -119,6 +123,7 @@ private:
 
 	CPlayer*		m_pPlayer = nullptr;
 	CTransform*		m_pPlayerTrans = nullptr;
+	CDynamicCamera*	m_pMainCamera = nullptr;
 	
 	// Component
 	CDynamicMesh*	m_pMeshCom = nullptr;

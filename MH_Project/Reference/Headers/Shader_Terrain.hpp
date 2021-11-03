@@ -38,6 +38,7 @@ struct VS_IN
 	vector		vPosition	: POSITION;			// 시멘틱 : 정점의 구성 옵션(쉽게 말해 FVF)
 	vector		vNormal		: NORMAL;
 	float2		vTexUV		: TEXCOORD0;
+	vector		vProjPos	: TEXCOORD1;
 };
 
 struct VS_OUT
@@ -45,7 +46,7 @@ struct VS_OUT
 	vector		vPosition	: POSITION;	
 	vector		vNormal		: NORMAL;
 	float2		vTexUV		: TEXCOORD0;
-	//vector		vWorldPos	: TEXCOORD1;
+	vector		vProjPos	: TEXCOORD1;
 };
 
 // 버텍스 쉐이더
@@ -60,8 +61,8 @@ VS_OUT			VS_MAIN(VS_IN In)
 
 	Out.vPosition = mul(vector(In.vPosition.xyz, 1.f), matWVP);
 	Out.vNormal = normalize(mul(vector(In.vNormal.xyz, 0.f), g_matWorld));
-
 	Out.vTexUV = In.vTexUV;
+	Out.vProjPos = Out.vPosition;
 	//Out.vWorldPos = mul(vector(In.vPosition.xyz, 1.f), g_matWorld);
 
 	return Out;
@@ -71,13 +72,14 @@ struct PS_IN
 {
 	float2			vTexUV : TEXCOORD0;
 	vector			vNormal : NORMAL;
-	//vector			vWorldPos : TEXCOORD1;
+	vector			vProjPos : TEXCOORD1;
 };
 
 struct PS_OUT
 {
 	vector			vColor : COLOR0;
 	vector			vNormal : COLOR1;
+	vector			vDepth : COLOR2;
 };
 
 PS_OUT		PS_MAIN(PS_IN In)
@@ -89,6 +91,14 @@ PS_OUT		PS_MAIN(PS_IN In)
 
 	Out.vColor = tex2D(BaseSampler, In.vTexUV);
 	Out.vNormal = tex2D(NormalSampler, In.vTexUV);
+
+	// r : z 나누기가 끝난 투영 상태의 z값을 보관
+	// g : 뷰스페이스 상태의 z값을 보관
+	// b, a : 아무 값도 저장하지 않음(far값으로 나누어 줌 => Far값이 1000.f이기 때문에 uv로 표현이 불가능함)
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w,
+						In.vProjPos.w * 0.001f,
+						0.f,
+						0.f);
 
 	return Out;
 }

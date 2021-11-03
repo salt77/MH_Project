@@ -17,7 +17,7 @@ class CDynamicCamera : public CCamera
 public:
 	enum MODE
 	{
-		MODE_NORMAL, 
+		MODE_NORMAL,
 		MODE_AHGLAN_START, MODE_AHGLAN_RISE, MODE_AHGLAN_STAND, MODE_AHGLAN_COMPLETE,
 		MODE_END
 	};
@@ -43,6 +43,7 @@ public:
 
 public:
 	void			Set_CameraMode(MODE eMode) { m_eCurMode = eMode; }
+	void			Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwEndTime = 1000, _float fWaveInterpol = 0.5f);
 
 public:
 	void		Sync_PlayerPos(_vec3 vDir, _float fSpeed, const _float& fTimeDelta) { if (MODE_NORMAL == m_eCurMode)	m_vEye += vDir * fSpeed * fTimeDelta; }
@@ -50,20 +51,26 @@ public:
 private:
 	void		Camera_Shake();
 	void		Mode_Change();
-	void		At_Update();
+	void		At_Update(const _float& fTimeDelta);
 	void		Key_Input(const _float& fTimeDelta);
 	void		Mouse_Move(void);
 	void		Mouse_Fix(void);
 
 private:
 	_bool		m_bClick = false;
-	_bool		m_bFix   = true;
+	_bool		m_bFix = true;
 	_bool		m_bShake = false;
+	_bool		m_bLongShake = false;
 
-	_ulong		m_dwShakeStartTime = GetTickCount();
-	_ulong		m_dwShakeDelay = 0;
+	_ulong		m_dwShakeTime = GetTickCount();
+	_ulong		m_dwShakeDelay = 1000;
 
-	_float		m_fShakePower = 0.f;
+	_float		m_fLongWaveInterpol = 0.5f;
+	_float		m_fFXProgress = 0.f;
+	_float		m_fShakeWaveX = 0.f;
+	_float		m_fFYProgress = 0.f;
+	_float		m_fShakeWaveY = 0.f;
+	_float		m_fShakePower = 0.025f;
 	_float		m_fSpeed = 20.f;
 	_float		m_fCamAngle = 0.f;
 	_float		m_fDistanceFromTarget = 2.15f;
@@ -79,7 +86,9 @@ private:
 	_ulong		m_dwCompleteTime = GetTickCount();
 	///////////////////////
 
-	_vec3		m_vFollowDir = _vec3(0.f, 0.f, 0.f);
+	_vec3		m_vShakeInterpol = { 0.f, 0.f, 0.f };
+	_vec3		m_vPreShakeInterpol = { 0.f, 0.f, 0.f };
+	//_vec3		m_vFollowDir = _vec3(0.f, 0.f, 0.f);
 
 	MODE		m_eCurMode = MODE_NORMAL;
 	MODE		m_ePreMode = MODE_END;
@@ -88,17 +97,19 @@ private:
 	CPlayer*	m_pPlayer = nullptr;
 	CTransform*	m_pPlayerTrans = nullptr;
 
+#define		WaveFxProgressive	0.002f;
+#define		WaveFyProgressive	0.00125f;
 
 public:
 	static CDynamicCamera*	Create(LPDIRECT3DDEVICE9 pGraphicDev,
-									const _vec3* pEye,
-									const _vec3* pAt,
-									const _vec3* pUp,
-									const _float& fFov,
-									const _float& fAspect,
-									const _float& fNear,
-									const _float& fFar);
-	
+		const _vec3* pEye,
+		const _vec3* pAt,
+		const _vec3* pUp,
+		const _float& fFov,
+		const _float& fAspect,
+		const _float& fNear,
+		const _float& fFar);
+
 	virtual void			Free(void);
 
 };

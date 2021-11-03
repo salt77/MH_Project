@@ -1,0 +1,19 @@
+
+"ground_effect_bind"
+{
+	"bind_name"
+	{
+		"C"			"effects/player/kalok_sp4_dust_soil.efx"
+		"D"			"effects/player/kalok_sp4_dust_soil.efx"
+		"W"			"effects/player/kalok_sp4_dust_soil.efx"
+		
+		// P∞° ICE, SNOW ¿”
+		"P"			"effects/player/kalok_sp4_dust_ice.efx"
+	}
+	
+	"replace_param"
+	{
+	}
+
+	"follow_parent_1"	"1"
+}

@@ -74,6 +74,7 @@ public:
 private:
 	CGraphicDev*		m_pDeviceClass = nullptr;
 	LPDIRECT3DDEVICE9	m_pGraphicDev = nullptr;
+	CManagement*		m_pManagementClass = nullptr;
 	CMFC_Camera*		m_pCamera = nullptr;
 	CMFC_Terrain*		m_pTerrain = nullptr;
 	CMFC_Terrain*		m_pTerrain2 = nullptr;
