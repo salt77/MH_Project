@@ -148,10 +148,29 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
 					return E_FAIL;
 			}
+			else if (!lstrcmp(szFileName, L"pc_male_plate_upper_body02.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"pc_male_plate_upper_body02_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+
+			}
 			else if (!lstrcmp(szFileName, L"dualsword_vanquisher.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"dualsword_vanquisher_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+			else if (!lstrcmp(szFileName, L"sticky_bomb.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"sticky_bomb_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
 				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
@@ -181,6 +200,33 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"golem_ahglan_ore_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+			else if (!lstrcmp(szFileName, L"golem_ahglan_Chest.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"golem_ahglan_Chest_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+			else if (!lstrcmp(szFileName, L"golem_ahglan_Head.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"golem_ahglan_Head_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+			else if (!lstrcmp(szFileName, L"golem_ahglan_RHand.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"golem_ahglan_RHand_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
 				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))

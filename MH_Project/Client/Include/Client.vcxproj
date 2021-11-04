@@ -160,6 +160,7 @@
     <ClInclude Include="..\Codes\SoundMgr.h" />
     <ClInclude Include="..\Codes\Stage.h" />
     <ClInclude Include="..\Codes\StageMesh.h" />
+    <ClInclude Include="..\Codes\StickyBomb.h" />
     <ClInclude Include="..\Codes\Terrain.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="..\Codes\SoundMgr.cpp" />
     <ClCompile Include="..\Codes\Stage.cpp" />
     <ClCompile Include="..\Codes\StageMesh.cpp" />
+    <ClCompile Include="..\Codes\StickyBomb.cpp" />
     <ClCompile Include="..\Codes\Terrain.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">

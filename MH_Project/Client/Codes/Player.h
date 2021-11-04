@@ -27,6 +27,7 @@ private:
 
 public:
 	virtual HRESULT Ready_Object(void) override;
+	virtual HRESULT	LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
@@ -36,6 +37,7 @@ private:
 	HRESULT			Add_Component(void);
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Key_Input(const _float& fTimeDelta);
+	void			SecondaryMode_MouseMove();
 	void			SetUp_OnTerrain(void);
 	_vec3			PickUp_OnTerrain(void);
 	void			Animation_Control();
@@ -104,6 +106,7 @@ private:
 
 	// Instance
 	CDynamicCamera*	m_pMainCam = nullptr;
+	CLayer*			m_pStickyLayer = nullptr;
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

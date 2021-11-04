@@ -29,14 +29,11 @@ public:
 private:
 	map<const wstring, CGameObject*>		m_mapObject;
 
-	//map<const wstring, vector<CGameObject*>>		m_mapObject;
-
 public:
 	static CLayer*		Create(void);
 	virtual void		Free(void);
-
 };
 
-
 END
+
 #endif // Layer_h__

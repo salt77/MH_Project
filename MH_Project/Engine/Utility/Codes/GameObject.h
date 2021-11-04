@@ -14,7 +14,6 @@ protected:
 	explicit CGameObject(const CGameObject& rhs);
 	virtual ~CGameObject(void);
 
-
 public:
 	CComponent*		Get_Component(const wstring pComponentTag, COMPONENTID eID);
 	_float			Get_ViewZ(void) { return m_fViewZ; }
@@ -38,6 +37,7 @@ public:
 
 protected:
 	LPDIRECT3DDEVICE9					m_pGraphicDev;
+
 	map<const wstring, CComponent*>		m_mapComponent[ID_END];
 	map<const wstring, CCollider*>		m_mapColliderCom;
 	map<const wstring, CBoxCollider*>	m_mapBoxColliderCom;

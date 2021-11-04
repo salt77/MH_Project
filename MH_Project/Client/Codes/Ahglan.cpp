@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "DynamicCamera.h"
 
+#include "Export_Function.h"
 #include "Export_Utility.h"
 
 USING(Engine)
@@ -35,6 +36,11 @@ HRESULT CAhglan::LateReady_Object()
 
 	m_pMainCamera = static_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
 
+	m_mapActiveParts.emplace(L"golem_ahglan_Chest.tga", TRUE);
+	m_mapActiveParts.emplace(L"golem_ahglan_Head.tga", TRUE);
+	m_mapActiveParts.emplace(L"golem_ahglan_RHand.tga", TRUE);
+	m_mapActiveParts.emplace(L"golem_ahglan_ore.tga", TRUE);
+
 	//list<D3DXMESHCONTAINER_DERIVED*>listTemp = m_pMeshCom->Get_MeshContainerList();
 	//list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
 	//for (_uint i = 0; i < (*iter)->dwNumBones; ++i)
@@ -58,6 +64,47 @@ HRESULT CAhglan::LateReady_Object()
 _int CAhglan::Update_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
+
+	// 부위파괴 디버그용
+	if (Key_Down('G'))
+	{
+		map<const wstring, _bool>::iterator		iter = m_mapActiveParts.begin();
+
+		for (; iter != m_mapActiveParts.end(); ++iter)
+		{
+			if (L"golem_ahglan_Chest.tga" == iter->first)
+			{
+				m_iAniIndex = DAMAGE_FROM_FRONT;
+				iter->second = FALSE;
+			}
+		}
+	}
+	else if (Key_Down('H'))
+	{
+		map<const wstring, _bool>::iterator		iter = m_mapActiveParts.begin();
+
+		for (; iter != m_mapActiveParts.end(); ++iter)
+		{
+			if (L"golem_ahglan_ore.tga" == iter->first)
+			{
+				m_iAniIndex = DAMAGE_FROM_FRONT;
+				iter->second = FALSE;
+			}
+		}
+	}
+	else if (Key_Down('J'))
+	{
+		map<const wstring, _bool>::iterator		iter = m_mapActiveParts.begin();
+
+		for (; iter != m_mapActiveParts.end(); ++iter)
+		{
+			if (L"golem_ahglan_Head.tga" == iter->first)
+			{
+				m_iAniIndex = DAMAGE_FROM_FRONT;
+				iter->second = FALSE;
+			}
+		}
+	}
 
 	m_fTimeDelta = fTimeDelta;
 
@@ -104,9 +151,6 @@ void CAhglan::Render_Object(void)
 	}
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-	//m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 
 	LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
 	pEffect->AddRef();
@@ -119,16 +163,12 @@ void CAhglan::Render_Object(void)
 											// 2인자 : 시작하는 방식을 묻는 FLAG
 	pEffect->BeginPass(0);
 
-	m_pMeshCom->Render_Meshes(pEffect);
+	m_pMeshCom->Render_Meshes(pEffect, m_mapActiveParts);
 
 	pEffect->EndPass();
 	pEffect->End();
 
 	Safe_Release(pEffect);
-
-	//m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
 HRESULT CAhglan::Add_Component(void)
@@ -548,7 +588,7 @@ void CAhglan::Animation_Control()
 			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.45f, 2.f, (_float)m_lfAniEnd * 0.7f);
 			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.5f);
 
-			m_fAniEndDelay = 1.06f;
+			m_fAniEndDelay = 1.055f;
 			m_bCanAction = false;
 
 			SoundGolemAtk;
@@ -793,7 +833,8 @@ void CAhglan::Animation_Control()
 				m_iAniIndex = ATK_TURNLEFT;
 			}
 		}
-		else if (m_iAniIndex == (_uint)TAUNT)
+		else if (m_iAniIndex == (_uint)TAUNT && 
+				 60.f <= m_fRand)
 		{
 			m_iAniIndex = ATK_TWOHANDS_COMBO;
 

@@ -4,6 +4,7 @@
 #include "Export_Function.h"
 #include "DynamicCamera.h"
 #include "Ahglan.h"
+#include "StickyBomb.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -36,6 +37,16 @@ HRESULT CPlayer::Ready_Object(void)
 	return S_OK;
 }
 
+HRESULT CPlayer::LateReady_Object()
+{
+	m_pStickyLayer = CLayer::Create();
+
+	if (!m_pStickyLayer)
+		return E_FAIL;
+
+	return S_OK;
+}
+
 _int CPlayer::Update_Object(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
@@ -51,6 +62,7 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	//SetUp_OnTerrain();
 	Compute_CanAction();
 	Key_Input(fTimeDelta);
+	SecondaryMode_MouseMove();
 
 	Animation_Control();
 	Collision_Control();
@@ -125,7 +137,7 @@ void CPlayer::Render_Object(void)
 	switch (m_eCurWeaponMode)
 	{
 	case Engine::WEAPON_DUALSWORD:
-		m_pMeshCom->Render_Meshes(pEffect);
+		m_pMeshCom->Render_Meshes(pEffect, L"sticky_bomb.tga");
 		break;
 
 	case Engine::WEAPON_SECONDARY:
@@ -155,6 +167,8 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CPlayer::Free(void)
 {
+	Safe_Release(m_pStickyLayer);
+
 	CGameObject::Free();
 }
 
@@ -324,6 +338,42 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
+	// 스킬 액션(퓨리, sp스킬, 보조무기 액션)
+	if (PL_SKILL >= m_eCurAction)
+	{
+		if (Key_Down('F'))
+		{
+			if (m_bCanAction)
+			{
+				if (STATE_THROW_DURING == m_eCurState)
+				{
+					m_eCurAction = PL_IDLE;
+					m_eCurWeaponMode = WEAPON_DUALSWORD;
+
+					Rotate_PlayerLook(+*m_pTransformCom->Get_Info(INFO_LOOK));
+					m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_NORMAL);
+				}
+				else
+				{
+					m_eCurAction = PL_SKILL;
+					m_iAniIndex = (_uint)STATE_THROW_DURING;
+
+					m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_SECONDARY);
+				}
+			}
+		}
+		else if (Key_Pressing(VK_LBUTTON))
+		{
+			if (m_bCanAction)
+			{
+				if (STATE_THROW_DURING == m_eCurState)
+				{
+					m_iAniIndex = (_uint)STATE_THROW_END;
+				}
+			}
+		}
+	}
+
 	// 스매쉬
 	if (PL_SMASH >= m_eCurAction)
 	{
@@ -404,6 +454,19 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	}
 }
 
+void CPlayer::SecondaryMode_MouseMove()
+{
+	if (STATE_THROW_DURING == m_eCurState)
+	{
+		_long	dwMouse = 0;
+
+		if (dwMouse = Get_DIMouseMove(DIMS_X))
+		{
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouse * 0.1f));
+		}
+	}
+}
+
 void CPlayer::SetUp_OnTerrain(void)
 {
 	_vec3		vPos;
@@ -429,8 +492,44 @@ Engine::_vec3 CPlayer::PickUp_OnTerrain(void)
 
 void CPlayer::Compute_CanAction()
 {
-	if (m_eCurAction == PL_ATK ||
-		m_eCurAction == PL_SMASH ||
+	if (m_eCurAction == PL_ATK)
+	{
+		if (STATE_ATK1 != m_iAniIndex &&
+			STATE_ATK4 != m_iAniIndex)
+		{
+			if (m_fAniTime < (m_lfAniEnd * 0.32f))
+			{
+				m_bCanAction = false;
+			}
+			else
+			{
+				m_bCanAction = true;
+			}
+		}
+		else if (STATE_ATK1 == m_iAniIndex)
+		{
+			if (m_fAniTime < (m_lfAniEnd * 0.27f))
+			{
+				m_bCanAction = false;
+			}
+			else
+			{
+				m_bCanAction = true;
+			}
+		}
+		else if (STATE_ATK4 == m_iAniIndex)
+		{
+			if (m_fAniTime < (m_lfAniEnd * 0.5f))
+			{
+				m_bCanAction = false;
+			}
+			else
+			{
+				m_bCanAction = true;
+			}
+		}
+	}
+	else if (m_eCurAction == PL_SMASH ||
 		m_eCurAction == PL_SKILL ||
 		m_eCurAction == PL_DASH)
 	{
@@ -600,11 +699,46 @@ void CPlayer::Animation_Control()
 		_uint	iRandSound = 0;
 		switch (m_eCurState)
 		{
+		case STATE_THROW_BEGIN:
+			break;
+
+		case STATE_THROW_DURING:
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
+
+			m_eCurWeaponMode = WEAPON_SECONDARY;
+
+			Rotate_PlayerLook(-*m_pTransformCom->Get_Info(INFO_LOOK));
+			break;
+			
+		case STATE_THROW_END:
+			// StickyBomb
+			NULL_CHECK(m_pStickyLayer);
+
+			{
+				CGameObject*	pGameObject = nullptr;
+
+				pGameObject = CStickyBomb::Create(m_pGraphicDev);
+				NULL_CHECK(pGameObject);
+				FAILED_CHECK_RETURN(m_pStickyLayer->Add_GameObject(L"StickyBomb", pGameObject), );
+
+				Engine::Add_ObjInManager(L"StickyBomb", m_pStickyLayer);
+			}
+			
+			m_eNextAtk = STATE_ATK1;
+			m_eNextSmash = STATE_DASHATK;
+
+			m_eCurWeaponMode = WEAPON_SECONDARY;
+			break;
+
+		case STATE_SP_FEVER:
+			break;
+
 			//case STATE_SPRINT_STOP:
 			//	break;
 		case STATE_REVIVE:
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_SMASH1;
+			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DEAD:
@@ -806,7 +940,22 @@ void CPlayer::Animation_Control()
 			m_iAniIndex = (_uint)STATE_DOWNIDLE_BACK;
 			break;
 
+		case Engine::STATE_THROW_BEGIN:
+			//m_iAniIndex = (_uint)STATE_THROW_DURING;
+			break;
+
+		case Engine::STATE_THROW_DURING:
+			break;
+
 		default:
+			if (STATE_THROW_END == m_ePreState)
+			{
+				m_eCurWeaponMode = WEAPON_DUALSWORD;
+
+				m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_NORMAL);
+				Rotate_PlayerLook(+*m_pTransformCom->Get_Info(INFO_LOOK));
+			}
+
 			m_eCurAction = PL_IDLE;
 
 			m_eNextAtk = STATE_ATK1;

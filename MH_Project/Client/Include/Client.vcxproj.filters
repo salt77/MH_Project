@@ -64,6 +64,9 @@
     <Filter Include="97.Manager\00. SoundMgr">
       <UniqueIdentifier>{51d6a7db-1c2f-42d0-b710-9affd4a749d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\07.StickyBomb">
+      <UniqueIdentifier>{2171dae8-a8c2-4c2e-96e6-8b3066f1953b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -117,6 +120,9 @@
     <ClInclude Include="..\Codes\SoundMgr.h">
       <Filter>97.Manager\00. SoundMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\StickyBomb.h">
+      <Filter>02.GameObject\07.StickyBomb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -160,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SoundMgr.cpp">
       <Filter>97.Manager\00. SoundMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\StickyBomb.cpp">
+      <Filter>02.GameObject\07.StickyBomb</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

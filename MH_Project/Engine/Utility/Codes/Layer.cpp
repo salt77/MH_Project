@@ -4,13 +4,12 @@ USING(Engine)
 
 Engine::CLayer::CLayer(void)
 {
-
 }
 
 Engine::CLayer::~CLayer(void)
 {
-
 }
+
 
 HRESULT Engine::CLayer::Add_GameObject(const wstring pObjTag, CGameObject* pInstance)
 {

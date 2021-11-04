@@ -1,27 +1,23 @@
 matrix		g_matWorld, g_matView, g_matProj;		// 상수 테이블
-
-texture		g_BaseTexture;
-texture		g_NormalTexture;
-
+texture		g_BaseTexture, g_NormalTexture;
 
 sampler BaseSampler = sampler_state
 {
 	texture = g_BaseTexture;
 
-minfilter = linear;
-magfilter = linear;
+	minfilter = linear;
+	magfilter = linear;
 };
 
 sampler NormalSampler = sampler_state
 {
 	texture = g_NormalTexture;
 
-minfilter = LINEAR;
-magfilter = LINEAR;
+	minfilter = linear;
+	magfilter = linear;
 };
 
 
-// 버텍스 쉐이더
 struct VS_IN
 {
 	vector		vPosition : POSITION;			// 시멘틱 : 정점의 구성 옵션(쉽게 말해 FVF)
@@ -36,6 +32,7 @@ struct VS_OUT
 	float2		vTexUV : TEXCOORD0;
 };
 
+// 버텍스 쉐이더
 VS_OUT			VS_MAIN(VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;
@@ -53,8 +50,6 @@ VS_OUT			VS_MAIN(VS_IN In)
 	return Out;
 }
 
-
-// 픽셀 쉐이더
 struct PS_IN
 {
 	float2			vTexUV : TEXCOORD0;
@@ -65,15 +60,15 @@ struct PS_OUT
 {
 	vector			vColor : COLOR0;
 	vector			vNormal : COLOR1;
+
 };
 
 PS_OUT		PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	// 단위 벡터로 정규화가 끝난 월드 영역상의 노말 벡터의 좌표 값은 -1~1이란 범위를 갖는다.
-	// 이런 좌표를 텍스쳐 uv좌표인 0~1로 보정하여 출력해야 한다.
-	Out.vColor = tex2D(NormalSampler, In.vTexUV);
+	Out.vColor = tex2D(BaseSampler, In.vTexUV);
+	//Out.vNormal = tex2D(NormalSampler, In.vTexUV);
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
 	return Out;
@@ -84,6 +79,7 @@ PS_OUT		PS_ALPHATEST(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	Out.vColor = tex2D(BaseSampler, In.vTexUV);
+	//Out.vNormal = tex2D(NormalSampler, In.vTexUV);
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
 	return Out;
@@ -105,7 +101,7 @@ technique Default_Device
 		alphafunc = greater;
 		alpharef = 0xc0;
 		cullmode = none;
-
+		
 		vertexshader = compile vs_3_0 VS_MAIN();
 		pixelshader = compile ps_3_0 PS_ALPHATEST();
 	}

@@ -416,6 +416,15 @@ HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileNa
 			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
 				return E_FAIL;
 		}
+		else if (!lstrcmp(szFileName, L"sticky_bomb.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"sticky_bomb_normal.tga");
+			lstrcat(szFullPath, szFileName);
+
+			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
+				return E_FAIL;
+		}
 	}
 
 	m_pMesh->UnlockVertexBuffer();

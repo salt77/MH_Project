@@ -184,6 +184,9 @@ void CDynamicCamera::Mode_Change()
 			}
 			break;
 
+		case CDynamicCamera::MODE_SECONDARY:
+			break;
+
 		case CDynamicCamera::MODE_AHGLAN_START:
 			m_dwStartTime = GetTickCount();
 			m_vEye = *D3DXVec3Normalize(&(-*pBossTrans->Get_Info(INFO_RIGHT)), &(-*pBossTrans->Get_Info(INFO_RIGHT))) * (m_fDistanceFromTarget * 500.f);
@@ -252,6 +255,16 @@ void CDynamicCamera::At_Update(const _float& fTimeDelta)
 
 		m_vAt = vPlayerPos + m_vShakeInterpol - m_vPreShakeInterpol;
 		m_vPreShakeInterpol = m_vShakeInterpol;
+	}
+	else if (MODE_SECONDARY == m_eCurMode)
+	{
+		m_pPlayerTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
+		_vec3 vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
+		vPlayerPos.y += m_fInterpolY - 0.35f;
+		_vec3 vPlayerRight = *m_pPlayerTrans->Get_Info(INFO_LOOK);
+		D3DXVec3Normalize(&vPlayerRight, &vPlayerRight);
+
+		m_vAt = vPlayerPos + (vPlayerRight * 150.f);
 	}
 	else if (MODE_AHGLAN_START == m_eCurMode)
 	{
@@ -328,8 +341,8 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 
 void CDynamicCamera::Mouse_Move(void)
 {
-	_matrix		matCamWorld;
-	D3DXMatrixInverse(&matCamWorld, NULL, &m_matView);
+	//_matrix		matCamWorld;
+	//D3DXMatrixInverse(&matCamWorld, NULL, &m_matView);
 
 	if (MODE_NORMAL == m_eCurMode)
 	{
@@ -371,6 +384,23 @@ void CDynamicCamera::Mouse_Move(void)
 
 			m_vEye = (m_vAt + vDirToCam * m_fDistanceFromTarget);// + (m_vShakeInterpol - m_vPreShakeInterpol);
 			//m_vPreShakeInterpol = m_vShakeInterpol;
+		}
+	}
+	else if (MODE_SECONDARY == m_eCurMode)
+	{
+		_long	dwMouse = 0;
+
+		if (m_pPlayerTrans)
+		{
+			_vec3 vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
+			vPlayerPos.y += m_fInterpolY - 0.35f;
+			_vec3 vPlayerRight = *m_pPlayerTrans->Get_Info(INFO_RIGHT);
+			_vec3 vPlayerBack = -(*m_pPlayerTrans->Get_Info(INFO_LOOK));
+
+			_vec3	vDir = vPlayerRight + (vPlayerBack * 2.75f);
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_vEye = vPlayerPos + vDir * 1.15f;
 		}
 	}
 	else if (MODE_AHGLAN_START == m_eCurMode)

@@ -61,6 +61,14 @@ HRESULT CManagement::Ready_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Mesh", pShader), E_FAIL);
 
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Player.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Player", pShader), E_FAIL);
+
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Ahglan.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Ahglan", pShader), E_FAIL);
+
 	// shader_shade
 	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Shade.hpp");
 	NULL_CHECK_RETURN(pShader, E_FAIL);

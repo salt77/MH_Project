@@ -79,6 +79,7 @@ Engine::_uint CLoading::Loading_ForStage(void)
 	lstrcpy(m_szLoading, L"Loading Mesh...............");
 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Stage", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Stage/", L"Stage.X")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_StickyBomb", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Prop/Fragment/", L"Fragment.X")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Lethita/", L"Lethita.X")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Ahglan", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Ahglan/", L"Ahglan.X")), E_FAIL);
 

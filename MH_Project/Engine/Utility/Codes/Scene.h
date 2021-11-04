@@ -12,9 +12,9 @@ protected:
 	virtual ~CScene(void);
 
 public:
-	CGameObject*	Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
-	CComponent*		Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
-	const SCENE_ID& Get_SceneID() { return m_eSceneID; }
+	CGameObject*		Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
+	CComponent*			Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
+	const SCENE_ID&		Get_SceneID() { return m_eSceneID; }
 
 public:
 	virtual HRESULT		Ready_Scene(void);

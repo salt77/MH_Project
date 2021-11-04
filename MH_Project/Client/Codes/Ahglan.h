@@ -122,6 +122,8 @@ private:
 	STATE			m_eCurState = ENTRY_IDLE;
 	STATE			m_ePreState = A_STATE_END;
 
+	map<const wstring, _bool>	m_mapActiveParts;
+
 	CPlayer*		m_pPlayer = nullptr;
 	CTransform*		m_pPlayerTrans = nullptr;
 	CDynamicCamera*	m_pMainCamera = nullptr;
