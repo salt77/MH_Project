@@ -80,6 +80,7 @@ namespace Engine
 		_matrix**				ppCombinedTransformMatrix;	// 뼈가 지닌 CombinedTransformMatrix들의 주소값을 보관하기 위한 이중 포인터
 		_matrix*				pRenderingMatrix;			// 최종 행렬 = pFrameOffSetMatrix * (*ppCombinedTransformMatrix);
 
+		wstring*				pwstrTextureName;
 
 	}D3DXMESHCONTAINER_DERIVED;
 

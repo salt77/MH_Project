@@ -29,7 +29,7 @@ public:
 public:
 	HRESULT		Ready_Meshes(const wstring pFilePath, const wstring pFileName);
 	void		Render_Meshes(void);
-	void		Render_Meshes(LPD3DXEFFECT& pEffect);
+	void		Render_Meshes(LPD3DXEFFECT& pEffect, const wstring& wstrNoRender = L"");
 
 private:
 	// 모든 뼈들을 재귀적으로 순회하면서 부모와 자식, 또는 형제 관계를 맺을 수 있도록 행렬들을 곱하여 완성된 월드 행렬 상태를 만들어주는 함수

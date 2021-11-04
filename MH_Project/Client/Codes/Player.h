@@ -47,6 +47,8 @@ private:
 	void			Rotate_PlayerLook(_vec3& TargetLookVector);
 	void			MoveOn_Skill(const _float& fTimeDelta);
 	void			StopMotion();
+	void			FootStepSound();
+	void			Weapon_Change(WEAPON_MODE eMode) { if (eMode != m_eCurWeaponMode)	m_eCurWeaponMode = eMode; }
 
 public:
 	HRESULT			Add_NaviMesh();
@@ -64,7 +66,7 @@ private:
 	_float			m_fSkillMoveSpeed = 0.f;
 	_float			m_fAniTime = 0.f;
 
-	_double			m_lfAniEnd = 0.f;	
+	_double			m_lfAniEnd = 0.f;
 
 	_ulong			m_dwSkillMoveReady = GetTickCount();
 	_ulong			m_dwSkillMoveReadyTime = 0;
@@ -72,6 +74,8 @@ private:
 	_ulong			m_dwSkillMoveTime = 0;
 	_ulong			m_dwStopMotionStart = GetTickCount();
 	_ulong			m_dwStopMotionTime = 0;
+	_ulong			m_dwFootStepStart = GetTickCount();
+	_ulong			m_dwFootStepDelay = 300;
 
 	_vec3			m_vDir;
 	_vec3			m_vLookDir;
@@ -86,6 +90,8 @@ private:
 
 	PL_STATE		m_eNextAtk = STATE_ATK1;
 	PL_STATE		m_eNextSmash = STATE_DASHATK;
+
+	WEAPON_MODE		m_eCurWeaponMode = WEAPON_DUALSWORD;
 
 	// Component
 	CDynamicMesh*	m_pMeshCom = nullptr;
@@ -102,6 +108,12 @@ private:
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual void		Free(void);
+
+
+	// Sound º¯¼öµé 
+private:
+	_bool		m_bAtkSound = false;
+	_bool		m_bLethitaSound = false;
 };
 
 #define	SKILL_MOVE(ReadyTime, Speed, Time)		m_bSkillMove = TRUE; m_dwSkillMoveReady = GetTickCount();		\

@@ -80,8 +80,8 @@ void CDynamicMesh::Render_Meshes(void)
 			pDerivedMeshContainer->pRenderingMatrix[i] = pDerivedMeshContainer->pFrameOffSetMatrix[i]
 			* *pDerivedMeshContainer->ppCombinedTransformMatrix[i];
 
-		void*			pSrcVtx = nullptr; // 고정 불변의 메쉬 정점 정보
-		void*			pDestVtx = nullptr; // 애니메이션 적용에 따른 변환된 메쉬 정점 정보
+		void*	pSrcVtx = nullptr; // 고정 불변의 메쉬 정점 정보
+		void*	pDestVtx = nullptr; // 애니메이션 적용에 따른 변환된 메쉬 정점 정보
 
 		pDerivedMeshContainer->pOriMesh->LockVertexBuffer(0, &pSrcVtx);
 		pDerivedMeshContainer->MeshData.pMesh->LockVertexBuffer(0, &pDestVtx);
@@ -100,7 +100,7 @@ void CDynamicMesh::Render_Meshes(void)
 	}
 }
 
-void CDynamicMesh::Render_Meshes(LPD3DXEFFECT & pEffect)
+void CDynamicMesh::Render_Meshes(LPD3DXEFFECT & pEffect, const wstring& wstrNoRender)
 {
 	for (auto& iter : m_MeshContainerList)
 	{
@@ -110,8 +110,8 @@ void CDynamicMesh::Render_Meshes(LPD3DXEFFECT & pEffect)
 			pDerivedMeshContainer->pRenderingMatrix[i] = pDerivedMeshContainer->pFrameOffSetMatrix[i]
 			* *pDerivedMeshContainer->ppCombinedTransformMatrix[i];
 
-		void*			pSrcVtx = nullptr; // 고정 불변의 메쉬 정점 정보
-		void*			pDestVtx = nullptr; // 애니메이션 적용에 따른 변환된 메쉬 정점 정보
+		void*	pSrcVtx = nullptr; // 고정 불변의 메쉬 정점 정보
+		void*	pDestVtx = nullptr; // 애니메이션 적용에 따른 변환된 메쉬 정점 정보
 
 		pDerivedMeshContainer->pOriMesh->LockVertexBuffer(0, &pSrcVtx);
 		pDerivedMeshContainer->MeshData.pMesh->LockVertexBuffer(0, &pDestVtx);
@@ -121,6 +121,13 @@ void CDynamicMesh::Render_Meshes(LPD3DXEFFECT & pEffect)
 
 		for (_ulong i = 0; i < pDerivedMeshContainer->NumMaterials; ++i)
 		{
+			if (L"" != wstrNoRender)
+			{
+				if (pDerivedMeshContainer->pwstrTextureName[i] == wstrNoRender)
+				{
+					continue;
+				}
+			}
 			pEffect->SetTexture("g_BaseTexture", pDerivedMeshContainer->ppTexture[i]);
 			if (pDerivedMeshContainer->ppNormalTexture[i])
 				pEffect->SetTexture("g_NormalTexture", pDerivedMeshContainer->ppNormalTexture[i]);

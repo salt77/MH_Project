@@ -56,6 +56,7 @@ void CSoundMgr::PlaySound(TCHAR * pSoundKey, CHANNELID eID)
 	if (FMOD_Channel_IsPlaying(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], &bPlay))
 	{
 		FMOD_System_PlaySound(m_pSystem, FMOD_CHANNEL_FREE, iter->second, FALSE, &m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]]);
+		FMOD_Channel_SetVolume(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], 0.1f);
 	}
 	FMOD_System_Update(m_pSystem);
 
@@ -95,6 +96,7 @@ void CSoundMgr::PlayBGM(TCHAR * pSoundKey, CHANNELID eID)
 		return;
 
 	FMOD_System_PlaySound(m_pSystem, FMOD_CHANNEL_FREE, iter->second, FALSE, &m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]]);
+	FMOD_Channel_SetVolume(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], 0.1f);
 	FMOD_Channel_SetMode(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], FMOD_LOOP_NORMAL);
 	FMOD_System_Update(m_pSystem);
 
@@ -130,16 +132,16 @@ void CSoundMgr::StopAll()
 		FMOD_Channel_Stop(m_pChannelArr[i]);
 }
 
-void CSoundMgr::SetVolume(CHANNELID eID, float fVolume)
+void CSoundMgr::SetVolume(float fVolume)
 {
 	////////////////////////////////
 	//기본 사운드 설정
 
-	for (int i = 0; i < CHANNELID::MAXCHANNEL * m_iChannel; i++)
+	for (int i = 0; i < CHANNELID::MAXCHANNEL/* * m_iChannel*/; i++)
 	{
-		FMOD_Channel_SetVolume(m_pChannelArr[i], fVolume);
+		FMOD_Channel_SetVolume(m_pChannelArr[i * m_iChannel + m_iChannelCount[i]], fVolume);
 	}
-
+	
 	////////////////////////////////
 
 	//FMOD_Channel_SetVolume(m_pChannelArr[eID], fVolume);
@@ -236,6 +238,8 @@ void CSoundMgr::LoadSoundFile()
 	_findclose(handle);
 }
 
+
 void CSoundMgr::Free(void)
 {
+	Release_Sound_Manager();
 }

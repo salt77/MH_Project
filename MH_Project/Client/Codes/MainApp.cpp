@@ -31,6 +31,9 @@ _int CMainApp::Update_MainApp(const _float& fTimeDelta)
 
 	Update_InputDev();
 
+	if (Engine::Key_Down('P'))
+		CSoundMgr::GetInstance()->SetVolume(0.1f);
+
 	m_pManagementClass->Update_Scene(fTimeDelta);
 
 	return 0;

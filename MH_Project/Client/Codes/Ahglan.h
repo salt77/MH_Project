@@ -69,6 +69,7 @@ private:
 	void			Movement();
 	void			MoveOn_Skill();
 	void			RotationOn_Skill();
+	void			FootStep();
 
 public:
 	HRESULT			Add_NaviMesh();
@@ -90,6 +91,8 @@ private:
 	_ulong			m_dwRollingAtkCoolDown = GetTickCount();
 	_ulong			m_dwRollingAtkDelay = m_dwCoolDownInterpol + rand() % 10000;
 	_ulong			m_dwRollingStartTime = GetTickCount();
+	_ulong			m_dwFootStepStart = GetTickCount();
+	_ulong			m_dwFootStepDelay = 800;
 
 	_float			m_fTimeDelta = 0.f;
 	_float			m_fSpeed = 4.5f;
@@ -113,8 +116,6 @@ private:
 	_vec3			m_vDir;
 	_vec3			m_vMyPos;
 	_vec3			m_vPlayerPos;
-	_vec3			m_vLFootPos;
-	_vec3			m_vRFootPos;
 
 	BOSS_ACTION		m_eBossAction = BS_END;
 
@@ -137,6 +138,13 @@ private:
 public:
 	static CAhglan*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual void		Free(void);
+
+
+private:
+	// Sound º¯¼öµé
+	_bool	m_bAtkSound = false;
+	_bool	m_bEffectSound = false;
+	_bool	m_bStampAtkSound[3] = { false, false, false };
 };
 
 #define BS_SKILL_ROTATION(StartTime, RotSpeed, EndTime) m_bSkillRotation = TRUE;  m_fSkillRotStartTime = StartTime;	m_fSkillRotSpeed = RotSpeed;  m_fSkillRotEndTime = EndTime;

@@ -61,6 +61,7 @@ private:
 	_bool		m_bFix = true;
 	_bool		m_bShake = false;
 	_bool		m_bLongShake = false;
+	_bool		m_bSoundGolemEntry = false;
 
 	_ulong		m_dwShakeTime = GetTickCount();
 	_ulong		m_dwShakeDelay = 1000;

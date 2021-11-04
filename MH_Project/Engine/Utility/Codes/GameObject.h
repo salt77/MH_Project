@@ -43,6 +43,7 @@ protected:
 	map<const wstring, CBoxCollider*>	m_mapBoxColliderCom;
 
 	_bool								m_bLateReady = false;
+	_bool								m_bSoundCheck = false;
 
 	_float								m_fViewZ;
 

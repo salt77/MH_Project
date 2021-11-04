@@ -85,6 +85,108 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 
 #define CAMSHAKE_POWER	0.025f
 
+
+
+
+
+
+
+
+
+
+// 사운드 매크로 => 코드량이 너무 길어지고 보기 싫어서 여기로 따로 매크로 잡아놓음
+#define SoundPlayerHurt										\
+iRandSound = rand() % 4;									\
+if (0 == iRandSound)										\
+{															\
+	SoundMgr(L"lethita_hurt1.wav", CSoundMgr::PLAYER);		\
+}															\
+else if (1 == iRandSound)									\
+{															\
+	SoundMgr(L"lethita_hurt2.wav", CSoundMgr::PLAYER);		\
+}															\
+else if (2 == iRandSound)									\
+{															\
+	SoundMgr(L"lethita_hurt3.wav", CSoundMgr::PLAYER);		\
+}															\
+else if (3 == iRandSound)									\
+{															\
+	SoundMgr(L"lethita_hurt4.wav", CSoundMgr::PLAYER);		\
+}
+
+#define	SoundPlayerStrongAtk										\
+iRandSound = rand() % 5;											\
+if (0 == iRandSound)												\
+{																	\
+	SoundMgr(L"lethita_strongattack1.wav", CSoundMgr::PLAYER);		\
+}																	\
+else if (1 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_strongattack2.wav", CSoundMgr::PLAYER);		\
+}																	\
+else if (2 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_strongattack3.wav", CSoundMgr::PLAYER);		\
+}																	\
+else if (3 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_strongattack4.wav", CSoundMgr::PLAYER);		\
+}																	\
+else if (4 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_strongattack5.wav", CSoundMgr::PLAYER);		\
+}
+
+#define SoundPlayerAtk												\
+iRandSound = rand() % 8;											\
+if (0 == iRandSound)												\
+{																	\
+	SoundMgr(L"lethita_attack1.wav", CSoundMgr::PLAYER);			\
+}																	\
+else if (1 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_attack2.wav", CSoundMgr::PLAYER);			\
+}																	\
+else if (2 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_attack3.wav", CSoundMgr::PLAYER);			\
+}																	\
+else if (3 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_attack4.wav", CSoundMgr::PLAYER);			\
+}																	\
+else if (4 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_attack5.wav", CSoundMgr::PLAYER);			\
+}																	\
+else if (5 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_attack6.wav", CSoundMgr::PLAYER);			\
+}																	\
+else if (6 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_attack7.wav", CSoundMgr::PLAYER);			\
+}																	\
+else if (7 == iRandSound)											\
+{																	\
+	SoundMgr(L"lethita_attack8.wav", CSoundMgr::PLAYER);			\
+}																	
+
+
+#define SoundGolemAtk											\
+iRandSound = rand() % 2;										\
+if (0 == iRandSound)											\
+{																\
+	SoundMgr(L"golem_attack01.wav", CSoundMgr::MONSTER);		\
+}																\
+else                                                            \
+{																\
+	SoundMgr(L"golem_attack02.wav", CSoundMgr::MONSTER);		\
+}
+	
+
+
+																
 //#ifdef _DEBUG
 //
 //#define _CRTDBG_MAP_ALLOC

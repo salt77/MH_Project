@@ -100,6 +100,7 @@ void CDynamicCamera::Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwE
 	if (!bShakeType)
 	{
 		m_bShake = true;
+		m_bLongShake = false;
 		m_fShakePower = fPower;
 		m_dwShakeTime = GetTickCount();
 		m_dwShakeDelay = dwEndTime;
@@ -112,6 +113,7 @@ void CDynamicCamera::Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwE
 	}
 	else
 	{
+		m_bShake = false;
 		m_bLongShake = true;
 		m_fShakePower = fPower;
 		m_dwShakeTime = GetTickCount();
@@ -212,6 +214,12 @@ void CDynamicCamera::Mode_Change()
 	case CDynamicCamera::MODE_AHGLAN_START:
 		if (m_dwStartTime + 2950 < GetTickCount())
 			m_eCurMode = MODE_AHGLAN_RISE;
+		if (!m_bSoundGolemEntry &&
+			m_dwStartTime + 2350 < GetTickCount())
+		{
+			m_bSoundGolemEntry = true;
+			SoundMgr(L"golem_cs_entry.wav", CSoundMgr::MONSTER);
+		}
 		break;
 
 	case CDynamicCamera::MODE_AHGLAN_RISE:

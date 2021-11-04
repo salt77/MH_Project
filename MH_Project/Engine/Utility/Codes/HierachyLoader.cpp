@@ -68,6 +68,10 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 	pDerivedMeshContainer->ppNormalTexture = new LPDIRECT3DTEXTURE9[pDerivedMeshContainer->NumMaterials];
 	ZeroMemory(pDerivedMeshContainer->ppNormalTexture, sizeof(LPDIRECT3DTEXTURE9) * pDerivedMeshContainer->NumMaterials);
 
+	pDerivedMeshContainer->pwstrTextureName = new wstring[pDerivedMeshContainer->NumMaterials];
+	// wstring이나 vector같은 stl을 사용할 시에는 ZeroMemory()나 memset()을 해서는 안된다. => 자체적으로 동적 할당을 해주기 때문에 메모리 누수가 발생함.
+	//ZeroMemory(pDerivedMeshContainer->pwstrTextureName, sizeof(wstring) * pDerivedMeshContainer->NumMaterials);
+
 	if (0 != NumMaterials)
 	{
 		memcpy(pDerivedMeshContainer->pMaterials, pMaterials, sizeof(D3DXMATERIAL) * pDerivedMeshContainer->NumMaterials);
@@ -86,6 +90,8 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 
 			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppTexture[i])))
 				return E_FAIL;
+
+			pDerivedMeshContainer->pwstrTextureName[i] = szFileName;
 
 			// Player Normal Texture
 			if (!lstrcmp(szFileName, L"pc_male_plate_chain.tga"))
@@ -137,6 +143,15 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_upper_body_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+			else if (!lstrcmp(szFileName, L"dualsword_vanquisher.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"dualsword_vanquisher_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
 				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
@@ -243,6 +258,7 @@ STDMETHODIMP CHierachyLoader::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshCont
 
 	Safe_Delete_Array(pDerivedMeshContainer->ppTexture);
 	Safe_Delete_Array(pDerivedMeshContainer->ppNormalTexture);
+	Safe_Delete_Array(pDerivedMeshContainer->pwstrTextureName);
 	Safe_Delete_Array(pDerivedMeshContainer->Name);
 	Safe_Delete_Array(pDerivedMeshContainer->pAdjacency);
 	Safe_Delete_Array(pDerivedMeshContainer->pMaterials);

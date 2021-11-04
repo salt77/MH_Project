@@ -43,7 +43,8 @@ public:
 	void StopSound(CHANNELID eID);
 	void StopAll();
 
-	void SetVolume(CHANNELID eID, float fVolume);
+	void GetVolume(_float* pVol) { FMOD_Channel_GetVolume(m_pChannelArr[PLAYER], pVol); }
+	void SetVolume(float fVolume);
 
 
 
