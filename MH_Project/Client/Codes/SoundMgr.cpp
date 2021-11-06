@@ -96,7 +96,7 @@ void CSoundMgr::PlayBGM(TCHAR * pSoundKey, CHANNELID eID)
 		return;
 
 	FMOD_System_PlaySound(m_pSystem, FMOD_CHANNEL_FREE, iter->second, FALSE, &m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]]);
-	FMOD_Channel_SetVolume(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], 0.1f);
+	FMOD_Channel_SetVolume(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], 0.085f);
 	FMOD_Channel_SetMode(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], FMOD_LOOP_NORMAL);
 	FMOD_System_Update(m_pSystem);
 
@@ -189,7 +189,7 @@ void CSoundMgr::PlaySoundLowerVol(TCHAR * pSoundKey, CHANNELID eID, _float fVol)
 	if (FMOD_Channel_IsPlaying(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], &bPlay))
 	{
 		FMOD_System_PlaySound(m_pSystem, FMOD_CHANNEL_FREE, iter->second, FALSE, &m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]]);
-		FMOD_Channel_SetVolume(m_pChannelArr[eID], fVol);
+		FMOD_Channel_SetVolume(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], fVol);
 	}
 	FMOD_System_Update(m_pSystem);
 

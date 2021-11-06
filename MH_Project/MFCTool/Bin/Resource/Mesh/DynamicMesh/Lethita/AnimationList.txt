@@ -1,3 +1,9 @@
+35.	Throw_Begin
+34.	Throw_During
+33. 	Throw_End
+
+32. 	SP_Fever
+
 31.	Idle (Battle Mode)
 
 30.	Run_Lower

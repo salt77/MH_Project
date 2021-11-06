@@ -42,10 +42,10 @@ private:
 public:
 	HRESULT			Add_NaviMesh(_uint iCellCount, vector<_matrix> vecPoint);
 	HRESULT			DeleteAll_NaviMesh();
-	HRESULT			Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
+	HRESULT			Add_Collider(_float fRadius, wstring cstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
 	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
 								_float vMaxX, _float vMaxY, _float vMaxZ,
-								wstring wstrName, COLLIDERTYPE eColliderType);
+								wstring wstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType);
 	HRESULT			Delete_Collider(wstring wstrName, COLLIDERTYPE eColliderType);
 	HRESULT			Change_ColliderScale(_float fRadius, wstring cstrName);
 

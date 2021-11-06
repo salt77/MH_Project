@@ -29,9 +29,11 @@ public:
 	void	Set_MatrixInterpolX(_float fX) { m_fInterpolX = fX; m_fInterpolX *= 0.01f; }
 	void	Set_MatrixInterpolY(_float fY) { m_fInterpolY = fY; m_fInterpolY *= 0.01f; }
 	void	Set_MatrixInterpolZ(_float fZ) { m_fInterpolZ = fZ; m_fInterpolZ *= 0.01f; }
+	// Render 대신에 콜라이더 행렬을 넘겨받는다. (매 프레임)
+	void	Set_ColliderMatrix(const _matrix* pColliderMatrix) { m_matColMatrix = *pColliderMatrix; }
 
 public:
-	HRESULT			Ready_Collider(const _float& fRadius, COLLIDERTYPE eColliderType);
+	HRESULT			Ready_Collider(const _float& fRadius, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType);
 	void			Render_Collider(COLTYPE eType, const _matrix* pColliderMatrix);
 
 private:
@@ -62,7 +64,7 @@ private:
 #endif
 
 public:
-	static CCollider*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fRadius, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
+	static CCollider*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fRadius, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
 	virtual CComponent*		Clone();
 	virtual void			Free();
 };

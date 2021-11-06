@@ -24,16 +24,19 @@ public:
 	void	Set_RenderColType(COLTYPE _eColType) { m_eColType = _eColType; }
 	void	Set_Matrix(_matrix* matInfo) { m_matColParts = matInfo; *m_matColParts *= 0.01f; }
 	void	Set_BoneName(wstring eBoneName) { m_cstrBoneName = eBoneName; }
+	// Render 대신에 콜라이더 행렬을 넘겨받는다. (매 프레임)
+	void	Set_ColliderMatrix(const _matrix* pColliderMatrix) { m_matColMatrix = *pColliderMatrix; }
 
 public:
 	HRESULT			Ready_Collider(_float vMinX, _float vMinY, _float vMinZ,
-									_float vMaxX, _float vMaxY, _float vMaxZ, COLLIDERTYPE eColliderType);
+									_float vMaxX, _float vMaxY, _float vMaxZ, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType);
 	void			Render_Collider(COLTYPE eType, const _matrix* pColliderMatrix);
 
 private:
 	_bool			m_bCanCollision = true;
 
 	_vec3			m_vMin, m_vMax;
+	const _vec3*	m_pPlayerLook;
 
 	_matrix			m_matColMatrix;
 	_matrix*		m_matColParts = nullptr;
@@ -53,7 +56,7 @@ private:
 
 public:
 	static CBoxCollider*	Create(LPDIRECT3DDEVICE9 pGraphicDev, _float vMinX, _float vMinY, _float vMinZ,
-									_float vMaxX, _float vMaxY, _float vMaxZ, COLLIDERTYPE eColliderType);
+									_float vMaxX, _float vMaxY, _float vMaxZ, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType);
 	virtual CComponent*		Clone(void);
 	virtual void			Free(void);
 };

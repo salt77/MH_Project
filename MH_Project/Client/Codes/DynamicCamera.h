@@ -39,7 +39,7 @@ public:
 	virtual _int LateUpdate_Object(const _float& fTimeDelta) override;
 
 public:
-	const _vec3&	Get_CamDirVector(DIR eDir);
+	_vec3			Get_CamDirVector(DIR eDir);
 
 public:
 	void			Set_CameraMode(MODE eMode) { m_eCurMode = eMode; }

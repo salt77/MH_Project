@@ -131,6 +131,11 @@ HRESULT CStage::Ready_Layer_GameLogic(const wstring pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Ahglan", pGameObject), E_FAIL);
 
+	// Dummy
+	pGameObject = CHitBox_Pos::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HitBox_Pos", pGameObject), E_FAIL);
+
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
 	return S_OK;
@@ -216,7 +221,7 @@ HRESULT CStage::Load_PlayerCol()
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
 		CDynamicMesh* pMeshCom = dynamic_cast<CDynamicMesh*>(pPlayer->Get_Component(L"Com_Mesh", ID_STATIC));
 
-		pPlayer->Add_Collider(fRadius, pNameBuff, eColliderType);
+		pPlayer->Add_Collider(fRadius, pNameBuff, dynamic_cast<CTransform*>(pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
 
 		list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pMeshCom->Get_MeshContainerList();
 		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
@@ -274,7 +279,8 @@ HRESULT CStage::Load_PlayerCol()
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
 		CDynamicMesh* pMeshCom = dynamic_cast<CDynamicMesh*>(pPlayer->Get_Component(L"Com_Mesh", ID_STATIC));
 
-		pPlayer->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
+		pPlayer->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, 
+							  dynamic_cast<CTransform*>(pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
 
 		// Bone 찾기
 		list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pMeshCom->Get_MeshContainerList();
@@ -302,6 +308,13 @@ HRESULT CStage::Load_PlayerCol()
 	}
 
 	CloseHandle(hFile);
+
+	// 검에 붙어있지 않은 히트박스 임의 생성
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+	CTransform*	pHitBox_Pos = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
+
+	pPlayer->Add_Collider(-30.f, -60.f, -30.f, 30.f, 60.f, 30.f, L"Other_Attack",
+						  pHitBox_Pos->Get_WorldMatrix(), COLTYPE_BOX_OTHER);
 
 	return S_OK;
 }
@@ -353,7 +366,7 @@ HRESULT CStage::Load_AhglanCol()
 		CAhglan* pAhglan = dynamic_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"));
 		CDynamicMesh* pMeshCom = dynamic_cast<CDynamicMesh*>(pAhglan->Get_Component(L"Com_Mesh", ID_STATIC));
 
-		pAhglan->Add_Collider(fRadius, pNameBuff, eColliderType);
+		pAhglan->Add_Collider(fRadius, pNameBuff, dynamic_cast<CTransform*>(pAhglan->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
 
 		list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pMeshCom->Get_MeshContainerList();
 		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
@@ -411,7 +424,8 @@ HRESULT CStage::Load_AhglanCol()
 		CAhglan* pAhglan = dynamic_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"));
 		CDynamicMesh* pMeshCom = dynamic_cast<CDynamicMesh*>(pAhglan->Get_Component(L"Com_Mesh", ID_STATIC));
 
-		pAhglan->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
+		pAhglan->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff,
+							  dynamic_cast<CTransform*>(pAhglan->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
 
 		// Bone 찾기
 		list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pMeshCom->Get_MeshContainerList();

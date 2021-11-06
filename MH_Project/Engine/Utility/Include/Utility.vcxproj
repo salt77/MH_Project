@@ -31,7 +31,6 @@
     <ClInclude Include="..\Codes\DynamicMesh.h" />
     <ClInclude Include="..\Codes\Frustum.h" />
     <ClInclude Include="..\Codes\GameObject.h" />
-    <ClInclude Include="..\Codes\GameObjMgr.h" />
     <ClInclude Include="..\Codes\HierachyLoader.h" />
     <ClInclude Include="..\Codes\Light.h" />
     <ClInclude Include="..\Codes\LightMgr.h" />
@@ -78,7 +77,6 @@
     <ClCompile Include="..\Codes\DynamicMesh.cpp" />
     <ClCompile Include="..\Codes\Frustum.cpp" />
     <ClCompile Include="..\Codes\GameObject.cpp" />
-    <ClCompile Include="..\Codes\GameObjMgr.cpp" />
     <ClCompile Include="..\Codes\HierachyLoader.cpp" />
     <ClCompile Include="..\Codes\Light.cpp" />
     <ClCompile Include="..\Codes\LightMgr.cpp" />

@@ -23,6 +23,9 @@ public:
 	virtual _int		LateUpdate_Scene(const _float& fTimeDelta);
 	virtual void		Render_Scene(void) PURE;
 
+public:
+	virtual	void		Emplace_Layer(const wstring wstrLayerTag, CLayer* pLayer) { m_mapLayer.emplace(wstrLayerTag, pLayer); }
+
 protected:
 	LPDIRECT3DDEVICE9				m_pGraphicDev;
 	map<const wstring, CLayer*>		m_mapLayer;

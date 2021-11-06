@@ -23,7 +23,6 @@
 #include "Navimesh.h"
 #include "Shader.h"
 #include "RenderTargetMgr.h"
-#include "GameObjMgr.h"
 
 #include "Camera.h"
 
@@ -46,6 +45,8 @@ inline _int			Update_Scene(const _float& fTimeDelta);
 inline void			Render_Scene(LPDIRECT3DDEVICE9& pGraphicDev);
 
 inline _float		Random(_float _fMin, _float _fMax);
+
+inline void			Emplace_Layer(const wstring wstrLayerTag, CLayer* pLayer);
 
 // ProtoMgr
 inline HRESULT		Ready_Prototype(const wstring pProtoTag, CComponent* pInstance);
@@ -74,18 +75,6 @@ inline HRESULT		End_MRT(const wstring pMRTTag);
 inline HRESULT		Ready_DebugBuffer(const wstring pTargetTag, const _float& fX, const _float& fY, const _float& fSizeX, const _float& fSizeY);
 inline void			Render_DebugBuffer(const wstring pMRTTag);
 inline void			Get_RenderTargetTexture(LPD3DXEFFECT& pEffect, const wstring pTargetTag, const char* pConstantTable);
-
-// GameObjMgr
-inline CGameObject*	Get_ObjInManager(const wstring pLayerTag, const wstring pObjTag);
-inline CComponent*	Get_ComponentInManager(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
-
-inline void			Add_ObjInManager(const wstring wstrLayerTag, CLayer* pLayer);
-inline HRESULT		DeleteObjInManager(const wstring LayerTag);
-
-inline HRESULT		Ready_Manager(void);
-inline HRESULT		LateReady_Manager();
-inline _int			Update_Manager(const _float& fTimeDelta);
-inline _int			LateUpdate_Manager(const _float& fTimeDelta);
 
 inline void			Release_Utility(void);
 

@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <functional>
 #include <ctime>
+#include <math.h>
 
 using namespace std;
 

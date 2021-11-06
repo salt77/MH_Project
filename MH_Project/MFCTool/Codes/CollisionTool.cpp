@@ -800,8 +800,9 @@ void CCollisionTool::OnBnClickedButtonLoad()
 			if (L"Player" == hItemName)
 			{
 				CMFC_Player* pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
+				CTransform*	pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
 
-				pPlayer->Add_Collider(fRadius, pNameBuff, eColliderType);
+				pPlayer->Add_Collider(fRadius, pNameBuff, pPlayerTrans->Get_WorldMatrix(), eColliderType);
 				m_ListBoxCollider.AddString(pNameBuff);
 
 				list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
@@ -828,8 +829,9 @@ void CCollisionTool::OnBnClickedButtonLoad()
 			else if (L"Ahglan" == hItemName)
 			{
 				CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
+				CTransform*	pAhglanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
 
-				pAhglan->Add_Collider(fRadius, pNameBuff, eColliderType);
+				pAhglan->Add_Collider(fRadius, pNameBuff, pAhglanTrans->Get_WorldMatrix(), eColliderType);
 				m_ListBoxCollider.AddString(pNameBuff);
 
 				list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_AHGLAN);
@@ -889,8 +891,10 @@ void CCollisionTool::OnBnClickedButtonLoad()
 			if (L"Player" == hItemName)
 			{
 				CMFC_Player* pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
+				CTransform*	pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
 
-				pPlayer->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
+				pPlayer->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, 
+									  pPlayerTrans->Get_WorldMatrix(), eColliderType);
 				m_ListBoxCol.AddString(pNameBuff);
 
 				// Bone 찾기
@@ -919,8 +923,10 @@ void CCollisionTool::OnBnClickedButtonLoad()
 			else if (L"Ahglan" == hItemName)
 			{
 				CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
+				CTransform*	pAhglanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
 
-				pAhglan->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, eColliderType);
+				pAhglan->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, 
+									  pAhglanTrans->Get_WorldMatrix(), eColliderType);
 				m_ListBoxCol.AddString(pNameBuff);
 
 				// Bone 찾기

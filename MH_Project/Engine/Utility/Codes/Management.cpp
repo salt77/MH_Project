@@ -95,6 +95,14 @@ HRESULT Engine::CManagement::Set_Scene(CScene* pScene)
 	return S_OK;
 }
 
+void CManagement::Emplace_Layer(const wstring wstrLayerTag, CLayer * pLayer)
+{
+	if (!m_pScene)
+		return;
+
+	m_pScene->Emplace_Layer(wstrLayerTag, pLayer);
+}
+
 Engine::_int Engine::CManagement::Update_Scene(const _float& fTimeDelta)
 {
 	if (nullptr == m_pScene)

@@ -194,9 +194,9 @@ HRESULT CMFC_Player::DeleteAll_NaviMesh()
 	return S_OK;
 }
 
-HRESULT CMFC_Player::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType)
+HRESULT CMFC_Player::Add_Collider(_float fRadius, wstring cstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType)
 {
-	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius, eColliderType);
+	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius, pColliderMatrix, eColliderType);
 	m_mapColliderCom.emplace(cstrName, dynamic_cast<CCollider*>(pComponent));
 	if (m_mapColliderCom.empty())
 		return E_FAIL;
@@ -211,9 +211,9 @@ HRESULT CMFC_Player::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE
 	return S_OK;
 }
 
-HRESULT CMFC_Player::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType)
+HRESULT CMFC_Player::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType)
 {
-	CComponent*		pComponent = CBoxCollider::Create(m_pGraphicDev, vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, eColliderType);
+	CComponent*		pComponent = CBoxCollider::Create(m_pGraphicDev, vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, pColliderMatrix, eColliderType);
 	m_mapBoxColliderCom.emplace(wstrName, dynamic_cast<CBoxCollider*>(pComponent));
 	if (m_mapBoxColliderCom.empty())
 		return E_FAIL;

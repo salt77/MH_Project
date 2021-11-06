@@ -157,7 +157,21 @@ void Engine::CTransform::Move_Pos(const _vec3* pDir, const _float& fSpeed, const
 
 void Engine::CTransform::Rotation(ROTATION eType, const _float& fAngle)
 {
-	*(((_float*)&m_vAngle) + eType) += fAngle;
+	switch (eType)
+	{
+	case Engine::ROT_X:
+		m_vAngle.x += fAngle;
+		break;
+
+	case Engine::ROT_Y:
+		m_vAngle.y += fAngle;
+		break;
+
+	case Engine::ROT_Z:
+		m_vAngle.z += fAngle;
+		break;
+	}
+	//*(((_float*)&m_vAngle) + eType) += fAngle;
 }
 
 void CTransform::RotationFromOriginAngle(ROTATION eType, const _float & fAngle)

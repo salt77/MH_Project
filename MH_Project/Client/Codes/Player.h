@@ -26,7 +26,7 @@ private:
 	virtual ~CPlayer(void);
 
 public:
-	virtual HRESULT Ready_Object(void) override;
+	virtual HRESULT Ready_Object() override;
 	virtual HRESULT	LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
@@ -50,7 +50,7 @@ private:
 	void			MoveOn_Skill(const _float& fTimeDelta);
 	void			StopMotion();
 	void			FootStepSound();
-	void			Weapon_Change(WEAPON_MODE eMode) { if (eMode != m_eCurWeaponMode)	m_eCurWeaponMode = eMode; }
+	void			Weapon_Change();
 
 public:
 	HRESULT			Add_NaviMesh();
@@ -63,6 +63,7 @@ private:
 	_bool			m_bStopMotion = false;
 
 	_uint			m_iAniIndex = (_uint)STATE_IDLE;
+	_uint			m_iSecondaryCount = 0;
 
 	_float			m_fSpeed = 3.f;
 	_float			m_fSkillMoveSpeed = 0.f;
@@ -78,6 +79,8 @@ private:
 	_ulong			m_dwStopMotionTime = 0;
 	_ulong			m_dwFootStepStart = GetTickCount();
 	_ulong			m_dwFootStepDelay = 300;
+	_ulong			m_dwThrowStart = GetTickCount();
+	_ulong			m_dwThrowDelay = 150;
 
 	_vec3			m_vDir;
 	_vec3			m_vLookDir;
@@ -94,6 +97,9 @@ private:
 	PL_STATE		m_eNextSmash = STATE_DASHATK;
 
 	WEAPON_MODE		m_eCurWeaponMode = WEAPON_DUALSWORD;
+	WEAPON_MODE		m_ePreWeaponMode = WEAPON_DUALSWORD;
+
+	map<const wstring, _bool>	m_mapActiveParts;
 
 	// Component
 	CDynamicMesh*	m_pMeshCom = nullptr;

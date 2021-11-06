@@ -21,7 +21,7 @@ CPlayer::~CPlayer(void)
 }
 
 
-HRESULT CPlayer::Ready_Object(void)
+HRESULT CPlayer::Ready_Object()
 {
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -33,6 +33,7 @@ HRESULT CPlayer::Ready_Object(void)
 	//m_pNaviMeshCom->Set_CellIndex(0);
 
 	m_vDir = *m_pTransformCom->Get_Info(INFO_LOOK);
+	m_pTransformCom->Update_Component(0.f);
 
 	return S_OK;
 }
@@ -44,12 +45,18 @@ HRESULT CPlayer::LateReady_Object()
 	if (!m_pStickyLayer)
 		return E_FAIL;
 
+	m_mapActiveParts.emplace(L"dualsword_vanquisher.tga", TRUE);
+	m_mapActiveParts.emplace(L"sticky_bomb.tga", FALSE);
+
 	return S_OK;
 }
 
 _int CPlayer::Update_Object(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
+
+	if (m_bDead)
+		return iExit;
 
 	m_pMainCam = dynamic_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
 
@@ -63,6 +70,7 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	Compute_CanAction();
 	Key_Input(fTimeDelta);
 	SecondaryMode_MouseMove();
+	Weapon_Change();
 
 	Animation_Control();
 	Collision_Control();
@@ -84,6 +92,34 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 _int CPlayer::LateUpdate_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::LateUpdate_Object(fTimeDelta);
+
+	if (!m_mapColliderCom.empty())
+	{
+		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+
+		for (; iter != m_mapColliderCom.end(); ++iter)
+		{
+			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+		}
+	}
+	if (!m_mapBoxColliderCom.empty())
+	{
+		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+
+		for (; iter != m_mapBoxColliderCom.end(); ++iter)
+		{
+			if (L"Other_Attack" == iter->first)
+			{
+				CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
+
+				iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+			}
+			else
+			{
+				iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+			}
+		}
+	}
 
 	return iExit;
 }
@@ -110,7 +146,16 @@ void CPlayer::Render_Object(void)
 		{
 			if (iter->second->Get_CanCollision())
 			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+				if (L"Other_Attack" == iter->first)
+				{
+					CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
+
+					iter->second->Render_Collider(COL_FALSE, pHitBoxPosTrans->Get_WorldMatrix());
+				}
+				else
+				{
+					iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+				}
 			}
 		}
 	}
@@ -134,16 +179,7 @@ void CPlayer::Render_Object(void)
 											// 2인자 : 시작하는 방식을 묻는 FLAG
 	pEffect->BeginPass(0);
 
-	switch (m_eCurWeaponMode)
-	{
-	case Engine::WEAPON_DUALSWORD:
-		m_pMeshCom->Render_Meshes(pEffect, L"sticky_bomb.tga");
-		break;
-
-	case Engine::WEAPON_SECONDARY:
-		m_pMeshCom->Render_Meshes(pEffect, L"dualsword_vanquisher.tga");
-		break;
-	}
+	m_pMeshCom->Render_Meshes(pEffect, m_mapActiveParts);
 
 	pEffect->EndPass();
 	pEffect->End();
@@ -343,6 +379,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		if (Key_Down('F'))
 		{
+			CStickyBomb*	pBomb = static_cast<CStickyBomb*>(Engine::Get_GameObject(L"StickyBomb", L"StickyBomb"));
+
 			if (m_bCanAction)
 			{
 				if (STATE_THROW_DURING == m_eCurState)
@@ -355,10 +393,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				}
 				else
 				{
-					m_eCurAction = PL_SKILL;
-					m_iAniIndex = (_uint)STATE_THROW_DURING;
+					if (!pBomb)
+					{
+						m_eCurAction = PL_SKILL;
+						m_iAniIndex = (_uint)STATE_THROW_DURING;
 
-					m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_SECONDARY);
+						m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_SECONDARY);
+					}
 				}
 			}
 		}
@@ -369,6 +410,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				if (STATE_THROW_DURING == m_eCurState)
 				{
 					m_iAniIndex = (_uint)STATE_THROW_END;
+
+					m_dwThrowStart = GetTickCount();
 				}
 			}
 		}
@@ -530,8 +573,8 @@ void CPlayer::Compute_CanAction()
 		}
 	}
 	else if (m_eCurAction == PL_SMASH ||
-		m_eCurAction == PL_SKILL ||
-		m_eCurAction == PL_DASH)
+			 m_eCurAction == PL_SKILL ||
+			 m_eCurAction == PL_DASH)
 	{
 		if (m_fAniTime < (m_lfAniEnd * 0.25f))
 		{
@@ -578,13 +621,16 @@ void CPlayer::Rotate_PlayerLook(_vec3 & TargetLookVector)
 	D3DXVec3Normalize(&TargetLookVector, &TargetLookVector);
 	D3DXVec3Normalize(&vPlayerRight, &vPlayerRight);
 
-	if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
+	if (D3DXToDegree(acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight))) > 5.f)
 	{
-		m_pTransformCom->Rotation(ROT_Y, acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
-	}
-	else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
-	{
-		m_pTransformCom->Rotation(ROT_Y, -acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
+		if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
+		{
+			m_pTransformCom->Rotation(ROT_Y, acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
+		}
+		else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
+		{
+			m_pTransformCom->Rotation(ROT_Y, -acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
+		}
 	}
 
 	// Debug 용
@@ -631,7 +677,7 @@ void CPlayer::StopMotion()
 
 void CPlayer::FootStepSound()
 {
-	if (STATE_SPRINT == m_eCurState && 
+	if (STATE_SPRINT == m_eCurState &&
 		m_dwFootStepStart + m_dwFootStepDelay <= GetTickCount())
 	{
 		m_dwFootStepStart = GetTickCount();
@@ -659,6 +705,53 @@ void CPlayer::FootStepSound()
 	}
 }
 
+void CPlayer::Weapon_Change()
+{
+	if (m_eCurWeaponMode != m_ePreWeaponMode)
+	{
+		map<const wstring, _bool>::iterator		iter = m_mapActiveParts.begin();
+		switch (m_eCurWeaponMode)
+		{
+		case Engine::WEAPON_DUALSWORD:
+			for (; iter != m_mapActiveParts.end(); ++iter)
+			{
+				if (L"dualsword_vanquisher.tga" == iter->first)
+				{
+					iter->second = TRUE;
+				}
+				else
+				{
+					iter->second = FALSE;
+				}
+			}
+			break;
+
+		case Engine::WEAPON_SECONDARY:
+			for (; iter != m_mapActiveParts.end(); ++iter)
+			{
+				if (L"sticky_bomb.tga" == iter->first)
+				{
+					iter->second = TRUE;
+				}
+				else
+				{
+					iter->second = FALSE;
+				}
+			}
+			break;
+
+		case Engine::WEAPON_END:
+			for (; iter != m_mapActiveParts.end(); ++iter)
+			{
+				iter->second = FALSE;
+			}
+			break;
+		}
+
+		m_ePreWeaponMode = m_eCurWeaponMode;
+	}
+}
+
 void CPlayer::Animation_Control()
 {
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
@@ -675,10 +768,10 @@ void CPlayer::Animation_Control()
 	}
 	else if (STATE_DAMAGE_RESIST == m_eCurState)
 	{
-		m_pMeshCom->Set_TrackSpeed(1.65f);
+		m_pMeshCom->Set_TrackSpeed(1.8f);
 	}
 	else if (STATE_RUN == m_eCurState ||
-			 STATE_SPRINT == m_eCurState)
+		STATE_SPRINT == m_eCurState)
 	{
 		m_pMeshCom->Set_TrackSpeed(2.f);
 	}
@@ -710,7 +803,7 @@ void CPlayer::Animation_Control()
 
 			Rotate_PlayerLook(-*m_pTransformCom->Get_Info(INFO_LOOK));
 			break;
-			
+
 		case STATE_THROW_END:
 			// StickyBomb
 			NULL_CHECK(m_pStickyLayer);
@@ -720,15 +813,17 @@ void CPlayer::Animation_Control()
 
 				pGameObject = CStickyBomb::Create(m_pGraphicDev);
 				NULL_CHECK(pGameObject);
+
+				//wstring	wstrName = L"StickyBomb" + to_wstring(m_iSecondaryCount);
 				FAILED_CHECK_RETURN(m_pStickyLayer->Add_GameObject(L"StickyBomb", pGameObject), );
 
-				Engine::Add_ObjInManager(L"StickyBomb", m_pStickyLayer);
+				Engine::Emplace_Layer(L"StickyBomb", m_pStickyLayer);
+
+				//++m_iSecondaryCount;
 			}
-			
+
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
-
-			m_eCurWeaponMode = WEAPON_SECONDARY;
 			break;
 
 		case STATE_SP_FEVER:
@@ -748,7 +843,7 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_DAMAGE_RESIST:
-			SKILL_MOVE(0, -350.f, 700);
+			SKILL_MOVE(0, -400.f, 800);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
@@ -764,7 +859,7 @@ void CPlayer::Animation_Control()
 		case STATE_DOWNTOIDLE_BACK:
 			Rotate_PlayerLook(m_vDir);
 
-			SKILL_MOVE(200, 350.f, 800);
+			SKILL_MOVE(200, 350.f, 750);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
@@ -918,6 +1013,17 @@ void CPlayer::Animation_Control()
 		m_ePreState = m_eCurState;
 	}
 
+	// 매 프레임 실행
+	switch (m_eCurState)
+	{
+	case STATE_THROW_END:
+		if (m_dwThrowStart + m_dwThrowDelay <= GetTickCount())
+		{
+			m_eCurWeaponMode = WEAPON_END;
+		}
+		break;
+	}
+
 	// State 자동 변경
 	if (m_fAniTime >= m_lfAniEnd)
 	{
@@ -933,11 +1039,11 @@ void CPlayer::Animation_Control()
 			break;
 
 		case Engine::STATE_DAMAGEFROM_FRONT:
-			m_iAniIndex = (_uint)STATE_DOWNIDLE_FRONT;
+			m_iAniIndex = (_uint)STATE_DOWNIDLE_BACK;
 			break;
 
 		case Engine::STATE_DAMAGEFROM_BACK:
-			m_iAniIndex = (_uint)STATE_DOWNIDLE_BACK;
+			m_iAniIndex = (_uint)STATE_DOWNIDLE_FRONT;
 			break;
 
 		case Engine::STATE_THROW_BEGIN:
@@ -1004,7 +1110,25 @@ void CPlayer::Collision_Control()
 		switch (m_iAniIndex)
 		{
 		case STATE_DOUBLE_CRECSENT:
-			HITBOX_CONTROLL(0.35f, 0.7f, TRUE);
+			for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			{
+				if (L"Other_Attack" == iter->first)
+				{
+					if (0.35f <= fAniTime &&
+						0.7f >= fAniTime)
+					{
+						iter->second->Set_CanCollision(true);
+					}
+					else
+					{
+						iter->second->Set_CanCollision(false);
+					}
+				}
+				else
+				{
+					iter->second->Set_CanCollision(false);
+				}
+			}
 			if (!m_bAtkSound &&
 				m_fAniTime >= 0.3f)
 			{
@@ -1044,12 +1168,19 @@ void CPlayer::Collision_Control()
 			break;
 
 		case STATE_SMASH3:
-			HITBOX_CONTROLL(0.25f, 0.55f, TRUE);
+			HITBOX_CONTROLL(0.35f, 0.5f, TRUE);
 			if (!m_bLethitaSound &&
 				m_fAniTime >= 0.25f)
 			{
 				m_bLethitaSound = true;
 				SoundPlayerStrongAtk;
+				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
+			}
+			else if (!m_bAtkSound &&
+				m_fAniTime >= 0.45f)
+			{
+				m_bAtkSound = true;
+				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
 			}
 			break;
 
@@ -1065,13 +1196,31 @@ void CPlayer::Collision_Control()
 			break;
 
 		case STATE_SMASH2:
-			HITBOX_CONTROLL(0.3f, 0.7f, TRUE);
+			for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			{
+				if (L"Other_Attack" == iter->first)
+				{
+					if (0.5f <= fAniTime &&
+						0.7f >= fAniTime)
+					{
+						iter->second->Set_CanCollision(true);
+					}
+					else
+					{
+						iter->second->Set_CanCollision(false);
+					}
+				}
+				else
+				{
+					iter->second->Set_CanCollision(false);
+				}
+			}
 			if (!m_bLethitaSound &&
-				m_fAniTime >= 0.3f)
+				m_fAniTime >= 0.5f)
 			{
 				m_bLethitaSound = true;
 				SoundPlayerStrongAtk;
-				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
+				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
 			}
 			break;
 
@@ -1161,140 +1310,175 @@ void CPlayer::Collision_Control()
 	map<const wstring, CBoxCollider*>::iterator		iter_BossDamaged;
 	map<const wstring, CBoxCollider*>				mapBossBoxCol;
 
+	CAhglan*	pAhglan = static_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"));
+
 	switch (m_eSceneID)
 	{
 	case Engine::SCENE_STAGE:
 		// Player 공격
 		if (m_bCanHit)
 		{
-			mapBossBoxCol = static_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"))->Get_MapBoxCollider();
-
-			for (_uint i = 0; i < m_mapBoxColliderCom.size(); ++i)
+			if (pAhglan)
 			{
-				iter_BossDamaged = mapBossBoxCol.begin();
+				mapBossBoxCol = pAhglan->Get_MapBoxCollider();
 
-				for (_uint j = 0; j < mapBossBoxCol.size(); ++j)
+				for (; iter_PlayerHit != m_mapBoxColliderCom.end(); ++iter_PlayerHit)
 				{
-					iter_PlayerHit->second->Set_RenderColType(COL_FALSE);
-					iter_BossDamaged->second->Set_RenderColType(COL_FALSE);
+					iter_BossDamaged = mapBossBoxCol.begin();
 
-					if (iter_PlayerHit->second->Get_CanCollision() &&
-						iter_BossDamaged->second->Get_CanCollision())
+					for (; iter_BossDamaged != mapBossBoxCol.end(); ++iter_BossDamaged)
 					{
-						if (m_pCalculatorCom->Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
-															&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
+						//iter_PlayerHit->second->Set_RenderColType(COL_FALSE);
+						//iter_BossDamaged->second->Set_RenderColType(COL_FALSE);
+
+						if (iter_PlayerHit->second->Get_CanCollision() &&
+							iter_BossDamaged->second->Get_CanCollision())
 						{
-							switch (m_eCurState)
+							const _matrix*	pMatrix = iter_PlayerHit->second->Get_ColliderWorld();
+							_matrix matTemp = *pMatrix;
+							if (m_pCalculatorCom->Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
+																&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
 							{
-							case Engine::STATE_DOUBLE_CRECSENT:
-								SoundMgr(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
-								STOP_MOTION(100);
-								break;
+								switch (m_eCurState)
+								{
+								case Engine::STATE_DOUBLE_CRECSENT:
+									SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
+									STOP_MOTION(100);
+									break;
 
-							case Engine::STATE_SMASH4:
-								STOP_MOTION(100);
-								SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
-								break;
+								case Engine::STATE_SMASH4:
+									STOP_MOTION(100);
+									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
+									break;
 
-							case Engine::STATE_SMASH1:
-								STOP_MOTION(75);
-								SoundMgr(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
+								case Engine::STATE_SMASH3:
+									//STOP_MOTION(100);
+									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
+									break;
+
+								case Engine::STATE_SMASH2:
+									STOP_MOTION(100);
+									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
+									break;
+
+								case Engine::STATE_SMASH1:
+									STOP_MOTION(75);
+									SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
+									break;
+
+								case Engine::STATE_ATK1:
+									STOP_MOTION(25);
+									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									break;
+
+								case Engine::STATE_ATK2:
+									STOP_MOTION(25);
+									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									break;
+
+								case Engine::STATE_ATK3:
+									STOP_MOTION(25);
+									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									break;
+
+								case Engine::STATE_ATK4:
+									STOP_MOTION(25);
+									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									break;
+								}
+
+								//iter_PlayerHit->second->Set_RenderColType(COL_TRUE);
+								//iter_BossDamaged->second->Set_RenderColType(COL_TRUE);
+
+								m_bCanHit = false;
+
 								break;
 							}
+						}
+					}
+				}
+			}
+		}
 
-							iter_PlayerHit->second->Set_RenderColType(COL_TRUE);
-							iter_BossDamaged->second->Set_RenderColType(COL_TRUE);
+		// Monster 공격
+		if (pAhglan)
+		{
+			mapBossSphereCol = pAhglan->Get_MapCollider();
 
-							m_bCanHit = false;
+			for (_uint i = 0; i < m_mapColliderCom.size(); ++i)
+			{
+				iter_BossHit = mapBossSphereCol.begin();
+
+				for (_uint j = 0; j < mapBossSphereCol.size(); ++j)
+				{
+					//iter_PlayerDamaged->second->Set_RenderColType(COL_FALSE);
+					//iter_BossHit->second->Set_RenderColType(COL_FALSE);
+
+					if (iter_PlayerDamaged->second->Get_CanCollision() &&
+						iter_BossHit->second->Get_CanCollision())
+					{
+						if (m_pCalculatorCom->Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
+							iter_BossHit->second->Get_Center(), iter_BossHit->second->Get_Radius() * SCALE_AHGLAN))
+						{
+							if (80.f <= Engine::Random(0.f, 100.f))
+							{
+								m_eCurAction = PL_DAMAGED;
+								m_iAniIndex = STATE_DAMAGE_RESIST;
+
+								if (!m_bLethitaSound)
+								{
+									m_bLethitaSound = true;
+									SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
+								}
+							}
+							else
+							{
+								CTransform*	pBossTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+								if (pBossTrans)
+								{
+									_vec3 vLookDir = *m_pTransformCom->Get_Info(INFO_RIGHT);
+									_vec3 vToBossDir = iter_BossHit->second->Get_Center() - *m_pTransformCom->Get_Info(INFO_POS);
+									D3DXVec3Normalize(&vLookDir, &vLookDir);
+									D3DXVec3Normalize(&vToBossDir, &vToBossDir);
+
+									if (D3DXVec3Dot(&vToBossDir, &vLookDir) > 0.f)
+									{
+										m_eCurAction = PL_DAMAGED;
+										m_iAniIndex = STATE_DAMAGEFROM_FRONT;
+
+										if (!m_bLethitaSound)
+										{
+											m_bLethitaSound = true;
+											SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
+										}
+									}
+									else
+									{
+										m_eCurAction = PL_DAMAGED;
+										m_iAniIndex = STATE_DAMAGEFROM_BACK;
+
+										if (!m_bLethitaSound)
+										{
+											m_bLethitaSound = true;
+											SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
+										}
+									}
+								}
+							}
+
+							//iter_PlayerDamaged->second->Set_RenderColType(COL_TRUE);
+							//iter_BossHit->second->Set_RenderColType(COL_TRUE);
 
 							break;
 						}
 					}
 
-					++iter_BossDamaged;
+					++iter_BossHit;
 				}
 
-				++iter_PlayerHit;
+				++iter_PlayerDamaged;
 			}
-		}
-
-
-		// Monster 공격
-		mapBossSphereCol = static_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"))->Get_MapCollider();
-
-		for (_uint i = 0; i < m_mapColliderCom.size(); ++i)
-		{
-			iter_BossHit = mapBossSphereCol.begin();
-
-			for (_uint j = 0; j < mapBossSphereCol.size(); ++j)
-			{
-				iter_PlayerDamaged->second->Set_RenderColType(COL_FALSE);
-				iter_BossHit->second->Set_RenderColType(COL_FALSE);
-
-				if (iter_PlayerDamaged->second->Get_CanCollision() &&
-					iter_BossHit->second->Get_CanCollision())
-				{
-					if (m_pCalculatorCom->Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
-						iter_BossHit->second->Get_Center(), iter_BossHit->second->Get_Radius() * SCALE_AHGLAN))
-					{	
-						if (80.f <= Engine::Random(0.f, 100.f))
-						{
-							m_eCurAction = PL_DAMAGED;
-							m_iAniIndex = STATE_DAMAGE_RESIST;
-
-							if (!m_bLethitaSound)
-							{
-								m_bLethitaSound = true;
-								SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
-							}
-						}
-						else
-						{
-							CTransform*	pBossTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
-
-							if (pBossTrans)
-							{
-								_vec3 vLookDir = *m_pTransformCom->Get_Info(INFO_RIGHT);
-								_vec3 vToBossDir = iter_BossHit->second->Get_Center() - *m_pTransformCom->Get_Info(INFO_POS);
-								D3DXVec3Normalize(&vLookDir, &vLookDir);
-								D3DXVec3Normalize(&vToBossDir, &vToBossDir);
-
-								if (D3DXVec3Dot(&vToBossDir, &vLookDir) > 0.f)
-								{
-									m_eCurAction = PL_DAMAGED;
-									m_iAniIndex = STATE_DAMAGEFROM_FRONT;
-
-									if (!m_bLethitaSound)
-									{
-										m_bLethitaSound = true;
-										SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
-									}
-								}
-								else
-								{
-									m_eCurAction = PL_DAMAGED;
-									m_iAniIndex = STATE_DAMAGEFROM_BACK;
-
-									if (!m_bLethitaSound)
-									{
-										m_bLethitaSound = true;
-										SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
-									}
-								}
-							}
-						}
-
-						iter_PlayerDamaged->second->Set_RenderColType(COL_TRUE);
-						iter_BossHit->second->Set_RenderColType(COL_TRUE);
-
-						break;
-					}
-				}
-
-				++iter_BossHit;
-			}
-
-			++iter_PlayerDamaged;
 		}
 		break;
 

@@ -454,17 +454,20 @@ HRESULT CMFCToolView::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYP
 {
 	// Collider는 프로토타입 생성 안 함
 	//Engine::Ready_Prototype(L"Proto_Collider", CCollider::Create(m_pGraphicDev, fRadius));
+
+	CTransform*	pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
+	CTransform*	pAhglanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
 	switch (eObjType)
 	{
 	case OBJECTADD_MFC_PLAYER:
 		if (m_pPlayer)
-			m_pPlayer->Add_Collider(fRadius, cstrName, eColliderType);
+			m_pPlayer->Add_Collider(fRadius, cstrName, pPlayerTrans->Get_WorldMatrix(), eColliderType);
 
 		break;
 
 	case OBJECTADD_MFC_AHGLAN:
 		if (m_pAhglan)
-			m_pAhglan->Add_Collider(fRadius, cstrName, eColliderType);
+			m_pAhglan->Add_Collider(fRadius, cstrName, pAhglanTrans->Get_WorldMatrix(), eColliderType);
 
 		break;
 	}
@@ -478,12 +481,14 @@ HRESULT CMFCToolView::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _fl
 	{
 	case OBJECTADD_MFC_PLAYER:
 		if (m_pPlayer)
-			m_pPlayer->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName, eColliderType);
+			m_pPlayer->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName,
+									dynamic_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
 
 		break;
 	case OBJECTADD_MFC_AHGLAN:
 		if (m_pAhglan)
-			m_pAhglan->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName, eColliderType);
+			m_pAhglan->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName, 
+									dynamic_cast<CTransform*>(m_pAhglan->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
 
 		break;
 	}

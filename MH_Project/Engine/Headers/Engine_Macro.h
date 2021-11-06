@@ -3,6 +3,12 @@
 
 namespace Engine
 {
+	#define	NO_EVENT	0
+	#define OBJ_DEAD	-1
+
+	#define	GRAVITY		9.8f
+
+	////////////////////////////////////////
 	#define	VTXCNTX		129
 	#define VTXCNTZ		129
 	#define VTXITV		1

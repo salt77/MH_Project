@@ -67,6 +67,12 @@
     <Filter Include="02.GameObject\07.StickyBomb">
       <UniqueIdentifier>{2171dae8-a8c2-4c2e-96e6-8b3066f1953b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\08.Dummy">
+      <UniqueIdentifier>{e0012ce0-c999-4095-8a8b-43df1c4f4208}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Dummy\00.HitBox_Pos">
+      <UniqueIdentifier>{d7115837-7d44-42f9-b97c-1b891f7ae570}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -123,6 +129,9 @@
     <ClInclude Include="..\Codes\StickyBomb.h">
       <Filter>02.GameObject\07.StickyBomb</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\HitBox_Pos.h">
+      <Filter>02.GameObject\08.Dummy\00.HitBox_Pos</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -169,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\StickyBomb.cpp">
       <Filter>02.GameObject\07.StickyBomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\HitBox_Pos.cpp">
+      <Filter>02.GameObject\08.Dummy\00.HitBox_Pos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

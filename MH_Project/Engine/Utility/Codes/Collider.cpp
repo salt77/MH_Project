@@ -26,7 +26,7 @@ CCollider::~CCollider()
 }
 
 
-HRESULT CCollider::Ready_Collider(const _float& fRadius, COLLIDERTYPE eColliderType)
+HRESULT CCollider::Ready_Collider(const _float& fRadius, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType)
 {
 	// 메시 사이즈에 맞는 바운딩 박스를 만들기 가장 작은 좌표 값과 가장 큰 좌표 값을 만들어주는 함수
 	//D3DXComputeBoundingSphere(pPos, dwVtxCnt, sizeof(_vec3), &m_vCenter, &m_fRadius);
@@ -58,6 +58,13 @@ HRESULT CCollider::Ready_Collider(const _float& fRadius, COLLIDERTYPE eColliderT
 
 		m_pTexture[i]->UnlockRect(0);
 	}
+
+	if (m_matColParts)
+		m_matColMatrix = (*m_matColParts) * *pColliderMatrix;
+	else
+		m_matColMatrix = *pColliderMatrix;
+
+	memcpy(&m_vCenter, &m_matColMatrix._41, sizeof(_vec3));
 
 	m_fRadius = fRadius;
 	m_eColliderType = eColliderType;
@@ -92,11 +99,11 @@ void CCollider::Render_Collider(COLTYPE eType, const _matrix * pColliderMatrix)
 #endif
 }
 
-CCollider * CCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fRadius, COLLIDERTYPE eColliderType)
+CCollider * CCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fRadius, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType)
 {
 	CCollider*	pInstance = new	CCollider(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Collider(fRadius, eColliderType)))
+	if (FAILED(pInstance->Ready_Collider(fRadius, pColliderMatrix, eColliderType)))
 		Safe_Release(pInstance);
 
 	return pInstance;

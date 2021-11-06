@@ -32,7 +32,7 @@ Engine::CBoxCollider::~CBoxCollider(void)
 
 HRESULT Engine::CBoxCollider::Ready_Collider(_float vMinX, _float vMinY, _float vMinZ,
 											_float vMaxX, _float vMaxY, _float vMaxZ,
-											COLLIDERTYPE eColliderType)
+											const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType)
 {
 	// 메시 사이즈에 맞는 바운딩 박스를 만들기 가장 작은 좌표 값과 가장 큰 좌표 값을 만들어주는 함수
 	//D3DXComputeBoundingBox(pPos, dwVtxCnt, sizeof(_vec3), &m_vMin, &m_vMax);
@@ -183,6 +183,11 @@ HRESULT Engine::CBoxCollider::Ready_Collider(_float vMinX, _float vMinY, _float 
 	}
 
 
+	if (m_matColParts)
+		m_matColMatrix = (*m_matColParts) * *pColliderMatrix;
+	else
+		m_matColMatrix = *pColliderMatrix;
+
 	m_eColliderType = eColliderType;
 
 #endif
@@ -217,11 +222,11 @@ void Engine::CBoxCollider::Render_Collider(COLTYPE eType, const _matrix* pCollid
 Engine::CBoxCollider* Engine::CBoxCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
 													_float vMinX, _float vMinY, _float vMinZ,
 													_float vMaxX, _float vMaxY, _float vMaxZ, 
-													COLLIDERTYPE eColliderType)
+													const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType)
 {
 	CBoxCollider*		pInstance = new	CBoxCollider(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, eColliderType)))
+	if (FAILED(pInstance->Ready_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, pColliderMatrix, eColliderType)))
 		Safe_Release(pInstance);
 
 	return pInstance;

@@ -22,7 +22,7 @@ public:
 	const map<const wstring, CBoxCollider*>&	Get_MapBoxCollider() { return m_mapBoxColliderCom; }
 
 public:
-	virtual		HRESULT		Ready_Object(void);
+	virtual		HRESULT		Ready_Object();
 	virtual		HRESULT		LateReady_Object();
 	virtual		_int		Update_Object(const _float& fTimeDelta);
 	virtual		_int		LateUpdate_Object(const _float& fTimeDelta);
@@ -30,10 +30,10 @@ public:
 
 public:
 	void			Compute_ViewZ(const _vec3* pPos);
-	HRESULT			Add_Collider(_float fRadius, wstring wstrName, COLLIDERTYPE eColliderType);
+	HRESULT			Add_Collider(_float fRadius, wstring wstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType);
 	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
 								 _float vMaxX, _float vMaxY, _float vMaxZ,
-								 wstring wstrName, COLLIDERTYPE eColliderType);
+								 wstring wstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType);
 
 protected:
 	LPDIRECT3DDEVICE9					m_pGraphicDev;
@@ -42,6 +42,7 @@ protected:
 	map<const wstring, CCollider*>		m_mapColliderCom;
 	map<const wstring, CBoxCollider*>	m_mapBoxColliderCom;
 
+	_bool								m_bDead = false;
 	_bool								m_bLateReady = false;
 	_bool								m_bSoundCheck = false;
 

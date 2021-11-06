@@ -112,9 +112,6 @@
     <Filter Include="04.Component\10.Shader\hpp">
       <UniqueIdentifier>{6a363f39-84c6-423f-8b6c-dd3bf48daaa9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.GameObject\GameObjMgr">
-      <UniqueIdentifier>{35314888-5036-4f67-8cab-56fab135a54f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Headers\Export_Utility.h">
@@ -243,9 +240,6 @@
     <ClInclude Include="..\Codes\Shader_Player.hpp">
       <Filter>04.Component\10.Shader\hpp</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\GameObjMgr.h">
-      <Filter>03.GameObject\GameObjMgr</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Headers\Export_Utility.inl">
@@ -354,9 +348,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Shader.cpp">
       <Filter>04.Component\10.Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\GameObjMgr.cpp">
-      <Filter>03.GameObject\GameObjMgr</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

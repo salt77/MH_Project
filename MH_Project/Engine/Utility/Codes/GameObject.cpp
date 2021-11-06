@@ -19,7 +19,7 @@ Engine::CGameObject::~CGameObject(void)
 }
 
 
-HRESULT Engine::CGameObject::Ready_Object(void)
+HRESULT Engine::CGameObject::Ready_Object()
 {
 	return S_OK;
 }
@@ -38,7 +38,10 @@ Engine::_int Engine::CGameObject::Update_Object(const _float& fTimeDelta)
 		LateReady_Object();
 	}
 
-	_int iResult = 0;
+	_int iResult = NO_EVENT;
+
+	if (m_bDead)
+		return OBJ_DEAD;
 
 	for (auto& iter : m_mapComponent[ID_DYNAMIC])
 	{
@@ -68,9 +71,9 @@ void CGameObject::Compute_ViewZ(const _vec3 * pPos)
 	m_fViewZ = D3DXVec3Length(&(vCamPos - *pPos));
 }
 
-HRESULT CGameObject::Add_Collider(_float fRadius, wstring wstrName, COLLIDERTYPE eColliderType)
+HRESULT CGameObject::Add_Collider(_float fRadius, wstring wstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType)
 {
-	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius, eColliderType);
+	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius, pColliderMatrix, eColliderType);
 	m_mapColliderCom.emplace(wstrName, dynamic_cast<CCollider*>(pComponent));
 	if (m_mapColliderCom.empty())
 		return E_FAIL;
@@ -80,9 +83,10 @@ HRESULT CGameObject::Add_Collider(_float fRadius, wstring wstrName, COLLIDERTYPE
 	return S_OK;
 }
 
-HRESULT CGameObject::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType)
+HRESULT CGameObject::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, 
+								  const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType)
 {
-	CComponent*		pComponent = CBoxCollider::Create(m_pGraphicDev, vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, eColliderType);
+	CComponent*		pComponent = CBoxCollider::Create(m_pGraphicDev, vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, pColliderMatrix, eColliderType);
 	m_mapBoxColliderCom.emplace(wstrName, dynamic_cast<CBoxCollider*>(pComponent));
 	if (m_mapBoxColliderCom.empty())
 		return E_FAIL;

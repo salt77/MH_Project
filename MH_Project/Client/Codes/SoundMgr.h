@@ -49,7 +49,7 @@ public:
 
 
 	void PlaySoundHigherVol(TCHAR* pSoundKey, CHANNELID eID, _float fVol = 2.5f);
-	void PlaySoundLowerVol(TCHAR* pSoundKey, CHANNELID eID, _float fVol = 0.5f);
+	void PlaySoundLowerVol(TCHAR* pSoundKey, CHANNELID eID, _float fVol = 0.075f);
 
 private:
 	void LoadSoundFile();

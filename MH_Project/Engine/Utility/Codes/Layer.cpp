@@ -34,8 +34,15 @@ int Engine::CLayer::Update_Layer(const _float& fTimeDelta)
 	{
 		iResult = iter.second->Update_Object(fTimeDelta);
 
-		if (iResult & 0x8000000)
+		if (OBJ_DEAD == iResult)
+		{
+			Safe_Release(iter.second);
+			m_mapObject.erase(iter.first);
+
 			return iResult;
+		}
+		//if (iResult & 0x8000000)
+		//	return iResult;
 	}
 
 	return iResult;
@@ -43,7 +50,7 @@ int Engine::CLayer::Update_Layer(const _float& fTimeDelta)
 
 _int CLayer::LateUpdate_Layer(const _float & fTimeDelta)
 {
-	_int	iResult = 0;
+	_int	iResult = NO_EVENT;
 
 	for (auto& iter : m_mapObject)
 	{

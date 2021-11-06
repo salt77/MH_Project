@@ -26,7 +26,7 @@ Engine::CCamera::~CCamera(void)
 }
 
 
-HRESULT Engine::CCamera::Ready_Object(void)
+HRESULT Engine::CCamera::Ready_Object()
 {
 	CGameObject::Render_Object();
 

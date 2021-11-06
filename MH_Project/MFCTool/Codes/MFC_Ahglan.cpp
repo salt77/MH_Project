@@ -65,14 +65,24 @@ void CMFC_Ahglan::Render_Object(void)
 	}
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
-	m_pMeshCom->Render_Meshes();
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
+	pEffect->AddRef();
 
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
+
+	_uint iMaxPass = 0;
+
+	pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
+											// 2인자 : 시작하는 방식을 묻는 FLAG
+	pEffect->BeginPass(0);
+
+	m_pMeshCom->Render_Meshes(pEffect);
+
+	pEffect->EndPass();
+	pEffect->End();
+
+	Safe_Release(pEffect);
 }
 
 HRESULT CMFC_Ahglan::Add_Component(void)
@@ -95,6 +105,11 @@ HRESULT CMFC_Ahglan::Add_Component(void)
 	pComponent->AddRef();
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
+	// Shader
+	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Mesh"));
+	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Shader", pComponent);
+
 	//// Calculator
 	//pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Clone_Prototype(L"Proto_Calculator"));
 	//NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
@@ -104,6 +119,48 @@ HRESULT CMFC_Ahglan::Add_Component(void)
 	//pComponent = m_pColliderCom = CCollider::Create(m_pGraphicDev, m_pMeshCom->Get_VtxPos(), m_pMeshCom->Get_VtxCnt(), m_pMeshCom->Get_Stride());
 	//NULL_CHECK_RETURN(m_pColliderCom, E_FAIL);
 	//m_mapComponent[ID_STATIC].emplace(L"Com_Collider", pComponent);
+
+	return S_OK;
+}
+
+HRESULT CMFC_Ahglan::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
+{
+	_matrix		matWorld, matView, matProj;
+
+	m_pTransformCom->Get_WorldMatrix(&matWorld);
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+
+	pEffect->SetMatrix("g_matWorld", &matWorld);
+	pEffect->SetMatrix("g_matView", &matView);
+	pEffect->SetMatrix("g_matProj", &matProj);
+
+	D3DMATERIAL9		tMtrl;
+	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+
+	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	tMtrl.Power = 10.f;
+
+	pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
+	pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
+	pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
+
+	pEffect->SetFloat("g_fPower", tMtrl.Power);
+
+	const D3DLIGHT9*	pLightInfo = Get_Light();
+	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
+
+	pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
+
+	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
+	pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
+	pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
+
+	D3DXMatrixInverse(&matView, NULL, &matView);
+	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
 
 	return S_OK;
 }
@@ -119,9 +176,9 @@ void CMFC_Ahglan::Key_Input(const _float & fTimeDelta)
 	//	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
 }
 
-HRESULT CMFC_Ahglan::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType)
+HRESULT CMFC_Ahglan::Add_Collider(_float fRadius, wstring cstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType)
 {
-	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius, eColliderType);
+	CComponent*		pComponent = CCollider::Create(m_pGraphicDev, fRadius, pColliderMatrix, eColliderType);
 	m_mapColliderCom.emplace(cstrName, dynamic_cast<CCollider*>(pComponent));
 	if (m_mapColliderCom.empty())
 		return E_FAIL;
@@ -136,9 +193,9 @@ HRESULT CMFC_Ahglan::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE
 	return S_OK;
 }
 
-HRESULT CMFC_Ahglan::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType)
+HRESULT CMFC_Ahglan::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType)
 {
-	CComponent*		pComponent = CBoxCollider::Create(m_pGraphicDev, vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, eColliderType);
+	CComponent*		pComponent = CBoxCollider::Create(m_pGraphicDev, vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, pColliderMatrix, eColliderType);
 	m_mapBoxColliderCom.emplace(wstrName, dynamic_cast<CBoxCollider*>(pComponent));
 	if (m_mapBoxColliderCom.empty())
 		return E_FAIL;

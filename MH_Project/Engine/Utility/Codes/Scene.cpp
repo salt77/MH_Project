@@ -1,5 +1,4 @@
 #include "Scene.h"
-#include "GameObjMgr.h"
 
 USING(Engine)
 
@@ -16,15 +15,11 @@ Engine::CScene::~CScene(void)
 
 HRESULT Engine::CScene::Ready_Scene(void)
 {
-	CGameObjMgr::GetInstance()->Ready_Manager();
-
 	return S_OK;
 }
 
 HRESULT CScene::LateReady_Scene()
 {
-	CGameObjMgr::GetInstance()->LateReady_Manager();
-
 	return S_OK;
 }
 
@@ -40,8 +35,6 @@ Engine::_int Engine::CScene::Update_Scene(const _float& fTimeDelta)
 			return iResult;
 	}
 
-	CGameObjMgr::GetInstance()->Update_Manager(fTimeDelta);
-
 	return iResult;
 }
 
@@ -56,8 +49,6 @@ _int CScene::LateUpdate_Scene(const _float & fTimeDelta)
 		if (iResult & 0x80000000)
 			return iResult;
 	}
-
-	CGameObjMgr::GetInstance()->LateUpdate_Manager(fTimeDelta);
 
 	return iResult;
 }

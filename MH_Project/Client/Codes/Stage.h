@@ -12,6 +12,7 @@
 #include "DynamicCamera.h"
 #include "SkyBox.h"
 #include "StageMesh.h"
+#include "HitBox_Pos.h"
 
 class CStage : public CScene
 {
@@ -48,7 +49,7 @@ public:
 	static CStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
-	virtual void Free(void) override;
+	virtual void	Free(void) override;
 
 };
 

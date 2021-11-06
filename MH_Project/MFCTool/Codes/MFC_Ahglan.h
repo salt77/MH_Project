@@ -10,6 +10,7 @@ class CCalculator;
 class CDynamicMesh;
 class CCollider;
 class CBoxCollider;
+class CShader;
 
 END
 
@@ -33,13 +34,14 @@ public:
 
 private:
 	HRESULT			Add_Component(void);
+	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Key_Input(const _float& fTimeDelta);
 
 public:
-	HRESULT			Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
+	HRESULT			Add_Collider(_float fRadius, wstring cstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);
 	HRESULT			Add_Collider(_float vMinX, _float vMinY, _float vMinZ,
 								_float vMaxX, _float vMaxY, _float vMaxZ,
-								wstring wstrName, COLLIDERTYPE eColliderType);
+								wstring wstrName, const _matrix* pColliderMatrix, COLLIDERTYPE eColliderType);
 	HRESULT			Delete_Collider(wstring wstrName, COLLIDERTYPE eColliderType);
 	HRESULT			Change_ColliderScale(_float fRadius, wstring cstrName);
 
@@ -53,6 +55,7 @@ private:
 	CRenderer*		m_pRendererCom = nullptr;
 	CCalculator*	m_pCalculatorCom = nullptr;
 	CDynamicMesh*	m_pMeshCom = nullptr;
+	CShader*		m_pShaderCom = nullptr;
 	
 	//CCollider*		m_pColliderCom = nullptr;
 	map<const wstring, CCollider*>		m_mapColliderCom;

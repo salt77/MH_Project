@@ -27,6 +27,8 @@ HRESULT CAhglan::Ready_Object(void)
 	m_pTransformCom->Set_Scale(SCALE_AHGLAN, SCALE_AHGLAN, SCALE_AHGLAN);
 	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180));
 
+	m_pTransformCom->Update_Component(0.f);
+
 	return S_OK;
 }
 
@@ -65,45 +67,19 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
 
-	// 부위파괴 디버그용
+	if (m_bDead)
+		return iExit;
+
+	// 디버그용
 	if (Key_Down('G'))
 	{
-		map<const wstring, _bool>::iterator		iter = m_mapActiveParts.begin();
-
-		for (; iter != m_mapActiveParts.end(); ++iter)
-		{
-			if (L"golem_ahglan_Chest.tga" == iter->first)
-			{
-				m_iAniIndex = DAMAGE_FROM_FRONT;
-				iter->second = FALSE;
-			}
-		}
 	}
 	else if (Key_Down('H'))
 	{
-		map<const wstring, _bool>::iterator		iter = m_mapActiveParts.begin();
-
-		for (; iter != m_mapActiveParts.end(); ++iter)
-		{
-			if (L"golem_ahglan_ore.tga" == iter->first)
-			{
-				m_iAniIndex = DAMAGE_FROM_FRONT;
-				iter->second = FALSE;
-			}
-		}
 	}
 	else if (Key_Down('J'))
 	{
-		map<const wstring, _bool>::iterator		iter = m_mapActiveParts.begin();
-
-		for (; iter != m_mapActiveParts.end(); ++iter)
-		{
-			if (L"golem_ahglan_Head.tga" == iter->first)
-			{
-				m_iAniIndex = DAMAGE_FROM_FRONT;
-				iter->second = FALSE;
-			}
-		}
+		m_bDead = true;
 	}
 
 	m_fTimeDelta = fTimeDelta;
@@ -119,6 +95,32 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 	m_pMeshCom->Play_Animation(fTimeDelta);
 
 	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+
+	return iExit;
+}
+
+_int CAhglan::LateUpdate_Object(const _float & fTimeDelta)
+{
+	_int iExit = CGameObject::LateUpdate_Object(fTimeDelta);
+
+	if (!m_mapColliderCom.empty())
+	{
+		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+
+		for (; iter != m_mapColliderCom.end(); ++iter)
+		{
+			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+		}
+	}
+	if (!m_mapBoxColliderCom.empty())
+	{
+		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+
+		for (; iter != m_mapBoxColliderCom.end(); ++iter)
+		{
+			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+		}
+	}
 
 	return iExit;
 }
@@ -288,11 +290,11 @@ void CAhglan::Movement()
 
 	if (m_bCanAction && m_pPlayerTrans)
 	{
-		if (BS_DAMAGED <= m_eBossAction)
+		if (BS_DAMAGED >= m_eBossAction)
 		{
 
 		}
-		else if (BS_ATK <= m_eBossAction)
+		else if (BS_ATK >= m_eBossAction)
 		{
 			if (DIS_SHORT > m_fDistance)
 			{
@@ -332,7 +334,7 @@ void CAhglan::Movement()
 				}
 			}
 		}
-		else if (BS_IDLE <= m_eBossAction)
+		else if (BS_IDLE >= m_eBossAction)
 		{
 			if (DIS_SHORTEST >= m_fDistance &&
 				20.f >= m_fRand)
@@ -597,12 +599,17 @@ void CAhglan::Animation_Control()
 		case DAMAGE_FROM_FRONT:
 			m_eBossAction = BS_DAMAGED;
 
+			m_pMeshCom->Set_TrackSpeed(1.2f);
+
+			m_fAniEndDelay = 0.86f;
 			m_bCanAction = false;
 			break;
 
 		case DAMAGE_FROM_BACK:
 			m_eBossAction = BS_DAMAGED;
 
+			m_pMeshCom->Set_TrackSpeed(1.8f);
+			m_fAniEndDelay = 0.92f;
 			m_bCanAction = false;
 			break;
 
@@ -833,16 +840,16 @@ void CAhglan::Animation_Control()
 				m_iAniIndex = ATK_TURNLEFT;
 			}
 		}
-		else if (m_iAniIndex == (_uint)TAUNT && 
-				 60.f <= m_fRand)
+		else if (m_iAniIndex == (_uint)TAUNT &&
+			60.f <= m_fRand)
 		{
 			m_iAniIndex = ATK_TWOHANDS_COMBO;
 
 			m_fRand = Engine::Random(0.f, 100.f);
 		}
 		else if (m_iAniIndex != (_uint)ENTRY_IDLE &&
-				 m_iAniIndex != (_uint)ENTRY_CONTACT &&
-				 m_iAniIndex != (_uint)WALK)
+			m_iAniIndex != (_uint)ENTRY_CONTACT &&
+			m_iAniIndex != (_uint)WALK)
 		{
 			if (m_iAniIndex == (_uint)ATK_TURNLEFT)
 			{
@@ -955,11 +962,11 @@ void CAhglan::Collision_Control()
 			if (L"Hit_LFoot" == iter_Hit->first)
 			{
 				if (m_lfAniEnd * 0.1f <= fAniTime &&
-					m_lfAniEnd * 0.23f >= fAniTime)
+					m_lfAniEnd * 0.21f >= fAniTime)
 				{
 					iter_Hit->second->Set_CanCollision(true);
 				}
-				else if (m_lfAniEnd * 0.5f <= fAniTime &&
+				else if (m_lfAniEnd * 0.53f <= fAniTime &&
 					m_lfAniEnd * 0.65f >= fAniTime)
 				{
 					iter_Hit->second->Set_CanCollision(true);
@@ -971,7 +978,7 @@ void CAhglan::Collision_Control()
 			}
 			else if (L"Hit_RFoot" == iter_Hit->first)
 			{
-				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.35f, m_lfAniEnd * 0.43f);
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.35f, m_lfAniEnd * 0.42f);
 			}
 		}
 		break;
@@ -1017,6 +1024,79 @@ HRESULT CAhglan::Add_NaviMesh()
 	m_mapComponent[ID_STATIC].emplace(L"Com_NaviMesh", pComponent);
 
 	return S_OK;
+}
+
+void CAhglan::BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName)
+{
+	_bool	bFront = false;
+	_vec3	vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
+	_vec3	vDir = vBombPos - vMyPos;
+
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	map<const wstring, _bool>::iterator		iter = m_mapActiveParts.begin();
+
+	if (0.f < D3DXVec3Dot(&vDir, &(-(*m_pTransformCom->Get_Info(INFO_LOOK)))))
+	{
+		bFront = true;
+		m_iAniIndex = DAMAGE_FROM_FRONT;
+	}
+	else
+	{
+		bFront = false;
+		m_iAniIndex = DAMAGE_FROM_BACK;
+	}
+
+	if (L"golem_ahglan_Chest.tga" == wstrPartsName)
+	{
+		for (; iter != m_mapActiveParts.end(); ++iter)
+		{
+			if (bFront &&
+				iter->first == wstrPartsName)
+			{
+				if (iter->second)
+				{
+					iter->second = FALSE;
+					break;
+				}
+				else
+				{
+					map<const wstring, _bool>::iterator		iter_Begin = m_mapActiveParts.begin();
+
+					for (; iter_Begin != m_mapActiveParts.end(); ++iter_Begin)
+					{
+						if (L"golem_ahglan_ore_tga" == iter_Begin->first)
+						{
+							iter_Begin->second = FALSE;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	else if (L"golem_ahglan_Head.tga" == wstrPartsName)
+	{
+		for (; iter != m_mapActiveParts.end(); ++iter)
+		{
+			if (iter->first == wstrPartsName)
+			{
+				iter->second = FALSE;
+				break;
+			}
+		}
+	}
+	else if (L"golem_ahglan_RHand.tga" == wstrPartsName)
+	{
+		for (; iter != m_mapActiveParts.end(); ++iter)
+		{
+			if (iter->first == wstrPartsName)
+			{
+				iter->second = FALSE;
+				break;
+			}
+		}
+	}
 }
 
 

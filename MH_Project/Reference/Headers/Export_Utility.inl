@@ -74,6 +74,11 @@ inline _float Random(_float _fMin, _float _fMax)
 	return generator();
 }
 
+inline void Emplace_Layer(const wstring wstrLayerTag, CLayer * pLayer)
+{
+	CManagement::GetInstance()->Emplace_Layer(wstrLayerTag, pLayer);
+}
+
 HRESULT		Ready_Prototype(const wstring pProtoTag, CComponent* pInstance)
 {
 	return CProtoMgr::GetInstance()->Ready_Prototype(pProtoTag, pInstance);
@@ -159,58 +164,9 @@ inline void Get_RenderTargetTexture(LPD3DXEFFECT & pEffect, const wstring pTarge
 	CRenderTargetMgr::GetInstance()->Get_RenderTargetTexture(pEffect, pTargetTag, pConstantTable);
 }
 
-inline CGameObject * Get_ObjInManager(const wstring pLayerTag, const wstring pObjTag)
-{
-	return CGameObjMgr::GetInstance()->Get_ObjInManager(pLayerTag, pObjTag);
-}
-
-inline CComponent * Get_ComponentInManager(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID)
-{
-	return CGameObjMgr::GetInstance()->Get_ComponentInManager(pLayerTag, pObjTag, pComponentTag, eID);
-}
-
-inline void Add_ObjInManager(const wstring wstrLayerTag, CLayer * pLayer)
-{
-	CGameObjMgr::GetInstance()->Add_ObjInManager(wstrLayerTag, pLayer);
-}
-
-inline HRESULT DeleteObjInManager(const wstring LayerTag)
-{
-	CGameObjMgr::GetInstance()->DeleteObjInManager(LayerTag);
-
-	return S_OK;
-}
-
-inline HRESULT Ready_Manager(void)
-{
-	if (FAILED(CGameObjMgr::GetInstance()->Ready_Manager()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-inline HRESULT LateReady_Manager()
-{
-	if (FAILED(CGameObjMgr::GetInstance()->LateReady_Manager()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-inline _int Update_Manager(const _float & fTimeDelta)
-{
-	return CGameObjMgr::GetInstance()->Update_Manager(fTimeDelta);
-}
-
-inline _int LateUpdate_Manager(const _float & fTimeDelta)
-{
-	return CGameObjMgr::GetInstance()->LateUpdate_Manager(fTimeDelta);
-}
-
 
 void	Release_Utility(void)
 {
-	CGameObjMgr::GetInstance()->DestroyInstance();
 	CRenderTargetMgr::GetInstance()->DestroyInstance();
 	CLightMgr::GetInstance()->DestroyInstance();
 	CRenderer::GetInstance()->DestroyInstance();

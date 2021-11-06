@@ -1,5 +1,9 @@
-18. Entry_Contact
-17. Entry_Idle
+20. Entry_Contact
+19. Entry_Idle
+
+18. DamageFromBack
+17. DamageFromFront
+
 
 16. Atk_Onehand
 15. Atk_Rolling_Onetime_Begin
@@ -20,6 +24,22 @@
 1.  TurnRight
 0.  Walk
 
+
+Middle
+ 7.  Atk_Windmill
+ 9.  Atk_Twohands
+ 11. Atk_TurnLeft
+ 10. Atk_TurnRight
+ 16. Atk_Onehand
+ 12. Atk_Stamp
+
+ 8. Atk_Twohands_Combo
+
+Long 
+ Atk_Rolling_Twice
+ Atk_Rolling_Onetime_Begin
+ Atk_Rolling_Onetime_End
+ 
 
 
 
