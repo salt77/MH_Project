@@ -35,7 +35,6 @@ void Engine::CFontMgr::Render_Font(const wstring pFontTag, const wstring pString
 	NULL_CHECK(pFont);
 
 	pFont->Render_Font(pString, pPos, Color);
-
 }
 
 CFont* Engine::CFontMgr::Find_Font(const wstring pFontTag)

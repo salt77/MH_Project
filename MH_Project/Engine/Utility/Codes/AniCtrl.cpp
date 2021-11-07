@@ -92,14 +92,14 @@ void CAniCtrl::Play_Animation(const _float & fTimeDelta)
 	m_fAccTime += fTimeDelta;
 }
 
-_bool CAniCtrl::Is_AnimationsetFinish(void)
+_bool CAniCtrl::Is_AnimationSetFinish(const _float& fEndTime)
 {
 	D3DXTRACK_DESC		TrackInfo;
 	ZeroMemory(&TrackInfo, sizeof(D3DXTRACK_DESC));
 
 	m_pAniCtrl->GetTrackDesc(m_iCurrentTrack, &TrackInfo);
 
-	if (TrackInfo.Position >= m_dPeriod - 0.1)
+	if (TrackInfo.Position >= fEndTime/*m_dPeriod - 0.1*/)
 		return true;
 
 	return false;

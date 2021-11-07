@@ -17,6 +17,8 @@ class CShader;
 END
 
 class CDynamicCamera;
+class CPlayer_Hpbar_ValueUI;
+class CPlayer_Hpbar_LerpUI;
 
 class CPlayer : public CGameObject
 {
@@ -32,6 +34,9 @@ public:
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 
+public:
+	const PL_INFO&	Get_TagPlayerInfo() { return m_tPlayerInfo; }
+
 private:
 	// 기본 함수들
 	HRESULT			Add_Component(void);
@@ -42,6 +47,8 @@ private:
 	_vec3			PickUp_OnTerrain(void);
 	void			Animation_Control();
 	void			Collision_Control();
+	void			Update_UI();
+	void			Update_State();
 
 	// 객체 함수들
 	void			Compute_CanAction();
@@ -61,6 +68,7 @@ private:
 	_bool			m_bSkillMove = false;
 	_bool			m_bCanHit = true;
 	_bool			m_bStopMotion = false;
+	_bool			m_bAnimation = true;
 
 	_uint			m_iAniIndex = (_uint)STATE_IDLE;
 	_uint			m_iSecondaryCount = 0;
@@ -85,6 +93,8 @@ private:
 	_vec3			m_vDir;
 	_vec3			m_vLookDir;
 	_vec3			m_vRightDir;
+
+	PL_INFO			m_tPlayerInfo;
 
 	SCENE_ID		m_eSceneID = SCENE_END;
 
@@ -113,6 +123,8 @@ private:
 	// Instance
 	CDynamicCamera*	m_pMainCam = nullptr;
 	CLayer*			m_pStickyLayer = nullptr;
+	CPlayer_Hpbar_ValueUI*	m_pHpbarValueUI = nullptr;
+	CPlayer_Hpbar_LerpUI*	m_pHpbarLerpUI = nullptr;
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

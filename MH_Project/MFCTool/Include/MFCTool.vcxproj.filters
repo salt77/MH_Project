@@ -19,9 +19,6 @@
     <Filter Include="01.View\00.Form">
       <UniqueIdentifier>{8cb5769d-29de-4fed-a64c-3cbc6530e9ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.View\00.Form\00.TerrainTool">
-      <UniqueIdentifier>{7defac07-f13b-42da-a6db-84b8622648ab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.View\00.Form\01.ObjectTool">
       <UniqueIdentifier>{7743f22d-22bd-44d6-86e6-9c30841fa68e}</UniqueIdentifier>
     </Filter>
@@ -67,6 +64,9 @@
     <Filter Include="02.GameObject\05.MFC_Stage">
       <UniqueIdentifier>{7016874e-8e45-4cb0-a869-60594f58372e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.View\00.Form\00.UITool">
+      <UniqueIdentifier>{7defac07-f13b-42da-a6db-84b8622648ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -95,9 +95,6 @@
     </ClInclude>
     <ClInclude Include="..\Codes\Form.h">
       <Filter>01.View\00.Form</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\TerrainTool.h">
-      <Filter>01.View\00.Form\00.TerrainTool</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\ObjectTool.h">
       <Filter>01.View\00.Form\01.ObjectTool</Filter>
@@ -138,6 +135,9 @@
     <ClInclude Include="..\Codes\MFC_Stage.h">
       <Filter>02.GameObject\05.MFC_Stage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\UITool.h">
+      <Filter>01.View\00.Form\00.UITool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -157,9 +157,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Form.cpp">
       <Filter>01.View\00.Form</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\TerrainTool.cpp">
-      <Filter>01.View\00.Form\00.TerrainTool</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\ObjectTool.cpp">
       <Filter>01.View\00.Form\01.ObjectTool</Filter>
@@ -199,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_Stage.cpp">
       <Filter>02.GameObject\05.MFC_Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\UITool.cpp">
+      <Filter>01.View\00.Form\00.UITool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -23,7 +23,7 @@ HRESULT CSkyBox::Ready_Object(void)
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	m_pTransformCom->Set_Scale(40.f, 40.f, 40.f);
+	m_pTransformCom->Set_Scale(10.f, 10.f, 10.f);
 
 	return S_OK;
 }
@@ -50,7 +50,7 @@ void CSkyBox::Render_Object(void)
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
-	m_pTextureCom->Set_Texture(3);
+	m_pTextureCom->Set_Texture();
 
 	m_pBufferCom->Render_Buffer();
 

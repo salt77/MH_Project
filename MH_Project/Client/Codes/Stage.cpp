@@ -20,7 +20,6 @@ HRESULT CStage::Ready_Scene(void)
 	FAILED_CHECK_RETURN(Ready_Prototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
-
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
@@ -65,7 +64,7 @@ void CStage::Render_Scene(void)
 		m_fTime = 0.f;
 	}
 
-	Render_Font(L"Font_Jinji", m_szFPS, &_vec2(400.f, 10.f), D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
+	Render_Font(L"Font_DFP", m_szFPS, &_vec2(850.f, 10.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
 }
 
 HRESULT CStage::Ready_Layer_Environment(const wstring pLayerTag)
@@ -89,7 +88,6 @@ HRESULT CStage::Ready_Layer_Environment(const wstring pLayerTag)
 	//pGameObject = CSkyBox::Create(m_pGraphicDev);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
-
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
@@ -148,8 +146,25 @@ HRESULT CStage::Ready_Layer_UI(const wstring pLayerTag)
 
 	CGameObject*			pGameObject = nullptr;
 
+	pGameObject = CPlayer_Hpbar_BackUI::Create(m_pGraphicDev, 340.f, 30.f, 650.f, 25.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Hpbar_BackUI", pGameObject), E_FAIL);
+
+	pGameObject = CPlayer_Hpbar_LerpUI::Create(m_pGraphicDev, 340.f, 30.f, 650.f, 25.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Hpbar_LerpUI", pGameObject), E_FAIL);
+
+	pGameObject = CPlayer_Hpbar_ValueUI::Create(m_pGraphicDev, 340.f, 30.f, 650.f, 25.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Hpbar_ValueUI", pGameObject), E_FAIL);
+
+	// FadeInOut
+	pGameObject = CFadeInOut::Create(m_pGraphicDev, 0.f, 0.f, WINCX * 2.f, WINCY * 2.f, 0.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"FadeInOut_UI", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
+
 	return S_OK;
 }
 

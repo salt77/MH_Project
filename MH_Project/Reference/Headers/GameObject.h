@@ -18,6 +18,8 @@ public:
 	CComponent*		Get_Component(const wstring pComponentTag, COMPONENTID eID);
 	_float			Get_ViewZ(void) { return m_fViewZ; }
 
+	const TAGINFO&	Get_TagInfo() { return m_tInfo; }
+
 	const map<const wstring, CCollider*>&		Get_MapCollider() { return m_mapColliderCom; }
 	const map<const wstring, CBoxCollider*>&	Get_MapBoxCollider() { return m_mapBoxColliderCom; }
 
@@ -47,6 +49,8 @@ protected:
 	_bool								m_bSoundCheck = false;
 
 	_float								m_fViewZ;
+
+	TAGINFO								m_tInfo;
 
 private:
 	CComponent*		Find_Component(const wstring pComponentTag, COMPONENTID eID);

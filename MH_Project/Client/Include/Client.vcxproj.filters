@@ -73,6 +73,51 @@
     <Filter Include="02.GameObject\08.Dummy\00.HitBox_Pos">
       <UniqueIdentifier>{d7115837-7d44-42f9-b97c-1b891f7ae570}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\09.UI">
+      <UniqueIdentifier>{8db05e54-02a2-4348-a264-208ba7111a71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.Player_Hpbar">
+      <UniqueIdentifier>{d1e5346f-9a1b-45a4-bc03-1eb217d91543}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\01.Boss_Hpbar">
+      <UniqueIdentifier>{49ea4020-cabf-428e-93a5-fd86f26c591c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.Player_Hpbar\00.Back">
+      <UniqueIdentifier>{1ff6f88e-f091-4545-a6ce-860f0352d5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.Player_Hpbar\01.Lerp">
+      <UniqueIdentifier>{870441fd-b6bc-4c0b-be03-b99e38e3e3ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.Player_Hpbar\02.Value">
+      <UniqueIdentifier>{a80a6018-3307-4d80-a9e1-afff257ebb9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\02.LoadingBar">
+      <UniqueIdentifier>{42864455-2f63-4c14-9e82-b2f005800586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\02.LoadingBar\00.BackEffect">
+      <UniqueIdentifier>{31cae7c8-c843-4435-8179-c3e773b23559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\02.LoadingBar\01.Progress">
+      <UniqueIdentifier>{703ea10b-b5e0-4b71-8185-18c073c9c366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\02.LoadingBar\02.Point">
+      <UniqueIdentifier>{d54ac2ec-8223-479f-a126-7802b74a9996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\03.FadeInOut">
+      <UniqueIdentifier>{de279750-3fe6-4260-a52b-a3113c23e5ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\01.Boss_Hpbar\00.Back">
+      <UniqueIdentifier>{741e5eb5-5055-488a-a298-9f49a1bdb421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\01.Boss_Hpbar\02.Yellow">
+      <UniqueIdentifier>{a65ed553-07eb-42ce-83e6-8ae5bde82e51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\01.Boss_Hpbar\01.Red">
+      <UniqueIdentifier>{0e8ce85f-cde0-4e13-bc7c-10e4d9857dea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\01.Boss_Hpbar\03.Green">
+      <UniqueIdentifier>{9f787fdc-f96f-4b37-96aa-71a7d6ca4b7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -132,6 +177,39 @@
     <ClInclude Include="..\Codes\HitBox_Pos.h">
       <Filter>02.GameObject\08.Dummy\00.HitBox_Pos</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\UI.h">
+      <Filter>02.GameObject\09.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player_Hpbar_BackUI.h">
+      <Filter>02.GameObject\09.UI\00.Player_Hpbar\00.Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player_Hpbar_ValueUI.h">
+      <Filter>02.GameObject\09.UI\00.Player_Hpbar\02.Value</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player_Hpbar_LerpUI.h">
+      <Filter>02.GameObject\09.UI\00.Player_Hpbar\01.Lerp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\LoadingBar_BackEffect.h">
+      <Filter>02.GameObject\09.UI\02.LoadingBar\00.BackEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\LoadingBar_Progress.h">
+      <Filter>02.GameObject\09.UI\02.LoadingBar\01.Progress</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\FadeInOut.h">
+      <Filter>02.GameObject\09.UI\03.FadeInOut</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Ahglan_Hpbar_BackUI.h">
+      <Filter>02.GameObject\09.UI\01.Boss_Hpbar\00.Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Ahglan_Hpbar_RedUI.h">
+      <Filter>02.GameObject\09.UI\01.Boss_Hpbar\01.Red</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Ahglan_Hpbar_YellowUI.h">
+      <Filter>02.GameObject\09.UI\01.Boss_Hpbar\02.Yellow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Ahglan_Hpbar_GreenUI.h">
+      <Filter>02.GameObject\09.UI\01.Boss_Hpbar\03.Green</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -181,6 +259,39 @@
     </ClCompile>
     <ClCompile Include="..\Codes\HitBox_Pos.cpp">
       <Filter>02.GameObject\08.Dummy\00.HitBox_Pos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\UI.cpp">
+      <Filter>02.GameObject\09.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player_Hpbar_BackUI.cpp">
+      <Filter>02.GameObject\09.UI\00.Player_Hpbar\00.Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player_Hpbar_ValueUI.cpp">
+      <Filter>02.GameObject\09.UI\00.Player_Hpbar\02.Value</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player_Hpbar_LerpUI.cpp">
+      <Filter>02.GameObject\09.UI\00.Player_Hpbar\01.Lerp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\LoadingBar_BackEffect.cpp">
+      <Filter>02.GameObject\09.UI\02.LoadingBar\00.BackEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\LoadingBar_Progress.cpp">
+      <Filter>02.GameObject\09.UI\02.LoadingBar\01.Progress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\FadeInOut.cpp">
+      <Filter>02.GameObject\09.UI\03.FadeInOut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Ahglan_Hpbar_BackUI.cpp">
+      <Filter>02.GameObject\09.UI\01.Boss_Hpbar\00.Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Ahglan_Hpbar_RedUI.cpp">
+      <Filter>02.GameObject\09.UI\01.Boss_Hpbar\01.Red</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Ahglan_Hpbar_YellowUI.cpp">
+      <Filter>02.GameObject\09.UI\01.Boss_Hpbar\02.Yellow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Ahglan_Hpbar_GreenUI.cpp">
+      <Filter>02.GameObject\09.UI\01.Boss_Hpbar\03.Green</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,8 @@ namespace Engine
 
 	#define	GRAVITY		9.8f
 
+	#define LERP(fA, fB, fAlpha)	fA * (1 - fAlpha) + fB * fAlpha
+
 	////////////////////////////////////////
 	#define	VTXCNTX		129
 	#define VTXCNTZ		129

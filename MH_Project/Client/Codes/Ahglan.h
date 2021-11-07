@@ -6,6 +6,11 @@
 #include "GameObject.h"
 #include "Define.h"
 
+#include "Ahglan_Hpbar_BackUI.h"
+#include "Ahglan_Hpbar_GreenUI.h"
+#include "Ahglan_Hpbar_YellowUI.h"
+#include "Ahglan_Hpbar_RedUI.h"
+
 BEGIN(Engine)
 
 class CDynamicMesh;
@@ -42,7 +47,7 @@ public:
 		ATK_WINDMILL, ATK_TWOHANDS_COMBO, ATK_TWOHANDS, ATK_TURNRIGHT, ATK_TURNLEFT, ATK_STAMP, ATK_ROLLING_TWICE,
 		ATK_ROLLING_ONETIME_END, ATK_ROLLING_ONETIME_BEGIN, ATK_ONEHAND,
 		DAMAGE_FROM_FRONT, DAMAGE_FROM_BACK,
-		ENTRY_IDLE, ENTRY_CONTACT,
+		ENTRY_IDLE, ENTRY_CONTACT, ATK_THREETIME_STAMP, ATK_ONETIME_STAMP,
 
 		A_STATE_END
 	};
@@ -81,6 +86,7 @@ private:
 	_bool			m_bCanAction = true;
 	_bool			m_bSkillMove = false;
 	_bool			m_bSkillRotation = false;
+	_bool			m_bAnimation = true;
 
 	_uint			m_iAniIndex = (_uint)ENTRY_IDLE;
 
@@ -94,7 +100,7 @@ private:
 	_ulong			m_dwRollingAtkDelay = m_dwCoolDownInterpol + rand() % 10000;
 	_ulong			m_dwRollingStartTime = GetTickCount();
 	_ulong			m_dwFootStepStart = GetTickCount();
-	_ulong			m_dwFootStepDelay = 800;
+	_ulong			m_dwFootStepDelay = 850;
 
 	_float			m_fTimeDelta = 0.f;
 	_float			m_fSpeed = 4.5f;
@@ -138,6 +144,9 @@ private:
 	CCollider*		m_pColliderCom = nullptr;
 	CNaviMesh*		m_pNaviMeshCom = nullptr;
 	CShader*		m_pShaderCom = nullptr;
+
+	// Instance
+	CLayer*			m_pUILayer = nullptr;
 
 public:
 	static CAhglan*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

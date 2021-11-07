@@ -75,6 +75,10 @@ HRESULT CMainApp::SetUp_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	// Font √ﬂ∞°
 	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Default", L"πŸ≈¡", 15, 15, FW_NORMAL), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Jinji", L"±√º≠", 30, 30, FW_HEAVY), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Arial", L"ArialUnicodeMS", 15, 20, FW_HEAVY), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_DFP", L"DFPHeiBold-B5", 15, 20, FW_HEAVY), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Namugothic", L"namugothic", 15, 20, FW_HEAVY), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Namugothic_Bold", L"namugothic_bold", 15, 20, FW_HEAVY), E_FAIL);
 
 	// Input √ﬂ∞°
 	FAILED_CHECK_RETURN(Ready_InputDev(g_hInst, g_hWnd), E_FAIL);

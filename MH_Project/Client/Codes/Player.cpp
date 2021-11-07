@@ -5,10 +5,13 @@
 #include "DynamicCamera.h"
 #include "Ahglan.h"
 #include "StickyBomb.h"
+#include "Player_Hpbar_ValueUI.h"
+#include "Player_Hpbar_LerpUI.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
+	ZeroMemory(&m_tPlayerInfo, sizeof(PL_INFO));
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
@@ -35,6 +38,13 @@ HRESULT CPlayer::Ready_Object()
 	m_vDir = *m_pTransformCom->Get_Info(INFO_LOOK);
 	m_pTransformCom->Update_Component(0.f);
 
+	m_tPlayerInfo.tagInfo.iHp = 10000;
+	m_tPlayerInfo.tagInfo.iMaxHp = m_tPlayerInfo.tagInfo.iHp;
+	m_tPlayerInfo.iStamina = 300;
+	m_tPlayerInfo.iMaxStamina = m_tPlayerInfo.iStamina;
+	m_tPlayerInfo.iSkillPoint = 100;
+	m_tPlayerInfo.iMaxSkillPoint = m_tPlayerInfo.iSkillPoint;
+
 	return S_OK;
 }
 
@@ -48,6 +58,9 @@ HRESULT CPlayer::LateReady_Object()
 	m_mapActiveParts.emplace(L"dualsword_vanquisher.tga", TRUE);
 	m_mapActiveParts.emplace(L"sticky_bomb.tga", FALSE);
 
+	m_pHpbarValueUI = dynamic_cast<CPlayer_Hpbar_ValueUI*>(Engine::Get_GameObject(L"UI", L"Player_Hpbar_ValueUI"));
+	m_pHpbarLerpUI = dynamic_cast<CPlayer_Hpbar_LerpUI*>(Engine::Get_GameObject(L"UI", L"Player_Hpbar_LerpUI"));
+
 	return S_OK;
 }
 
@@ -60,12 +73,6 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 
 	m_pMainCam = dynamic_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
 
-	_vec3	vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
-	if (!(-100.f <= vMyPos.y && 100.f >= vMyPos.y))
-	{
-		_vec3 vPos = vMyPos;
-	}
-
 	//SetUp_OnTerrain();
 	Compute_CanAction();
 	Key_Input(fTimeDelta);
@@ -74,6 +81,8 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 
 	Animation_Control();
 	Collision_Control();
+	Update_State();
+	Update_UI();
 	FootStepSound();
 	MoveOn_Skill(fTimeDelta);
 
@@ -81,7 +90,7 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	StopMotion();
 
 	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
-	if (!m_bStopMotion)
+	if (!m_bStopMotion && m_bAnimation)
 		m_pMeshCom->Play_Animation(fTimeDelta);
 
 	Add_RenderGroup(RENDER_NONALPHA, this);
@@ -362,11 +371,11 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		{
 			if (m_bCanAction)
 			{
-				if (STATE_DOWNIDLE_FRONT == m_iAniIndex)
+				if (STATE_DAMAGEFROM_FRONT == m_iAniIndex)
 				{
 					m_iAniIndex = STATE_DOWNTOIDLE_BACK;
 				}
-				else if (STATE_DOWNIDLE_BACK == m_iAniIndex)
+				else if (STATE_DAMAGEFROM_BACK == m_iAniIndex)
 				{
 					m_iAniIndex = STATE_DOWNTOIDLE_BACK;
 				}
@@ -784,6 +793,8 @@ void CPlayer::Animation_Control()
 	m_eCurState = (PL_STATE)m_iAniIndex;
 	if (m_eCurState != m_ePreState)
 	{
+		m_bAnimation = true;
+
 		// Sound 변수 초기화
 		m_bAtkSound = false;
 		m_bLethitaSound = false;
@@ -843,11 +854,11 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_DAMAGE_RESIST:
-			SKILL_MOVE(0, -400.f, 800);
+			SKILL_MOVE(100, -400.f, 750);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
-			m_lfAniEnd *= 0.7f;
+			m_lfAniEnd *= 0.65f;
 
 			SoundPlayerHurt;
 			SoundMgr(L"Skill_DownResist.wav", CSoundMgr::PLAYER_EFFECT);
@@ -880,7 +891,7 @@ void CPlayer::Animation_Control()
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
-			m_lfAniEnd *= 0.42f;
+			m_lfAniEnd *= 0.1f;
 
 			SoundPlayerHurt;
 			break;
@@ -890,7 +901,7 @@ void CPlayer::Animation_Control()
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
-			m_lfAniEnd *= 0.42f;
+			m_lfAniEnd *= 0.05f;
 
 			SoundPlayerHurt;
 			break;
@@ -1027,6 +1038,17 @@ void CPlayer::Animation_Control()
 	// State 자동 변경
 	if (m_fAniTime >= m_lfAniEnd)
 	{
+		if (Engine::STATE_IDLE == m_eCurState ||
+			Engine::STATE_RUN == m_eCurState ||
+			Engine::STATE_SPRINT == m_eCurState)
+		{
+			m_bAnimation = true;
+		}
+		else
+		{
+			m_bAnimation = false;
+		}
+
 		switch (m_eCurState)
 		{
 		case Engine::STATE_DEAD:
@@ -1039,11 +1061,11 @@ void CPlayer::Animation_Control()
 			break;
 
 		case Engine::STATE_DAMAGEFROM_FRONT:
-			m_iAniIndex = (_uint)STATE_DOWNIDLE_BACK;
+			//m_iAniIndex = (_uint)STATE_DOWNIDLE_BACK;
 			break;
 
 		case Engine::STATE_DAMAGEFROM_BACK:
-			m_iAniIndex = (_uint)STATE_DOWNIDLE_FRONT;
+			//m_iAniIndex = (_uint)STATE_DOWNIDLE_FRONT;
 			break;
 
 		case Engine::STATE_THROW_BEGIN:
@@ -1110,7 +1132,7 @@ void CPlayer::Collision_Control()
 		switch (m_iAniIndex)
 		{
 		case STATE_DOUBLE_CRECSENT:
-			for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			/*for (; iter != m_mapBoxColliderCom.end(); ++iter)
 			{
 				if (L"Other_Attack" == iter->first)
 				{
@@ -1128,7 +1150,8 @@ void CPlayer::Collision_Control()
 				{
 					iter->second->Set_CanCollision(false);
 				}
-			}
+			}*/
+			HITBOX_CONTROLL(0.35f, 0.7f, TRUE);
 			if (!m_bAtkSound &&
 				m_fAniTime >= 0.3f)
 			{
@@ -1356,6 +1379,10 @@ void CPlayer::Collision_Control()
 									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
 									break;
 
+								case Engine::STATE_SMASH2_B:
+									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									break;
+
 								case Engine::STATE_SMASH2:
 									STOP_MOTION(100);
 									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
@@ -1367,22 +1394,22 @@ void CPlayer::Collision_Control()
 									break;
 
 								case Engine::STATE_ATK1:
-									STOP_MOTION(25);
+									STOP_MOTION(35);
 									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
 									break;
 
 								case Engine::STATE_ATK2:
-									STOP_MOTION(25);
+									STOP_MOTION(35);
 									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
 									break;
 
 								case Engine::STATE_ATK3:
-									STOP_MOTION(25);
+									STOP_MOTION(35);
 									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
 									break;
 
 								case Engine::STATE_ATK4:
-									STOP_MOTION(25);
+									STOP_MOTION(35);
 									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
 									break;
 								}
@@ -1420,7 +1447,8 @@ void CPlayer::Collision_Control()
 						if (m_pCalculatorCom->Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
 							iter_BossHit->second->Get_Center(), iter_BossHit->second->Get_Radius() * SCALE_AHGLAN))
 						{
-							if (80.f <= Engine::Random(0.f, 100.f))
+							if (80.f <= Engine::Random(0.f, 100.f) && 
+								AHGLAN_ATKPOWER < m_tPlayerInfo.tagInfo.iHp)
 							{
 								m_eCurAction = PL_DAMAGED;
 								m_iAniIndex = STATE_DAMAGE_RESIST;
@@ -1429,6 +1457,8 @@ void CPlayer::Collision_Control()
 								{
 									m_bLethitaSound = true;
 									SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
+
+									m_tPlayerInfo.tagInfo.iHp -= AHGLAN_ATKPOWER;
 								}
 							}
 							else
@@ -1451,6 +1481,8 @@ void CPlayer::Collision_Control()
 										{
 											m_bLethitaSound = true;
 											SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
+
+											m_tPlayerInfo.tagInfo.iHp -= AHGLAN_ATKPOWER;
 										}
 									}
 									else
@@ -1462,6 +1494,8 @@ void CPlayer::Collision_Control()
 										{
 											m_bLethitaSound = true;
 											SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
+
+											m_tPlayerInfo.tagInfo.iHp -= AHGLAN_ATKPOWER;
 										}
 									}
 								}
@@ -1484,5 +1518,50 @@ void CPlayer::Collision_Control()
 
 	default:
 		break;
+	}
+}
+
+void CPlayer::Update_UI()
+{
+	// Hpbar
+	if (m_pHpbarValueUI)
+	{
+		m_pHpbarValueUI->Set_ValueRatio(m_tPlayerInfo.tagInfo.iHp * 0.0001f);
+	}
+	if (m_pHpbarLerpUI)
+	{
+		m_pHpbarLerpUI->Set_ValueRatio(m_tPlayerInfo.tagInfo.iHp * 0.0001f);
+	}
+}
+
+void CPlayer::Update_State()
+{
+	if (0 >= m_tPlayerInfo.tagInfo.iHp)
+	{
+		m_tPlayerInfo.tagInfo.iHp = 0;
+
+		m_eCurAction = PL_DEAD;
+	}
+	else if (m_tPlayerInfo.tagInfo.iMaxHp <= m_tPlayerInfo.tagInfo.iHp)
+	{
+		m_tPlayerInfo.tagInfo.iHp = m_tPlayerInfo.tagInfo.iMaxHp;
+	}
+
+	if (0 >= m_tPlayerInfo.iStamina)
+	{
+		m_tPlayerInfo.iStamina = 0;
+	}
+	else if (m_tPlayerInfo.iMaxStamina <= m_tPlayerInfo.iStamina)
+	{
+		m_tPlayerInfo.iStamina = m_tPlayerInfo.iMaxStamina;
+	}
+
+	if (0 >= m_tPlayerInfo.iSkillPoint)
+	{
+		m_tPlayerInfo.iSkillPoint = 0;
+	}
+	else if (m_tPlayerInfo.iMaxSkillPoint <= m_tPlayerInfo.iSkillPoint)
+	{
+		m_tPlayerInfo.iSkillPoint = m_tPlayerInfo.iMaxSkillPoint;
 	}
 }

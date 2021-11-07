@@ -50,11 +50,16 @@
     <ClInclude Include="..\Codes\Shader.h" />
     <ClInclude Include="..\Codes\Shader_Ahglan.hpp" />
     <ClInclude Include="..\Codes\Shader_Blend.hpp" />
+    <ClInclude Include="..\Codes\Shader_Boss_Hpbar.hpp" />
+    <ClInclude Include="..\Codes\Shader_FadeInOut.hpp" />
+    <ClInclude Include="..\Codes\Shader_Loading_Progress.hpp" />
     <ClInclude Include="..\Codes\Shader_Mesh.hpp" />
     <ClInclude Include="..\Codes\Shader_Player.hpp" />
+    <ClInclude Include="..\Codes\Shader_Player_Hpbar.hpp" />
     <ClInclude Include="..\Codes\Shader_Sample.hpp" />
     <ClInclude Include="..\Codes\Shader_Shade.hpp" />
     <ClInclude Include="..\Codes\Shader_Terrain.hpp" />
+    <ClInclude Include="..\Codes\Shader_UI.hpp" />
     <ClInclude Include="..\Codes\StaticMesh.h" />
     <ClInclude Include="..\Codes\TerrainTex.h" />
     <ClInclude Include="..\Codes\Texture.h" />

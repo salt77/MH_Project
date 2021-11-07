@@ -5,7 +5,7 @@
 #include "MFCTool.h"
 #include "../Codes/Form.h"
 
-#include "TerrainTool.h"
+#include "UITool.h"
 #include "ObjectTool.h"
 #include "NavmeshTool.h"
 #include "CameraTool.h"
@@ -27,8 +27,8 @@ CForm::CForm()
 
 CForm::~CForm()
 {
-	delete m_pTerrainTool;
-	m_pTerrainTool = nullptr;
+	delete m_pUITool;
+	m_pUITool = nullptr;
 
 	delete m_pObjectTool;
 	m_pObjectTool = nullptr;
@@ -82,7 +82,7 @@ void CForm::OnInitialUpdate()
 
 	//SetTimer(1, 30, NULL);
 
-	m_Tab.InsertItem(0, _T("Terrain"));
+	m_Tab.InsertItem(0, _T("UI"));
 	m_Tab.InsertItem(1, _T("Object"));
 	m_Tab.InsertItem(2, _T("Navmesh"));
 	m_Tab.InsertItem(3, _T("Camera"));
@@ -93,10 +93,10 @@ void CForm::OnInitialUpdate()
 	CRect rect;
 	m_Tab.GetWindowRect(&rect);
 
-	m_pTerrainTool = new CTerrainTool;
-	m_pTerrainTool->Create(IDD_DIALOG1, &m_Tab);
-	m_pTerrainTool->MoveWindow(0, 25, rect.Width(), rect.Height());
-	m_pTerrainTool->ShowWindow(SW_SHOW);
+	m_pUITool = new CUITool;
+	m_pUITool->Create(IDD_DIALOG1, &m_Tab);
+	m_pUITool->MoveWindow(0, 25, rect.Width(), rect.Height());
+	m_pUITool->ShowWindow(SW_SHOW);
 
 	m_pObjectTool = new CObjectTool;
 	m_pObjectTool->Create(IDD_DIALOG2, &m_Tab);
@@ -127,35 +127,35 @@ void CForm::OnTabControl(NMHDR *pNMHDR, LRESULT *pResult)
 	switch (iSel)
 	{
 	case 0:
-		m_pTerrainTool->ShowWindow(SW_SHOW);
+		m_pUITool->ShowWindow(SW_SHOW);
 		m_pObjectTool->ShowWindow(SW_HIDE);
 		m_pNavmeshTool->ShowWindow(SW_HIDE);
 		m_pCameraTool->ShowWindow(SW_HIDE);
 		m_pCollisionTool->ShowWindow(SW_HIDE);
 		break;
 	case 1:
-		m_pTerrainTool->ShowWindow(SW_HIDE);
+		m_pUITool->ShowWindow(SW_HIDE);
 		m_pObjectTool->ShowWindow(SW_SHOW);
 		m_pNavmeshTool->ShowWindow(SW_HIDE);
 		m_pCameraTool->ShowWindow(SW_HIDE);
 		m_pCollisionTool->ShowWindow(SW_HIDE);
 		break;
 	case 2:
-		m_pTerrainTool->ShowWindow(SW_HIDE);
+		m_pUITool->ShowWindow(SW_HIDE);
 		m_pObjectTool->ShowWindow(SW_HIDE);
 		m_pNavmeshTool->ShowWindow(SW_SHOW);
 		m_pCameraTool->ShowWindow(SW_HIDE);
 		m_pCollisionTool->ShowWindow(SW_HIDE);
 		break;
 	case 3:
-		m_pTerrainTool->ShowWindow(SW_HIDE);
+		m_pUITool->ShowWindow(SW_HIDE);
 		m_pObjectTool->ShowWindow(SW_HIDE);
 		m_pNavmeshTool->ShowWindow(SW_HIDE);
 		m_pCameraTool->ShowWindow(SW_SHOW);
 		m_pCollisionTool->ShowWindow(SW_HIDE);
 		break;
 	case 4:
-		m_pTerrainTool->ShowWindow(SW_HIDE);
+		m_pUITool->ShowWindow(SW_HIDE);
 		m_pObjectTool->ShowWindow(SW_HIDE);
 		m_pNavmeshTool->ShowWindow(SW_HIDE);
 		m_pCameraTool->ShowWindow(SW_HIDE);
@@ -187,35 +187,35 @@ void CForm::OnDraw(CDC* /*pDC*/)
 	switch (iSel)
 	{
 	case 0:
-		m_pTerrainTool->ShowWindow(SW_SHOW);
+		m_pUITool->ShowWindow(SW_SHOW);
 		m_pObjectTool->ShowWindow(SW_HIDE);
 		m_pNavmeshTool->ShowWindow(SW_HIDE);
 		m_pCameraTool->ShowWindow(SW_HIDE);
 		m_pCollisionTool->ShowWindow(SW_HIDE);
 		break;
 	case 1:
-		m_pTerrainTool->ShowWindow(SW_HIDE);
+		m_pUITool->ShowWindow(SW_HIDE);
 		m_pObjectTool->ShowWindow(SW_SHOW);
 		m_pNavmeshTool->ShowWindow(SW_HIDE);
 		m_pCameraTool->ShowWindow(SW_HIDE);
 		m_pCollisionTool->ShowWindow(SW_HIDE);
 		break;
 	case 2:
-		m_pTerrainTool->ShowWindow(SW_HIDE);
+		m_pUITool->ShowWindow(SW_HIDE);
 		m_pObjectTool->ShowWindow(SW_HIDE);
 		m_pNavmeshTool->ShowWindow(SW_SHOW);
 		m_pCameraTool->ShowWindow(SW_HIDE);
 		m_pCollisionTool->ShowWindow(SW_HIDE);
 		break;
 	case 3:
-		m_pTerrainTool->ShowWindow(SW_HIDE);
+		m_pUITool->ShowWindow(SW_HIDE);
 		m_pObjectTool->ShowWindow(SW_HIDE);
 		m_pNavmeshTool->ShowWindow(SW_HIDE);
 		m_pCameraTool->ShowWindow(SW_SHOW);
 		m_pCollisionTool->ShowWindow(SW_HIDE);
 		break;
 	case 4:
-		m_pTerrainTool->ShowWindow(SW_HIDE);
+		m_pUITool->ShowWindow(SW_HIDE);
 		m_pObjectTool->ShowWindow(SW_HIDE);
 		m_pNavmeshTool->ShowWindow(SW_HIDE);
 		m_pCameraTool->ShowWindow(SW_HIDE);

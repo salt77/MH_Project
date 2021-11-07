@@ -30,6 +30,7 @@
 #include <unordered_map>
 #include <ctime>
 #include <random>
+#include <cmath>
 
 #include <process.h>
 

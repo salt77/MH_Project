@@ -36,6 +36,15 @@ HRESULT CDynamicCamera::Ready_Object(const _vec3* pEye, const _vec3* pAt, const 
 	return S_OK;
 }
 
+HRESULT CDynamicCamera::LateReady_Object()
+{
+	CCamera::LateReady_Object();
+
+	m_pFadeInOut = dynamic_cast<CFadeInOut*>(Engine::Get_GameObject(L"UI", L"FadeInOut_UI"));
+
+	return S_OK;
+}
+
 Engine::_int CDynamicCamera::Update_Object(const _float& fTimeDelta)
 {
 	_int	iExit = CCamera::Update_Object(fTimeDelta);
@@ -167,6 +176,36 @@ void CDynamicCamera::Camera_Shake()
 
 void CDynamicCamera::Mode_Change()
 {
+	switch (m_eCurMode)
+	{
+	case CDynamicCamera::MODE_AHGLAN_START:
+		if (m_dwStartTime + 2950 < GetTickCount())
+			m_eCurMode = MODE_AHGLAN_RISE;
+		if (!m_bSoundGolemEntry &&
+			m_dwStartTime + 2350 < GetTickCount())
+		{
+			m_bSoundGolemEntry = true;
+			SoundMgr(L"golem_cs_entry.wav", CSoundMgr::MONSTER);
+		}
+		break;
+
+	case CDynamicCamera::MODE_AHGLAN_RISE:
+		if (m_dwRiseTime + 2150 < GetTickCount())
+			m_eCurMode = MODE_AHGLAN_STAND;
+		break;
+
+	case CDynamicCamera::MODE_AHGLAN_STAND:
+		if (m_dwStandTime + 1200 < GetTickCount())
+			m_eCurMode = MODE_AHGLAN_COMPLETE;
+		break;
+
+	case CDynamicCamera::MODE_AHGLAN_COMPLETE:
+		if (m_dwCompleteTime + 6100 < GetTickCount())
+			m_eCurMode = MODE_NORMAL;
+		break;
+	}
+
+
 	if (m_eCurMode != m_ePreMode)
 	{
 		CTransform* pBossTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
@@ -230,35 +269,6 @@ void CDynamicCamera::Mode_Change()
 		}
 
 		m_ePreMode = m_eCurMode;
-	}
-
-	switch (m_eCurMode)
-	{
-	case CDynamicCamera::MODE_AHGLAN_START:
-		if (m_dwStartTime + 2950 < GetTickCount())
-			m_eCurMode = MODE_AHGLAN_RISE;
-		if (!m_bSoundGolemEntry &&
-			m_dwStartTime + 2350 < GetTickCount())
-		{
-			m_bSoundGolemEntry = true;
-			SoundMgr(L"golem_cs_entry.wav", CSoundMgr::MONSTER);
-		}
-		break;
-
-	case CDynamicCamera::MODE_AHGLAN_RISE:
-		if (m_dwRiseTime + 2150 < GetTickCount())
-			m_eCurMode = MODE_AHGLAN_STAND;
-		break;
-
-	case CDynamicCamera::MODE_AHGLAN_STAND:
-		if (m_dwStandTime + 1200 < GetTickCount())
-			m_eCurMode = MODE_AHGLAN_COMPLETE;
-		break;
-
-	case CDynamicCamera::MODE_AHGLAN_COMPLETE:
-		if (m_dwCompleteTime + 6100 < GetTickCount())
-			m_eCurMode = MODE_NORMAL;
-		break;
 	}
 }
 
@@ -540,6 +550,11 @@ void CDynamicCamera::Mouse_Move(void)
 			}
 			else
 			{
+				if (m_dwCompleteTime + 4700 < GetTickCount())
+				{
+					m_pFadeInOut->Set_AhglanFadeOut();
+				}
+
 				m_vEye.y = m_fInterpolY;
 				_vec3 vDirToCam = m_vEye - m_vAt;
 				D3DXVec3Normalize(&vDirToCam, &vDirToCam);

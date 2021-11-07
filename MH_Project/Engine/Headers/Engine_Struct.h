@@ -3,6 +3,24 @@
 
 namespace Engine
 {
+	typedef	struct tagObjectInfo
+	{
+		_int		iHp;
+		_int		iMaxHp;
+
+	} TAGINFO;
+
+	typedef	struct tagPlayerInfo
+	{
+		tagObjectInfo	tagInfo;
+
+		_int			iStamina;
+		_int			iMaxStamina;
+		_int			iSkillPoint;
+		_int			iMaxSkillPoint;
+
+	} PL_INFO;
+
 	typedef struct tagVertexColor
 	{
 		_vec3		vPosition;	// float * 3  : 4, 4, 4

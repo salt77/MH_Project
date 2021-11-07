@@ -19,13 +19,13 @@ public:
 	const	_float&					Get_AniSpeed() { return m_fAniSpeed; }
 
 public:
-	void	Set_TrackSpeed(_float fSpeed) { m_fAniSpeed = fSpeed; }
+	void			Set_TrackSpeed(_float fSpeed) { m_fAniSpeed = fSpeed; }
 
 public:
 	HRESULT			Ready_AniCtrl(void);
 	void			Set_AnimationIndex(const _uint& iIndex);
 	void			Play_Animation(const _float& fTimeDelta);
-	_bool			Is_AnimationsetFinish(void);
+	_bool			Is_AnimationSetFinish(const _float& fEndTime);
 
 private:
 	LPD3DXANIMATIONCONTROLLER				m_pAniCtrl;

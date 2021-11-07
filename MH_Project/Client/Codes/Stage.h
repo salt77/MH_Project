@@ -13,6 +13,10 @@
 #include "SkyBox.h"
 #include "StageMesh.h"
 #include "HitBox_Pos.h"
+#include "Player_Hpbar_BackUI.h"
+#include "Player_Hpbar_ValueUI.h"
+#include "Player_Hpbar_LerpUI.h"
+#include "FadeInOut.h"
 
 class CStage : public CScene
 {

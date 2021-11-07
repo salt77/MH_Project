@@ -6,6 +6,8 @@ Engine::CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	: m_pGraphicDev(pGraphicDev)
 {
 	m_pGraphicDev->AddRef();
+
+	ZeroMemory(&m_tInfo, sizeof(INFO));
 }
 
 Engine::CGameObject::CGameObject(const CGameObject& rhs)

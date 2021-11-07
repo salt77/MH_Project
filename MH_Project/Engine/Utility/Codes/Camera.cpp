@@ -39,6 +39,13 @@ HRESULT Engine::CCamera::Ready_Object()
 	return S_OK;
 }
 
+HRESULT CCamera::LateReady_Object()
+{
+	CGameObject::LateReady_Object();
+
+	return S_OK;
+}
+
 Engine::_int Engine::CCamera::Update_Object(const _float& fTimeDelta)
 {
 	CGameObject::Update_Object(fTimeDelta);

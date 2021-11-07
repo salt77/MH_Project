@@ -203,7 +203,7 @@
     <ClInclude Include="..\Codes\MFC_Terrain.h" />
     <ClInclude Include="..\Codes\NavmeshTool.h" />
     <ClInclude Include="..\Codes\ObjectTool.h" />
-    <ClInclude Include="..\Codes\TerrainTool.h" />
+    <ClInclude Include="..\Codes\UITool.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MFCTool.h" />
     <ClInclude Include="MFCToolDoc.h" />
@@ -228,7 +228,7 @@
     <ClCompile Include="..\Codes\MFC_Terrain.cpp" />
     <ClCompile Include="..\Codes\NavmeshTool.cpp" />
     <ClCompile Include="..\Codes\ObjectTool.cpp" />
-    <ClCompile Include="..\Codes\TerrainTool.cpp" />
+    <ClCompile Include="..\Codes\UITool.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MFCTool.cpp" />
     <ClCompile Include="MFCToolDoc.cpp" />

@@ -85,6 +85,18 @@
 #define IDC_EDIT_OBJ_POSX               1093
 #define IDC_EDIT3_OBJ_POSY              1094
 #define IDC_EDIT_OBJ_POSZ               1095
+#define IDC_BUTTON_UI_ADD               1096
+#define IDC_BUTTON_DELETE_UI            1097
+#define IDC_BUTTON_APPLY_POS            1098
+#define IDC_BUTTON_APPLY_SCALE          1099
+#define IDC_EDIT_NAME_UI                1100
+#define IDC_EDIT_SCALE_Y_UI             1101
+#define IDC_EDIT_SCALE_X_UI             1102
+#define IDC_EDIT_POS_Y_UI               1103
+#define IDC_EDIT_POS_X_UI               1104
+#define IDC_BUTTON_SAVE_UI              1105
+#define IDC_BUTTON6                     1106
+#define IDC_BUTTON_LOAD_UI              1106
 
 // Next default values for new objects
 // 
@@ -92,7 +104,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        321
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1096
+#define _APS_NEXT_CONTROL_VALUE         1107
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

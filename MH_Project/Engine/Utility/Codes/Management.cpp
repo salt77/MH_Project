@@ -18,24 +18,24 @@ HRESULT CManagement::Ready_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 {
 	CShader*		pShader = nullptr;
 
-	D3DVIEWPORT9		ViewPort;
+	D3DVIEWPORT9	ViewPort;
 	pGraphicDev->GetViewport(&ViewPort);
 
 	// ·»´õ Å¸°Ù »ý¼º
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Albedo", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 0.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Albedo", 0.f, 0.f, 200.f, 200.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Albedo", 0.f, 0.f, 1.f, 1.f), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Normal", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 1.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Normal", 0.f, 200.f, 200.f, 200.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Normal", 0.f, 1.f, 1.f, 1.f), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Depth", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(1.f, 1.f, 1.f, 1.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Depth", 0.f, 400.f, 200.f, 200.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Depth", 0.f, 2.f, 1.f, 1.f), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Shade", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 1.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Shade", 200.f, 0.f, 200.f, 200.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Shade", 1.f, 0.f, 1.f, 1.f), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Specular", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 0.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Specular", 200.f, 200.f, 200.f, 200.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Specular", 1.f, 1.f, 1.f, 1.f), E_FAIL);
 
 	// ¸ÖÆ¼ ·»´õ ±×·ì Æí¼º
 	FAILED_CHECK_RETURN(Ready_MRT(L"MRT_Deferred", L"Target_Albedo"), E_FAIL);
@@ -78,6 +78,26 @@ HRESULT CManagement::Ready_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Blend.hpp");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Blend", pShader), E_FAIL);
+
+	// shader_Normal_UI
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_UI.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_UI", pShader), E_FAIL);
+
+	// shader_Player_Hpbar_Value_UI
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Player_Hpbar.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Player_Hpbar_Value_UI", pShader), E_FAIL);
+
+	// shader_Loading_Progress_UI
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Loading_Progress.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Loading_Progress_UI", pShader), E_FAIL);
+
+	// shader_FadeInOut_UI
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_FadeInOut.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_FadeInOut_UI", pShader), E_FAIL);
 
 	return S_OK;
 }

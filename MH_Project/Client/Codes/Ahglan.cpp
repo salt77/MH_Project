@@ -29,6 +29,9 @@ HRESULT CAhglan::Ready_Object(void)
 
 	m_pTransformCom->Update_Component(0.f);
 
+	m_tInfo.iHp = 100000;
+	m_tInfo.iMaxHp = m_tInfo.iHp;
+
 	return S_OK;
 }
 
@@ -43,22 +46,9 @@ HRESULT CAhglan::LateReady_Object()
 	m_mapActiveParts.emplace(L"golem_ahglan_RHand.tga", TRUE);
 	m_mapActiveParts.emplace(L"golem_ahglan_ore.tga", TRUE);
 
-	//list<D3DXMESHCONTAINER_DERIVED*>listTemp = m_pMeshCom->Get_MeshContainerList();
-	//list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
-	//for (_uint i = 0; i < (*iter)->dwNumBones; ++i)
-	//{
-	//	_tchar	pTemp[64] = L"";
-	//	MultiByteToWideChar(CP_ACP, 0, (*iter)->pSkinInfo->GetBoneName(i), strlen((*iter)->pSkinInfo->GetBoneName(i)), pTemp, 64);
 
-	//	if (!wcscmp(L"ValveBiped_Bip01_R_Foot", pTemp))
-	//	{
-	//		memcpy(&m_vRFootPos, &((*iter)->ppCombinedTransformMatrix[i]->_41), sizeof(_vec3));
-	//	}
-	//	else if (!wcscmp(L"ValveBiped_Bip01_L_Foot", pTemp))
-	//	{
-	//		memcpy(&m_vLFootPos, &((*iter)->ppCombinedTransformMatrix[i]->_41), sizeof(_vec3));
-	//	}
-	//}
+	m_pUILayer = CLayer::Create();
+	NULL_CHECK_RETURN(m_pUILayer, E_FAIL);
 
 	return S_OK;
 }
@@ -70,17 +60,17 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 	if (m_bDead)
 		return iExit;
 
-	// 디버그용
-	if (Key_Down('G'))
-	{
-	}
-	else if (Key_Down('H'))
-	{
-	}
-	else if (Key_Down('J'))
-	{
-		m_bDead = true;
-	}
+	//// 디버그용
+	//if (Key_Down('G'))
+	//{
+	//}
+	//else if (Key_Down('H'))
+	//{
+	//}
+	//else if (Key_Down('J'))
+	//{
+	//	m_bDead = true;
+	//}
 
 	m_fTimeDelta = fTimeDelta;
 
@@ -92,7 +82,8 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 	RotationOn_Skill();
 
 	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
-	m_pMeshCom->Play_Animation(fTimeDelta);
+	if (m_bAnimation)
+		m_pMeshCom->Play_Animation(fTimeDelta);
 
 	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
 
@@ -267,60 +258,92 @@ void CAhglan::Movement()
 {
 	m_pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
 	if (m_pPlayer)
-		m_pPlayerTrans = static_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
-
-	m_vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
-	if (m_pPlayerTrans)
-		m_vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
-	m_fDistance = D3DXVec3Length(&(m_vMyPos - m_vPlayerPos));
-
-	_vec3	vPlayerDir = m_vPlayerPos - m_vMyPos;
-	m_vDir = -(*m_pTransformCom->Get_Info(INFO_LOOK));
-	D3DXVec3Normalize(&m_vDir, &m_vDir);
-	D3DXVec3Normalize(&vPlayerDir, &vPlayerDir);
-
-	m_fAngle = D3DXToDegree(acos(D3DXVec3Dot(&m_vDir, &vPlayerDir)));
-
-	// 아글란 메쉬의 축이 반대로 뒤틀려있다. 그래서 계산도 반대로 함. Look == Back, Right == Left;
-	if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) > 0.f)
-		m_bTargetIsRight = false;
-	else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) < 0.f)
-		m_bTargetIsRight = true;
-
-
-	if (m_bCanAction && m_pPlayerTrans)
 	{
-		if (BS_DAMAGED >= m_eBossAction)
+		if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 		{
-
+			m_iAniIndex = IDLE;
 		}
-		else if (BS_ATK >= m_eBossAction)
+		else
 		{
-			if (DIS_SHORT > m_fDistance)
+			m_pPlayerTrans = static_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
+
+			m_vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
+			if (m_pPlayerTrans)
+				m_vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
+			m_fDistance = D3DXVec3Length(&(m_vMyPos - m_vPlayerPos));
+
+			_vec3	vPlayerDir = m_vPlayerPos - m_vMyPos;
+			m_vDir = -(*m_pTransformCom->Get_Info(INFO_LOOK));
+			D3DXVec3Normalize(&m_vDir, &m_vDir);
+			D3DXVec3Normalize(&vPlayerDir, &vPlayerDir);
+
+			m_fAngle = D3DXToDegree(acos(D3DXVec3Dot(&m_vDir, &vPlayerDir)));
+
+			// 아글란 메쉬의 축이 반대로 뒤틀려있다. 그래서 계산도 반대로 함. Look == Back, Right == Left;
+			if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) > 0.f)
+				m_bTargetIsRight = false;
+			else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) < 0.f)
+				m_bTargetIsRight = true;
+
+
+			if (m_bCanAction && m_pPlayerTrans)
 			{
-				if (m_dwWindmillCoolDown + m_dwWindmillDelay < GetTickCount())
+				if (BS_DAMAGED <= m_eBossAction)
 				{
-					m_iAniIndex = ATK_WINDMILL;
+
 				}
-				else
+				else if (BS_ATK <= m_eBossAction)
 				{
-					if (30.f >= m_fRand)
+					if (DIS_SHORT > m_fDistance)
 					{
-						m_iAniIndex = ATK_TWOHANDS;
+						if (m_dwWindmillCoolDown + m_dwWindmillDelay < GetTickCount())
+						{
+							m_iAniIndex = ATK_WINDMILL;
+						}
+						else
+						{
+							if (20.f >= m_fRand)
+							{
+								m_iAniIndex = ATK_TWOHANDS;
+							}
+							else if (35.f >= m_fRand)
+							{
+								m_iAniIndex = ATK_ONEHAND;
+							}
+							else if (45.f >= m_fRand)
+							{
+								m_iAniIndex = TAUNT;
+							}
+							else if (60.f >= m_fRand)
+							{
+								m_iAniIndex = ATK_STAMP;
+							}
+							else if (75.f >= m_fRand)
+							{
+								m_iAniIndex = ATK_ONETIME_STAMP;
+							}
+							else if (90.f >= m_fRand)
+							{
+								m_iAniIndex = ATK_THREETIME_STAMP;
+							}
+							else
+							{
+								if (m_bTargetIsRight)
+								{
+									m_iAniIndex = ATK_TURNRIGHT;
+								}
+								else
+								{
+									m_iAniIndex = ATK_TURNLEFT;
+								}
+							}
+						}
 					}
-					else if (50.f >= m_fRand)
-					{
-						m_iAniIndex = ATK_ONEHAND;
-					}
-					else if (60.f >= m_fRand)
-					{
-						m_iAniIndex = TAUNT;
-					}
-					else if (90.f >= m_fRand)
-					{
-						m_iAniIndex = ATK_STAMP;
-					}
-					else
+				}
+				else if (BS_IDLE <= m_eBossAction)
+				{
+					if (DIS_SHORTEST >= m_fDistance &&
+						20.f >= m_fRand)
 					{
 						if (m_bTargetIsRight)
 						{
@@ -331,43 +354,28 @@ void CAhglan::Movement()
 							m_iAniIndex = ATK_TURNLEFT;
 						}
 					}
-				}
-			}
-		}
-		else if (BS_IDLE >= m_eBossAction)
-		{
-			if (DIS_SHORTEST >= m_fDistance &&
-				20.f >= m_fRand)
-			{
-				if (m_bTargetIsRight)
-				{
-					m_iAniIndex = ATK_TURNRIGHT;
-				}
-				else
-				{
-					m_iAniIndex = ATK_TURNLEFT;
-				}
-			}
-			else if (50.f <= m_fAngle)
-			{
-				if (m_bTargetIsRight)
-				{
-					m_iAniIndex = TURN_RIGHT;
-				}
-				else
-				{
-					m_iAniIndex = TURN_LEFT;
-				}
-			}
-			else if (DIS_SHORT < m_fDistance)
-			{
-				if (m_dwRollingAtkCoolDown + m_dwRollingAtkDelay < GetTickCount())
-				{
-					m_iAniIndex = ATK_ROLLING_ONETIME_BEGIN;
-				}
-				else
-				{
-					m_iAniIndex = WALK;
+					else if (50.f <= m_fAngle)
+					{
+						if (m_bTargetIsRight)
+						{
+							m_iAniIndex = TURN_RIGHT;
+						}
+						else
+						{
+							m_iAniIndex = TURN_LEFT;
+						}
+					}
+					else if (DIS_SHORT < m_fDistance)
+					{
+						if (m_dwRollingAtkCoolDown + m_dwRollingAtkDelay < GetTickCount())
+						{
+							m_iAniIndex = ATK_ROLLING_ONETIME_BEGIN;
+						}
+						else
+						{
+							m_iAniIndex = WALK;
+						}
+					}
 				}
 			}
 		}
@@ -376,7 +384,8 @@ void CAhglan::Movement()
 
 void CAhglan::MoveOn_Skill()
 {
-	if (m_bSkillMove)
+	if (m_bSkillMove && 
+		BS_DAMAGED > m_eBossAction)
 	{
 		if (m_fSkillMoveStartTime <= m_fAniTime &&
 			m_fSkillMoveEndTime >= m_fAniTime)
@@ -437,6 +446,7 @@ void CAhglan::Animation_Control()
 	m_eCurState = (STATE)m_iAniIndex;
 	if (m_eCurState != m_ePreState)
 	{
+		m_bAnimation = true;
 		m_fAniTime = 0.f;
 
 		// Sound들 전부 다시 false;
@@ -447,6 +457,8 @@ void CAhglan::Animation_Control()
 		//////////////////////////
 
 		_uint iRandSound = 0;
+		CGameObject*	pGameObject = nullptr;
+
 		switch (m_eCurState)
 		{
 		case WALK:
@@ -469,6 +481,16 @@ void CAhglan::Animation_Control()
 			break;
 
 		case SPAWN:
+			pGameObject = CAhglan_Hpbar_BackUI::Create(m_pGraphicDev, 725.f, 115.f, 850.f, 100.f);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Ahglan_Hpbar_BackUI", pGameObject), );
+
+			pGameObject = CAhglan_Hpbar_BackUI::Create(m_pGraphicDev, 725.f, 115.f, 850.f, 100.f);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Ahglan_Hpbar_GreenUI", pGameObject), );
+
+			Engine::Emplace_Layer(L"Ahglan_Hpbar_UI", m_pUILayer);
+
 			SoundGolemAtk;
 			SoundMgrBGM(L"bgm_ep8_ahglan.wav", CSoundMgr::BGM);
 			break;
@@ -498,11 +520,11 @@ void CAhglan::Animation_Control()
 		case ATK_TWOHANDS_COMBO:
 			m_eBossAction = BS_ATK;
 
-			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
-			BS_SKILL_MOVE(0.f, 3.5f, (_float)m_lfAniEnd * 0.45f);
-			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.8f);
+			m_pMeshCom->Set_TrackSpeed(1.8f + m_fRandSpeed);
+			BS_SKILL_MOVE(0.f, 3.5f, (_float)m_lfAniEnd * 0.4f);
+			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.5f);
 
-			m_fAniEndDelay = 1.05f;
+			m_fAniEndDelay = 1.f;
 			m_bCanAction = false;
 
 			SoundGolemAtk;
@@ -524,7 +546,7 @@ void CAhglan::Animation_Control()
 		case ATK_TURNRIGHT:
 			m_eBossAction = BS_ATK;
 
-			m_pMeshCom->Set_TrackSpeed(2.15f + m_fRandSpeed);
+			m_pMeshCom->Set_TrackSpeed(2.3f + m_fRandSpeed);
 
 			m_fAniEndDelay = 1.07f;
 			m_bCanAction = false;
@@ -535,7 +557,7 @@ void CAhglan::Animation_Control()
 		case ATK_TURNLEFT:
 			m_eBossAction = BS_ATK;
 
-			m_pMeshCom->Set_TrackSpeed(2.15f + m_fRandSpeed);
+			m_pMeshCom->Set_TrackSpeed(2.3f + m_fRandSpeed);
 
 			m_fAniEndDelay = 1.07f;
 			m_bCanAction = false;
@@ -550,10 +572,32 @@ void CAhglan::Animation_Control()
 			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 1.2f);
 			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.9f);
 
-			if (30.f >= m_fRand)
-				m_fAniEndDelay = 0.95f;
-			else
-				m_fAniEndDelay = 1.08f;
+			m_bCanAction = false;
+
+			SoundGolemAtk;
+			break;
+
+		case ATK_ONETIME_STAMP:
+			m_eBossAction = BS_ATK;
+
+			m_pMeshCom->Set_TrackSpeed(1.6f + m_fRandSpeed);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 0.25f);
+			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.15f);
+
+			m_fAniEndDelay = 1.08f;
+			m_bCanAction = false;
+
+			SoundGolemAtk;
+			break;
+
+		case ATK_THREETIME_STAMP:
+			m_eBossAction = BS_ATK;
+
+			m_pMeshCom->Set_TrackSpeed(1.95f + m_fRandSpeed);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 1.2f);
+			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.9f);
+
+			m_fAniEndDelay = 1.05f;
 			m_bCanAction = false;
 
 			SoundGolemAtk;
@@ -600,6 +644,7 @@ void CAhglan::Animation_Control()
 			m_eBossAction = BS_DAMAGED;
 
 			m_pMeshCom->Set_TrackSpeed(1.2f);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.1f, -0.8f, (_float)m_lfAniEnd * 0.5f);
 
 			m_fAniEndDelay = 0.86f;
 			m_bCanAction = false;
@@ -609,6 +654,8 @@ void CAhglan::Animation_Control()
 			m_eBossAction = BS_DAMAGED;
 
 			m_pMeshCom->Set_TrackSpeed(1.8f);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.1f, 0.8f, (_float)m_lfAniEnd * 0.5f);
+
 			m_fAniEndDelay = 0.92f;
 			m_bCanAction = false;
 			break;
@@ -701,7 +748,7 @@ void CAhglan::Animation_Control()
 
 	case ATK_TWOHANDS_COMBO:
 		if (!m_bEffectSound &&
-			m_fAniTime >= m_lfAniEnd * 0.42f)
+			m_fAniTime >= m_lfAniEnd * 0.36f)
 		{
 			m_bEffectSound = true;
 			SoundMgr(L"step_lv6.wav", CSoundMgr::MONSTER3);
@@ -756,6 +803,40 @@ void CAhglan::Animation_Control()
 		}
 		else if (!m_bStampAtkSound[2] &&
 			m_fAniTime >= m_lfAniEnd * 0.63f)
+		{
+			m_bStampAtkSound[2] = true;
+			SoundMgr(L"step_lv5.wav", CSoundMgr::MONSTER2);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+		}
+		break;
+
+	case ATK_ONETIME_STAMP:
+		if (!m_bStampAtkSound[0] &&
+			m_fAniTime >= m_lfAniEnd * 0.83f)
+		{
+			m_bStampAtkSound[0] = true;
+			SoundMgr(L"step_lv4.wav", CSoundMgr::MONSTER2);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+		}
+		break;
+
+	case ATK_THREETIME_STAMP:
+		if (!m_bStampAtkSound[0] &&
+			m_fAniTime >= m_lfAniEnd * 0.29f)
+		{
+			m_bStampAtkSound[0] = true;
+			SoundMgr(L"step_lv4.wav", CSoundMgr::MONSTER2);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+		}
+		else if (!m_bStampAtkSound[1] &&
+			m_fAniTime >= m_lfAniEnd * 0.6f)
+		{
+			m_bStampAtkSound[1] = true;
+			SoundMgr(L"step_lv4.wav", CSoundMgr::MONSTER3);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+		}
+		else if (!m_bStampAtkSound[2] &&
+			m_fAniTime >= m_lfAniEnd * 1.f)
 		{
 			m_bStampAtkSound[2] = true;
 			SoundMgr(L"step_lv5.wav", CSoundMgr::MONSTER2);
@@ -824,21 +905,61 @@ void CAhglan::Animation_Control()
 
 	if (m_fAniTime >= m_lfAniEnd * m_fAniEndDelay + m_fRandSpeed)
 	{
+		_uint	iRandomPattern = rand() % 2;
+
+		if (m_iAniIndex == (_uint)WALK || 
+			m_iAniIndex == (_uint)IDLE)
+		{
+			m_bAnimation = true;
+		}
+		else
+		{
+			m_bAnimation = false;
+		}
+
 		if (m_iAniIndex == (_uint)ATK_ROLLING_ONETIME_BEGIN)
 		{
 			m_iAniIndex = (_uint)ATK_ROLLING_ONETIME_END;
 		}
-		else if (m_iAniIndex == (_uint)ATK_STAMP &&
-			0.95f == m_fAniEndDelay)
+		else if (m_iAniIndex == (_uint)ATK_ONETIME_STAMP &&
+				 0 == iRandomPattern)
 		{
 			if (m_bTargetIsRight)
 			{
-				m_iAniIndex = ATK_TURNRIGHT;
+				m_iAniIndex = (_uint)ATK_TURNRIGHT;
+				Animation_Control();
 			}
 			else
 			{
-				m_iAniIndex = ATK_TURNLEFT;
+				m_iAniIndex = (_uint)ATK_TURNLEFT;
+				Animation_Control();
 			}
+		}
+		else if (m_iAniIndex == (_uint)ATK_ONETIME_STAMP &&
+			1 == iRandomPattern)
+		{
+			m_iAniIndex = (_uint)ATK_TWOHANDS_COMBO;
+			Animation_Control();
+		}
+		else if (m_iAniIndex == (_uint)ATK_THREETIME_STAMP &&
+			0 == iRandomPattern)
+		{
+			if (m_bTargetIsRight)
+			{
+				m_iAniIndex = (_uint)ATK_TURNRIGHT;
+				Animation_Control();
+			}
+			else
+			{
+				m_iAniIndex = (_uint)ATK_TURNLEFT;
+				Animation_Control();
+			}
+		}
+		else if (m_iAniIndex == (_uint)ATK_THREETIME_STAMP &&
+			1 == iRandomPattern)
+		{
+			m_iAniIndex = (_uint)ATK_TWOHANDS;
+			Animation_Control();
 		}
 		else if (m_iAniIndex == (_uint)TAUNT &&
 			60.f <= m_fRand)
@@ -846,6 +967,7 @@ void CAhglan::Animation_Control()
 			m_iAniIndex = ATK_TWOHANDS_COMBO;
 
 			m_fRand = Engine::Random(0.f, 100.f);
+			Animation_Control();
 		}
 		else if (m_iAniIndex != (_uint)ENTRY_IDLE &&
 			m_iAniIndex != (_uint)ENTRY_CONTACT &&
@@ -883,6 +1005,20 @@ void CAhglan::Collision_Control()
 
 	map<const wstring, CBoxCollider*>::iterator	iter_Damaged = m_mapBoxColliderCom.begin();
 	map<const wstring, CCollider*>::iterator	iter_Hit = m_mapColliderCom.begin();
+
+	// 부위파괴되면 충돌체 삭제 
+	//map<const wstring, _bool>::iterator			iter_ActiveParts = m_mapActiveParts.begin();
+
+	//for (; iter_ActiveParts != m_mapActiveParts.end(); ++iter_ActiveParts)
+	//{
+	//	if (!iter_ActiveParts->second)
+	//	{
+	//		for (; iter_Damaged != m_mapBoxColliderCom.end(); ++iter_Damaged)
+	//		{
+	//			if (iter_Damaged->first == iter)
+	//		}
+	//	}
+	//}
 
 	// DamagedBox
 	if (!m_mapBoxColliderCom.empty())
@@ -979,6 +1115,43 @@ void CAhglan::Collision_Control()
 			else if (L"Hit_RFoot" == iter_Hit->first)
 			{
 				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.35f, m_lfAniEnd * 0.42f);
+			}
+		}
+		break;
+
+	case CAhglan::ATK_ONETIME_STAMP:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			if (L"Hit_LFoot" == iter_Hit->first)
+			{
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.6f, m_lfAniEnd * 0.83f);
+			}
+		}
+		break;
+
+	case CAhglan::ATK_THREETIME_STAMP:
+		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		{
+			if (L"Hit_LFoot" == iter_Hit->first)
+			{
+				if (m_lfAniEnd * 0.12f <= fAniTime &&
+					m_lfAniEnd * 0.29f >= fAniTime)
+				{
+					iter_Hit->second->Set_CanCollision(true);
+				}
+				else if (m_lfAniEnd * 0.85f <= fAniTime &&
+					m_lfAniEnd * 1.f >= fAniTime)
+				{
+					iter_Hit->second->Set_CanCollision(true);
+				}
+				else
+				{
+					iter_Hit->second->Set_CanCollision(false);
+				}
+			}
+			else if (L"Hit_RFoot" == iter_Hit->first)
+			{
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.5f, m_lfAniEnd * 0.6f);
 			}
 		}
 		break;
@@ -1112,5 +1285,7 @@ CAhglan * CAhglan::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CAhglan::Free(void)
 {
+	Safe_Release(m_pUILayer);
+
 	CGameObject::Free();
 }

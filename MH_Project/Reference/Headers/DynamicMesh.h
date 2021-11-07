@@ -25,6 +25,7 @@ public:
 
 public:
 	void			Play_Animation(const _float& fTimeDelta);
+	_bool			Is_AnimationSetFinish(const _float& fEndTime) { return m_pAniCtrl->Is_AnimationSetFinish(fEndTime); }
 
 public:
 	HRESULT		Ready_Meshes(const wstring pFilePath, const wstring pFileName);

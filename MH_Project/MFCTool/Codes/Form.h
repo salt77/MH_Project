@@ -4,7 +4,7 @@
 
 
 // CForm Æû ºäÀÔ´Ï´Ù.
-class CTerrainTool;
+class CUITool;
 class CObjectTool;
 class CNavmeshTool;
 class CCameraTool;
@@ -34,7 +34,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CTerrainTool*	m_pTerrainTool = nullptr;
+	CUITool*		m_pUITool = nullptr;
 	CObjectTool*	m_pObjectTool = nullptr;
 	CNavmeshTool*	m_pNavmeshTool = nullptr;
 	CCameraTool*	m_pCameraTool = nullptr;

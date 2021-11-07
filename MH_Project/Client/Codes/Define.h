@@ -85,9 +85,15 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 
 #define CAMSHAKE_POWER	0.025f
 
+#define AHGLAN_ATKPOWER	1200
 
+#define PLAYER_ATKPOWER 450
+#define PLAYER_SMASHPOWER	6500
+#define PLAYER_SMASHPOWER2	9000
 
+#define FADEOUTSPEED		0.0005f
 
+#define LERP_PLAYERHPBAR	0.0002f
 
 
 

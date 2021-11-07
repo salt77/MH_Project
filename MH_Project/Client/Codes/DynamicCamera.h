@@ -4,6 +4,8 @@
 #include "Camera.h"
 #include "Define.h"
 
+#include "FadeInOut.h"
+
 BEGIN(Engine)
 
 class CTransform;
@@ -35,6 +37,7 @@ public:
 							 const _float& fAspect,
 							 const _float& fNear,
 							 const _float& fFar);
+	virtual HRESULT	LateReady_Object() override;
 	virtual _int Update_Object(const _float& fTimeDelta) override;
 	virtual _int LateUpdate_Object(const _float& fTimeDelta) override;
 
@@ -97,6 +100,7 @@ private:
 	//CTransform*	m_pTransformCom = nullptr;
 	CPlayer*	m_pPlayer = nullptr;
 	CTransform*	m_pPlayerTrans = nullptr;
+	CFadeInOut*	m_pFadeInOut = nullptr;
 
 #define		WaveFxProgressive	0.002f;
 #define		WaveFyProgressive	0.00125f;

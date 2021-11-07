@@ -240,6 +240,21 @@
     <ClInclude Include="..\Codes\Shader_Player.hpp">
       <Filter>04.Component\10.Shader\hpp</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Shader_Player_Hpbar.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_UI.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_Loading_Progress.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_FadeInOut.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_Boss_Hpbar.hpp">
+      <Filter>04.Component\10.Shader\hpp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Headers\Export_Utility.inl">
