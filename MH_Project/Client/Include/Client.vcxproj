@@ -149,10 +149,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Codes\Ahglan.h" />
-    <ClInclude Include="..\Codes\Ahglan_Hpbar_BackUI.h" />
-    <ClInclude Include="..\Codes\Ahglan_Hpbar_GreenUI.h" />
-    <ClInclude Include="..\Codes\Ahglan_Hpbar_RedUI.h" />
-    <ClInclude Include="..\Codes\Ahglan_Hpbar_YellowUI.h" />
+    <ClInclude Include="..\Codes\Boss_Hpbar_BackUI.h" />
+    <ClInclude Include="..\Codes\Boss_Hpbar_FontUI.h" />
+    <ClInclude Include="..\Codes\Boss_Hpbar_GreenUI.h" />
+    <ClInclude Include="..\Codes\Boss_Hpbar_RedUI.h" />
+    <ClInclude Include="..\Codes\Boss_Hpbar_YellowUI.h" />
     <ClInclude Include="..\Codes\BackGround.h" />
     <ClInclude Include="..\Codes\Define.h" />
     <ClInclude Include="..\Codes\DynamicCamera.h" />
@@ -181,10 +182,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Ahglan.cpp" />
-    <ClCompile Include="..\Codes\Ahglan_Hpbar_BackUI.cpp" />
-    <ClCompile Include="..\Codes\Ahglan_Hpbar_GreenUI.cpp" />
-    <ClCompile Include="..\Codes\Ahglan_Hpbar_RedUI.cpp" />
-    <ClCompile Include="..\Codes\Ahglan_Hpbar_YellowUI.cpp" />
+    <ClCompile Include="..\Codes\Boss_Hpbar_BackUI.cpp" />
+    <ClCompile Include="..\Codes\Boss_Hpbar_FontUI.cpp" />
+    <ClCompile Include="..\Codes\Boss_Hpbar_GreenUI.cpp" />
+    <ClCompile Include="..\Codes\Boss_Hpbar_RedUI.cpp" />
+    <ClCompile Include="..\Codes\Boss_Hpbar_YellowUI.cpp" />
     <ClCompile Include="..\Codes\BackGround.cpp" />
     <ClCompile Include="..\Codes\DynamicCamera.cpp" />
     <ClCompile Include="..\Codes\FadeInOut.cpp" />

@@ -42,22 +42,23 @@ public:
 	virtual _int LateUpdate_Object(const _float& fTimeDelta) override;
 
 public:
-	_vec3			Get_CamDirVector(DIR eDir);
+	_vec3		Get_CamDirVector(DIR eDir);
 
 public:
-	void			Set_CameraMode(MODE eMode) { m_eCurMode = eMode; }
-	void			Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwEndTime = 1000, _float fWaveInterpol = 0.5f);
+	void		Set_CameraMode(MODE eMode) { m_eCurMode = eMode; }
+	void		Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwEndTime = 1000, _float fWaveInterpol = 0.5f);
 
 public:
 	void		Sync_PlayerPos(_vec3 vDir, _float fSpeed, const _float& fTimeDelta) { if (MODE_NORMAL == m_eCurMode)	m_vEye += vDir * fSpeed * fTimeDelta; }
 
 private:
 	void		Camera_Shake();
-	void		Mode_Change();
+	void		Mode_Change(const _float& fTimeDelta);
 	void		At_Update(const _float& fTimeDelta);
 	void		Key_Input(const _float& fTimeDelta);
 	void		Mouse_Move(void);
 	void		Mouse_Fix(void);
+	void		CutScene_Eye();
 
 private:
 	_bool		m_bClick = false;

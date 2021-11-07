@@ -1,7 +1,14 @@
 #include "stdafx.h"
 #include "Ahglan.h"
+
 #include "Player.h"
 #include "DynamicCamera.h"
+
+#include "Boss_Hpbar_BackUI.h"
+#include "Boss_Hpbar_GreenUI.h"
+#include "Boss_Hpbar_YellowUI.h"
+#include "Boss_Hpbar_RedUI.h"
+#include "Boss_Hpbar_FontUI.h"
 
 #include "Export_Function.h"
 #include "Export_Utility.h"
@@ -32,6 +39,11 @@ HRESULT CAhglan::Ready_Object(void)
 	m_tInfo.iHp = 100000;
 	m_tInfo.iMaxHp = m_tInfo.iHp;
 
+	m_bBoss = true;
+	
+	m_iLineHp = _int(m_tInfo.iMaxHp * 0.1f);
+	m_iMaxLineHp = m_iLineHp;
+
 	return S_OK;
 }
 
@@ -61,12 +73,15 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 		return iExit;
 
 	//// 디버그용
-	//if (Key_Down('G'))
-	//{
-	//}
-	//else if (Key_Down('H'))
-	//{
-	//}
+	if (Key_Down('G'))
+	{
+		Set_Damage(5000);
+	}
+	else if (Key_Down('H'))
+	{
+		m_iAniIndex = SPAWN;
+		Animation_Control();
+	}
 	//else if (Key_Down('J'))
 	//{
 	//	m_bDead = true;
@@ -77,6 +92,7 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 	Movement();
 	Animation_Control();
 	Collision_Control();
+	Update_UI();
 	FootStep();
 	MoveOn_Skill();
 	RotationOn_Skill();
@@ -259,7 +275,8 @@ void CAhglan::Movement()
 	m_pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
 	if (m_pPlayer)
 	{
-		if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
+		if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp && 
+			BS_IDLE == m_eBossAction)
 		{
 			m_iAniIndex = IDLE;
 		}
@@ -481,15 +498,37 @@ void CAhglan::Animation_Control()
 			break;
 
 		case SPAWN:
-			pGameObject = CAhglan_Hpbar_BackUI::Create(m_pGraphicDev, 725.f, 115.f, 850.f, 100.f);
+			pGameObject = CBoss_Hpbar_BackUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f);
 			NULL_CHECK_RETURN(pGameObject, );
-			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Ahglan_Hpbar_BackUI", pGameObject), );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_BackUI", pGameObject), );
 
-			pGameObject = CAhglan_Hpbar_BackUI::Create(m_pGraphicDev, 725.f, 115.f, 850.f, 100.f);
+			pGameObject = CBoss_Hpbar_RedUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f, 2);
 			NULL_CHECK_RETURN(pGameObject, );
-			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Ahglan_Hpbar_GreenUI", pGameObject), );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_RedUI", pGameObject), );
 
-			Engine::Emplace_Layer(L"Ahglan_Hpbar_UI", m_pUILayer);
+			pGameObject = CBoss_Hpbar_YellowUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f, 1);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_YellowUI", pGameObject), );
+
+			pGameObject = CBoss_Hpbar_GreenUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f, 0);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_GreenUI", pGameObject), );
+			
+			// Font Image
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, 775.f, 100.f, 30.f, 30.f, true);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_FontUI", pGameObject), );
+
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, 800.f, 100.f, 30.f, 30.f, false);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_FontUI", pGameObject), );
+
+			Engine::Emplace_Layer(L"Boss_Hpbar_UI", m_pUILayer);
+
+			m_pGreenHpbar = dynamic_cast<CBoss_Hpbar_GreenUI*>(Engine::Get_GameObject(L"Boss_Hpbar_UI", L"Boss_Hpbar_GreenUI"));
+			m_pYellowHpbar = dynamic_cast<CBoss_Hpbar_YellowUI*>(Engine::Get_GameObject(L"Boss_Hpbar_UI", L"Boss_Hpbar_YellowUI"));
+			m_pRedHpbar = dynamic_cast<CBoss_Hpbar_RedUI*>(Engine::Get_GameObject(L"Boss_Hpbar_UI", L"Boss_Hpbar_RedUI"));
+			m_pFontHpbar = dynamic_cast<CBoss_Hpbar_FontUI*>(Engine::Get_GameObject(L"Boss_Hpbar_UI", L"Boss_Hpbar_FontUI"));
 
 			SoundGolemAtk;
 			SoundMgrBGM(L"bgm_ep8_ahglan.wav", CSoundMgr::BGM);
@@ -1188,6 +1227,59 @@ void CAhglan::Collision_Control()
 	}
 }
 
+void CAhglan::Update_UI()
+{
+	//_int	iDamaged = m_tInfo.iMaxHp - m_tInfo.iHp;
+	//iDamaged %= _int(m_tInfo.iMaxHp * 0.1f);
+
+	//if (m_iPreHp != m_tInfo.iHp)
+	//{
+	//	iDamaged = m_iPreHp - m_tInfo.iHp;
+
+	//	if (iDamaged <= m_iLineHp)
+	//	{
+	//		m_iLineHp -= iDamaged;
+	//	}
+	//	else
+	//	{
+	//		iDamaged -= m_iLineHp;
+	//		m_iLineHp = m_iMaxLineHp;
+	//		m_iLineHp -= iDamaged;
+	//	}
+
+	//	m_iPreHp = m_tInfo.iHp;
+	//}
+
+	_float	fHpRatio = (_float)m_tInfo.iHp / (_float)m_tInfo.iMaxHp;
+
+	if (m_pGreenHpbar)
+	{
+		m_pGreenHpbar->Set_ValueRatio((_float)m_tInfo.iHp);
+		m_pGreenHpbar->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
+		m_pGreenHpbar->Set_LineHpRatio((_float)m_iLineHp);
+		m_pGreenHpbar->Set_MaxLineHpRatio((_float)m_iMaxLineHp);
+	}
+	if (m_pYellowHpbar)
+	{
+		m_pYellowHpbar->Set_ValueRatio((_float)m_tInfo.iHp);
+		m_pYellowHpbar->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
+		m_pYellowHpbar->Set_LineHpRatio((_float)m_iLineHp);
+		m_pYellowHpbar->Set_MaxLineHpRatio((_float)m_iMaxLineHp);
+	}
+	if (m_pRedHpbar)
+	{
+		m_pRedHpbar->Set_ValueRatio((_float)m_tInfo.iHp);
+		m_pRedHpbar->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
+		m_pRedHpbar->Set_LineHpRatio((_float)m_iLineHp);
+		m_pRedHpbar->Set_MaxLineHpRatio((_float)m_iMaxLineHp);
+	}
+	if (m_pFontHpbar)
+	{
+		m_pFontHpbar->Set_ValueRatio((_float)m_tInfo.iHp);
+		m_pFontHpbar->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
+	}
+}
+
 HRESULT CAhglan::Add_NaviMesh()
 {
 	CComponent*		pComponent = nullptr;
@@ -1270,6 +1362,8 @@ void CAhglan::BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName)
 			}
 		}
 	}
+
+	Animation_Control();
 }
 
 

@@ -6,11 +6,6 @@
 #include "GameObject.h"
 #include "Define.h"
 
-#include "Ahglan_Hpbar_BackUI.h"
-#include "Ahglan_Hpbar_GreenUI.h"
-#include "Ahglan_Hpbar_YellowUI.h"
-#include "Ahglan_Hpbar_RedUI.h"
-
 BEGIN(Engine)
 
 class CDynamicMesh;
@@ -25,6 +20,10 @@ END
 
 class CPlayer;
 class CDynamicCamera;
+class CBoss_Hpbar_GreenUI;
+class CBoss_Hpbar_YellowUI;
+class CBoss_Hpbar_RedUI;
+class CBoss_Hpbar_FontUI;
 
 class CAhglan : public CGameObject
 {
@@ -69,6 +68,7 @@ private:
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Animation_Control();
 	void			Collision_Control();
+	void			Update_UI();
 
 	// °´Ã¼ ÇÔ¼öµé
 	void			Contact();
@@ -146,7 +146,11 @@ private:
 	CShader*		m_pShaderCom = nullptr;
 
 	// Instance
-	CLayer*			m_pUILayer = nullptr;
+	CLayer*					m_pUILayer = nullptr;
+	CBoss_Hpbar_GreenUI*	m_pGreenHpbar = nullptr;
+	CBoss_Hpbar_YellowUI*	m_pYellowHpbar = nullptr;
+	CBoss_Hpbar_RedUI*		m_pRedHpbar = nullptr;
+	CBoss_Hpbar_FontUI*		m_pFontHpbar = nullptr;
 
 public:
 	static CAhglan*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

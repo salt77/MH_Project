@@ -21,6 +21,30 @@ Engine::CGameObject::~CGameObject(void)
 }
 
 
+void CGameObject::Set_Damage(_uint iDamage)
+{
+	if (iDamage <= m_tInfo.iHp)
+	{
+		m_tInfo.iHp -= iDamage;
+
+		if (m_bBoss)
+		{
+			if (iDamage >= m_iLineHp)
+			{
+				m_iLineHp = m_iMaxLineHp + (m_iLineHp - iDamage);
+			}
+			else
+			{
+				m_iLineHp -= iDamage;
+			}
+		}
+	}
+	else
+	{
+		m_tInfo.iHp = 0;
+	}
+}
+
 HRESULT Engine::CGameObject::Ready_Object()
 {
 	return S_OK;

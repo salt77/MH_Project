@@ -139,6 +139,7 @@ HRESULT CPlayer_Hpbar_ValueUI::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 0);
 
 	pEffect->SetFloat("g_fHpRatio", m_fValueRatio);
+	pEffect->SetFloat("g_fFullHpRatio", m_fFullValueRatio);
 
 	D3DMATERIAL9		tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));

@@ -141,6 +141,7 @@ HRESULT CPlayer_Hpbar_LerpUI::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 0);
 
 	pEffect->SetFloat("g_fHpRatio", m_fLerpValue);
+	pEffect->SetFloat("g_fFullHpRatio", m_fFullValueRatio);
 
 	D3DMATERIAL9		tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));

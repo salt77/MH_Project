@@ -1,6 +1,12 @@
 matrix		g_matWorld, g_matView, g_matProj;		// 상수 테이블
 
+int			g_iType;
+	
+float		g_fFullHpRatio;
 float		g_fHpRatio;
+
+float		g_fFullLineHpRatio;
+float		g_fLineHpRatio;
 
 texture		g_BaseTexture;
 
@@ -55,15 +61,91 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT	Out = (PS_OUT)0;
 
-	float EndX = 0.65f;
+	float	fHpRatio = g_fHpRatio;
+	fHpRatio /= g_fFullHpRatio;
+
+	float	fLineHpRatio = g_fLineHpRatio;
+	fLineHpRatio /= g_fFullLineHpRatio;
+
+	//float EndX = 0.65f;
 
 	float2 vTexUV = In.vTexUV;
+	float	fAlpha = 1.f;
 
-	// TexUV.x가 체력 비율보다 높은 곳에 있다면 TextureUV의 1.f의 ARGB를 적용하라?
-	if (g_fHpRatio * EndX < vTexUV.x)
-		vTexUV.x = 1.f;
+	if (0 == g_iType)
+	{
+		if (0.5f <= fHpRatio)
+		{
+			if (fLineHpRatio < vTexUV.x)
+			{
+				vTexUV.x = 1.f;
+				vTexUV.y = 1.f;
+			}
+		}
+		else if (0.5f >= fHpRatio &&
+			0.4f < fHpRatio)
+		{
+			if (fLineHpRatio < vTexUV.x)
+			{
+				fAlpha = 0.f;
+			}
+		}
+		else
+		{
+			fAlpha = 0.f;
+		}
+	}
+	else if (1 == g_iType)
+	{
+		if (0.3f <= fHpRatio && 
+			0.5f > fHpRatio)
+		{
+			if (fLineHpRatio < vTexUV.x)
+			{
+				vTexUV.x = 1.f;
+				vTexUV.y = 1.f;
+			}
+		}
+		else if (0.3f >= fHpRatio && 
+				 0.2f < fHpRatio)
+		{
+			if (fLineHpRatio < vTexUV.x)
+			{
+				fAlpha = 0.f;
+			}
+		}
+		else
+		{
+			fAlpha = 0.f;
+		}
+	}
+	else if (2 == g_iType)
+	{
+		if (0.1f <= fHpRatio && 
+			0.3f > fHpRatio)
+		{
+			if (fLineHpRatio < vTexUV.x)
+			{
+				vTexUV.x = 1.f;
+				vTexUV.y = 1.f;
+			}
+		}
+		else if (0.1f >= fHpRatio &&
+				 0.f < fHpRatio)
+		{
+			if (fLineHpRatio < vTexUV.x)
+			{
+				fAlpha = 0.f;
+			}
+		}
+		else
+		{
+			fAlpha = 0.f;
+		}
+	}
 
 	Out.vColor = tex2D(BaseSampler, vTexUV);
+	Out.vColor.a = fAlpha;
 
 	return Out;
 }

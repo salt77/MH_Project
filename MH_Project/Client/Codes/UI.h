@@ -32,11 +32,13 @@ protected:
 
 public:
 	void			Set_ValueRatio(_float fValue) { m_fValueRatio = fValue; }
+	void			Set_MaxValueRatio(_float fValue) { m_fFullValueRatio = fValue; }
 
 protected:
 	_matrix			m_matProj;
 
 	_float			m_fValueRatio = 1.f;
+	_float			m_fFullValueRatio = 1.f;
 
 	_float			m_fX, m_fY;
 	_float			m_fSizeX, m_fSizeY;

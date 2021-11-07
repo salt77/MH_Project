@@ -74,10 +74,12 @@ Engine::_uint CLoading::Loading_ForStage(void)
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Hpbar_LerpUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Hpbar_Lerp.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Hpbar_ValueUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Hpbar_Value.png", TEX_NORMAL)), E_FAIL);
 
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ahglan_Hpbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossHpBar_Base.png", TEX_NORMAL)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ahglan_Hpbar_GreenUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossHpBar_Green.png", TEX_NORMAL)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ahglan_Hpbar_YellowUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossHpBar_Yellow.png", TEX_NORMAL)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ahglan_Hpbar_RedUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossHpBar_Red.png", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_Hpbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossHpBar_Base.png", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_Hpbar_GreenUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossHpBar_Green.png", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_Hpbar_YellowUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossHpBar_Yellow.png", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_Hpbar_RedUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossHpBar_Red.png", TEX_NORMAL)), E_FAIL);
+
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_Hpbar_FontUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossLife%d.png", TEX_NORMAL, 11)), E_FAIL);
 
 	lstrcpy(m_szLoading, L"Loading Etc..");
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Calculator", CCalculator::Create(m_pGraphicDev)), E_FAIL);

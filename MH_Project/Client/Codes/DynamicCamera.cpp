@@ -52,13 +52,14 @@ Engine::_int CDynamicCamera::Update_Object(const _float& fTimeDelta)
 	Key_Input(fTimeDelta);
 	Camera_Shake();
 	At_Update(fTimeDelta);
-	Mode_Change();
+	Mode_Change(fTimeDelta);
 
 	if (true == m_bFix)
 	{
 		Mouse_Fix();
 	}
 	Mouse_Move();
+	CutScene_Eye();
 
 	//m_matWorld = *m_pTransformCom->Get_WorldMatrix();
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
@@ -174,7 +175,7 @@ void CDynamicCamera::Camera_Shake()
 	}
 }
 
-void CDynamicCamera::Mode_Change()
+void CDynamicCamera::Mode_Change(const _float& fTimeDelta)
 {
 	switch (m_eCurMode)
 	{
@@ -221,7 +222,10 @@ void CDynamicCamera::Mode_Change()
 					_vec3	vDir = *m_pPlayerTrans->Get_Info(INFO_POS) - *pBossTrans->Get_Info(INFO_POS);
 					D3DXVec3Normalize(&vDir, &vDir);
 
-					m_vEye = vDir * 100.f;
+					At_Update(fTimeDelta);
+					m_vEye = vDir * DIS_LONG;
+
+					m_pPlayerTrans->Rotation(ROT_Y, D3DXToRadian(45));
 				}
 			}
 			else if (MODE_SECONDARY == m_ePreMode)
@@ -454,7 +458,19 @@ void CDynamicCamera::Mouse_Move(void)
 			}
 		}
 	}
-	else if (MODE_AHGLAN_START == m_eCurMode)
+}
+
+void CDynamicCamera::Mouse_Fix(void)
+{
+	POINT	pt = { WINCX >> 1, WINCY >> 1 };
+
+	ClientToScreen(g_hWnd, &pt);
+	SetCursorPos(pt.x, pt.y);
+}
+
+void CDynamicCamera::CutScene_Eye()
+{
+	if (MODE_AHGLAN_START == m_eCurMode)
 	{
 		CTransform* pBossTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
 
@@ -546,7 +562,7 @@ void CDynamicCamera::Mouse_Move(void)
 				m_vEye = m_vAt + vDirToCam * (m_fDistanceFromTarget + 2.f + m_fFarAway);
 				m_fFarAway += 0.0015f;
 
-				Set_CameraShake(true, CAMSHAKE_POWER * 6.f, 800, 3.5f);
+				Set_CameraShake(true, CAMSHAKE_POWER * 7.f, 1000, 4.f);
 			}
 			else
 			{
@@ -573,14 +589,6 @@ void CDynamicCamera::Mouse_Move(void)
 			}
 		}
 	}
-}
-
-void CDynamicCamera::Mouse_Fix(void)
-{
-	POINT	pt = { WINCX >> 1, WINCY >> 1 };
-
-	ClientToScreen(g_hWnd, &pt);
-	SetCursorPos(pt.x, pt.y);
 }
 
 CDynamicCamera* CDynamicCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3* pEye, const _vec3* pAt, const _vec3* pUp, const _float& fFov, const _float& fAspect, const _float& fNear, const _float& fFar)

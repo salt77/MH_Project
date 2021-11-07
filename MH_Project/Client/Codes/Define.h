@@ -93,7 +93,10 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 
 #define FADEOUTSPEED		0.0005f
 
-#define LERP_PLAYERHPBAR	0.0002f
+#define LERP_PLAYERHPBAR	2.f
+
+#define	INFINITY_INT		999999
+#define INFINITY_FLOAT		999999.f
 
 
 

@@ -170,9 +170,6 @@ void CPlayer::Render_Object(void)
 	}
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-	//m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 
 	if (m_pNaviMeshCom)
 		m_pNaviMeshCom->Render_NaviMesh();
@@ -194,10 +191,6 @@ void CPlayer::Render_Object(void)
 	pEffect->End();
 
 	Safe_Release(pEffect);
-
-	//m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -657,7 +650,7 @@ void CPlayer::MoveOn_Skill(const _float& fTimeDelta)
 		if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
 		{
 			m_dwSkillMoveReady = GetTickCount();
-			m_dwSkillMoveReadyTime = 9999999;
+			m_dwSkillMoveReadyTime = INFINITY_INT;
 			m_dwSkillMoveStart = GetTickCount();
 		}
 
@@ -1151,7 +1144,7 @@ void CPlayer::Collision_Control()
 					iter->second->Set_CanCollision(false);
 				}
 			}*/
-			HITBOX_CONTROLL(0.35f, 0.7f, TRUE);
+			HITBOX_CONTROLL(0.35f, 0.6f, TRUE);
 			if (!m_bAtkSound &&
 				m_fAniTime >= 0.3f)
 			{
@@ -1357,26 +1350,24 @@ void CPlayer::Collision_Control()
 						if (iter_PlayerHit->second->Get_CanCollision() &&
 							iter_BossDamaged->second->Get_CanCollision())
 						{
-							const _matrix*	pMatrix = iter_PlayerHit->second->Get_ColliderWorld();
-							_matrix matTemp = *pMatrix;
 							if (m_pCalculatorCom->Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
 																&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
 							{
 								switch (m_eCurState)
 								{
 								case Engine::STATE_DOUBLE_CRECSENT:
-									SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
+									SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
 									STOP_MOTION(100);
 									break;
 
 								case Engine::STATE_SMASH4:
 									STOP_MOTION(100);
-									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
+									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
 									break;
 
 								case Engine::STATE_SMASH3:
 									//STOP_MOTION(100);
-									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
+									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
 									break;
 
 								case Engine::STATE_SMASH2_B:
@@ -1385,12 +1376,12 @@ void CPlayer::Collision_Control()
 
 								case Engine::STATE_SMASH2:
 									STOP_MOTION(100);
-									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
+									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
 									break;
 
 								case Engine::STATE_SMASH1:
 									STOP_MOTION(75);
-									SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.08f);
+									SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
 									break;
 
 								case Engine::STATE_ATK1:
@@ -1526,11 +1517,13 @@ void CPlayer::Update_UI()
 	// Hpbar
 	if (m_pHpbarValueUI)
 	{
-		m_pHpbarValueUI->Set_ValueRatio(m_tPlayerInfo.tagInfo.iHp * 0.0001f);
+		m_pHpbarValueUI->Set_ValueRatio((_float)m_tPlayerInfo.tagInfo.iHp);
+		m_pHpbarValueUI->Set_MaxValueRatio((_float)m_tPlayerInfo.tagInfo.iMaxHp);
 	}
 	if (m_pHpbarLerpUI)
 	{
-		m_pHpbarLerpUI->Set_ValueRatio(m_tPlayerInfo.tagInfo.iHp * 0.0001f);
+		m_pHpbarLerpUI->Set_ValueRatio((_float)m_tPlayerInfo.tagInfo.iHp);
+		m_pHpbarLerpUI->Set_MaxValueRatio((_float)m_tPlayerInfo.tagInfo.iMaxHp);
 	}
 }
 

@@ -99,6 +99,11 @@ HRESULT CManagement::Ready_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_FadeInOut_UI", pShader), E_FAIL);
 
+	// shader_BossHpbar_UI
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Boss_Hpbar.hpp");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_BossHpbar_UI", pShader), E_FAIL);
+
 	return S_OK;
 }
 

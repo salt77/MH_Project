@@ -24,6 +24,9 @@ public:
 	const map<const wstring, CBoxCollider*>&	Get_MapBoxCollider() { return m_mapBoxColliderCom; }
 
 public:
+	void			Set_Damage(_uint iDamage);
+
+public:
 	virtual		HRESULT		Ready_Object();
 	virtual		HRESULT		LateReady_Object();
 	virtual		_int		Update_Object(const _float& fTimeDelta);
@@ -47,6 +50,12 @@ protected:
 	_bool								m_bDead = false;
 	_bool								m_bLateReady = false;
 	_bool								m_bSoundCheck = false;
+	_bool								m_bBoss = false;
+
+	// 보스 몬스터 라인 Hp 체크용
+	//_int								m_iPreHp;
+	_int								m_iLineHp;
+	_int								m_iMaxLineHp;
 
 	_float								m_fViewZ;
 
