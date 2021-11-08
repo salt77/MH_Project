@@ -64,6 +64,27 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 		iter_Hit->second->Set_CanCollision(false);			\
 	}
 
+#define GET_SPPOINT_ATK																	\
+	if (m_tPlayerInfo.iSkillPoint + (rand() % 2 + 1) < m_tPlayerInfo.iMaxSkillPoint)	\
+	{																					\
+		m_tPlayerInfo.iSkillPoint += rand() % 2 + 1;									\
+	}																					\
+	else																				\
+	{																					\
+		m_tPlayerInfo.iSkillPoint = m_tPlayerInfo.iMaxSkillPoint;						\
+	}
+
+#define GET_SPPOINT_SMASH																\
+	if (m_tPlayerInfo.iSkillPoint + (rand() % 5 + 2) < m_tPlayerInfo.iMaxSkillPoint)	\
+	{																					\
+		m_tPlayerInfo.iSkillPoint += rand() % 5 + 2;									\
+	}																					\
+	else																				\
+	{																					\
+		m_tPlayerInfo.iSkillPoint = m_tPlayerInfo.iMaxSkillPoint;						\
+	}
+
+
 #define	SoundMgr(SoundName, ChannelID)		CSoundMgr::GetInstance()->PlaySound(SoundName, ChannelID);
 #define SoundMgrBGM(SoundName, ChannelID)	CSoundMgr::GetInstance()->StopSound(ChannelID);				\
 											CSoundMgr::GetInstance()->PlayBGM(SoundName, ChannelID);
@@ -197,10 +218,10 @@ else                                                            \
 {																\
 	SoundMgr(L"golem_attack02.wav", CSoundMgr::MONSTER);		\
 }
-	
 
 
-																
+
+
 //#ifdef _DEBUG
 //
 //#define _CRTDBG_MAP_ALLOC

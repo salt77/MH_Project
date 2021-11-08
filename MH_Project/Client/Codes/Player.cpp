@@ -138,6 +138,7 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	Update_UI();
 	FootStepSound();
 	MoveOn_Skill(fTimeDelta);
+	Compute_Buff();
 
 	/*_int iExit = CGameObject::Update_Object(fTimeDelta);*/
 	StopMotion();
@@ -258,6 +259,9 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CPlayer::Free(void)
 {
+	for_each(m_listBuff.begin(), m_listBuff.end(), CDeleteList());
+
+	Safe_Release(m_pUILayer);
 	Safe_Release(m_pStickyLayer);
 
 	CGameObject::Free();
@@ -631,18 +635,68 @@ void CPlayer::Compute_CanAction()
 			 m_eCurAction == PL_SKILL ||
 			 m_eCurAction == PL_DASH)
 	{
-		if (m_fAniTime < (m_lfAniEnd * 0.25f))
+		if (STATE_FURY == m_eCurState ||
+			STATE_FURY2 == m_eCurState)
 		{
-			m_bCanAction = false;
+			if (m_fAniTime < (m_lfAniEnd * 0.01f))
+			{
+				m_bCanAction = false;
+			}
+			else
+			{
+				m_bCanAction = true;
+			}
 		}
 		else
 		{
-			m_bCanAction = true;
+			if (m_fAniTime < (m_lfAniEnd * 0.25f))
+			{
+				m_bCanAction = false;
+			}
+			else
+			{
+				m_bCanAction = true;
+			}
 		}
 	}
 	else
 	{
 		m_bCanAction = true;
+	}
+}
+
+void CPlayer::Compute_Buff()
+{
+	if (!m_listBuff.empty())
+	{
+		list<tag_BuffDeBuff*>::iterator		iter = m_listBuff.begin();
+
+		for (; iter != m_listBuff.end(); )
+		{
+			if ((*iter)->dwBuffStartTime + (*iter)->dwBuffDuration < GetTickCount())
+			{
+				Safe_Delete(*iter);
+				iter = m_listBuff.erase(iter);
+			}
+
+			switch ((*iter)->eBuffID)
+			{
+			case BUFF_CRITICAL:
+				SetNextSmash(STATE_FURY, (*iter)->dwBuffDuration);
+
+				Safe_Delete(*iter);
+				iter = m_listBuff.erase(iter);
+				break;
+
+			default:
+				break;
+			}
+
+			if (iter != m_listBuff.end())
+			{
+				++iter;
+			}
+		}
 	}
 }
 
@@ -696,23 +750,40 @@ void CPlayer::Rotate_PlayerLook(_vec3 & TargetLookVector)
 	}
 }
 
-void CPlayer::MoveOn_Skill(const _float& fTimeDelta)
-{
-	if (m_bSkillMove)
-	{
-		if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
-		{
-			m_dwSkillMoveReady = GetTickCount();
-			m_dwSkillMoveReadyTime = INFINITY_INT;
-			m_dwSkillMoveStart = GetTickCount();
-		}
+//void CPlayer::MoveOn_Skill(const _float& fTimeDelta)
+//{
+//	if (m_bSkillMove)
+//	{
+//		if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
+//		{
+//			m_dwSkillMoveReady = GetTickCount();
+//			m_dwSkillMoveReadyTime = INFINITY_INT;
+//			m_dwSkillMoveStart = GetTickCount();
+//		}
+//
+//		if (m_dwSkillMoveStart + m_dwSkillMoveTime >= GetTickCount())
+//		{
+//			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
+//			m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT), m_fSkillMoveSpeed, fTimeDelta);
+//		}
+//		else if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
+//		{
+//			m_bSkillMove = false;
+//		}
+//	}
+//}
 
-		if (m_dwSkillMoveStart + m_dwSkillMoveTime >= GetTickCount())
+void CPlayer::MoveOn_Skill(const _float & fTimeDelta)
+{
+	if (m_bSkillMove && !m_bStopMotion)
+	{
+		if (m_fSkillMoveStartTime <= m_fAniTime && 
+			m_fSkillMoveEndTime >= m_fAniTime)
 		{
 			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
 			m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT), m_fSkillMoveSpeed, fTimeDelta);
 		}
-		else if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
+		else if (m_fSkillMoveEndTime < m_fAniTime)
 		{
 			m_bSkillMove = false;
 		}
@@ -819,14 +890,14 @@ void CPlayer::Animation_Control()
 	}
 	else if (PL_SMASH == m_eCurAction || PL_SKILL == m_eCurAction || PL_DASH == m_eCurAction)
 	{
-		m_pMeshCom->Set_TrackSpeed(2.5f);
+		m_pMeshCom->Set_TrackSpeed(2.4f);
 	}
 	else if (STATE_DAMAGE_RESIST == m_eCurState)
 	{
 		m_pMeshCom->Set_TrackSpeed(1.8f);
 	}
 	else if (STATE_RUN == m_eCurState ||
-		STATE_SPRINT == m_eCurState)
+			 STATE_SPRINT == m_eCurState)
 	{
 		m_pMeshCom->Set_TrackSpeed(2.f);
 	}
@@ -842,8 +913,12 @@ void CPlayer::Animation_Control()
 		m_bAnimation = true;
 
 		// Sound 변수 초기화
-		m_bAtkSound = false;
-		m_bLethitaSound = false;
+		for (_uint i = 0; i < 3; ++i)
+		{
+			m_bAtkSound[i] = false;
+			m_bLethitaSound[i] = false;
+			m_bSkillSound[i] = false;
+		}
 		/////////////////////
 
 		_uint	iRandSound = 0;
@@ -900,7 +975,7 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_DAMAGE_RESIST:
-			SKILL_MOVE(100, -400.f, 750);
+			SKILL_MOVE_BYANI(0.1f, -400.f, 0.78f);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
@@ -916,7 +991,7 @@ void CPlayer::Animation_Control()
 		case STATE_DOWNTOIDLE_BACK:
 			Rotate_PlayerLook(m_vDir);
 
-			SKILL_MOVE(200, 350.f, 750);
+			SKILL_MOVE_BYANI(0.2f, 350.f, 0.85f);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
@@ -933,7 +1008,7 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_DAMAGEFROM_FRONT:
-			SKILL_MOVE(0, -350.f, 700);
+			SKILL_MOVE_BYANI(0.f, -350.f, 0.7f);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
@@ -943,7 +1018,7 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_DAMAGEFROM_BACK:
-			SKILL_MOVE(0, 350.f, 700);
+			SKILL_MOVE_BYANI(0.f, 350.f, 0.7f);
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
@@ -956,7 +1031,7 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_DOUBLE_CRECSENT:
-			SKILL_MOVE(135, 300.f, 250);
+			SKILL_MOVE_BYANI(0.135f, 300.f, 0.5f);
 
 			Set_PlayerStemina(-20.f);
 
@@ -965,7 +1040,7 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_DASHATK:
-			SKILL_MOVE(10, 1100.f, 150);
+			SKILL_MOVE_BYANI(0.01f, 1100.f, 0.15f);
 
 			Set_PlayerStemina(-10.f);
 
@@ -974,36 +1049,42 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_FURY2:
-			Set_PlayerStemina(-35.f);
+			SKILL_MOVE_BYANI(0.45f, 3500.f, 0.55f);
+
+			Set_PlayerStemina(-30.f);
 			break;
 
 		case STATE_FURY:
-			Set_PlayerStemina(-35.f);
+			SKILL_MOVE_BYANI(0.45f, 3500.f, 0.55f);
+
+			Set_PlayerStemina(-30.f);
 			break;
 
 			//case STATE_DASH_W:
 			//	break;
+
 		case STATE_DASH_S:
 			break;
 
 		case STATE_DASH_N:
-			SKILL_MOVE(125, 1200.f, 125);
+			SKILL_MOVE_BYANI(0.125f, 1200.f, 0.3f);
 
 			Set_PlayerStemina(-15.f);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_DOUBLE_CRECSENT;
+			SetNextSmash(STATE_DOUBLE_CRECSENT, 750);
 			break;
+
 			//case STATE_DASH_E:
 			//	break;
 
 		case STATE_SMASH3:
-			SKILL_MOVE(180, 750.f, 275);
+			SKILL_MOVE_BYANI(0.18f, 700.f, 0.53f);
 
 			Set_PlayerStemina(-23.f);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_SMASH1;
+			SetNextSmash(STATE_SMASH1, 500);
 			break;
 
 		case STATE_SMASH4_B:
@@ -1014,16 +1095,17 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_SMASH4:
-			SKILL_MOVE(450, 600.f, 80);
+			SKILL_MOVE_BYANI(0.45f, 650.f, 0.53f);
 
 			Set_PlayerStemina(-25.f);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_SMASH4_B;
+			m_eNextSmash = STATE_DASHATK;		// 4타 스매쉬 추가타 구현 전까지는 잠깐 대쉬어택으로 대체함. 
+			//m_eNextSmash = STATE_SMASH4_B;
 			break;
 
 		case STATE_SMASH2_B:
-			SKILL_MOVE(300, 1100.f, 200);
+			SKILL_MOVE_BYANI(0.3f, 1100.f, 0.55f);
 
 			Set_PlayerStemina(-20.f);
 
@@ -1032,16 +1114,16 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_SMASH2:
-			SKILL_MOVE(250, 600.f, 95);
+			SKILL_MOVE_BYANI(0.25f, 600.f, 0.38f);
 
 			Set_PlayerStemina(-15.f);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_SMASH2_B;
+			SetNextSmash(STATE_SMASH2_B, 750);
 			break;
 
 		case STATE_SMASH1:
-			SKILL_MOVE(150, 600.f, 95);
+			SKILL_MOVE_BYANI(0.15f, 600.f, 0.28f);
 
 			Set_PlayerStemina(-15.f);
 
@@ -1050,39 +1132,39 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_ATK4:
-			SKILL_MOVE(135, 650.f, 95);
+			SKILL_MOVE_BYANI(0.135f, 650.f, 0.26f);
 
 			Set_PlayerStemina(-0.f);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_SMASH4;
+			SetNextSmash(STATE_SMASH4, 750);
 			break;
 
 		case STATE_ATK3:
-			SKILL_MOVE(150, 650.f, 95);
+			SKILL_MOVE_BYANI(0.15f, 650.f, 0.28f);
 
 			Set_PlayerStemina(-0.f);
 
 			m_eNextAtk = STATE_ATK4;
-			m_eNextSmash = STATE_SMASH3;
+			SetNextSmash(STATE_SMASH3, 750);
 			break;
 
 		case STATE_ATK2:
-			SKILL_MOVE(150, 650.f, 95);
+			SKILL_MOVE_BYANI(0.15f, 650.f, 0.28f);
 
 			Set_PlayerStemina(-0.f);
 
 			m_eNextAtk = STATE_ATK3;
-			m_eNextSmash = STATE_SMASH2;
+			SetNextSmash(STATE_SMASH2, 750);
 			break;
 
 		case STATE_ATK1:
-			SKILL_MOVE(150, 650.f, 70);
+			SKILL_MOVE_BYANI(0.15f, 650.f, 0.26f);
 
 			Set_PlayerStemina(-0.f);
 
 			m_eNextAtk = STATE_ATK2;
-			m_eNextSmash = STATE_SMASH1;
+			SetNextSmash(STATE_SMASH1, 750);
 			break;
 
 		default:
@@ -1118,7 +1200,8 @@ void CPlayer::Animation_Control()
 	{
 		if (Engine::STATE_IDLE == m_eCurState ||
 			Engine::STATE_RUN == m_eCurState ||
-			Engine::STATE_SPRINT == m_eCurState)
+			Engine::STATE_SPRINT == m_eCurState || 
+			Engine::STATE_THROW_DURING == m_eCurState)
 		{
 			m_bAnimation = true;
 		}
@@ -1165,7 +1248,10 @@ void CPlayer::Animation_Control()
 			m_eCurAction = PL_IDLE;
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_DASHATK;
+			if (m_dwNextSmashCheckTime + m_dwNextSmashDelay <= GetTickCount())
+			{
+				m_eNextSmash = STATE_DASHATK;
+			}
 			break;
 		}
 	}
@@ -1210,87 +1296,68 @@ void CPlayer::Collision_Control()
 		switch (m_iAniIndex)
 		{
 		case STATE_DOUBLE_CRECSENT:
-			/*for (; iter != m_mapBoxColliderCom.end(); ++iter)
-			{
-				if (L"Other_Attack" == iter->first)
-				{
-					if (0.35f <= fAniTime &&
-						0.7f >= fAniTime)
-					{
-						iter->second->Set_CanCollision(true);
-					}
-					else
-					{
-						iter->second->Set_CanCollision(false);
-					}
-				}
-				else
-				{
-					iter->second->Set_CanCollision(false);
-				}
-			}*/
 			HITBOX_CONTROLL(0.35f, 0.6f, TRUE);
-			if (!m_bAtkSound &&
+			if (!m_bAtkSound[2] &&
 				m_fAniTime >= 0.3f)
 			{
-				m_bAtkSound = true;
+				m_bAtkSound[2] = true;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
 			}
 			break;
 
 		case STATE_DASHATK:
 			HITBOX_CONTROLL(0.1f, 0.65f, FALSE);
-			if (!m_bAtkSound &&
+			if (!m_bAtkSound[0] &&
 				m_fAniTime >= 0.1f)
 			{
-				m_bAtkSound = true;
+				m_bAtkSound[0] = true;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
 			}
 			break;
 
 		case STATE_FURY2:
-			HITBOX_CONTROLL(0.45f, 0.8f, TRUE);
-			if (!m_bLethitaSound &&
-				m_fAniTime >= 0.45f)
+			HITBOX_CONTROLL(0.4f, 0.6f, TRUE);
+			if (!m_bSkillSound[0] &&
+				m_fAniTime >= 0.4f)
 			{
-				m_bAtkSound = true;
+				m_bSkillSound[0] = true;
 				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
 			}
 			break;
 
 		case STATE_FURY:
-			HITBOX_CONTROLL(0.45f, 0.8f, TRUE);
-			if (!m_bLethitaSound &&
-				m_fAniTime >= 0.45f)
+			HITBOX_CONTROLL(0.4f, 0.6f, TRUE);
+			if (!m_bSkillSound[0] &&
+				m_fAniTime >= 0.4f)
 			{
-				m_bAtkSound = true;
+				m_bSkillSound[0] = true;
 				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
 			}
 			break;
 
 		case STATE_SMASH3:
 			HITBOX_CONTROLL(0.35f, 0.5f, TRUE);
-			if (!m_bLethitaSound &&
+			if (!m_bLethitaSound[1] &&
 				m_fAniTime >= 0.25f)
 			{
-				m_bLethitaSound = true;
+				m_bLethitaSound[1] = true;
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
 			}
-			else if (!m_bAtkSound &&
+			else if (!m_bAtkSound[1] &&
 				m_fAniTime >= 0.45f)
 			{
-				m_bAtkSound = true;
+				m_bAtkSound[1] = true;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
 			}
 			break;
 
 		case STATE_SMASH4:
 			HITBOX_CONTROLL(0.55f, 0.8f, TRUE);
-			if (!m_bLethitaSound &&
+			if (!m_bLethitaSound[0] &&
 				m_fAniTime >= 0.55f)
 			{
-				m_bLethitaSound = true;
+				m_bLethitaSound[0] = true;
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
 			}
@@ -1316,10 +1383,10 @@ void CPlayer::Collision_Control()
 					iter->second->Set_CanCollision(false);
 				}
 			}
-			if (!m_bLethitaSound &&
+			if (!m_bAtkSound[0] &&
 				m_fAniTime >= 0.5f)
 			{
-				m_bLethitaSound = true;
+				m_bAtkSound[0] = true;
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
 			}
@@ -1327,10 +1394,10 @@ void CPlayer::Collision_Control()
 
 		case STATE_SMASH2_B:
 			HITBOX_CONTROLL(0.45f, 0.7f, TRUE);
-			if (!m_bLethitaSound &&
+			if (!m_bAtkSound[1] &&
 				m_fAniTime >= 0.45f)
 			{
-				m_bLethitaSound = true;
+				m_bAtkSound[1] = true;
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_Metal.wav", CSoundMgr::PLAYER_EFFECT);
 			}
@@ -1338,10 +1405,10 @@ void CPlayer::Collision_Control()
 
 		case STATE_SMASH1:
 			HITBOX_CONTROLL(0.4f, 0.6f, TRUE);
-			if (!m_bLethitaSound &&
+			if (!m_bAtkSound[1] &&
 				m_fAniTime >= 0.3f)
 			{
-				m_bLethitaSound = true;
+				m_bAtkSound[1] = true;
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
 			}
@@ -1349,10 +1416,10 @@ void CPlayer::Collision_Control()
 
 		case STATE_ATK4:
 			HITBOX_CONTROLL(0.3f, 0.7f, FALSE);
-			if (!m_bLethitaSound &&
+			if (!m_bLethitaSound[2] &&
 				m_fAniTime >= 0.3f)
 			{
-				m_bLethitaSound = true;
+				m_bLethitaSound[2] = true;
 				SoundPlayerAtk;
 				SoundMgr(L"Swing_Metal.wav", CSoundMgr::PLAYER_EFFECT);
 			}
@@ -1360,10 +1427,10 @@ void CPlayer::Collision_Control()
 
 		case STATE_ATK3:
 			HITBOX_CONTROLL(0.3f, 0.6f, FALSE);
-			if (!m_bLethitaSound &&
+			if (!m_bLethitaSound[1] &&
 				m_fAniTime >= 0.3f)
 			{
-				m_bLethitaSound = true;
+				m_bLethitaSound[1] = true;
 				SoundPlayerAtk;
 				SoundMgr(L"Swing_Metal.wav", CSoundMgr::PLAYER_EFFECT);
 			}
@@ -1371,10 +1438,10 @@ void CPlayer::Collision_Control()
 
 		case STATE_ATK2:
 			HITBOX_CONTROLL(0.25f, 0.6f, FALSE);
-			if (!m_bLethitaSound &&
+			if (!m_bLethitaSound[0] &&
 				m_fAniTime >= 0.25f)
 			{
-				m_bLethitaSound = true;
+				m_bLethitaSound[0] = true;
 				SoundPlayerAtk;
 				SoundMgr(L"Swing_Metal.wav", CSoundMgr::PLAYER_EFFECT);
 			}
@@ -1382,10 +1449,10 @@ void CPlayer::Collision_Control()
 
 		case STATE_ATK1:
 			HITBOX_CONTROLL(0.25f, 0.5f, FALSE);
-			if (!m_bLethitaSound &&
+			if (!m_bLethitaSound[1] &&
 				m_fAniTime >= 0.25f)
 			{
-				m_bLethitaSound = true;
+				m_bLethitaSound[1] = true;
 				SoundPlayerAtk;
 				SoundMgr(L"Swing_Metal.wav", CSoundMgr::PLAYER_EFFECT);
 			}
@@ -1438,9 +1505,22 @@ void CPlayer::Collision_Control()
 							{
 								switch (m_eCurState)
 								{
+								case Engine::STATE_FURY:
+									GET_SPPOINT_SMASH;
+
+									m_pAhglan->Set_Damage(PLAYER_SMASHPOWER2);
+									break;
+
+								case Engine::STATE_FURY2:
+									GET_SPPOINT_SMASH;
+
+									m_pAhglan->Set_Damage(PLAYER_SMASHPOWER2);
+									break;
+
 								case Engine::STATE_DOUBLE_CRECSENT:
 									SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
 									STOP_MOTION(100);
+									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH3POWER);
 									break;
@@ -1448,26 +1528,30 @@ void CPlayer::Collision_Control()
 								case Engine::STATE_SMASH4:
 									STOP_MOTION(100);
 									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
+									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH4POWER);
 									break;
 
 								case Engine::STATE_SMASH3:
-									//STOP_MOTION(100);
+									STOP_MOTION(100);
 									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
+									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH3POWER);
 									break;
 
 								case Engine::STATE_SMASH2_B:
 									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									GET_SPPOINT_ATK;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH2BPOWER);
 									break;
 
 								case Engine::STATE_SMASH2:
 									STOP_MOTION(100);
-									SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
+									//SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
+									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH2POWER);
 									break;
@@ -1475,34 +1559,39 @@ void CPlayer::Collision_Control()
 								case Engine::STATE_SMASH1:
 									STOP_MOTION(75);
 									SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
+									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH1POWER);
 									break;
 
 								case Engine::STATE_ATK1:
-									STOP_MOTION(35);
+									STOP_MOTION(40);
 									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									GET_SPPOINT_ATK;
 
 									m_pAhglan->Set_Damage(PLAYER_ATKPOWER);
 									break;
 
 								case Engine::STATE_ATK2:
-									STOP_MOTION(35);
+									STOP_MOTION(40);
 									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									GET_SPPOINT_ATK;
 
 									m_pAhglan->Set_Damage(PLAYER_ATKPOWER);
 									break;
 
 								case Engine::STATE_ATK3:
-									STOP_MOTION(35);
+									STOP_MOTION(40);
 									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									GET_SPPOINT_ATK;
 
 									m_pAhglan->Set_Damage(PLAYER_ATKPOWER);
 									break;
 
 								case Engine::STATE_ATK4:
-									STOP_MOTION(35);
+									STOP_MOTION(40);
 									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									GET_SPPOINT_ATK;
 
 									m_pAhglan->Set_Damage(PLAYER_ATKPOWER);
 									break;
@@ -1511,13 +1600,12 @@ void CPlayer::Collision_Control()
 								//iter_PlayerHit->second->Set_RenderColType(COL_TRUE);
 								//iter_BossDamaged->second->Set_RenderColType(COL_TRUE);
 
-								if (m_tPlayerInfo.iSkillPoint + (rand() % 5 + 2) < m_tPlayerInfo.iMaxSkillPoint)
+								if ((PL_SMASH == m_eCurAction) && 
+									8.f <= Engine::Random(0.f, 10.f))
 								{
-									m_tPlayerInfo.iSkillPoint += rand() % 5 + 2;
-								}
-								else
-								{
-									m_tPlayerInfo.iSkillPoint = m_tPlayerInfo.iMaxSkillPoint;
+									m_listBuff.emplace_back(new tag_BuffDeBuff(BUFF_CRITICAL, GetTickCount(), 1000));
+
+									SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.15f);
 								}
 
 								m_bCanHit = false;
@@ -1556,9 +1644,9 @@ void CPlayer::Collision_Control()
 								m_eCurAction = PL_DAMAGED;
 								m_iAniIndex = STATE_DAMAGE_RESIST;
 
-								if (!m_bLethitaSound)
+								if (!m_bLethitaSound[0])
 								{
-									m_bLethitaSound = true;
+									m_bLethitaSound[0] = true;
 									SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
 
 									m_tPlayerInfo.tagInfo.iHp -= AHGLAN_ATKPOWER;
@@ -1580,9 +1668,9 @@ void CPlayer::Collision_Control()
 										m_eCurAction = PL_DAMAGED;
 										m_iAniIndex = STATE_DAMAGEFROM_FRONT;
 
-										if (!m_bLethitaSound)
+										if (!m_bLethitaSound[0])
 										{
-											m_bLethitaSound = true;
+											m_bLethitaSound[0] = true;
 											SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
 
 											m_tPlayerInfo.tagInfo.iHp -= AHGLAN_ATKPOWER;
@@ -1593,9 +1681,9 @@ void CPlayer::Collision_Control()
 										m_eCurAction = PL_DAMAGED;
 										m_iAniIndex = STATE_DAMAGEFROM_BACK;
 
-										if (!m_bLethitaSound)
+										if (!m_bLethitaSound[0])
 										{
-											m_bLethitaSound = true;
+											m_bLethitaSound[0] = true;
 											SoundMgr(L"Hit_Flesh_Blunt.wav", CSoundMgr::PLAYER);
 
 											m_tPlayerInfo.tagInfo.iHp -= AHGLAN_ATKPOWER;

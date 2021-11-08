@@ -6,7 +6,7 @@
 //틀, 도구 
 //
 //함수		템플릿	: 함수를 만드는 틀			-> 템플릿 함수
-//클래스		템플릿	: 클래스를 만드는 틀		-> STL
+//클래스		템플릿	: 클래스를 만드는 틀			-> STL
 //
 //- 특징 : 자료형은 결정되어 있지 않지만 템플릿은 이미 기능은 결정되어 있다.
 //
@@ -120,6 +120,22 @@ namespace Engine
 
 			if (0 == dwRefCnt)
 				Pair.second = NULL;
+		}
+	};
+
+	// list Container 삭제용
+	class CDeleteList
+	{
+	public:
+		explicit CDeleteList() {}
+		~CDeleteList() {}
+
+	public:
+		template<typename T>
+		void operator() (T& Instance)
+		{
+			delete Instance;
+			Instance = nullptr;
 		}
 	};
 }

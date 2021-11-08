@@ -52,6 +52,11 @@ void CSoundMgr::PlaySound(TCHAR * pSoundKey, CHANNELID eID)
 	if (iter == m_mapSound.end())
 		return;
 
+	if (!lstrcmp(pSoundKey, L"Hit_HardFlesh_StrongSlash.wav"))
+	{
+		int a = 0;
+	}
+
 	FMOD_BOOL bPlay = FALSE;
 	if (FMOD_Channel_IsPlaying(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], &bPlay))
 	{
@@ -184,6 +189,11 @@ void CSoundMgr::PlaySoundLowerVol(TCHAR * pSoundKey, CHANNELID eID, _float fVol)
 
 	if (iter == m_mapSound.end())
 		return;
+
+	if (!lstrcmp(pSoundKey, L"Hit_HardFlesh_StrongSlash.wav"))
+	{
+		int a = 0;
+	}
 
 	FMOD_BOOL bPlay = FALSE;
 	if (FMOD_Channel_IsPlaying(m_pChannelArr[eID * m_iChannel + m_iChannelCount[eID]], &bPlay))

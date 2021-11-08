@@ -122,6 +122,22 @@ namespace Engine
 				Pair.second = NULL;
 		}
 	};
+
+	// list Container »èÁ¦¿ë
+	class CDeleteList
+	{
+	public:
+		explicit CDeleteList() {}
+		~CDeleteList() {}
+
+	public:
+		template<typename T>
+		void operator() (T& Instance)
+		{
+			delete Instance;
+			Instance = nullptr;
+		}
+	};
 }
 
 

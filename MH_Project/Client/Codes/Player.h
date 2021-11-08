@@ -65,12 +65,15 @@ private:
 
 	// 객체 함수들
 	void			Compute_CanAction();
+	void			Compute_Buff();
 	void			Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector);
 	void			Rotate_PlayerLook(_vec3& TargetLookVector);
+	//void			MoveOn_Skill(const _float& fTimeDelta);
 	void			MoveOn_Skill(const _float& fTimeDelta);
 	void			StopMotion();
 	void			FootStepSound();
 	void			Weapon_Change();
+	void			SetNextSmash(PL_STATE eState, _ulong dwDelay) { m_eNextSmash = eState; m_dwNextSmashCheckTime = GetTickCount();  m_dwNextSmashDelay = dwDelay; }
 
 public:
 	HRESULT			Add_NaviMesh();
@@ -89,15 +92,19 @@ private:
 	_float			m_fSpeed = 3.f;
 	_float			m_fSkillMoveSpeed = 0.f;
 	_float			m_fAniTime = 0.f;
+	_float			m_fSkillMoveStartTime = 0.f;
+	_float			m_fSkillMoveEndTime = 0.f;
 
 	_double			m_lfAniEnd = 0.f;
 
+	_ulong			m_dwNextSmashCheckTime = 0;
+	_ulong			m_dwNextSmashDelay = 0;
 	_ulong			m_dwSteminaRecoveryTime = GetTickCount();
 	_ulong			m_dwSteminaRecoveryDelay = 2000;
-	_ulong			m_dwSkillMoveReady = GetTickCount();
-	_ulong			m_dwSkillMoveReadyTime = 0;
-	_ulong			m_dwSkillMoveStart = GetTickCount();
-	_ulong			m_dwSkillMoveTime = 0;
+	//_ulong			m_dwSkillMoveReady = GetTickCount();
+	//_ulong			m_dwSkillMoveReadyTime = 0;
+	//_ulong			m_dwSkillMoveStart = GetTickCount();
+	//_ulong			m_dwSkillMoveTime = 0;
 	_ulong			m_dwStopMotionStart = GetTickCount();
 	_ulong			m_dwStopMotionTime = 0;
 	_ulong			m_dwFootStepStart = GetTickCount();
@@ -124,6 +131,7 @@ private:
 	WEAPON_MODE		m_eCurWeaponMode = WEAPON_DUALSWORD;
 	WEAPON_MODE		m_ePreWeaponMode = WEAPON_DUALSWORD;
 
+	list<tag_BuffDeBuff*>		m_listBuff;
 	map<const wstring, _bool>	m_mapActiveParts;
 
 	// Component
@@ -152,13 +160,16 @@ public:
 
 	// Sound 변수들 
 private:
-	_bool		m_bAtkSound = false;
-	_bool		m_bLethitaSound = false;
+	_bool		m_bAtkSound[3] = { false, false, false };
+	_bool		m_bLethitaSound[3] = { false, false, false };
+	_bool		m_bSkillSound[3] = { false, false, false };
 };
 
-#define	SKILL_MOVE(ReadyTime, Speed, Time)		m_bSkillMove = TRUE; m_dwSkillMoveReady = GetTickCount();		\
-												m_dwSkillMoveReadyTime = ReadyTime;	m_fSkillMoveSpeed = Speed; m_dwSkillMoveTime = Time;
-#define SKILL_MOVE_END							m_bSkillMove = FALSE; m_fSkillMoveSpeed = 0.f; m_dwSkillMoveTime = 0;
+#define SKILL_MOVE_BYANI(StartTime, Speed, EndTime)		m_bSkillMove = TRUE; m_fSkillMoveStartTime = StartTime;	m_fSkillMoveEndTime = EndTime;	m_fSkillMoveSpeed = Speed;
+#define SKILL_MOVE_END									m_bSkillMove = FALSE; m_fSkillMoveStartTime = 0.f; m_fSkillMoveEndTime = (_float)m_lfAniEnd; m_fSkillMoveSpeed = 0.f;
+//#define	SKILL_MOVE(ReadyTime, Speed, Time)		m_bSkillMove = TRUE; m_dwSkillMoveReady = GetTickCount();		\
+//												m_dwSkillMoveReadyTime = ReadyTime;	m_fSkillMoveSpeed = Speed; m_dwSkillMoveTime = Time;
+//#define SKILL_MOVE_END							m_bSkillMove = FALSE; m_fSkillMoveSpeed = 0.f; m_dwSkillMoveTime = 0;
 #define STOP_MOTION(Time)						m_bStopMotion = TRUE; m_dwStopMotionStart = GetTickCount();	m_dwStopMotionTime = Time;
 #define STOP_MOTION_END							m_bStopMotion = FALSE; m_dwStopMotionTime = 0;
 

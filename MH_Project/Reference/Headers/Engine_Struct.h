@@ -3,6 +3,7 @@
 
 namespace Engine
 {
+	/////////////////////////////// Client에서 쓰는 구조체들 ///////////////////////////////////////
 	typedef	struct tagObjectInfo
 	{
 		_int		iHp;
@@ -21,6 +22,22 @@ namespace Engine
 
 	} PL_INFO;
 
+	typedef struct tag_BuffDeBuff
+	{
+		tag_BuffDeBuff(BUFF_ID _eID, _ulong _dwBuffStart, _ulong _dwBuffTime)
+			: eBuffID(_eID), dwBuffStartTime(_dwBuffStart), dwBuffDuration(_dwBuffTime)
+		{
+
+		}
+
+		BUFF_ID			eBuffID;
+
+		_ulong			dwBuffStartTime;
+		_ulong			dwBuffDuration;
+
+	} BUFF;
+
+	/////////////////////////////// 기본 Engine에서 필요한 핵심 구조체들 ///////////////////////////////////////
 	typedef struct tagVertexColor
 	{
 		_vec3		vPosition;	// float * 3  : 4, 4, 4

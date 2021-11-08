@@ -47,6 +47,11 @@ namespace Engine
 		BOSS_AHGLAN, BOSS_CLOYAN,
 		BOSS_END
 	};
+	enum BUFF_ID
+	{
+		BUFF_CRITICAL, 
+		BUFF_END
+	};
 
 	// ********************************************* //
 	enum WINMODE { MODE_FULL, MODE_WIN };
