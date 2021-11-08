@@ -159,10 +159,10 @@ void CFadeInOut::AhglanFadeOut()
 {
 	if (m_bAhglanFadeOut)
 	{
-		if (1.f >= m_fValueRatio && 
+		if (1.f > m_fValueRatio && 
 			0 == m_iFadeCount)
 		{
-			m_fValueRatio += FADEOUTSPEED * 6.5f;
+			m_fValueRatio += FADEOUTSPEED * 7.5f;
 		}
 
 		if (1.f <= m_fValueRatio)
@@ -173,7 +173,14 @@ void CFadeInOut::AhglanFadeOut()
 		if (1 == m_iFadeCount && 
 			0.f <= m_fValueRatio)
 		{
-			m_fValueRatio -= FADEOUTSPEED * 6.5f;
+			m_fValueRatio -= FADEOUTSPEED * 7.5f;
+		}
+
+		// 페이드아웃 종료 후 레이어에서 삭제
+		if (1 == m_iFadeCount &&
+			0.f >= m_fValueRatio)
+		{
+			//Engine::Delete_Layer(L"");
 		}
 	}
 }

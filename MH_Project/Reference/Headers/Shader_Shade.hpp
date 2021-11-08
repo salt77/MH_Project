@@ -46,7 +46,7 @@ PS_OUT		PS_DIRECTIONAL(PS_IN In)
 
 	// depth 타겟의 g값에 view스페이스의 Z를 보관했었음. 
 	// 텍스쳐 uv에 저장하기 위해 far값으로 나누어 주었으니, 다시 사용할 때는 곱해준다.
-	float	fViewZ = vDepth.y * 1000.f;
+	float	fViewZ = vDepth.y * 300.f;
 	
 	// 텍스쳐 uv상태의 노말 값을 월드 좌표로 변환 시켜줘야 함(0 ~ 1 => -1 ~ 1)
 	vNormal = vector(vNormal.xyz * 2.f - 1.f, 0.f);

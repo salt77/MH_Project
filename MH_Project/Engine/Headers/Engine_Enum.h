@@ -37,6 +37,16 @@ namespace Engine
 		SCENE_LOGO, SCENE_LOADING, SCENE_STAGE,
 		SCENE_END
 	};
+	enum NAMINGSCENE_ID
+	{
+		NAMING_BOSSNAME, NAMING_STAGENAME, NAMING_BACKGROUND,
+		NAMING_END
+	};
+	enum BOSS_ID
+	{
+		BOSS_AHGLAN, BOSS_CLOYAN,
+		BOSS_END
+	};
 
 	// ********************************************* //
 	enum WINMODE { MODE_FULL, MODE_WIN };

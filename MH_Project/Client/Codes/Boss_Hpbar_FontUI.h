@@ -21,7 +21,7 @@ private:
 	virtual ~CBoss_Hpbar_FontUI(void);
 
 public:
-	virtual HRESULT Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY, _bool	bFontX);
+	virtual HRESULT Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY, _bool	bFontX, _bool bTenNum);
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 
@@ -31,8 +31,9 @@ protected:
 
 private:
 	_bool				m_bIsFontX = false;
+	_bool				m_bIsTenNum = false;
 
 public:
-	static CBoss_Hpbar_FontUI*	Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY, _bool	bFontX);
+	static CBoss_Hpbar_FontUI*	Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY, _bool	bFontX, _bool bTenNum);
 	virtual void		Free(void);
 };

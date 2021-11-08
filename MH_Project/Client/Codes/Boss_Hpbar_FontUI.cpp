@@ -13,7 +13,7 @@ CBoss_Hpbar_FontUI::~CBoss_Hpbar_FontUI(void)
 }
 
 
-HRESULT CBoss_Hpbar_FontUI::Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY, _bool	bFontX)
+HRESULT CBoss_Hpbar_FontUI::Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY, _bool	bFontX, _bool bTenNum)
 {
 	FAILED_CHECK_RETURN(CUI::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -25,6 +25,7 @@ HRESULT CBoss_Hpbar_FontUI::Ready_Object(_float fX, _float fY, _float fSizeX, _f
 	m_fSizeY = fSizeY;
 
 	m_bIsFontX = bFontX;
+	m_bIsTenNum = bTenNum;
 
 	return S_OK;
 }
@@ -69,11 +70,11 @@ void CBoss_Hpbar_FontUI::Render_Object(void)
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matOldProj);
 }
 
-CBoss_Hpbar_FontUI* CBoss_Hpbar_FontUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY, _bool	bFontX)
+CBoss_Hpbar_FontUI* CBoss_Hpbar_FontUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY, _bool	bFontX, _bool bTenNum)
 {
 	CBoss_Hpbar_FontUI*	pInstance = new CBoss_Hpbar_FontUI(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Object(fX, fY, fSizeX, fSizeY, bFontX)))
+	if (FAILED(pInstance->Ready_Object(fX, fY, fSizeX, fSizeY, bFontX, bTenNum)))
 		Safe_Release(pInstance);
 
 	return pInstance;
@@ -146,49 +147,63 @@ HRESULT CBoss_Hpbar_FontUI::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	{
 		_float	fHpRatio = m_fValueRatio / m_fFullValueRatio;
 
-		if (0.f >= fHpRatio)
+		if (!m_bIsTenNum)
 		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 0);
+			if (0.f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 0);
+			}
+			else if (0.f < fHpRatio && 0.1f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 1);
+			}
+			else if (0.1f < fHpRatio && 0.2f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 2);
+			}
+			else if (0.2f < fHpRatio && 0.3f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 3);
+			}
+			else if (0.3f < fHpRatio && 0.4f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 4);
+			}
+			else if (0.4f < fHpRatio && 0.5f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 5);
+			}
+			else if (0.5f < fHpRatio && 0.6f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 6);
+			}
+			else if (0.6f < fHpRatio && 0.7f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 7);
+			}
+			else if (0.7f < fHpRatio && 0.8f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 8);
+			}
+			else if (0.8f < fHpRatio && 0.9f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 9);
+			}
+			else if (0.9f < fHpRatio && 1.f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 1);
+			}
 		}
-		else if (0.f < fHpRatio && 0.1f >= fHpRatio)
+		else
 		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 1);
-		}
-		else if (0.1f < fHpRatio && 0.2f >= fHpRatio)
-		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 2);
-		}
-		else if (0.2f < fHpRatio && 0.3f < fHpRatio)
-		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 3);
-		}
-		else if (0.3f < fHpRatio && 0.4f > fHpRatio)
-		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 4);
-		}
-		else if (0.4f < fHpRatio && 0.5f > fHpRatio)
-		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 5);
-		}
-		else if (0.5f < fHpRatio && 0.6f > fHpRatio)
-		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 6);
-		}
-		else if (0.6f < fHpRatio && 0.7f > fHpRatio)
-		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 7);
-		}
-		else if (0.7f < fHpRatio && 0.8f > fHpRatio)
-		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 8);
-		}
-		else if (0.8f < fHpRatio && 0.9f > fHpRatio)
-		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 9);
-		}
-		else if (0.9f < fHpRatio && 1.f > fHpRatio)
-		{
-			m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 9);
+			if (0.9f < fHpRatio && 1.f >= fHpRatio)
+			{
+				m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 0);
+			}
+			else
+			{
+				Engine::Delete_Layer(L"Boss_UI", L"6.Boss_Hpbar_FontNumTenUI");
+			}
 		}
 	}
 

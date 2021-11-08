@@ -75,10 +75,10 @@ HRESULT CMainApp::SetUp_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	// Font Ãß°¡
 	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Default", L"¹ÙÅÁ", 15, 15, FW_NORMAL), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Jinji", L"±Ã¼­", 30, 30, FW_HEAVY), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Arial", L"ArialUnicodeMS", 15, 20, FW_HEAVY), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_DFP", L"DFPHeiBold-B5", 15, 20, FW_HEAVY), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Namugothic", L"namugothic", 15, 20, FW_HEAVY), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Namugothic_Bold", L"namugothic_bold", 15, 20, FW_HEAVY), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Arial", L"Arial Unicode MS", 15, 22, FW_HEAVY), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_DFP", L"DFPHeiBold-B5", 15, 22, FW_HEAVY), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Nanumgothic", L"³ª´®°íµñ", 15, 22, FW_HEAVY), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Font(*ppGraphicDev, L"Font_Nanumgothic_Bold", L"³ª´®°íµñ ±½°Ô", 12, 20, FW_HEAVY), E_FAIL);
 
 	// Input Ãß°¡
 	FAILED_CHECK_RETURN(Ready_InputDev(g_hInst, g_hWnd), E_FAIL);

@@ -76,20 +76,8 @@
     <Filter Include="02.GameObject\09.UI">
       <UniqueIdentifier>{8db05e54-02a2-4348-a264-208ba7111a71}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\09.UI\00.Player_Hpbar">
-      <UniqueIdentifier>{d1e5346f-9a1b-45a4-bc03-1eb217d91543}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\09.UI\01.Boss_Hpbar">
       <UniqueIdentifier>{49ea4020-cabf-428e-93a5-fd86f26c591c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\09.UI\00.Player_Hpbar\00.Back">
-      <UniqueIdentifier>{1ff6f88e-f091-4545-a6ce-860f0352d5e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\09.UI\00.Player_Hpbar\01.Lerp">
-      <UniqueIdentifier>{870441fd-b6bc-4c0b-be03-b99e38e3e3ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\09.UI\00.Player_Hpbar\02.Value">
-      <UniqueIdentifier>{a80a6018-3307-4d80-a9e1-afff257ebb9d}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\09.UI\02.LoadingBar">
       <UniqueIdentifier>{42864455-2f63-4c14-9e82-b2f005800586}</UniqueIdentifier>
@@ -120,6 +108,51 @@
     </Filter>
     <Filter Include="02.GameObject\09.UI\01.Boss_Hpbar\04.Font">
       <UniqueIdentifier>{d1af5261-8404-4433-96f6-ac1fcc7df777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI">
+      <UniqueIdentifier>{c65be191-1da5-46f9-977d-3cc5a6443f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI\00.AhglanNameFont">
+      <UniqueIdentifier>{e6828ee7-fdf0-4eed-a3b8-facab7712a8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI\01.Boss_NamingScene">
+      <UniqueIdentifier>{a6c0c7c8-4140-4ef9-862a-2a0362ce6679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI\02.AhglanStageUI">
+      <UniqueIdentifier>{085fd346-f834-446e-8459-faa968144847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI">
+      <UniqueIdentifier>{d1e5346f-9a1b-45a4-bc03-1eb217d91543}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\00.Hpbar">
+      <UniqueIdentifier>{e18c0cb1-6ab9-42c9-bed8-8d363595de0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\00.Hpbar\02.Value">
+      <UniqueIdentifier>{a80a6018-3307-4d80-a9e1-afff257ebb9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\00.Hpbar\01.Lerp">
+      <UniqueIdentifier>{870441fd-b6bc-4c0b-be03-b99e38e3e3ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\00.Hpbar\00.Back">
+      <UniqueIdentifier>{1ff6f88e-f091-4545-a6ce-860f0352d5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\01.Steminabar">
+      <UniqueIdentifier>{cf3386f3-af20-4b50-a1db-aa91587727da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\02.Spbar">
+      <UniqueIdentifier>{fec64bad-f54b-4b90-9b9c-03af8ab0c677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\01.Steminabar\00.Back">
+      <UniqueIdentifier>{da1a19fa-a908-4d3e-8027-386217479fde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\01.Steminabar\01.Value">
+      <UniqueIdentifier>{3d8192b2-8bee-4702-93e2-7666c8df36d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\02.Spbar\00.Back">
+      <UniqueIdentifier>{a6567912-48cf-4593-b05e-163a803ca9e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\02.Spbar\01.Value">
+      <UniqueIdentifier>{277e6868-fea3-484b-b7e1-e2c2391edc4f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -184,13 +217,13 @@
       <Filter>02.GameObject\09.UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Player_Hpbar_BackUI.h">
-      <Filter>02.GameObject\09.UI\00.Player_Hpbar\00.Back</Filter>
+      <Filter>02.GameObject\09.UI\00.PlayerUI\00.Hpbar\00.Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Player_Hpbar_ValueUI.h">
-      <Filter>02.GameObject\09.UI\00.Player_Hpbar\02.Value</Filter>
+      <Filter>02.GameObject\09.UI\00.PlayerUI\00.Hpbar\02.Value</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Player_Hpbar_LerpUI.h">
-      <Filter>02.GameObject\09.UI\00.Player_Hpbar\01.Lerp</Filter>
+      <Filter>02.GameObject\09.UI\00.PlayerUI\00.Hpbar\01.Lerp</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\LoadingBar_BackEffect.h">
       <Filter>02.GameObject\09.UI\02.LoadingBar\00.BackEffect</Filter>
@@ -215,6 +248,27 @@
     </ClInclude>
     <ClInclude Include="..\Codes\Boss_Hpbar_FontUI.h">
       <Filter>02.GameObject\09.UI\01.Boss_Hpbar\04.Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Ahglan_FontName.h">
+      <Filter>02.GameObject\09.UI\04.StageUI\00.AhglanNameFont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Boss_NamingScene.h">
+      <Filter>02.GameObject\09.UI\04.StageUI\01.Boss_NamingScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Ahglan_StageUI.h">
+      <Filter>02.GameObject\09.UI\04.StageUI\02.AhglanStageUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player_Steminabar_BackUI.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\01.Steminabar\00.Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player_Spbar_BackUI.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\02.Spbar\00.Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player_Steminabar_ValueUI.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\01.Steminabar\01.Value</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player_Spbar_ValueUI.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\02.Spbar\01.Value</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -270,13 +324,13 @@
       <Filter>02.GameObject\09.UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Player_Hpbar_BackUI.cpp">
-      <Filter>02.GameObject\09.UI\00.Player_Hpbar\00.Back</Filter>
+      <Filter>02.GameObject\09.UI\00.PlayerUI\00.Hpbar\00.Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Player_Hpbar_ValueUI.cpp">
-      <Filter>02.GameObject\09.UI\00.Player_Hpbar\02.Value</Filter>
+      <Filter>02.GameObject\09.UI\00.PlayerUI\00.Hpbar\02.Value</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Player_Hpbar_LerpUI.cpp">
-      <Filter>02.GameObject\09.UI\00.Player_Hpbar\01.Lerp</Filter>
+      <Filter>02.GameObject\09.UI\00.PlayerUI\00.Hpbar\01.Lerp</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\LoadingBar_BackEffect.cpp">
       <Filter>02.GameObject\09.UI\02.LoadingBar\00.BackEffect</Filter>
@@ -301,6 +355,27 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Boss_Hpbar_FontUI.cpp">
       <Filter>02.GameObject\09.UI\01.Boss_Hpbar\04.Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Ahglan_FontName.cpp">
+      <Filter>02.GameObject\09.UI\04.StageUI\00.AhglanNameFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Boss_NamingScene.cpp">
+      <Filter>02.GameObject\09.UI\04.StageUI\01.Boss_NamingScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Ahglan_StageUI.cpp">
+      <Filter>02.GameObject\09.UI\04.StageUI\02.AhglanStageUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player_Steminabar_BackUI.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\01.Steminabar\00.Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player_Spbar_BackUI.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\02.Spbar\00.Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player_Steminabar_ValueUI.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\01.Steminabar\01.Value</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player_Spbar_ValueUI.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\02.Spbar\01.Value</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

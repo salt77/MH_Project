@@ -69,7 +69,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	//float EndX = 0.65f;
 
-	float2 vTexUV = In.vTexUV;
+	float2	vTexUV = In.vTexUV;
 	float	fAlpha = 1.f;
 
 	if (0 == g_iType)
@@ -83,7 +83,7 @@ PS_OUT PS_MAIN(PS_IN In)
 			}
 		}
 		else if (0.5f >= fHpRatio &&
-			0.4f < fHpRatio)
+				 0.4f < fHpRatio)
 		{
 			if (fLineHpRatio < vTexUV.x)
 			{

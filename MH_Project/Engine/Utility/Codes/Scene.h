@@ -25,6 +25,7 @@ public:
 
 public:
 	virtual	void		Emplace_Layer(const wstring wstrLayerTag, CLayer* pLayer) { m_mapLayer.emplace(wstrLayerTag, pLayer); }
+	virtual void		Delete_Layer(const wstring wstrLayerTag, const wstring wstrObjTag);
 
 protected:
 	LPDIRECT3DDEVICE9				m_pGraphicDev;

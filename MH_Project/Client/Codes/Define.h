@@ -75,8 +75,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define SoundMgrHigherVol(SoundName, ChannelID, Volume) CSoundMgr::GetInstance()->PlaySoundHigherVol(SoundName, ChannelID, Volume);
 
 
-#define DIS_SHORTEST	3.5f
-#define DIS_SHORT		5.5f
+#define DIS_SHORTEST	3.25f
+#define DIS_SHORT		5.f
 #define DIS_MID			10.f
 #define DIS_LONG		15.f
 
@@ -88,10 +88,15 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define AHGLAN_ATKPOWER	1200
 
 #define PLAYER_ATKPOWER 450
-#define PLAYER_SMASHPOWER	6500
+#define PLAYER_SMASH1POWER	3200
+#define PLAYER_SMASH2POWER	2800
+#define PLAYER_SMASH2BPOWER	3200
+#define PLAYER_SMASH3POWER	4800
+#define PLAYER_SMASH4POWER	6500
 #define PLAYER_SMASHPOWER2	9000
 
 #define FADEOUTSPEED		0.0005f
+#define PROGRESSBARSPEED	0.00005f;
 
 #define LERP_PLAYERHPBAR	2.f
 

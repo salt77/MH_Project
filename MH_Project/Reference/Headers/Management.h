@@ -33,6 +33,7 @@ public:
 public:
 	HRESULT			Set_Scene(CScene* pScene);
 	void			Emplace_Layer(const wstring wstrLayerTag, CLayer* pLayer);
+	void			Delete_Layer(const wstring wstrLayerTag, const wstring wstrObjTag);
 
 public:
 	_int			Update_Scene(const _float& fTimeDelta);

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Stage.h"
+#include "Ahglan_FontName.h"
+#include "Ahglan_StageUI.h"
 
 #include "Export_Function.h"
 
@@ -146,22 +148,19 @@ HRESULT CStage::Ready_Layer_UI(const wstring pLayerTag)
 
 	CGameObject*			pGameObject = nullptr;
 
-	pGameObject = CPlayer_Hpbar_BackUI::Create(m_pGraphicDev, 340.f, 30.f, 650.f, 25.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Hpbar_BackUI", pGameObject), E_FAIL);
-
-	pGameObject = CPlayer_Hpbar_LerpUI::Create(m_pGraphicDev, 340.f, 30.f, 650.f, 25.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Hpbar_LerpUI", pGameObject), E_FAIL);
-
-	pGameObject = CPlayer_Hpbar_ValueUI::Create(m_pGraphicDev, 340.f, 30.f, 650.f, 25.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Hpbar_ValueUI", pGameObject), E_FAIL);
-
 	// FadeInOut
 	pGameObject = CFadeInOut::Create(m_pGraphicDev, 0.f, 0.f, WINCX * 2.f, WINCY * 2.f, 0.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"FadeInOut_UI", pGameObject), E_FAIL);
+
+	// Quest Target¿¡ ºÙ´Â UI
+	pGameObject = CAhglan_FontName::Create(m_pGraphicDev, 150.f, 100.f, 110.f, 55.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"1.Ahglan_FontName", pGameObject), E_FAIL);
+
+	pGameObject = CAhglan_StageUI::Create(m_pGraphicDev, 75.f, 50.f, 200.f, 100.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"0.Ahglan_QuestTarget", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 

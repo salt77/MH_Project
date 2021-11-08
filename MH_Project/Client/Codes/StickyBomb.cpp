@@ -284,6 +284,7 @@ void CStickyBomb::Bomb()
 				break;
 
 			default:
+				pAhglan->BombAttacked(*m_pTransformCom->Get_Info(INFO_POS), L"");
 				break;
 			}
 		}

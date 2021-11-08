@@ -60,8 +60,7 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 
 void CLogo::Render_Scene(void)
 {
-	// DEBUG 용
-	Render_Font(L"Font_Namugothic_Bold", m_pLoading->Get_String(), &_vec2(WINCX * 0.5f - 350.f, WINCY - 135.f), D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	Render_Font(L"Font_Nanumgothic_Bold", m_pLoading->Get_String(), &_vec2(WINCX * 0.5f - 350.f, WINCY - 135.f), D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 }
 
 HRESULT CLogo::Ready_Layer_Environment(const wstring pLayerTag)
@@ -142,25 +141,37 @@ void CLogo::Update_ProgressUI()
 
 		if (L"Loading Buffer.." == m_pLoading->Get_String())
 		{
-			fTarget = 15.f;
+			fTarget = 5.f;
 
 			fSpeed = LERP(fTarget, fPreTarget, 0.9f);
 		}
 		else if (L"Loading Texture.." == m_pLoading->Get_String())
 		{
-			fTarget = 40.f;
+			fTarget = 10.f;
 
 			fSpeed = LERP(fTarget, fPreTarget, 0.9f);
 		}
 		else if (L"Loading Etc.." == m_pLoading->Get_String())
 		{
-			fTarget = 50.f;
+			fTarget = 10.f;
 
 			fSpeed = LERP(fTarget, fPreTarget, 0.9f);
 		}
-		else if (L"Loading Mesh.." == m_pLoading->Get_String())
+		else if (L"Loading Stage.." == m_pLoading->Get_String())
 		{
-			fTarget = 85.f;
+			fTarget = 25.f;
+
+			fSpeed = LERP(fTarget, fPreTarget, 0.9f);
+		}
+		else if (L"Loading Player.." == m_pLoading->Get_String())
+		{
+			fTarget = 45.f;
+
+			fSpeed = LERP(fTarget, fPreTarget, 0.9f);
+		}
+		else if (L"Loading Object.." == m_pLoading->Get_String())
+		{
+			fTarget = 75.f;
 
 			fSpeed = LERP(fTarget, fPreTarget, 0.9f);
 		}
@@ -175,7 +186,7 @@ void CLogo::Update_ProgressUI()
 
 		if (m_fProgressBar < (fTarget * 0.01f))
 		{
-			m_fProgressBar += fSpeed * 0.0001f;			// 프로그래스바 속도 보정(너무 빠름)
+			m_fProgressBar += fSpeed * PROGRESSBARSPEED;			// 프로그래스바 속도 보정(너무 빠름)
 		}
 
 		if (1.f <= m_fProgressBar)

@@ -23,19 +23,19 @@ HRESULT CManagement::Ready_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 
 	// ·»´õ Å¸°Ù »ý¼º
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Albedo", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 0.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Albedo", 0.f, 0.f, 1.f, 1.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Albedo", WINCX_ENGINE, WINCY_ENGINE, 50.f, 50.f), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Normal", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 1.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Normal", 0.f, 1.f, 1.f, 1.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Normal", WINCX_ENGINE, WINCY_ENGINE - 50.f, 50.f, 50.f), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Depth", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(1.f, 1.f, 1.f, 1.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Depth", 0.f, 2.f, 1.f, 1.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Depth", WINCX_ENGINE, WINCY_ENGINE - 100.f, 50.f, 50.f), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Shade", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 1.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Shade", 1.f, 0.f, 1.f, 1.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Shade", WINCX_ENGINE - 50.f, WINCY_ENGINE, 50.f, 50.f), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Specular", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 0.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Specular", 1.f, 1.f, 1.f, 1.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Specular", WINCX_ENGINE - 50.f, WINCY_ENGINE - 50.f, 50.f, 50.f), E_FAIL);
 
 	// ¸ÖÆ¼ ·»´õ ±×·ì Æí¼º
 	FAILED_CHECK_RETURN(Ready_MRT(L"MRT_Deferred", L"Target_Albedo"), E_FAIL);
@@ -126,6 +126,14 @@ void CManagement::Emplace_Layer(const wstring wstrLayerTag, CLayer * pLayer)
 		return;
 
 	m_pScene->Emplace_Layer(wstrLayerTag, pLayer);
+}
+
+void CManagement::Delete_Layer(const wstring wstrLayerTag, const wstring wstrObjTag)
+{
+	if (!m_pScene)
+		return;
+
+	m_pScene->Delete_Layer(wstrLayerTag, wstrObjTag);
 }
 
 Engine::_int Engine::CManagement::Update_Scene(const _float& fTimeDelta)

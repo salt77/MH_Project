@@ -9,6 +9,8 @@
 #include "Boss_Hpbar_YellowUI.h"
 #include "Boss_Hpbar_RedUI.h"
 #include "Boss_Hpbar_FontUI.h"
+#include "Ahglan_FontName.h"
+#include "Boss_NamingScene.h"
 
 #include "Export_Function.h"
 #include "Export_Utility.h"
@@ -36,7 +38,7 @@ HRESULT CAhglan::Ready_Object(void)
 
 	m_pTransformCom->Update_Component(0.f);
 
-	m_tInfo.iHp = 100000;
+	m_tInfo.iHp = 850000;
 	m_tInfo.iMaxHp = m_tInfo.iHp;
 
 	m_bBoss = true;
@@ -75,11 +77,12 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 	//// 디버그용
 	if (Key_Down('G'))
 	{
-		Set_Damage(5000);
+		Set_Damage(15000);
 	}
 	else if (Key_Down('H'))
 	{
 		m_iAniIndex = SPAWN;
+
 		Animation_Control();
 	}
 	//else if (Key_Down('J'))
@@ -327,7 +330,7 @@ void CAhglan::Movement()
 							{
 								m_iAniIndex = ATK_ONEHAND;
 							}
-							else if (45.f >= m_fRand)
+							else if (40.f >= m_fRand)
 							{
 								m_iAniIndex = TAUNT;
 							}
@@ -402,7 +405,7 @@ void CAhglan::Movement()
 void CAhglan::MoveOn_Skill()
 {
 	if (m_bSkillMove && 
-		BS_DAMAGED > m_eBossAction)
+		BS_DAMAGED >= m_eBossAction)
 	{
 		if (m_fSkillMoveStartTime <= m_fAniTime &&
 			m_fSkillMoveEndTime >= m_fAniTime)
@@ -500,35 +503,56 @@ void CAhglan::Animation_Control()
 		case SPAWN:
 			pGameObject = CBoss_Hpbar_BackUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f);
 			NULL_CHECK_RETURN(pGameObject, );
-			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_BackUI", pGameObject), );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"0.Boss_Hpbar_BackUI", pGameObject), );
 
 			pGameObject = CBoss_Hpbar_RedUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f, 2);
 			NULL_CHECK_RETURN(pGameObject, );
-			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_RedUI", pGameObject), );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"1.Boss_Hpbar_RedUI", pGameObject), );
 
 			pGameObject = CBoss_Hpbar_YellowUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f, 1);
 			NULL_CHECK_RETURN(pGameObject, );
-			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_YellowUI", pGameObject), );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"2.Boss_Hpbar_YellowUI", pGameObject), );
 
 			pGameObject = CBoss_Hpbar_GreenUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f, 0);
 			NULL_CHECK_RETURN(pGameObject, );
-			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_GreenUI", pGameObject), );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"3.Boss_Hpbar_GreenUI", pGameObject), );
 			
 			// Font Image
-			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, 775.f, 100.f, 30.f, 30.f, true);
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, 765.f, 100.f, 23.f, 23.f, true, false);
 			NULL_CHECK_RETURN(pGameObject, );
-			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_FontUI", pGameObject), );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"4.Boss_Hpbar_FontXUI", pGameObject), );
 
-			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, 800.f, 100.f, 30.f, 30.f, false);
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, 790.f, 100.f, 30.f, 30.f, false, false);
 			NULL_CHECK_RETURN(pGameObject, );
-			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Boss_Hpbar_FontUI", pGameObject), );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"5.Boss_Hpbar_FontNumUI", pGameObject), );
 
-			Engine::Emplace_Layer(L"Boss_Hpbar_UI", m_pUILayer);
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, 805.f, 100.f, 30.f, 30.f, false, true);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"6.Boss_Hpbar_FontNumTenUI", pGameObject), );
+			// 보스 체력바에 붙는 UI
+			pGameObject = CAhglan_FontName::Create(m_pGraphicDev, 550.f, 100.f, 124.f, 64.f);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"7.Ahglan_FontName", pGameObject), );
 
-			m_pGreenHpbar = dynamic_cast<CBoss_Hpbar_GreenUI*>(Engine::Get_GameObject(L"Boss_Hpbar_UI", L"Boss_Hpbar_GreenUI"));
-			m_pYellowHpbar = dynamic_cast<CBoss_Hpbar_YellowUI*>(Engine::Get_GameObject(L"Boss_Hpbar_UI", L"Boss_Hpbar_YellowUI"));
-			m_pRedHpbar = dynamic_cast<CBoss_Hpbar_RedUI*>(Engine::Get_GameObject(L"Boss_Hpbar_UI", L"Boss_Hpbar_RedUI"));
-			m_pFontHpbar = dynamic_cast<CBoss_Hpbar_FontUI*>(Engine::Get_GameObject(L"Boss_Hpbar_UI", L"Boss_Hpbar_FontUI"));
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, 550.f, WINCY - 200.f, 1200.f, 550.f, NAMING_BACKGROUND, BOSS_AHGLAN);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"9.Ahglan_NamingScene_Back", pGameObject), );
+
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, 550.f, WINCY - 125.f, 200.f, 100.f, NAMING_BOSSNAME, BOSS_AHGLAN);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"10.Ahglan_NamingScene_BossName", pGameObject), );
+
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, 550.f, WINCY - 75.f, 175.f, 85.f, NAMING_STAGENAME, BOSS_AHGLAN);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"11.Ahglan_NamingScene_StageName", pGameObject), );
+
+			Engine::Emplace_Layer(L"Boss_UI", m_pUILayer);
+
+			m_pGreenHpbar = dynamic_cast<CBoss_Hpbar_GreenUI*>(Engine::Get_GameObject(L"Boss_UI", L"3.Boss_Hpbar_GreenUI"));
+			m_pYellowHpbar = dynamic_cast<CBoss_Hpbar_YellowUI*>(Engine::Get_GameObject(L"Boss_UI", L"2.Boss_Hpbar_YellowUI"));
+			m_pRedHpbar = dynamic_cast<CBoss_Hpbar_RedUI*>(Engine::Get_GameObject(L"Boss_UI", L"1.Boss_Hpbar_RedUI"));
+			m_pFontHpbar = dynamic_cast<CBoss_Hpbar_FontUI*>(Engine::Get_GameObject(L"Boss_UI", L"5.Boss_Hpbar_FontNumUI"));
+			m_pFontHpbarTen = dynamic_cast<CBoss_Hpbar_FontUI*>(Engine::Get_GameObject(L"Boss_UI", L"6.Boss_Hpbar_FontNumTenUI"));
 
 			SoundGolemAtk;
 			SoundMgrBGM(L"bgm_ep8_ahglan.wav", CSoundMgr::BGM);
@@ -573,8 +597,8 @@ void CAhglan::Animation_Control()
 			m_eBossAction = BS_ATK;
 
 			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
-			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 0.8f);
-			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.8f);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 0.6f);
+			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.6f);
 
 			m_fAniEndDelay = 1.07f;
 			m_bCanAction = false;
@@ -620,7 +644,7 @@ void CAhglan::Animation_Control()
 			m_eBossAction = BS_ATK;
 
 			m_pMeshCom->Set_TrackSpeed(1.6f + m_fRandSpeed);
-			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 0.25f);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 5.f, (_float)m_lfAniEnd * 0.35f);
 			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.15f);
 
 			m_fAniEndDelay = 1.08f;
@@ -975,13 +999,13 @@ void CAhglan::Animation_Control()
 			}
 		}
 		else if (m_iAniIndex == (_uint)ATK_ONETIME_STAMP &&
-			1 == iRandomPattern)
+				 1 == iRandomPattern)
 		{
 			m_iAniIndex = (_uint)ATK_TWOHANDS_COMBO;
 			Animation_Control();
 		}
 		else if (m_iAniIndex == (_uint)ATK_THREETIME_STAMP &&
-			0 == iRandomPattern)
+				 0 == iRandomPattern)
 		{
 			if (m_bTargetIsRight)
 			{
@@ -995,22 +1019,26 @@ void CAhglan::Animation_Control()
 			}
 		}
 		else if (m_iAniIndex == (_uint)ATK_THREETIME_STAMP &&
-			1 == iRandomPattern)
+				 1 == iRandomPattern)
 		{
 			m_iAniIndex = (_uint)ATK_TWOHANDS;
 			Animation_Control();
 		}
 		else if (m_iAniIndex == (_uint)TAUNT &&
-			60.f <= m_fRand)
+				 0 == iRandomPattern)
 		{
 			m_iAniIndex = ATK_TWOHANDS_COMBO;
-
-			m_fRand = Engine::Random(0.f, 100.f);
+			Animation_Control();
+		}
+		else if (m_iAniIndex == (_uint)ATK_ONEHAND && 
+				 0 == iRandomPattern)
+		{
+			m_iAniIndex = ATK_TWOHANDS;
 			Animation_Control();
 		}
 		else if (m_iAniIndex != (_uint)ENTRY_IDLE &&
-			m_iAniIndex != (_uint)ENTRY_CONTACT &&
-			m_iAniIndex != (_uint)WALK)
+				 m_iAniIndex != (_uint)ENTRY_CONTACT &&
+				 m_iAniIndex != (_uint)WALK)
 		{
 			if (m_iAniIndex == (_uint)ATK_TURNLEFT)
 			{
@@ -1229,29 +1257,6 @@ void CAhglan::Collision_Control()
 
 void CAhglan::Update_UI()
 {
-	//_int	iDamaged = m_tInfo.iMaxHp - m_tInfo.iHp;
-	//iDamaged %= _int(m_tInfo.iMaxHp * 0.1f);
-
-	//if (m_iPreHp != m_tInfo.iHp)
-	//{
-	//	iDamaged = m_iPreHp - m_tInfo.iHp;
-
-	//	if (iDamaged <= m_iLineHp)
-	//	{
-	//		m_iLineHp -= iDamaged;
-	//	}
-	//	else
-	//	{
-	//		iDamaged -= m_iLineHp;
-	//		m_iLineHp = m_iMaxLineHp;
-	//		m_iLineHp -= iDamaged;
-	//	}
-
-	//	m_iPreHp = m_tInfo.iHp;
-	//}
-
-	_float	fHpRatio = (_float)m_tInfo.iHp / (_float)m_tInfo.iMaxHp;
-
 	if (m_pGreenHpbar)
 	{
 		m_pGreenHpbar->Set_ValueRatio((_float)m_tInfo.iHp);
@@ -1277,6 +1282,11 @@ void CAhglan::Update_UI()
 	{
 		m_pFontHpbar->Set_ValueRatio((_float)m_tInfo.iHp);
 		m_pFontHpbar->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
+	}
+	if (m_pFontHpbarTen)
+	{
+		m_pFontHpbarTen->Set_ValueRatio((_float)m_tInfo.iHp);
+		m_pFontHpbarTen->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
 	}
 }
 

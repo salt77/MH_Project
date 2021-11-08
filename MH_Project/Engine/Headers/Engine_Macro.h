@@ -3,6 +3,9 @@
 
 namespace Engine
 {
+	#define WINCX_ENGINE	1100
+	#define WINCY_ENGINE	900
+
 	#define	NO_EVENT	0
 	#define OBJ_DEAD	-1
 

@@ -35,6 +35,8 @@ _int CBoss_Hpbar_RedUI::Update_Object(const _float& fTimeDelta)
 
 	D3DXMatrixOrthoLH(&m_matProj, WINCX, WINCY, 0.f, 1.f);
 
+	Lerp();
+
 	Add_RenderGroup(RENDER_ALPHA, this);
 
 	return iExit;
@@ -144,7 +146,7 @@ HRESULT CBoss_Hpbar_RedUI::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 
 	pEffect->SetFloat("g_fHpRatio", m_fValueRatio);
 	pEffect->SetFloat("g_fFullHpRatio", m_fFullValueRatio);
-	pEffect->SetFloat("g_fLineHpRatio", m_fLineHpRatio);
+	pEffect->SetFloat("g_fLineHpRatio", m_fLerpValue);
 	pEffect->SetFloat("g_fFullLineHpRatio", m_fFullLineHpRatio);
 
 	D3DMATERIAL9		tMtrl;
@@ -175,5 +177,24 @@ HRESULT CBoss_Hpbar_RedUI::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	//pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
 
 	return S_OK;
+}
+
+void CBoss_Hpbar_RedUI::Lerp()
+{
+	if (m_fLerpValue > m_fLineHpRatio)
+	{
+		m_fLerpValue -= (m_fLerpValue - m_fLineHpRatio) * 0.05f;
+	}
+	else if (m_fLerpValue < m_fLineHpRatio)
+	{
+		if (0.f >= m_fLerpValue)
+		{
+			m_fLerpValue = m_fLineHpRatio;
+		}
+		else
+		{
+			m_fLerpValue -= (m_fLerpValue - m_fLineHpRatio) * 0.1f;
+		}
+	}
 }
 

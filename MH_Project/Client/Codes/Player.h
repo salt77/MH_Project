@@ -17,8 +17,11 @@ class CShader;
 END
 
 class CDynamicCamera;
+class CAhglan;
 class CPlayer_Hpbar_ValueUI;
 class CPlayer_Hpbar_LerpUI;
+class CPlayer_Steminabar_ValueUI;
+class CPlayer_Spbar_ValueUI;
 
 class CPlayer : public CGameObject
 {
@@ -36,6 +39,16 @@ public:
 
 public:
 	const PL_INFO&	Get_TagPlayerInfo() { return m_tPlayerInfo; }
+
+public:
+	void			Set_PlayerStemina(_float fStemina) 
+	{ 
+		if (0 < m_tPlayerInfo.fStamina)
+		{
+			m_tPlayerInfo.fStamina += fStemina;
+			m_dwSteminaRecoveryTime = GetTickCount();
+		}
+	}
 
 private:
 	// 기본 함수들
@@ -79,6 +92,8 @@ private:
 
 	_double			m_lfAniEnd = 0.f;
 
+	_ulong			m_dwSteminaRecoveryTime = GetTickCount();
+	_ulong			m_dwSteminaRecoveryDelay = 2000;
 	_ulong			m_dwSkillMoveReady = GetTickCount();
 	_ulong			m_dwSkillMoveReadyTime = 0;
 	_ulong			m_dwSkillMoveStart = GetTickCount();
@@ -122,9 +137,13 @@ private:
 
 	// Instance
 	CDynamicCamera*	m_pMainCam = nullptr;
+	CAhglan*		m_pAhglan = nullptr;
+	CLayer*			m_pUILayer = nullptr;
 	CLayer*			m_pStickyLayer = nullptr;
 	CPlayer_Hpbar_ValueUI*	m_pHpbarValueUI = nullptr;
 	CPlayer_Hpbar_LerpUI*	m_pHpbarLerpUI = nullptr;
+	CPlayer_Steminabar_ValueUI*	m_pSteminabarValueUI = nullptr;
+	CPlayer_Spbar_ValueUI*		m_pSpbarValueUI = nullptr;
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -140,7 +159,7 @@ private:
 #define	SKILL_MOVE(ReadyTime, Speed, Time)		m_bSkillMove = TRUE; m_dwSkillMoveReady = GetTickCount();		\
 												m_dwSkillMoveReadyTime = ReadyTime;	m_fSkillMoveSpeed = Speed; m_dwSkillMoveTime = Time;
 #define SKILL_MOVE_END							m_bSkillMove = FALSE; m_fSkillMoveSpeed = 0.f; m_dwSkillMoveTime = 0;
-#define STOP_MOTION(Time)			m_bStopMotion = TRUE; m_dwStopMotionStart = GetTickCount();	m_dwStopMotionTime = Time;
+#define STOP_MOTION(Time)						m_bStopMotion = TRUE; m_dwStopMotionStart = GetTickCount();	m_dwStopMotionTime = Time;
 #define STOP_MOTION_END							m_bStopMotion = FALSE; m_dwStopMotionTime = 0;
 
 #endif // Player_h__

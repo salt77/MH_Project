@@ -43,9 +43,10 @@ public:
 
 public:
 	_vec3		Get_CamDirVector(DIR eDir);
+	const MODE&	Get_CamMode() { return m_eCurMode; }
 
 public:
-	void		Set_CameraMode(MODE eMode) { m_eCurMode = eMode; }
+	void		Set_CameraMode(MODE eMode) { m_eCurMode = eMode; if (MODE_AHGLAN_START == eMode)	m_dwStartTime = GetTickCount(); }
 	void		Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwEndTime = 1000, _float fWaveInterpol = 0.5f);
 
 public:

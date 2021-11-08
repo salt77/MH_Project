@@ -79,6 +79,11 @@ inline void Emplace_Layer(const wstring wstrLayerTag, CLayer * pLayer)
 	CManagement::GetInstance()->Emplace_Layer(wstrLayerTag, pLayer);
 }
 
+inline void Delete_Layer(const wstring wstrLayerTag, const wstring wstrObjTag)
+{
+	CManagement::GetInstance()->Delete_Layer(wstrLayerTag, wstrObjTag);
+}
+
 HRESULT		Ready_Prototype(const wstring pProtoTag, CComponent* pInstance)
 {
 	return CProtoMgr::GetInstance()->Ready_Prototype(pProtoTag, pInstance);

@@ -151,6 +151,7 @@ private:
 	CBoss_Hpbar_YellowUI*	m_pYellowHpbar = nullptr;
 	CBoss_Hpbar_RedUI*		m_pRedHpbar = nullptr;
 	CBoss_Hpbar_FontUI*		m_pFontHpbar = nullptr;
+	CBoss_Hpbar_FontUI*		m_pFontHpbarTen = nullptr;
 
 public:
 	static CAhglan*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

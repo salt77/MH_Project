@@ -29,6 +29,9 @@ protected:
 	HRESULT				Add_Component(void);
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
+private:
+	void				Lerp();
+
 public:
 	void				Set_LineHpRatio(_float fLineHpRatio) { m_fLineHpRatio = fLineHpRatio; }
 	void				Set_MaxLineHpRatio(_float fMaxLineHpRatio) { m_fFullLineHpRatio = fMaxLineHpRatio; }
@@ -38,6 +41,8 @@ private:
 
 	_float				m_fLineHpRatio = 1.f;
 	_float				m_fFullLineHpRatio = 1.f;
+
+	_float				m_fLerpValue = 0.f;
 
 public:
 	static CBoss_Hpbar_YellowUI*	Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY, _int iHpType);

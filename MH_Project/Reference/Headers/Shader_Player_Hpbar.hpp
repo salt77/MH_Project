@@ -1,5 +1,7 @@
 matrix		g_matWorld, g_matView, g_matProj;		// 상수 테이블
 
+bool		g_bIsSpbar;
+
 float		g_fFullHpRatio;
 float		g_fHpRatio;
 
@@ -59,13 +61,27 @@ PS_OUT PS_MAIN(PS_IN In)
 	float	fHpRatio = g_fHpRatio;
 	fHpRatio /= g_fFullHpRatio;
 
-	float EndX = 0.65f;
+	float EndX = 0.628f;
 
 	float2 vTexUV = In.vTexUV;
 
 	// TexUV.x가 체력 비율보다 높은 곳에 있다면 TextureUV의 1.f의 ARGB를 적용하라?
-	if (fHpRatio * EndX < vTexUV.x)
-		vTexUV.x = 1.f;
+	if (!g_bIsSpbar)
+	{
+		if (fHpRatio * EndX < vTexUV.x)
+		{
+			vTexUV.x = 1.f;
+		}
+	}
+	else
+	{
+		EndX = 0.9f;
+
+		if (fHpRatio * EndX < vTexUV.x)
+		{
+			vTexUV.x = 1.f;
+		}
+	}
 
 	Out.vColor = tex2D(BaseSampler, vTexUV);
 

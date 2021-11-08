@@ -14,8 +14,8 @@ namespace Engine
 	{
 		tagObjectInfo	tagInfo;
 
-		_int			iStamina;
-		_int			iMaxStamina;
+		_float			fStamina;
+		_float			fMaxStamina;
 		_int			iSkillPoint;
 		_int			iMaxSkillPoint;
 

@@ -56,7 +56,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT	Out = (PS_OUT)0;
 
 	Out.vColor = tex2D(BaseSampler, In.vTexUV);
-	Out.vColor.a = g_fAlphaValue;
+	Out.vColor.a *= g_fAlphaValue;
 
 	return Out;
 }

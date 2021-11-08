@@ -250,7 +250,7 @@ void CDynamicCamera::Mode_Change(const _float& fTimeDelta)
 			break;
 
 		case CDynamicCamera::MODE_AHGLAN_RISE:
-			Set_CameraShake(true, CAMSHAKE_POWER * 3.f, 3000);
+			Set_CameraShake(true, CAMSHAKE_POWER * 3.f, 2900);
 			m_dwRiseTime = GetTickCount();
 			break;
 
