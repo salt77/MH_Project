@@ -501,48 +501,48 @@ void CAhglan::Animation_Control()
 			break;
 
 		case SPAWN:
-			pGameObject = CBoss_Hpbar_BackUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f);
+			pGameObject = CBoss_Hpbar_BackUI::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, BOSS_HPBAR_SCALE_X, BOSS_HPBAR_SCALE_Y);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"0.Boss_Hpbar_BackUI", pGameObject), );
 
-			pGameObject = CBoss_Hpbar_RedUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f, 2);
+			pGameObject = CBoss_Hpbar_RedUI::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, BOSS_HPBAR_SCALE_X, BOSS_HPBAR_SCALE_Y, 2);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"1.Boss_Hpbar_RedUI", pGameObject), );
 
-			pGameObject = CBoss_Hpbar_YellowUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f, 1);
+			pGameObject = CBoss_Hpbar_YellowUI::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, BOSS_HPBAR_SCALE_X, BOSS_HPBAR_SCALE_Y, 1);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"2.Boss_Hpbar_YellowUI", pGameObject), );
 
-			pGameObject = CBoss_Hpbar_GreenUI::Create(m_pGraphicDev, 550.f, 100.f, 550.f, 30.f, 0);
+			pGameObject = CBoss_Hpbar_GreenUI::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, BOSS_HPBAR_SCALE_X, BOSS_HPBAR_SCALE_Y, 0);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"3.Boss_Hpbar_GreenUI", pGameObject), );
 			
 			// Font Image
-			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, 765.f, 100.f, 23.f, 23.f, true, false);
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, WINCX * 0.72f, BOSS_HPBAR_Y, 23.f, 23.f, true, false);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"4.Boss_Hpbar_FontXUI", pGameObject), );
 
-			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, 790.f, 100.f, 30.f, 30.f, false, false);
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, WINCX * 0.735f, BOSS_HPBAR_Y, 30.f, 30.f, false, false);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"5.Boss_Hpbar_FontNumUI", pGameObject), );
 
-			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, 805.f, 100.f, 30.f, 30.f, false, true);
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, WINCX * 0.745f, BOSS_HPBAR_Y, 30.f, 30.f, false, true);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"6.Boss_Hpbar_FontNumTenUI", pGameObject), );
 			// 보스 체력바에 붙는 UI
-			pGameObject = CAhglan_FontName::Create(m_pGraphicDev, 550.f, 100.f, 124.f, 64.f);
+			pGameObject = CAhglan_FontName::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, 124.f, 64.f);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"7.Ahglan_FontName", pGameObject), );
 
-			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, 550.f, WINCY - 200.f, 1200.f, 550.f, NAMING_BACKGROUND, BOSS_AHGLAN);
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 185.f, 1500.f, 550.f, NAMING_BACKGROUND, BOSS_AHGLAN);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"9.Ahglan_NamingScene_Back", pGameObject), );
 
-			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, 550.f, WINCY - 125.f, 200.f, 100.f, NAMING_BOSSNAME, BOSS_AHGLAN);
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 125.f, 250.f, 120.f, NAMING_BOSSNAME, BOSS_AHGLAN);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"10.Ahglan_NamingScene_BossName", pGameObject), );
 
-			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, 550.f, WINCY - 75.f, 175.f, 85.f, NAMING_STAGENAME, BOSS_AHGLAN);
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 75.f, 183.f, 90.f, NAMING_STAGENAME, BOSS_AHGLAN);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"11.Ahglan_NamingScene_StageName", pGameObject), );
 
@@ -765,13 +765,28 @@ void CAhglan::Animation_Control()
 
 	case TURN_RIGHT:
 		if (5.f <= m_fAngle)
+		{
 			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * m_fTimeDelta));
+		}
+		else
+		{
+			m_iAniIndex = WALK;
+
+			Animation_Control();
+		}
 		break;
 
 	case TURN_LEFT:
 		if (5.f <= m_fAngle)
+		{
 			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * -m_fTimeDelta));
-		break;
+		}
+		else
+		{
+			m_iAniIndex = WALK;
+
+			Animation_Control();
+		}
 
 	case TAUNT:
 		if (!m_bAtkSound &&

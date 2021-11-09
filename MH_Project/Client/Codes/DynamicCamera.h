@@ -48,9 +48,16 @@ public:
 public:
 	void		Set_CameraMode(MODE eMode) { m_eCurMode = eMode; if (MODE_AHGLAN_START == eMode)	m_dwStartTime = GetTickCount(); }
 	void		Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwEndTime = 1000, _float fWaveInterpol = 0.5f);
+	void		Set_HighlightSkillShot(_float fDistance, _ulong dwHighlightTime) 
+	{ 
+		m_fHighlightDistance = fDistance;
+		m_dwHighlightStart = GetTickCount();
+		m_dwHighlightDelay = dwHighlightTime;
+	}
 
 public:
 	void		Sync_PlayerPos(_vec3 vDir, _float fSpeed, const _float& fTimeDelta) { if (MODE_NORMAL == m_eCurMode)	m_vEye += vDir * fSpeed * fTimeDelta; }
+	void		Highlight_SkillShot();
 
 private:
 	void		Camera_Shake();
@@ -68,6 +75,8 @@ private:
 	_bool		m_bLongShake = false;
 	_bool		m_bSoundGolemEntry = false;
 
+	_ulong		m_dwHighlightStart = GetTickCount();
+	_ulong		m_dwHighlightDelay = 0;
 	_ulong		m_dwShakeTime = GetTickCount();
 	_ulong		m_dwShakeDelay = 1000;
 
@@ -80,6 +89,8 @@ private:
 	_float		m_fSpeed = 20.f;
 	_float		m_fCamAngle = 0.f;
 	_float		m_fDistanceFromTarget = 2.15f;
+	_float		m_fOriginDistanceFromTarget = 2.15f;
+	_float		m_fHighlightDistance = 2.15f;
 	_float		m_fInterpolY = 0.85f;
 
 	// Ahglan Cutscene

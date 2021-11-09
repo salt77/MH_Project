@@ -98,6 +98,10 @@ Engine::_uint CLoading::Loading_ForStage(void)
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ahglan_FontUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/golem_ahglan_font.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ahglan_QuestUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/quest_golem_ahglan_target.tga", TEX_NORMAL)), E_FAIL);
 
+	// Buff UI
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_CriticalUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/skill_lethita_glidingfury.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_ReinforceFuryUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/skill_lethita_spirit_wind.tga", TEX_NORMAL)), E_FAIL);
+
 	lstrcpy(m_szLoading, L"Loading Etc..");
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Calculator", CCalculator::Create(m_pGraphicDev)), E_FAIL);
 

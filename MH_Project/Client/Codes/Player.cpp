@@ -5,6 +5,7 @@
 #include "DynamicCamera.h"
 #include "Ahglan.h"
 #include "StickyBomb.h"
+
 #include "Player_Hpbar_BackUI.h"
 #include "Player_Hpbar_ValueUI.h"
 #include "Player_Hpbar_LerpUI.h"
@@ -12,6 +13,7 @@
 #include "Player_Steminabar_ValueUI.h"
 #include "Player_Spbar_BackUI.h"
 #include "Player_Spbar_ValueUI.h"
+#include "Player_Buff_CriticalUI.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -48,7 +50,7 @@ HRESULT CPlayer::Ready_Object()
 	m_tPlayerInfo.fStamina = 300.f;
 	m_tPlayerInfo.fMaxStamina = m_tPlayerInfo.fStamina;
 	m_tPlayerInfo.iSkillPoint = 0;
-	m_tPlayerInfo.iMaxSkillPoint = 100;
+	m_tPlayerInfo.iMaxSkillPoint = 1000;
 
 	return S_OK;
 }
@@ -93,8 +95,6 @@ HRESULT CPlayer::LateReady_Object()
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Spbar_ValueUI", pGameObject), E_FAIL);
 
-	// Spbar
-
 	Engine::Emplace_Layer(L"Player_UI", m_pUILayer);
 
 
@@ -121,13 +121,14 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	// Debug 용
 	if (Key_Down('J'))
 	{
-		m_tPlayerInfo.iSkillPoint += 25;
+		m_tPlayerInfo.iSkillPoint += 250.f;
 	}
 
-	m_pMainCam = dynamic_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
+	m_pMainCam = static_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
 
 	//SetUp_OnTerrain();
 	Compute_CanAction();
+	Compute_Buff();
 	Key_Input(fTimeDelta);
 	SecondaryMode_MouseMove();
 	Weapon_Change();
@@ -138,7 +139,6 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	Update_UI();
 	FootStepSound();
 	MoveOn_Skill(fTimeDelta);
-	Compute_Buff();
 
 	/*_int iExit = CGameObject::Update_Object(fTimeDelta);*/
 	StopMotion();
@@ -175,7 +175,7 @@ _int CPlayer::LateUpdate_Object(const _float & fTimeDelta)
 			{
 				CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
 
-				iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+				iter->second->Set_ColliderMatrix(pHitBoxPosTrans->Get_WorldMatrix());
 			}
 			else
 			{
@@ -433,10 +433,37 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
-	// 스킬 액션(퓨리, sp스킬, 보조무기 액션)
+	// 스테미나 x 
+	// => Key_Input()보단 Animation_Control()이 더 맞을 것 같아서 이동함. 
+	/*if (PL_TIRED >= m_eCurAction)
+	{
+		if (m_iAniIndex != STATE_TIRED_DURING)
+		{
+			if (0.f >= m_tPlayerInfo.fStamina)
+			{
+				m_iAniIndex = STATE_TIRED_BEGIN;
+			}
+		}
+	}*/
+
+	// 스킬 액션(sp스킬, 보조무기 액션)
 	if (PL_SKILL >= m_eCurAction)
 	{
-		if (Key_Down('F'))
+		if (Key_Down('Z'))
+		{
+			if (m_bCanAction)
+			{
+				if (PLAYER_SP_FEVER <= m_tPlayerInfo.iSkillPoint)
+				{
+					m_eCurAction = PL_SKILL;
+					m_iAniIndex = STATE_SP_FEVER;
+
+					m_tPlayerInfo.iSkillPoint -= PLAYER_SP_FEVER;
+				}
+			}
+		}
+
+		else if (Key_Down('F'))
 		{
 			CStickyBomb*	pBomb = static_cast<CStickyBomb*>(Engine::Get_GameObject(L"StickyBomb", L"StickyBomb"));
 
@@ -499,8 +526,25 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		{
 			if (m_bCanAction)
 			{
-				m_eCurAction = PL_DASH;
-				m_iAniIndex = STATE_DASH_N;
+				switch (m_iDashCount)
+				{
+				case 0:
+					m_eCurAction = PL_DASH;
+					m_iAniIndex = STATE_DASH_N;
+
+					++m_iDashCount;
+					break;
+
+				case 1:
+					m_eCurAction = PL_DASH;
+					m_iAniIndex = STATE_DASH_S;
+
+					m_iDashCount = 0;
+					break;
+
+				default:
+					break;
+				}
 			}
 		}
 	}
@@ -529,7 +573,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		if (Key_Pressing(VK_SHIFT))
 		{
-			//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
 			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed * 1.35f, fTimeDelta));
 			m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
 
@@ -537,7 +580,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 		else
 		{
-			//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed, fTimeDelta);
 			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta));
 			m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed, fTimeDelta);
 
@@ -596,21 +638,9 @@ void CPlayer::Compute_CanAction()
 {
 	if (m_eCurAction == PL_ATK)
 	{
-		if (STATE_ATK1 != m_iAniIndex &&
-			STATE_ATK4 != m_iAniIndex)
+		if (STATE_ATK4 != m_iAniIndex)
 		{
 			if (m_fAniTime < (m_lfAniEnd * 0.32f))
-			{
-				m_bCanAction = false;
-			}
-			else
-			{
-				m_bCanAction = true;
-			}
-		}
-		else if (STATE_ATK1 == m_iAniIndex)
-		{
-			if (m_fAniTime < (m_lfAniEnd * 0.27f))
 			{
 				m_bCanAction = false;
 			}
@@ -631,32 +661,27 @@ void CPlayer::Compute_CanAction()
 			}
 		}
 	}
-	else if (m_eCurAction == PL_SMASH ||
-			 m_eCurAction == PL_SKILL ||
-			 m_eCurAction == PL_DASH)
+	else if (m_eCurAction == PL_DASH)
 	{
-		if (STATE_FURY == m_eCurState ||
-			STATE_FURY2 == m_eCurState)
+		if (m_fAniTime < (m_lfAniEnd * 0.45f))
 		{
-			if (m_fAniTime < (m_lfAniEnd * 0.01f))
-			{
-				m_bCanAction = false;
-			}
-			else
-			{
-				m_bCanAction = true;
-			}
+			m_bCanAction = false;
 		}
 		else
 		{
-			if (m_fAniTime < (m_lfAniEnd * 0.25f))
-			{
-				m_bCanAction = false;
-			}
-			else
-			{
-				m_bCanAction = true;
-			}
+			m_bCanAction = true;
+		}
+	}
+	else if (m_eCurAction == PL_SMASH ||
+		m_eCurAction == PL_SKILL)
+	{
+		if (m_fAniTime < (m_lfAniEnd * 0.25f))
+		{
+			m_bCanAction = false;
+		}
+		else
+		{
+			m_bCanAction = true;
 		}
 	}
 	else
@@ -697,6 +722,44 @@ void CPlayer::Compute_Buff()
 				++iter;
 			}
 		}
+	}
+}
+
+void CPlayer::Compute_Critical()
+{
+	if (m_fCriticalPotential >= Engine::Random(0.f, 10.f))
+	{
+		Add_Buff(BUFF_CRITICAL, 1500);
+
+		SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
+	}
+}
+
+void CPlayer::Add_Buff(BUFF_ID eID, _ulong dwBuffDuration)
+{
+	list<tag_BuffDeBuff*>::iterator		iter = m_listBuff.begin();
+
+	//CGameObject* pGameObject = nullptr;
+
+	for (; iter != m_listBuff.end(); )
+	{
+		if (eID == (*iter)->eBuffID)
+		{
+			Safe_Delete(*iter);
+			iter = m_listBuff.erase(iter);
+
+			m_listBuff.emplace_back(new tag_BuffDeBuff(eID, GetTickCount(), dwBuffDuration));
+			break;
+		}
+		else
+		{
+			++iter;
+		}
+	}
+
+	if (iter == m_listBuff.end())
+	{
+		m_listBuff.emplace_back(new tag_BuffDeBuff(eID, GetTickCount(), dwBuffDuration));
 	}
 }
 
@@ -741,13 +804,6 @@ void CPlayer::Rotate_PlayerLook(_vec3 & TargetLookVector)
 			m_pTransformCom->Rotation(ROT_Y, -acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
 		}
 	}
-
-	// Debug 용
-	_vec3	vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
-	if (!(-100.f <= vMyPos.y && 100.f >= vMyPos.y))
-	{
-		_vec3 vPos = vMyPos;
-	}
 }
 
 //void CPlayer::MoveOn_Skill(const _float& fTimeDelta)
@@ -777,15 +833,18 @@ void CPlayer::MoveOn_Skill(const _float & fTimeDelta)
 {
 	if (m_bSkillMove && !m_bStopMotion)
 	{
-		if (m_fSkillMoveStartTime <= m_fAniTime && 
-			m_fSkillMoveEndTime >= m_fAniTime)
+		if (PL_TIRED != m_eCurAction)
 		{
-			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
-			m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT), m_fSkillMoveSpeed, fTimeDelta);
-		}
-		else if (m_fSkillMoveEndTime < m_fAniTime)
-		{
-			m_bSkillMove = false;
+			if (m_fSkillMoveStartTime <= m_fAniTime &&
+				m_fSkillMoveEndTime >= m_fAniTime)
+			{
+				m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
+				m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT), m_fSkillMoveSpeed, fTimeDelta);
+			}
+			else if (m_fSkillMoveEndTime < m_fAniTime)
+			{
+				m_bSkillMove = false;
+			}
 		}
 	}
 }
@@ -836,6 +895,7 @@ void CPlayer::Weapon_Change()
 	if (m_eCurWeaponMode != m_ePreWeaponMode)
 	{
 		map<const wstring, _bool>::iterator		iter = m_mapActiveParts.begin();
+
 		switch (m_eCurWeaponMode)
 		{
 		case Engine::WEAPON_DUALSWORD:
@@ -881,7 +941,6 @@ void CPlayer::Weapon_Change()
 void CPlayer::Animation_Control()
 {
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
-	m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 
 	// Speed 조절
 	if (PL_ATK == m_eCurAction)
@@ -890,7 +949,19 @@ void CPlayer::Animation_Control()
 	}
 	else if (PL_SMASH == m_eCurAction || PL_SKILL == m_eCurAction || PL_DASH == m_eCurAction)
 	{
-		m_pMeshCom->Set_TrackSpeed(2.4f);
+		if (STATE_FURY == m_iAniIndex ||
+			STATE_FURY2 == m_iAniIndex)
+		{
+			m_pMeshCom->Set_TrackSpeed(2.15f);
+		}
+		else if (STATE_SP_FEVER == m_iAniIndex)
+		{
+			m_pMeshCom->Set_TrackSpeed(2.65f);
+		}
+		else
+		{
+			m_pMeshCom->Set_TrackSpeed(2.4f);
+		}
 	}
 	else if (STATE_DAMAGE_RESIST == m_eCurState)
 	{
@@ -906,11 +977,26 @@ void CPlayer::Animation_Control()
 		m_pMeshCom->Set_TrackSpeed(1.9f);
 	}
 
+	// 스테미나 오링 
+	if (PL_TIRED >= m_eCurAction)
+	{
+		if (m_iAniIndex != STATE_TIRED_DURING)
+		{
+			if (0.f >= m_tPlayerInfo.fStamina)
+			{
+				m_iAniIndex = STATE_TIRED_BEGIN;
+			}
+		}
+	}
+
 	// 각 Animation 별 디테일
 	m_eCurState = (PL_STATE)m_iAniIndex;
+
 	if (m_eCurState != m_ePreState)
 	{
 		m_bAnimation = true;
+
+		m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 
 		// Sound 변수 초기화
 		for (_uint i = 0; i < 3; ++i)
@@ -924,6 +1010,17 @@ void CPlayer::Animation_Control()
 		_uint	iRandSound = 0;
 		switch (m_eCurState)
 		{
+		case STATE_TIRED_BEGIN:
+			m_lfAniEnd *= 0.35f;
+			break;
+
+		case STATE_TIRED_DURING:
+			break;
+
+		case STATE_TIRED_END:
+			m_lfAniEnd *= 0.8f;
+			break;
+
 		case STATE_THROW_BEGIN:
 			break;
 
@@ -959,6 +1056,10 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_SP_FEVER:
+			SKILL_MOVE_BYANI(0.6f, 2500.f, 0.73f);
+			m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
+
+			m_lfAniEnd *= 2.f;
 			break;
 
 			//case STATE_SPRINT_STOP:
@@ -971,7 +1072,6 @@ void CPlayer::Animation_Control()
 		case STATE_DEAD:
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
-
 			break;
 
 		case STATE_DAMAGE_RESIST:
@@ -979,7 +1079,6 @@ void CPlayer::Animation_Control()
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
-			m_lfAniEnd *= 0.65f;
 
 			SoundPlayerHurt;
 			SoundMgr(L"Skill_DownResist.wav", CSoundMgr::PLAYER_EFFECT);
@@ -993,6 +1092,7 @@ void CPlayer::Animation_Control()
 
 			SKILL_MOVE_BYANI(0.2f, 350.f, 0.85f);
 
+			m_lfAniEnd *= 0.7f;
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
 			break;
@@ -1012,8 +1112,8 @@ void CPlayer::Animation_Control()
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
-			m_lfAniEnd *= 0.1f;
 
+			m_lfAniEnd *= 0.85f;
 			SoundPlayerHurt;
 			break;
 
@@ -1022,8 +1122,8 @@ void CPlayer::Animation_Control()
 
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
-			m_lfAniEnd *= 0.05f;
 
+			m_lfAniEnd *= 0.85f;
 			SoundPlayerHurt;
 			break;
 
@@ -1033,15 +1133,16 @@ void CPlayer::Animation_Control()
 		case STATE_DOUBLE_CRECSENT:
 			SKILL_MOVE_BYANI(0.135f, 300.f, 0.5f);
 
+			m_pMainCam->Set_HighlightSkillShot(1.95f, 750);
 			Set_PlayerStemina(-20.f);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_DASHATK:
 			SKILL_MOVE_BYANI(0.01f, 1100.f, 0.15f);
 
+			m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
 			Set_PlayerStemina(-10.f);
 
 			m_eNextAtk = STATE_ATK1;
@@ -1049,13 +1150,15 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_FURY2:
-			SKILL_MOVE_BYANI(0.45f, 3500.f, 0.55f);
+			SKILL_MOVE_BYANI(0.45f, 4000.f, 0.6f);
+			m_lfAniEnd *= 1.2f;
 
 			Set_PlayerStemina(-30.f);
 			break;
 
 		case STATE_FURY:
-			SKILL_MOVE_BYANI(0.45f, 3500.f, 0.55f);
+			SKILL_MOVE_BYANI(0.45f, 4000.f, 0.6f);
+			m_lfAniEnd = 1.7f;
 
 			Set_PlayerStemina(-30.f);
 			break;
@@ -1064,10 +1167,16 @@ void CPlayer::Animation_Control()
 			//	break;
 
 		case STATE_DASH_S:
+			SKILL_MOVE_BYANI(0.125f, 700.f, 0.3f);
+
+			Set_PlayerStemina(-9.f);
+
+			m_eNextAtk = STATE_ATK1;
+			SetNextSmash(STATE_DOUBLE_CRECSENT, 750);
 			break;
 
 		case STATE_DASH_N:
-			SKILL_MOVE_BYANI(0.125f, 1200.f, 0.3f);
+			SKILL_MOVE_BYANI(0.125f, 900.f, 0.3f);
 
 			Set_PlayerStemina(-15.f);
 
@@ -1100,7 +1209,7 @@ void CPlayer::Animation_Control()
 			Set_PlayerStemina(-25.f);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_DASHATK;		// 4타 스매쉬 추가타 구현 전까지는 잠깐 대쉬어택으로 대체함. 
+			//m_eNextSmash = STATE_DASHATK;		// 4타 스매쉬 추가타 구현 전까지는 잠깐 대쉬어택으로 대체함. 
 			//m_eNextSmash = STATE_SMASH4_B;
 			break;
 
@@ -1110,7 +1219,6 @@ void CPlayer::Animation_Control()
 			Set_PlayerStemina(-20.f);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_SMASH2:
@@ -1128,7 +1236,6 @@ void CPlayer::Animation_Control()
 			Set_PlayerStemina(-15.f);
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_DASHATK;
 			break;
 
 		case STATE_ATK4:
@@ -1171,7 +1278,7 @@ void CPlayer::Animation_Control()
 			SKILL_MOVE_END;
 
 			m_eNextAtk = STATE_ATK1;
-			m_eNextSmash = STATE_DASHATK;
+			//m_eNextSmash = STATE_DASHATK;
 			break;
 		}
 
@@ -1185,6 +1292,8 @@ void CPlayer::Animation_Control()
 	{
 	case STATE_SPRINT:
 		Set_PlayerStemina(-0.05f);
+
+		m_eNextSmash = STATE_DASHATK;
 		break;
 
 	case STATE_THROW_END:
@@ -1200,14 +1309,20 @@ void CPlayer::Animation_Control()
 	{
 		if (Engine::STATE_IDLE == m_eCurState ||
 			Engine::STATE_RUN == m_eCurState ||
-			Engine::STATE_SPRINT == m_eCurState || 
-			Engine::STATE_THROW_DURING == m_eCurState)
+			Engine::STATE_SPRINT == m_eCurState ||
+			Engine::STATE_THROW_DURING == m_eCurState || 
+			Engine::STATE_TIRED_DURING == m_eCurState)
 		{
 			m_bAnimation = true;
 		}
 		else
 		{
 			m_bAnimation = false;
+		}
+
+		if (Engine::STATE_FURY == m_eCurState)
+		{
+			_int a = 0;
 		}
 
 		switch (m_eCurState)
@@ -1236,6 +1351,13 @@ void CPlayer::Animation_Control()
 		case Engine::STATE_THROW_DURING:
 			break;
 
+		case Engine::STATE_TIRED_BEGIN:
+			m_iAniIndex = (_uint)STATE_TIRED_DURING;
+			break;
+
+		case Engine::STATE_TIRED_DURING:
+			break;
+
 		default:
 			if (STATE_THROW_END == m_ePreState)
 			{
@@ -1245,10 +1367,12 @@ void CPlayer::Animation_Control()
 				Rotate_PlayerLook(+*m_pTransformCom->Get_Info(INFO_LOOK));
 			}
 
+			m_iDashCount = 0;
+
 			m_eCurAction = PL_IDLE;
 
 			m_eNextAtk = STATE_ATK1;
-			if (m_dwNextSmashCheckTime + m_dwNextSmashDelay <= GetTickCount())
+			if (m_dwNextSmashCheckTime + m_dwNextSmashDelay < GetTickCount())
 			{
 				m_eNextSmash = STATE_DASHATK;
 			}
@@ -1295,6 +1419,16 @@ void CPlayer::Collision_Control()
 		_uint iRandSound = 0;
 		switch (m_iAniIndex)
 		{
+		case STATE_SP_FEVER:
+			HITBOX_CONTROLL(0.6f, 0.75f, TRUE);
+			if (!m_bAtkSound[0] &&
+				m_fAniTime >= 0.6f)
+			{
+				m_bAtkSound[0] = true;
+				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
+			}
+			break;
+
 		case STATE_DOUBLE_CRECSENT:
 			HITBOX_CONTROLL(0.35f, 0.6f, TRUE);
 			if (!m_bAtkSound[2] &&
@@ -1316,22 +1450,64 @@ void CPlayer::Collision_Control()
 			break;
 
 		case STATE_FURY2:
-			HITBOX_CONTROLL(0.4f, 0.6f, TRUE);
+			for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			{
+				if (L"Other_Attack" == iter->first)
+				{
+					if (0.37f <= fAniTime &&
+						0.6f >= fAniTime)
+					{
+						iter->second->Set_CanCollision(true);
+					}
+					else
+					{
+						iter->second->Set_CanCollision(false);
+					}
+				}
+				else
+				{
+					iter->second->Set_CanCollision(false);
+				}
+			}
+			//HITBOX_CONTROLL(0.4f, 0.6f, TRUE);
 			if (!m_bSkillSound[0] &&
-				m_fAniTime >= 0.4f)
+				m_fAniTime >= 0.37f)
 			{
 				m_bSkillSound[0] = true;
-				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
+				SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.27f);
+
+				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
 			}
 			break;
 
 		case STATE_FURY:
-			HITBOX_CONTROLL(0.4f, 0.6f, TRUE);
+			for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			{
+				if (L"Other_Attack" == iter->first)
+				{
+					if (0.37f <= fAniTime &&
+						0.6f >= fAniTime)
+					{
+						iter->second->Set_CanCollision(true);
+					}
+					else
+					{
+						iter->second->Set_CanCollision(false);
+					}
+				}
+				else
+				{
+					iter->second->Set_CanCollision(false);
+				}
+			}
+			//HITBOX_CONTROLL(0.4f, 0.6f, TRUE);
 			if (!m_bSkillSound[0] &&
-				m_fAniTime >= 0.4f)
+				m_fAniTime >= 0.37f)
 			{
 				m_bSkillSound[0] = true;
-				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
+				SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.27f);
+
+				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
 			}
 			break;
 
@@ -1343,6 +1519,8 @@ void CPlayer::Collision_Control()
 				m_bLethitaSound[1] = true;
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
+
+				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
 			}
 			else if (!m_bAtkSound[1] &&
 				m_fAniTime >= 0.45f)
@@ -1360,6 +1538,8 @@ void CPlayer::Collision_Control()
 				m_bLethitaSound[0] = true;
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
+
+				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
 			}
 			break;
 
@@ -1389,6 +1569,8 @@ void CPlayer::Collision_Control()
 				m_bAtkSound[0] = true;
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
+
+				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
 			}
 			break;
 
@@ -1400,6 +1582,8 @@ void CPlayer::Collision_Control()
 				m_bAtkSound[1] = true;
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_Metal.wav", CSoundMgr::PLAYER_EFFECT);
+
+				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
 			}
 			break;
 
@@ -1411,6 +1595,8 @@ void CPlayer::Collision_Control()
 				m_bAtkSound[1] = true;
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
+
+				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
 			}
 			break;
 
@@ -1501,14 +1687,24 @@ void CPlayer::Collision_Control()
 							iter_BossDamaged->second->Get_CanCollision())
 						{
 							if (m_pCalculatorCom->Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
-																&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
+								&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
 							{
 								switch (m_eCurState)
 								{
+								case Engine::STATE_SP_FEVER:
+									m_pAhglan->Set_Damage(PLAYER_SMASHPOWER2);
+
+									Add_Buff(BUFF_CRITICAL, 1500);
+									SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
+									break;
+
 								case Engine::STATE_FURY:
 									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASHPOWER2);
+									Add_Buff(BUFF_CRITICAL, 1500);
+									SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
+									//Compute_Critical();
 									break;
 
 								case Engine::STATE_FURY2:
@@ -1523,6 +1719,7 @@ void CPlayer::Collision_Control()
 									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH3POWER);
+									Compute_Critical();
 									break;
 
 								case Engine::STATE_SMASH4:
@@ -1531,6 +1728,7 @@ void CPlayer::Collision_Control()
 									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH4POWER);
+									Compute_Critical();
 									break;
 
 								case Engine::STATE_SMASH3:
@@ -1539,6 +1737,7 @@ void CPlayer::Collision_Control()
 									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH3POWER);
+									Compute_Critical();
 									break;
 
 								case Engine::STATE_SMASH2_B:
@@ -1546,6 +1745,7 @@ void CPlayer::Collision_Control()
 									GET_SPPOINT_ATK;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH2BPOWER);
+									Compute_Critical();
 									break;
 
 								case Engine::STATE_SMASH2:
@@ -1554,6 +1754,7 @@ void CPlayer::Collision_Control()
 									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH2POWER);
+									Compute_Critical();
 									break;
 
 								case Engine::STATE_SMASH1:
@@ -1562,6 +1763,7 @@ void CPlayer::Collision_Control()
 									GET_SPPOINT_SMASH;
 
 									m_pAhglan->Set_Damage(PLAYER_SMASH1POWER);
+									Compute_Critical();
 									break;
 
 								case Engine::STATE_ATK1:
@@ -1595,17 +1797,14 @@ void CPlayer::Collision_Control()
 
 									m_pAhglan->Set_Damage(PLAYER_ATKPOWER);
 									break;
-								}
 
-								//iter_PlayerHit->second->Set_RenderColType(COL_TRUE);
-								//iter_BossDamaged->second->Set_RenderColType(COL_TRUE);
+								case Engine::STATE_DASHATK:
+									SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+									GET_SPPOINT_ATK;
 
-								if ((PL_SMASH == m_eCurAction) && 
-									8.f <= Engine::Random(0.f, 10.f))
-								{
-									m_listBuff.emplace_back(new tag_BuffDeBuff(BUFF_CRITICAL, GetTickCount(), 1000));
-
-									SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.15f);
+									m_pAhglan->Set_Damage(PLAYER_ATKPOWER);
+									Compute_Critical();
+									break;
 								}
 
 								m_bCanHit = false;
@@ -1629,16 +1828,13 @@ void CPlayer::Collision_Control()
 
 				for (_uint j = 0; j < mapBossSphereCol.size(); ++j)
 				{
-					//iter_PlayerDamaged->second->Set_RenderColType(COL_FALSE);
-					//iter_BossHit->second->Set_RenderColType(COL_FALSE);
-
 					if (iter_PlayerDamaged->second->Get_CanCollision() &&
 						iter_BossHit->second->Get_CanCollision())
 					{
 						if (m_pCalculatorCom->Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
-							iter_BossHit->second->Get_Center(), iter_BossHit->second->Get_Radius() * SCALE_AHGLAN))
+															   iter_BossHit->second->Get_Center(), iter_BossHit->second->Get_Radius() * SCALE_AHGLAN))
 						{
-							if (80.f <= Engine::Random(0.f, 100.f) && 
+							if (80.f <= Engine::Random(0.f, 100.f) &&
 								AHGLAN_ATKPOWER < m_tPlayerInfo.tagInfo.iHp)
 							{
 								m_eCurAction = PL_DAMAGED;
@@ -1693,15 +1889,12 @@ void CPlayer::Collision_Control()
 							}
 
 							// 공격 당하면 원 상태로 되돌려야 하는 상태들
-							if (CDynamicCamera::MODE_NORMAL != m_pMainCam->Get_CamMode() || 
+							if (CDynamicCamera::MODE_NORMAL != m_pMainCam->Get_CamMode() ||
 								WEAPON_DUALSWORD != m_eCurWeaponMode)
 							{
 								m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_NORMAL);
 								m_eCurWeaponMode = WEAPON_DUALSWORD;
 							}
-
-							//iter_PlayerDamaged->second->Set_RenderColType(COL_TRUE);
-							//iter_BossHit->second->Set_RenderColType(COL_TRUE);
 
 							break;
 						}
@@ -1762,19 +1955,30 @@ void CPlayer::Update_State()
 	}
 
 	// 스테미나 관련
-	if (m_tPlayerInfo.fStamina < m_tPlayerInfo.fMaxStamina && 
-		m_dwSteminaRecoveryTime + m_dwSteminaRecoveryDelay < GetTickCount())
+	if (STATE_TIRED_DURING == m_eCurState)
 	{
-		m_tPlayerInfo.fStamina += 0.2f;
+		if (30.f <= m_tPlayerInfo.fStamina)
+		{
+			m_iAniIndex = STATE_TIRED_END;
+		}
 	}
 
 	if (0 > m_tPlayerInfo.fStamina)
 	{
 		m_tPlayerInfo.fStamina = 0;
+
+		m_eCurAction = PL_TIRED;
+		Animation_Control();
 	}
 	else if (m_tPlayerInfo.fMaxStamina < m_tPlayerInfo.fStamina)
 	{
 		m_tPlayerInfo.fStamina = m_tPlayerInfo.fMaxStamina;
+	}
+
+	if (m_tPlayerInfo.fStamina < m_tPlayerInfo.fMaxStamina &&
+		m_dwSteminaRecoveryTime + m_dwSteminaRecoveryDelay < GetTickCount())
+	{
+		m_tPlayerInfo.fStamina += 0.3f;
 	}
 
 	// sp 관련

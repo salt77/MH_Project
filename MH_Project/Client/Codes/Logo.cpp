@@ -60,7 +60,7 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 
 void CLogo::Render_Scene(void)
 {
-	Render_Font(L"Font_Nanumgothic_Bold", m_pLoading->Get_String(), &_vec2(WINCX * 0.5f - 350.f, WINCY - 135.f), D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	Render_Font(L"Font_Nanumgothic_Bold", m_pLoading->Get_String(), &_vec2(SCREEN_CENTER_X - 390.f, LOADINGBAR_Y - 60.f), D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 }
 
 HRESULT CLogo::Ready_Layer_Environment(const wstring pLayerTag)
@@ -87,17 +87,13 @@ HRESULT CLogo::Ready_Layer_UI(const wstring pLayerTag)
 
 	CGameObject*		pGameObject = nullptr;
 
-	pGameObject = CLoadingBar_BackEffect::Create(m_pGraphicDev, 550.f, 725.f, 800.f, 15.f);
+	pGameObject = CLoadingBar_BackEffect::Create(m_pGraphicDev, SCREEN_CENTER_X, LOADINGBAR_Y, WINCX * 0.7f, 15.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Loading_BackEffect_UI", pGameObject), E_FAIL);
 
-	pGameObject = CLoadingBar_Progress::Create(m_pGraphicDev, 550.f, 725.f, 800.f, 15.f);
+	pGameObject = CLoadingBar_Progress::Create(m_pGraphicDev, SCREEN_CENTER_X, LOADINGBAR_Y, WINCX * 0.7f, 15.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Loading_Progress_UI", pGameObject), E_FAIL);
-
-	//pGameObject = CPlayer_Hpbar_ValueUI::Create(m_pGraphicDev, 350.f, 35.f, 650.f, 25.f);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Hpbar_ValueUI", pGameObject), E_FAIL);
 
 	pGameObject = CFadeInOut::Create(m_pGraphicDev, 0.f, 0.f, WINCX * 2.f, WINCY * 2.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);

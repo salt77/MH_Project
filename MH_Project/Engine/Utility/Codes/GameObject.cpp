@@ -21,7 +21,7 @@ Engine::CGameObject::~CGameObject(void)
 }
 
 
-void CGameObject::Set_Damage(_uint iDamage)
+void CGameObject::Set_Damage(_int iDamage)
 {
 	if (iDamage <= m_tInfo.iHp)
 	{

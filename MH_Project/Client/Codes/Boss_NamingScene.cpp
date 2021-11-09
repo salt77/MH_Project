@@ -1,8 +1,7 @@
 #include "stdafx.h"
-#include "Ahglan_FontName.h"
+#include "Boss_NamingScene.h"
 
 #include "Export_Function.h"
-#include "Boss_NamingScene.h"
 
 CBoss_NamingScene::CBoss_NamingScene(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUI(pGraphicDev)

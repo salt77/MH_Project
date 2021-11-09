@@ -66,6 +66,8 @@ private:
 	// °´Ã¼ ÇÔ¼öµé
 	void			Compute_CanAction();
 	void			Compute_Buff();
+	void			Compute_Critical();
+	void			Add_Buff(BUFF_ID eID, _ulong dwBuffDuration);
 	void			Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector);
 	void			Rotate_PlayerLook(_vec3& TargetLookVector);
 	//void			MoveOn_Skill(const _float& fTimeDelta);
@@ -88,12 +90,14 @@ private:
 
 	_uint			m_iAniIndex = (_uint)STATE_IDLE;
 	_uint			m_iSecondaryCount = 0;
+	_uint			m_iDashCount = 0;
 
 	_float			m_fSpeed = 3.f;
 	_float			m_fSkillMoveSpeed = 0.f;
 	_float			m_fAniTime = 0.f;
 	_float			m_fSkillMoveStartTime = 0.f;
 	_float			m_fSkillMoveEndTime = 0.f;
+	_float			m_fCriticalPotential = 4.f;
 
 	_double			m_lfAniEnd = 0.f;
 

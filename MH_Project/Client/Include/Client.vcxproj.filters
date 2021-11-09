@@ -154,6 +154,12 @@
     <Filter Include="02.GameObject\09.UI\00.PlayerUI\02.Spbar\01.Value">
       <UniqueIdentifier>{277e6868-fea3-484b-b7e1-e2c2391edc4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\03.Buff">
+      <UniqueIdentifier>{c149420b-e917-43fa-b503-88abab0eeb1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical">
+      <UniqueIdentifier>{4abd34b4-b0e2-4827-b720-0d77a7932fb5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -270,6 +276,9 @@
     <ClInclude Include="..\Codes\Player_Spbar_ValueUI.h">
       <Filter>02.GameObject\09.UI\00.PlayerUI\02.Spbar\01.Value</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Player_Buff_CriticalUI.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -376,6 +385,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Player_Spbar_ValueUI.cpp">
       <Filter>02.GameObject\09.UI\00.PlayerUI\02.Spbar\01.Value</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player_Buff_CriticalUI.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

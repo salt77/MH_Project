@@ -1,8 +1,8 @@
 #ifndef Define_h__
 #define Define_h__
 
-#define	WINCX	1100
-#define	WINCY	800
+#define	WINCX	1300
+#define	WINCY	900
 
 extern	HWND		 g_hWnd;
 extern	HINSTANCE	 g_hInst;
@@ -65,9 +65,9 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 	}
 
 #define GET_SPPOINT_ATK																	\
-	if (m_tPlayerInfo.iSkillPoint + (rand() % 2 + 1) < m_tPlayerInfo.iMaxSkillPoint)	\
+	if (m_tPlayerInfo.iSkillPoint + (rand() % 5 + 1) < m_tPlayerInfo.iMaxSkillPoint)	\
 	{																					\
-		m_tPlayerInfo.iSkillPoint += rand() % 2 + 1;									\
+		m_tPlayerInfo.iSkillPoint += rand() % 5 + 1;									\
 	}																					\
 	else																				\
 	{																					\
@@ -75,9 +75,9 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 	}
 
 #define GET_SPPOINT_SMASH																\
-	if (m_tPlayerInfo.iSkillPoint + (rand() % 5 + 2) < m_tPlayerInfo.iMaxSkillPoint)	\
+	if (m_tPlayerInfo.iSkillPoint + (rand() % 50 + 5) < m_tPlayerInfo.iMaxSkillPoint)	\
 	{																					\
-		m_tPlayerInfo.iSkillPoint += rand() % 5 + 2;									\
+		m_tPlayerInfo.iSkillPoint += rand() % 50 + 5;									\
 	}																					\
 	else																				\
 	{																					\
@@ -116,6 +116,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define PLAYER_SMASH4POWER	6500
 #define PLAYER_SMASHPOWER2	9000
 
+#define PLAYER_SP_FEVER		75
+
 #define FADEOUTSPEED		0.0005f
 #define PROGRESSBARSPEED	0.00005f;
 
@@ -123,6 +125,13 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 
 #define	INFINITY_INT		999999
 #define INFINITY_FLOAT		999999.f
+
+#define SCREEN_CENTER_X		WINCX * 0.5f
+
+#define LOADINGBAR_Y		WINCY * 0.88f
+#define BOSS_HPBAR_Y		WINCY * 0.15f
+#define BOSS_HPBAR_SCALE_X	WINCX * 0.52f
+#define BOSS_HPBAR_SCALE_Y	35.f
 
 
 

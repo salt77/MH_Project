@@ -158,6 +158,7 @@
     <ClInclude Include="..\Codes\Boss_Hpbar_YellowUI.h" />
     <ClInclude Include="..\Codes\BackGround.h" />
     <ClInclude Include="..\Codes\Boss_NamingScene.h" />
+    <ClInclude Include="..\Codes\Player_Buff_CriticalUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_BackUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_ValueUI.h" />
     <ClInclude Include="..\Codes\Player_Steminabar_BackUI.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="..\Codes\Boss_Hpbar_YellowUI.cpp" />
     <ClCompile Include="..\Codes\BackGround.cpp" />
     <ClCompile Include="..\Codes\Boss_NamingScene.cpp" />
+    <ClCompile Include="..\Codes\Player_Buff_CriticalUI.cpp" />
     <ClCompile Include="..\Codes\Player_Spbar_BackUI.cpp" />
     <ClCompile Include="..\Codes\Player_Spbar_ValueUI.cpp" />
     <ClCompile Include="..\Codes\Player_Steminabar_BackUI.cpp" />

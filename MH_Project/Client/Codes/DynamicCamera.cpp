@@ -58,6 +58,7 @@ Engine::_int CDynamicCamera::Update_Object(const _float& fTimeDelta)
 	{
 		Mouse_Fix();
 	}
+	Highlight_SkillShot();
 	Mouse_Move();
 	CutScene_Eye();
 
@@ -133,6 +134,28 @@ void CDynamicCamera::Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwE
 		m_fFYProgress = 0.f;
 		m_fLongWaveInterpol = fWaveInterpol;
 		m_vShakeInterpol = _vec3(0.f, 0.f, 0.f);
+	}
+}
+
+void CDynamicCamera::Highlight_SkillShot()
+{
+	if (m_dwHighlightStart + m_dwHighlightDelay >= GetTickCount())
+	{
+		if (m_fHighlightDistance < m_fDistanceFromTarget)
+		{
+			m_fDistanceFromTarget -= (m_fDistanceFromTarget - m_fHighlightDistance) * 0.1f;
+		}
+	}
+	else
+	{
+		if (m_fOriginDistanceFromTarget > m_fDistanceFromTarget)
+		{
+			m_fDistanceFromTarget += (m_fOriginDistanceFromTarget - m_fDistanceFromTarget) * 0.1f;
+		}
+		else
+		{
+			m_fDistanceFromTarget = m_fOriginDistanceFromTarget;
+		}
 	}
 }
 

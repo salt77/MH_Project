@@ -1,3 +1,7 @@
+38.	Tired_Begin
+37.	Tired_During
+36. 	Tired_End
+
 35.	Throw_Begin
 34.	Throw_During
 33. 	Throw_End
