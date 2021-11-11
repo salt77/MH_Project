@@ -47,62 +47,67 @@ HRESULT CManagement::Ready_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 
 
 	// shader_sample
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Sample.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Sample.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Sample", pShader), E_FAIL);
 
 	//shader_terrain
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Terrain.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Terrain.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Terrain", pShader), E_FAIL);
 
 	// shader_mesh
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Mesh.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Mesh.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Mesh", pShader), E_FAIL);
 
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Player.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Player.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Player", pShader), E_FAIL);
 
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Ahglan.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Ahglan.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Ahglan", pShader), E_FAIL);
 
 	// shader_shade
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Shade.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Shade.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Shade", pShader), E_FAIL);
 
 	// shader_shade
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Blend.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Blend.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Blend", pShader), E_FAIL);
 
 	// shader_Normal_UI
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_UI.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_UI.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_UI", pShader), E_FAIL);
 
 	// shader_Player_Hpbar_Value_UI
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Player_Hpbar.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Player_Hpbar.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Player_Hpbar_Value_UI", pShader), E_FAIL);
 
 	// shader_Loading_Progress_UI
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Loading_Progress.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Loading_Progress.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Loading_Progress_UI", pShader), E_FAIL);
 
 	// shader_FadeInOut_UI
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_FadeInOut.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_FadeInOut.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_FadeInOut_UI", pShader), E_FAIL);
 
 	// shader_BossHpbar_UI
-	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Boss_Hpbar.hpp");
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Boss_Hpbar.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_BossHpbar_UI", pShader), E_FAIL);
+
+	// shader_DamageFont
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_DamageFont.fx");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_DamageFont", pShader), E_FAIL);
 
 	return S_OK;
 }

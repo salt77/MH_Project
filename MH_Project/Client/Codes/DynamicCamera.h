@@ -60,13 +60,13 @@ public:
 	void		Highlight_SkillShot();
 
 private:
-	void		Camera_Shake();
+	void		Camera_Shake(const _float& fTimeDelta);
 	void		Mode_Change(const _float& fTimeDelta);
 	void		At_Update(const _float& fTimeDelta);
 	void		Key_Input(const _float& fTimeDelta);
 	void		Mouse_Move(void);
 	void		Mouse_Fix(void);
-	void		CutScene_Eye();
+	void		CutScene_Eye(const _float& fTimeDelta);
 
 private:
 	_bool		m_bClick = false;
@@ -115,8 +115,8 @@ private:
 	CTransform*	m_pPlayerTrans = nullptr;
 	CFadeInOut*	m_pFadeInOut = nullptr;
 
-#define		WaveFxProgressive	0.002f;
-#define		WaveFyProgressive	0.00125f;
+#define		WaveFxProgressive	1.5f
+#define		WaveFyProgressive	0.9f
 
 public:
 	static CDynamicCamera*	Create(LPDIRECT3DDEVICE9 pGraphicDev,

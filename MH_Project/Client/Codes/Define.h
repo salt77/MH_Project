@@ -16,8 +16,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 		if (L"Hit_LHandLong" == iter->first ||				\
 			L"Hit_RHandLong" == iter->first)				\
 		{													\
-			if (StartTime <= fAniTime &&					\
-				EndTime >= fAniTime)						\
+			if (StartTime <= m_fAniTime &&					\
+				m_fAniTime <= EndTime)						\
 			{												\
 				iter->second->Set_CanCollision(true);		\
 			}												\
@@ -36,8 +36,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 		if (L"Hit_LHand" == iter->first ||					\
 			L"Hit_RHand" == iter->first)					\
 		{													\
-			if (StartTime <= fAniTime &&					\
-				EndTime >= fAniTime)						\
+			if (StartTime <= m_fAniTime &&					\
+				EndTime >= m_fAniTime)						\
 			{												\
 				iter->second->Set_CanCollision(true);		\
 			}												\
@@ -54,8 +54,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 }
 
 #define HITBOX_CONTROLL_SPHERE(StartTime, EndTime)			\
-	if (StartTime <= fAniTime &&							\
-		EndTime >= fAniTime)								\
+	if (StartTime <= m_fAniTime &&							\
+		EndTime >= m_fAniTime)								\
 	{														\
 		iter_Hit->second->Set_CanCollision(true);			\
 	}														\
@@ -119,7 +119,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define PLAYER_SP_FEVER		75
 
 #define FADEOUTSPEED		0.0005f
-#define PROGRESSBARSPEED	0.00005f;
+#define PROGRESSBARSPEED	0.05f
 
 #define LERP_PLAYERHPBAR	2.f
 
@@ -132,6 +132,10 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define BOSS_HPBAR_Y		WINCY * 0.15f
 #define BOSS_HPBAR_SCALE_X	WINCX * 0.52f
 #define BOSS_HPBAR_SCALE_Y	35.f
+
+#define POOLING_POS			_vec3(0.f, -999.f, 0.f)
+
+#define DAMAGEFONT_COUNT	20
 
 
 

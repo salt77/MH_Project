@@ -18,7 +18,7 @@ protected:
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 public:
-	void		AhglanFadeOut();
+	void		AhglanFadeOut(const _float& fTimeDelta);
 	void		Set_AhglanFadeOut() { m_bAhglanFadeOut = true; }
 
 private:

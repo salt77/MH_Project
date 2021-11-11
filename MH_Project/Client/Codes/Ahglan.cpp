@@ -453,7 +453,7 @@ void CAhglan::FootStep()
 		m_dwFootStepStart = GetTickCount();
 
 		SoundMgr(L"step_lv3.wav", CSoundMgr::MONSTER2);
-		m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 0.6f);
+		m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 1.3f);
 	}
 }
 
@@ -632,7 +632,7 @@ void CAhglan::Animation_Control()
 			m_eBossAction = BS_ATK;
 
 			m_pMeshCom->Set_TrackSpeed(2.f + m_fRandSpeed);
-			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 1.2f);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 1.5f);
 			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.9f);
 
 			m_bCanAction = false;
@@ -643,8 +643,8 @@ void CAhglan::Animation_Control()
 		case ATK_ONETIME_STAMP:
 			m_eBossAction = BS_ATK;
 
-			m_pMeshCom->Set_TrackSpeed(1.6f + m_fRandSpeed);
-			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 5.f, (_float)m_lfAniEnd * 0.35f);
+			m_pMeshCom->Set_TrackSpeed(1.65f + m_fRandSpeed);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.25f, 6.f, (_float)m_lfAniEnd * 0.35f);
 			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.15f);
 
 			m_fAniEndDelay = 1.08f;
@@ -657,7 +657,7 @@ void CAhglan::Animation_Control()
 			m_eBossAction = BS_ATK;
 
 			m_pMeshCom->Set_TrackSpeed(1.95f + m_fRandSpeed);
-			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 1.2f);
+			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.05f, 4.f, (_float)m_lfAniEnd * 1.5f);
 			BS_SKILL_ROTATION(0.f, 180.f, (_float)m_lfAniEnd * 0.9f);
 
 			m_fAniEndDelay = 1.05f;
@@ -820,7 +820,7 @@ void CAhglan::Animation_Control()
 		}
 		if (m_fAniTime <= m_lfAniEnd * 0.3f)
 		{
-			m_pMainCamera->Set_CameraShake(true, CAMSHAKE_POWER * 0.5f, 4000, 3.f);
+			m_pMainCamera->Set_CameraShake(true, CAMSHAKE_POWER * 3.f, 5500, 0.35f);
 		}
 		break;
 
@@ -830,17 +830,17 @@ void CAhglan::Animation_Control()
 		{
 			m_bEffectSound = true;
 			SoundMgr(L"step_lv6.wav", CSoundMgr::MONSTER3);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 4.f);
 		}
 		break;
 
 	case ATK_TWOHANDS:
 		if (!m_bEffectSound &&
-			m_fAniTime >= m_lfAniEnd * 0.42f)
+			m_fAniTime >= m_lfAniEnd * 0.45f)
 		{
 			m_bEffectSound = true;
 			SoundMgr(L"step_lv6.wav", CSoundMgr::MONSTER3);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.5f);
 		}
 		break;
 
@@ -850,17 +850,17 @@ void CAhglan::Animation_Control()
 		{
 			m_bEffectSound = true;
 			SoundMgr(L"swing_lv7.wav", CSoundMgr::MONSTER3);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.5f);
 		}
 		break;
 
 	case ATK_TURNLEFT:
 		if (!m_bEffectSound &&
-			m_fAniTime >= m_lfAniEnd * 0.4f)
+			m_fAniTime >= m_lfAniEnd * 0.45f)
 		{
 			m_bEffectSound = true;
 			SoundMgr(L"swing_lv7.wav", CSoundMgr::MONSTER3);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.5f);
 		}
 		break;
 
@@ -870,21 +870,21 @@ void CAhglan::Animation_Control()
 		{
 			m_bStampAtkSound[0] = true;
 			SoundMgr(L"step_lv4.wav", CSoundMgr::MONSTER2);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.5f);
 		}
 		else if (!m_bStampAtkSound[1] &&
 			m_fAniTime >= m_lfAniEnd * 0.37f)
 		{
 			m_bStampAtkSound[1] = true;
 			SoundMgr(L"step_lv4.wav", CSoundMgr::MONSTER3);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.5f);
 		}
 		else if (!m_bStampAtkSound[2] &&
 			m_fAniTime >= m_lfAniEnd * 0.63f)
 		{
 			m_bStampAtkSound[2] = true;
 			SoundMgr(L"step_lv5.wav", CSoundMgr::MONSTER2);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.5f);
 		}
 		break;
 
@@ -894,7 +894,7 @@ void CAhglan::Animation_Control()
 		{
 			m_bStampAtkSound[0] = true;
 			SoundMgr(L"step_lv4.wav", CSoundMgr::MONSTER2);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.5f);
 		}
 		break;
 
@@ -904,21 +904,21 @@ void CAhglan::Animation_Control()
 		{
 			m_bStampAtkSound[0] = true;
 			SoundMgr(L"step_lv4.wav", CSoundMgr::MONSTER2);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.5f);
 		}
 		else if (!m_bStampAtkSound[1] &&
 			m_fAniTime >= m_lfAniEnd * 0.6f)
 		{
 			m_bStampAtkSound[1] = true;
 			SoundMgr(L"step_lv4.wav", CSoundMgr::MONSTER3);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.f);
 		}
 		else if (!m_bStampAtkSound[2] &&
 			m_fAniTime >= m_lfAniEnd * 1.f)
 		{
 			m_bStampAtkSound[2] = true;
 			SoundMgr(L"step_lv5.wav", CSoundMgr::MONSTER2);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.5f);
 		}
 		break;
 
@@ -931,7 +931,7 @@ void CAhglan::Animation_Control()
 	case ATK_ROLLING_ONETIME_BEGIN:
 		if (m_dwRollingStartTime + 1500 > GetTickCount())
 		{
-			m_pMainCamera->Set_CameraShake(true, CAMSHAKE_POWER * 0.8f, 1200, 4.2f);
+			m_pMainCamera->Set_CameraShake(true, CAMSHAKE_POWER * 0.8f, 1200, 4.f);
 		}
 		if (m_dwRollingStartTime + 1800 > GetTickCount())
 		{
@@ -960,7 +960,7 @@ void CAhglan::Animation_Control()
 		{
 			m_bEffectSound = true;
 			SoundMgr(L"step_lv6.wav", CSoundMgr::MONSTER3);
-			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
+			m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 3.5f);
 		}
 		break;
 
@@ -1083,24 +1083,8 @@ void CAhglan::Animation_Control()
 
 void CAhglan::Collision_Control()
 {
-	_float	fAniTime = m_pMeshCom->Get_AniFrameTime();
-
 	map<const wstring, CBoxCollider*>::iterator	iter_Damaged = m_mapBoxColliderCom.begin();
 	map<const wstring, CCollider*>::iterator	iter_Hit = m_mapColliderCom.begin();
-
-	// 부위파괴되면 충돌체 삭제 
-	//map<const wstring, _bool>::iterator			iter_ActiveParts = m_mapActiveParts.begin();
-
-	//for (; iter_ActiveParts != m_mapActiveParts.end(); ++iter_ActiveParts)
-	//{
-	//	if (!iter_ActiveParts->second)
-	//	{
-	//		for (; iter_Damaged != m_mapBoxColliderCom.end(); ++iter_Damaged)
-	//		{
-	//			if (iter_Damaged->first == iter)
-	//		}
-	//	}
-	//}
 
 	// DamagedBox
 	if (!m_mapBoxColliderCom.empty())
@@ -1179,13 +1163,13 @@ void CAhglan::Collision_Control()
 		{
 			if (L"Hit_LFoot" == iter_Hit->first)
 			{
-				if (m_lfAniEnd * 0.1f <= fAniTime &&
-					m_lfAniEnd * 0.21f >= fAniTime)
+				if (m_lfAniEnd * 0.1f <= m_fAniTime &&
+					m_lfAniEnd * 0.21f >= m_fAniTime)
 				{
 					iter_Hit->second->Set_CanCollision(true);
 				}
-				else if (m_lfAniEnd * 0.53f <= fAniTime &&
-					m_lfAniEnd * 0.65f >= fAniTime)
+				else if (m_lfAniEnd * 0.53f <= m_fAniTime &&
+					m_lfAniEnd * 0.65f >= m_fAniTime)
 				{
 					iter_Hit->second->Set_CanCollision(true);
 				}
@@ -1216,13 +1200,13 @@ void CAhglan::Collision_Control()
 		{
 			if (L"Hit_LFoot" == iter_Hit->first)
 			{
-				if (m_lfAniEnd * 0.12f <= fAniTime &&
-					m_lfAniEnd * 0.29f >= fAniTime)
+				if (m_lfAniEnd * 0.12f <= m_fAniTime &&
+					m_lfAniEnd * 0.29f >= m_fAniTime)
 				{
 					iter_Hit->second->Set_CanCollision(true);
 				}
-				else if (m_lfAniEnd * 0.85f <= fAniTime &&
-					m_lfAniEnd * 1.f >= fAniTime)
+				else if (m_lfAniEnd * 0.85f <= m_fAniTime &&
+					m_lfAniEnd * 1.f >= m_fAniTime)
 				{
 					iter_Hit->second->Set_CanCollision(true);
 				}

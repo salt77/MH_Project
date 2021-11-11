@@ -54,9 +54,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	FAILED_CHECK_RETURN(Ready_Timer(L"Timer_Immediate"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Timer(L"Timer_FPS60"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Timer(L"Timer_FPS30"), E_FAIL);
 
 	// 프레임 설치
 	FAILED_CHECK_RETURN(Ready_Frame(L"Frame60", 60.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Frame(L"Frame30", 30.f), E_FAIL);
 
 
 	// 기본 메시지 루프입니다.
@@ -78,12 +80,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			Set_TimeDelta(L"Timer_Immediate");
 			_float Timer_Immediate = Get_TimeDelta(L"Timer_Immediate");
 
-			//if (IsPermit_Call(L"Frame60", Timer_Immediate))
+			//if (IsPermit_Call(L"Frame30", Timer_Immediate))
 			//{
-			//	Set_TimeDelta(L"Timer_FPS60");
-			//	_float Timer_60 = Get_TimeDelta(L"Timer_FPS60");
+			//	Set_TimeDelta(L"Timer_FPS30");
+			//	_float Timer_30 = Get_TimeDelta(L"Timer_FPS30");
 
-			//	pMainApp->Update_MainApp(Timer_60);
+			//	pMainApp->Update_MainApp(Timer_30);
+			//	pMainApp->LateUpdate_MainApp(Timer_30);
 			//	pMainApp->Render_MainApp();
 			//}
 

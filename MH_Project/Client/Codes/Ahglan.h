@@ -106,7 +106,7 @@ private:
 	_float			m_fSpeed = 4.5f;
 	_float			m_fAngle = 0.f;
 	_float			m_fAniTime = 0.f;
-	_float			m_fDistance = 99999.f;
+	_float			m_fDistance = INFINITY_FLOAT;
 	_float			m_fRandSpeed = (rand() % 300) * 0.001f;
 	_float			m_fRand;
 	// Skill Move

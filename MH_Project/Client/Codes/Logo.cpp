@@ -40,7 +40,7 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 {
 	_int		iExit = CScene::Update_Scene(fTimeDelta);
 
-	Update_ProgressUI();
+	Update_ProgressUI(fTimeDelta);
 
 	if (true == m_pLoading->Get_Finish() && 
 		1.f <= m_fFadeOut)
@@ -124,7 +124,7 @@ HRESULT CLogo::Ready_Prototype(void)
 	return S_OK;
 }
 
-void CLogo::Update_ProgressUI()
+void CLogo::Update_ProgressUI(const _float& fTimeDelta)
 {
 	CLoadingBar_Progress*	pProgress = static_cast<CLoadingBar_Progress*>(Engine::Get_GameObject(L"UI", L"Loading_Progress_UI"));
 	CFadeInOut*		pFadeInOut = static_cast<CFadeInOut*>(Engine::Get_GameObject(L"UI", L"FadeInOut_UI"));
@@ -182,12 +182,13 @@ void CLogo::Update_ProgressUI()
 
 		if (m_fProgressBar < (fTarget * 0.01f))
 		{
-			m_fProgressBar += fSpeed * PROGRESSBARSPEED;			// 프로그래스바 속도 보정(너무 빠름)
+			m_fProgressBar += fSpeed * PROGRESSBARSPEED * fTimeDelta;			// 프로그래스바 속도 보정(너무 빠름)
 		}
 
 		if (1.f <= m_fProgressBar)
 		{
-			m_fFadeOut += FADEOUTSPEED * 0.85f;
+			m_fFadeOut += FADEOUTSPEED;
+			pProgress->Set_ValueRatio(m_fProgressBar);
 			pFadeInOut->Set_ValueRatio(m_fFadeOut);
 		}
 		else

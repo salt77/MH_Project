@@ -41,7 +41,7 @@ private:
 
 private:
 	_ulong					m_dwRenderCnt = 0;
-	_tchar					m_szFPS[256];
+	_tchar					m_szFPS[256] = L"0";
 	_float					m_fTime = 0.f;
 
 	vector<_matrix>			m_vecSavePoint;

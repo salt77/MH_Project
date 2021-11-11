@@ -28,8 +28,11 @@ Engine::CVIBuffer::CVIBuffer(const CVIBuffer& rhs)
 	, m_dwVtxCntX(rhs.m_dwVtxCntX)
 	, m_dwVtxCntZ(rhs.m_dwVtxCntZ)
 {
-	m_pIB->AddRef();
-	m_pVB->AddRef();
+	if (m_pVB && m_pIB)
+	{
+		m_pIB->AddRef();
+		m_pVB->AddRef();
+	}
 }
 
 Engine::CVIBuffer::~CVIBuffer(void)

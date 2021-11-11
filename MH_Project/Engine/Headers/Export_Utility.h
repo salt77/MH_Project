@@ -23,6 +23,7 @@
 #include "Navimesh.h"
 #include "Shader.h"
 #include "RenderTargetMgr.h"
+#include "Trail.h"
 
 #include "Camera.h"
 

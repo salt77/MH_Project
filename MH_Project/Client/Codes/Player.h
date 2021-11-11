@@ -18,6 +18,7 @@ END
 
 class CDynamicCamera;
 class CAhglan;
+class CTrail_Sword;
 class CPlayer_Hpbar_ValueUI;
 class CPlayer_Hpbar_LerpUI;
 class CPlayer_Steminabar_ValueUI;
@@ -76,6 +77,8 @@ private:
 	void			FootStepSound();
 	void			Weapon_Change();
 	void			SetNextSmash(PL_STATE eState, _ulong dwDelay) { m_eNextSmash = eState; m_dwNextSmashCheckTime = GetTickCount();  m_dwNextSmashDelay = dwDelay; }
+	void			Create_DamageFont(_uint iDamage, const _matrix* pMatrix, DAMAGEFONT_ID eID);
+	void			Make_TrailEffect(const _float& fDeltaTime);
 
 public:
 	HRESULT			Add_NaviMesh();
@@ -105,10 +108,6 @@ private:
 	_ulong			m_dwNextSmashDelay = 0;
 	_ulong			m_dwSteminaRecoveryTime = GetTickCount();
 	_ulong			m_dwSteminaRecoveryDelay = 2000;
-	//_ulong			m_dwSkillMoveReady = GetTickCount();
-	//_ulong			m_dwSkillMoveReadyTime = 0;
-	//_ulong			m_dwSkillMoveStart = GetTickCount();
-	//_ulong			m_dwSkillMoveTime = 0;
 	_ulong			m_dwStopMotionStart = GetTickCount();
 	_ulong			m_dwStopMotionTime = 0;
 	_ulong			m_dwFootStepStart = GetTickCount();
@@ -151,7 +150,8 @@ private:
 	CDynamicCamera*	m_pMainCam = nullptr;
 	CAhglan*		m_pAhglan = nullptr;
 	CLayer*			m_pUILayer = nullptr;
-	CLayer*			m_pStickyLayer = nullptr;
+	CLayer*			m_pOtherLayer = nullptr;
+	CTrail_Sword*	m_pTrailSword = nullptr;
 	CPlayer_Hpbar_ValueUI*	m_pHpbarValueUI = nullptr;
 	CPlayer_Hpbar_LerpUI*	m_pHpbarLerpUI = nullptr;
 	CPlayer_Steminabar_ValueUI*	m_pSteminabarValueUI = nullptr;

@@ -1,0 +1,17 @@
+"OBBMotionBlurTrail"
+{
+	"$basetexture" "_rt_SmallFB0"
+	"$model"	"1"
+	
+	"$TrailFactorScale" 	"1"
+		
+	"$TrailFactor" 		"1"
+	"$PrevViewMatrix"	"center 0 0 0 scale 1 1 rotate 0 translate 0 0 0"
+
+	"Proxies"
+	{
+		"OBBMotionBlur"
+		{
+		}
+	}
+}

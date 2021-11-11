@@ -109,7 +109,10 @@
     <Filter Include="07.RenderTarget\Manager">
       <UniqueIdentifier>{7d7b95b4-9dbe-4dc2-8c34-bff3aa4b1187}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Component\10.Shader\hpp">
+    <Filter Include="04.Component\00.VIBuffer\04.Trail">
+      <UniqueIdentifier>{2e2f132d-5b71-43c6-a38f-aac0abb72675}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\10.Shader\HLSL">
       <UniqueIdentifier>{6a363f39-84c6-423f-8b6c-dd3bf48daaa9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -219,41 +222,44 @@
     <ClInclude Include="..\Codes\Shader.h">
       <Filter>04.Component\10.Shader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_Blend.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Trail.h">
+      <Filter>04.Component\00.VIBuffer\04.Trail</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_Mesh.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_Ahglan.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_Sample.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_Blend.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_Shade.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_Boss_Hpbar.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_Terrain.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_FadeInOut.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_Ahglan.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_Loading_Progress.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_Player.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_Mesh.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_Player_Hpbar.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_Player.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_UI.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_Player_Hpbar.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_Loading_Progress.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_Sample.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_FadeInOut.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_Shade.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Shader_Boss_Hpbar.hpp">
-      <Filter>04.Component\10.Shader\hpp</Filter>
+    <ClInclude Include="..\Codes\Shader_Terrain.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Shader_UI.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -364,5 +370,13 @@
     <ClCompile Include="..\Codes\Shader.cpp">
       <Filter>04.Component\10.Shader</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\Trail.cpp">
+      <Filter>04.Component\00.VIBuffer\04.Trail</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Codes\Shader_DamageFont.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

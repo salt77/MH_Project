@@ -2,6 +2,7 @@
 #include "Stage.h"
 #include "Ahglan_FontName.h"
 #include "Ahglan_StageUI.h"
+#include "DamageFont.h"
 
 #include "Export_Function.h"
 
@@ -161,6 +162,30 @@ HRESULT CStage::Ready_Layer_UI(const wstring pLayerTag)
 	pGameObject = CAhglan_StageUI::Create(m_pGraphicDev, 75.f, 50.f, 200.f, 100.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"0.Ahglan_QuestTarget", pGameObject), E_FAIL);
+
+	// Damage Font UI (풀링 사용 => 미리 생성 (종류별로 30개씩 생성 -> 최대 4자릿수 데미지))
+	for (_uint i = 0; i < DAMAGEFONT_COUNT; ++i)
+	{
+		wstring wstrNormalFont = L"DamageFont_Normal_UI_";
+		wstring wstrSkillFont = L"DamageFont_Skill_UI_";
+		wstring wstrMonsterFont = L"DamageFont_Monster_UI_";
+		
+		wstrNormalFont += to_wstring(i);
+		wstrSkillFont += to_wstring(i);
+		wstrMonsterFont += to_wstring(i);
+
+		pGameObject = CDamageFont::Create(m_pGraphicDev, DAMAGEFONT_NORMAL);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrNormalFont, pGameObject), E_FAIL);
+
+		pGameObject = CDamageFont::Create(m_pGraphicDev, DAMAGEFONT_SKILL);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrSkillFont, pGameObject), E_FAIL);
+
+		pGameObject = CDamageFont::Create(m_pGraphicDev, DAMAGEFONT_MONSTER);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrMonsterFont, pGameObject), E_FAIL);
+	}
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 

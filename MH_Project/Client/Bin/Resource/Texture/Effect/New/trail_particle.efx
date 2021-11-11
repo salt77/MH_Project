@@ -1,0 +1,77 @@
+"particle"
+{
+	"follow_parent_1"	"1"
+	"direction_axis"	"0"
+	"position_offset_1"	"0 0 20"
+
+	"material"		"effects/yellowflare"
+	"delay"	"0"
+	
+	// Particle specification
+	"emitter"	"trail"
+
+	"emit_interval"	"0.016"
+	"emit_duration"	"3"
+
+	"gravity"	
+	{
+		"0" "30"
+		"1" "130"
+	}
+
+
+	"particle_count"	
+	{
+		"0" 	"5 5"
+		"0.3" 	"5 5"
+		"0.7" 	"5 5"
+		"1" 	"10 10"
+	}
+
+	"die_time" "3 3"
+	
+	"speed"			
+	{
+		"0" "100 100"
+		"1" "200 200"
+	}
+	"spread_angle"		
+	{
+		"0.3"	"30 30"
+		"0.7"	"90 90"
+		"1"	"30 30"
+	}
+
+	"color_ramp"	"1 2"
+	"color_min"	
+	{
+		"0"	"200 200 0"
+		"1"	"0 0 200"
+	}
+	"color_max"	
+	{
+		"250 0 100"
+		"100 250 250"
+	}
+
+	"length_delta"	
+	{
+		"0"	"1 1"
+		"1"	"0.3 0.3"
+	}
+	"width_delta"	
+	{	
+		"0"	"10 10"
+		"1"	"20 30"
+	}
+	
+	"alpha_delta"	
+	{
+		"0"	"255"
+		"1"	"0"
+	}
+
+	"use_light"	"1"
+}
+
+

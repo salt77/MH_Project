@@ -160,6 +160,15 @@
     <Filter Include="02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical">
       <UniqueIdentifier>{4abd34b4-b0e2-4827-b720-0d77a7932fb5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\10.Trail_Sword">
+      <UniqueIdentifier>{eef3002d-1c61-4f41-832c-29d196e6e54e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\11.DamageFont">
+      <UniqueIdentifier>{f0889c0f-fbde-4185-bf44-2300078a86fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\01.EffectMgr">
+      <UniqueIdentifier>{a9bb61b1-408f-4daf-bafd-710e586bd675}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -279,6 +288,12 @@
     <ClInclude Include="..\Codes\Player_Buff_CriticalUI.h">
       <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Trail_Sword.h">
+      <Filter>02.GameObject\10.Trail_Sword</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\DamageFont.h">
+      <Filter>02.GameObject\11.DamageFont</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -301,9 +316,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\BackGround.cpp">
       <Filter>02.GameObject\00.BackGround</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Player.cpp">
-      <Filter>02.GameObject\01.Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Terrain.cpp">
       <Filter>02.GameObject\02.Terrain</Filter>
@@ -388,6 +400,15 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Player_Buff_CriticalUI.cpp">
       <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Trail_Sword.cpp">
+      <Filter>02.GameObject\10.Trail_Sword</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DamageFont.cpp">
+      <Filter>02.GameObject\11.DamageFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player.cpp">
+      <Filter>02.GameObject\01.Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

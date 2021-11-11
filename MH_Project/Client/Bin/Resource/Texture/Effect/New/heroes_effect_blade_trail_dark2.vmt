@@ -1,0 +1,9 @@
+"ParticleGeneric"
+{
+	"$basetexture" "effects/heroes_effect_blade_trail_dark2"
+	"$additive" "0"
+	"$vertexalpha" "1"
+	"$vertexcolor" 1
+	"$translucent" "1"
+	"$nocull" 1
+}

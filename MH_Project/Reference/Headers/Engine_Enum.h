@@ -53,6 +53,11 @@ namespace Engine
 		BUFF_CRITICAL, 
 		BUFF_END
 	};
+	enum DAMAGEFONT_ID
+	{
+		DAMAGEFONT_NORMAL, DAMAGEFONT_SKILL, DAMAGEFONT_MONSTER, 
+		DAMAGEFONT_END
+	};
 
 	// ********************************************* //
 	enum WINMODE { MODE_FULL, MODE_WIN };

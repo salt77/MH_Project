@@ -50,7 +50,7 @@ Engine::_int CDynamicCamera::Update_Object(const _float& fTimeDelta)
 	_int	iExit = CCamera::Update_Object(fTimeDelta);
 
 	Key_Input(fTimeDelta);
-	Camera_Shake();
+	Camera_Shake(fTimeDelta);
 	At_Update(fTimeDelta);
 	Mode_Change(fTimeDelta);
 
@@ -60,7 +60,7 @@ Engine::_int CDynamicCamera::Update_Object(const _float& fTimeDelta)
 	}
 	Highlight_SkillShot();
 	Mouse_Move();
-	CutScene_Eye();
+	CutScene_Eye(fTimeDelta);
 
 	//m_matWorld = *m_pTransformCom->Get_WorldMatrix();
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
@@ -159,32 +159,32 @@ void CDynamicCamera::Highlight_SkillShot()
 	}
 }
 
-void CDynamicCamera::Camera_Shake()
+void CDynamicCamera::Camera_Shake(const _float& fTimeDelta)
 {
 	if (m_bShake &&
 		m_dwShakeTime + m_dwShakeDelay >= GetTickCount())
 	{
-		m_fFXProgress += WaveFxProgressive/* + Engine::Random(-0.001f, 0.002f)*/;
+		m_fFXProgress += WaveFxProgressive * fTimeDelta;
 		m_fShakeWaveX += m_fFXProgress;
-		m_fFYProgress += WaveFyProgressive/* + Engine::Random(-0.001f, 0.002f)*/;
+		m_fFYProgress += WaveFyProgressive * fTimeDelta;
 		m_fShakeWaveY += m_fFYProgress;
 		m_vShakeInterpol.x = sin(m_fShakeWaveX * 10.f) * powf(0.5f, m_fShakeWaveX) * m_fShakePower;
 		m_vShakeInterpol.y = sin(m_fShakeWaveY * 5.f) * powf(0.5f, m_fShakeWaveY) * m_fShakePower;
 		m_vShakeInterpol.z = sin(m_fShakeWaveX * 10.f) * powf(0.5f, m_fShakeWaveX) * m_fShakePower;
 	}
 	else if (m_bLongShake &&
-		m_dwShakeTime + m_dwShakeDelay >= GetTickCount())
+			 m_dwShakeTime + m_dwShakeDelay >= GetTickCount())
 	{
-		m_fFXProgress += WaveFxProgressive/* + Engine::Random(-0.001f, 0.002f)*/;
+		m_fFXProgress += WaveFxProgressive * fTimeDelta;
 		m_fShakeWaveX += m_fFXProgress;
-		m_fFYProgress += WaveFyProgressive/* + Engine::Random(-0.001f, 0.002f)*/;
+		m_fFYProgress += WaveFyProgressive * fTimeDelta;
 		m_fShakeWaveY += m_fFYProgress;
 		m_vShakeInterpol.x = sin(m_fShakeWaveX * m_fLongWaveInterpol) * powf(0.9f, m_fShakeWaveX * 0.02f) * m_fShakePower;
 		m_vShakeInterpol.y = sin(m_fShakeWaveY * m_fLongWaveInterpol * 0.5f) * powf(0.9f, m_fShakeWaveY * 0.02f) * m_fShakePower;
 		m_vShakeInterpol.z = sin(m_fShakeWaveX * m_fLongWaveInterpol) * powf(0.9f, m_fShakeWaveX * 0.02f) * m_fShakePower;
 	}
 	else if (m_bShake &&
-		m_dwShakeTime + m_dwShakeDelay < GetTickCount())
+			 m_dwShakeTime + m_dwShakeDelay < GetTickCount())
 	{
 		m_bShake = false;
 		m_bLongShake = false;
@@ -273,14 +273,14 @@ void CDynamicCamera::Mode_Change(const _float& fTimeDelta)
 			break;
 
 		case CDynamicCamera::MODE_AHGLAN_RISE:
-			Set_CameraShake(true, CAMSHAKE_POWER * 3.f, 2900);
+			Set_CameraShake(true, CAMSHAKE_POWER * 4.f, 2900, 0.25f);
 			m_dwRiseTime = GetTickCount();
 			break;
 
 		case CDynamicCamera::MODE_AHGLAN_STAND:
 			if (pBossTrans)
 			{
-				Set_CameraShake(true, CAMSHAKE_POWER * 3.f, 650, 1.75f);
+				Set_CameraShake(true, CAMSHAKE_POWER * 1.f, 650, 2.f);
 				m_dwStandTime = GetTickCount();
 				m_vEye = *D3DXVec3Normalize(&(+*pBossTrans->Get_Info(INFO_RIGHT)), &(+*pBossTrans->Get_Info(INFO_RIGHT))) * (m_fDistanceFromTarget);
 			}
@@ -348,7 +348,7 @@ void CDynamicCamera::At_Update(const _float& fTimeDelta)
 			m_vAt = vAtTarget + m_vShakeInterpol - m_vPreShakeInterpol;
 			m_vPreShakeInterpol = m_vShakeInterpol;
 
-			m_fRiseUp += 0.0075f;
+			m_fRiseUp += 1.05f * fTimeDelta;
 		}
 	}
 	else if (MODE_AHGLAN_STAND == m_eCurMode)
@@ -491,7 +491,7 @@ void CDynamicCamera::Mouse_Fix(void)
 	SetCursorPos(pt.x, pt.y);
 }
 
-void CDynamicCamera::CutScene_Eye()
+void CDynamicCamera::CutScene_Eye(const _float& fTimeDelta)
 {
 	if (MODE_AHGLAN_START == m_eCurMode)
 	{
@@ -509,7 +509,7 @@ void CDynamicCamera::CutScene_Eye()
 
 			_matrix matRotate;
 			D3DXMatrixIdentity(&matRotate);
-			D3DXMatrixRotationAxis(&matRotate, &vUp, D3DXToRadian(-0.025f));
+			D3DXMatrixRotationAxis(&matRotate, &vUp, D3DXToRadian(-2.5f * fTimeDelta));
 			D3DXVec3TransformCoord(&vDirToCam, &vDirToCam, &matRotate);
 
 			m_vEye = m_vAt + vDirToCam * (m_fDistanceFromTarget + 4.5f);
@@ -531,7 +531,7 @@ void CDynamicCamera::CutScene_Eye()
 
 			_matrix matRotate;
 			D3DXMatrixIdentity(&matRotate);
-			D3DXMatrixRotationAxis(&matRotate, &vUp, D3DXToRadian(-0.0075f));
+			D3DXMatrixRotationAxis(&matRotate, &vUp, D3DXToRadian(-0.95f * fTimeDelta));
 			D3DXVec3TransformCoord(&vDirToCam, &vDirToCam, &matRotate);
 
 			m_vEye = m_vAt + vDirToCam * (m_fDistanceFromTarget + 1.f);
@@ -554,7 +554,7 @@ void CDynamicCamera::CutScene_Eye()
 
 			_matrix matRotate;
 			D3DXMatrixIdentity(&matRotate);
-			D3DXMatrixRotationAxis(&matRotate, &vUp, D3DXToRadian(0.0075f));
+			D3DXMatrixRotationAxis(&matRotate, &vUp, D3DXToRadian(0.75f * fTimeDelta));
 			D3DXVec3TransformCoord(&vDirToCam, &vDirToCam, &matRotate);
 
 			m_vEye = m_vAt + vDirToCam * (m_fDistanceFromTarget + 5.f);
@@ -579,11 +579,11 @@ void CDynamicCamera::CutScene_Eye()
 
 				_matrix matRotate;
 				D3DXMatrixIdentity(&matRotate);
-				D3DXMatrixRotationAxis(&matRotate, &vUp, D3DXToRadian(0.0075f));
+				D3DXMatrixRotationAxis(&matRotate, &vUp, D3DXToRadian(0.75f * fTimeDelta));
 				D3DXVec3TransformCoord(&vDirToCam, &vDirToCam, &matRotate);
 
 				m_vEye = m_vAt + vDirToCam * (m_fDistanceFromTarget + 2.f + m_fFarAway);
-				m_fFarAway += 0.0015f;
+				m_fFarAway += 0.25f * fTimeDelta;
 
 				Set_CameraShake(true, CAMSHAKE_POWER * 7.f, 1000, 4.f);
 			}
@@ -607,7 +607,7 @@ void CDynamicCamera::CutScene_Eye()
 
 				if (m_fFarAway <= 4.f)
 				{
-					m_fFarAway += 0.12f;
+					m_fFarAway += 20.f * fTimeDelta;
 				}
 			}
 		}

@@ -34,7 +34,7 @@ _int CFadeInOut::Update_Object(const _float & fTimeDelta)
 
 	D3DXMatrixOrthoLH(&m_matProj, WINCX, WINCY, 0.f, 1.f);
 
-	AhglanFadeOut();
+	AhglanFadeOut(fTimeDelta);
 
 	Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -155,14 +155,14 @@ HRESULT CFadeInOut::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	return S_OK;
 }
 
-void CFadeInOut::AhglanFadeOut()
+void CFadeInOut::AhglanFadeOut(const _float& fTimeDelta)
 {
 	if (m_bAhglanFadeOut)
 	{
 		if (1.f > m_fValueRatio && 
 			0 == m_iFadeCount)
 		{
-			m_fValueRatio += FADEOUTSPEED * 7.5f;
+			m_fValueRatio += FADEOUTSPEED * 950.f * fTimeDelta;
 		}
 
 		if (1.f <= m_fValueRatio)
@@ -173,7 +173,7 @@ void CFadeInOut::AhglanFadeOut()
 		if (1 == m_iFadeCount && 
 			0.f <= m_fValueRatio)
 		{
-			m_fValueRatio -= FADEOUTSPEED * 7.5f;
+			m_fValueRatio -= FADEOUTSPEED * 950.f * fTimeDelta;
 		}
 
 		// 페이드아웃 종료 후 레이어에서 삭제

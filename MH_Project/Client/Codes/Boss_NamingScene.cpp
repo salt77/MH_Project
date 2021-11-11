@@ -38,7 +38,7 @@ _int CBoss_NamingScene::Update_Object(const _float& fTimeDelta)
 
 	D3DXMatrixOrthoLH(&m_matProj, WINCX, WINCY, 0.f, 1.f);
 
-	FadeInOut();
+	FadeInOut(fTimeDelta);
 
 	Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -186,7 +186,7 @@ HRESULT CBoss_NamingScene::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	return S_OK;
 }
 
-void CBoss_NamingScene::FadeInOut()
+void CBoss_NamingScene::FadeInOut(const _float& fTimeDelta)
 {
 	if (1.f > m_fValueRatio &&
 		0 == m_iFadeCount)
@@ -196,16 +196,16 @@ void CBoss_NamingScene::FadeInOut()
 		case Engine::NAMING_BOSSNAME:
 			if (m_dwBossNameInStart + m_dwBossNameInDelay <= GetTickCount())
 			{
-				m_fValueRatio += FADEOUTSPEED * 6.f;
+				m_fValueRatio += FADEOUTSPEED * 900.f * fTimeDelta;
 			}
 			break;
 
 		case Engine::NAMING_STAGENAME:
-			m_fValueRatio += FADEOUTSPEED * 4.f;
+			m_fValueRatio += FADEOUTSPEED * 600.f * fTimeDelta;
 			break;
 
 		case Engine::NAMING_BACKGROUND:
-			m_fValueRatio += FADEOUTSPEED * 4.f;
+			m_fValueRatio += FADEOUTSPEED * 600.f * fTimeDelta;
 			break;
 		}
 	}
@@ -231,18 +231,18 @@ void CBoss_NamingScene::FadeInOut()
 		case Engine::NAMING_BOSSNAME:
 			if (m_dwBossNameOutTime + m_dwBossNameOutDelay <= GetTickCount())
 			{
-				m_fValueRatio -= FADEOUTSPEED * 3.75f;
+				m_fValueRatio -= FADEOUTSPEED * 600.f * fTimeDelta;
 			}
 			break;
 
 		case Engine::NAMING_STAGENAME:
-			m_fValueRatio -= FADEOUTSPEED * 2.f;
+			m_fValueRatio -= FADEOUTSPEED * 400.f * fTimeDelta;
 			break;
 
 		case Engine::NAMING_BACKGROUND:
 			if (m_dwBackOutTime + m_dwBackOutDelay <= GetTickCount())
 			{
-				m_fValueRatio -= FADEOUTSPEED * 2.f;
+				m_fValueRatio -= FADEOUTSPEED * 400.f * fTimeDelta;
 			}
 			break;
 		}

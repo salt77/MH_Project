@@ -32,7 +32,7 @@ private:
 	HRESULT				Ready_Prototype(void);
 
 private:
-	void				Update_ProgressUI();
+	void				Update_ProgressUI(const _float& fTimeDelta);
 
 private:
 	CLoading*			m_pLoading = nullptr;

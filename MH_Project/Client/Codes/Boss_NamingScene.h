@@ -30,7 +30,7 @@ protected:
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	
 private:
-	void				FadeInOut();
+	void				FadeInOut(const _float& fTimeDelta);
 
 private:
 	_bool				m_bOneTimeCheck = false;
