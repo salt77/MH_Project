@@ -61,9 +61,6 @@
     <Filter Include="97.Manager">
       <UniqueIdentifier>{f6921372-5d52-43e1-ac0a-37510c790150}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Manager\00. SoundMgr">
-      <UniqueIdentifier>{51d6a7db-1c2f-42d0-b710-9affd4a749d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\07.StickyBomb">
       <UniqueIdentifier>{2171dae8-a8c2-4c2e-96e6-8b3066f1953b}</UniqueIdentifier>
     </Filter>
@@ -169,6 +166,18 @@
     <Filter Include="97.Manager\01.EffectMgr">
       <UniqueIdentifier>{a9bb61b1-408f-4daf-bafd-710e586bd675}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\03.StageMesh\00.Stage">
+      <UniqueIdentifier>{e8d7a9bf-0c21-41cc-b8f9-83434bddad3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.StageMesh\01.Stage_1">
+      <UniqueIdentifier>{a7996a38-98e0-430c-9174-f4763d3436ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\00.SoundMgr">
+      <UniqueIdentifier>{51d6a7db-1c2f-42d0-b710-9affd4a749d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\02.CollisionMgr">
+      <UniqueIdentifier>{18779f9a-be58-4be8-a2a6-3ea4f71c4120}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -213,14 +222,11 @@
     <ClInclude Include="..\Codes\SkyBox.h">
       <Filter>02.GameObject\05.SkyBox</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\StageMesh.h">
-      <Filter>02.GameObject\03.StageMesh</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\Ahglan.h">
       <Filter>02.GameObject\06.Ahglan</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\SoundMgr.h">
-      <Filter>97.Manager\00. SoundMgr</Filter>
+      <Filter>97.Manager\00.SoundMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\StickyBomb.h">
       <Filter>02.GameObject\07.StickyBomb</Filter>
@@ -294,11 +300,17 @@
     <ClInclude Include="..\Codes\DamageFont.h">
       <Filter>02.GameObject\11.DamageFont</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\StageMesh.h">
+      <Filter>02.GameObject\03.StageMesh\00.Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\StageMesh_1.h">
+      <Filter>02.GameObject\03.StageMesh\01.Stage_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\CollisionMgr.h">
+      <Filter>97.Manager\02.CollisionMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>99.Etc\소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>99.Etc\소스 파일</Filter>
     </ClCompile>
@@ -326,14 +338,11 @@
     <ClCompile Include="..\Codes\SkyBox.cpp">
       <Filter>02.GameObject\05.SkyBox</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\StageMesh.cpp">
-      <Filter>02.GameObject\03.StageMesh</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\Ahglan.cpp">
       <Filter>02.GameObject\06.Ahglan</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\SoundMgr.cpp">
-      <Filter>97.Manager\00. SoundMgr</Filter>
+      <Filter>97.Manager\00.SoundMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\StickyBomb.cpp">
       <Filter>02.GameObject\07.StickyBomb</Filter>
@@ -409,6 +418,18 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Player.cpp">
       <Filter>02.GameObject\01.Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\StageMesh.cpp">
+      <Filter>02.GameObject\03.StageMesh\00.Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\StageMesh_1.cpp">
+      <Filter>02.GameObject\03.StageMesh\01.Stage_1</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>99.Etc\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\CollisionMgr.cpp">
+      <Filter>97.Manager\02.CollisionMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

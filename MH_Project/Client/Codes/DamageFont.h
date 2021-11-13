@@ -30,6 +30,7 @@ private:
 private:
 	void			Position_Interpolation(const _float& fTimeDelta);
 	void			Scale_Interpolation(const _float& fTimeDelta);
+	void			Alpha_Interpolation(const _float& fTimeDelta);
 
 public:
 	void			Set_EnableDamageFont(_vec3 vPos, _uint iFontNum, _uint iDigit);
@@ -41,7 +42,10 @@ private:
 	_ulong			m_dwFontStart = GetTickCount();
 	_ulong			m_dwFontDelay = 1000;
 
-	_float			m_fScaleDown = 0.25f;
+	_float			m_fAlpha = 0.01f;
+	const _float	m_fOriginAlpha = 0.01f;
+	_float			m_fScaleDown = 0.1f;
+	const _float	m_fOriginScaleDown = 0.1f;
 
 	_vec3			m_vPos;
 	_vec3			m_vOriginPos;

@@ -24,7 +24,9 @@ public:
 
 public:
 	HRESULT		Ready_Loading(LOADINGID eLoading);
-	_uint		Loading_ForStage(void);
+
+	_uint		Loading_ForStage();
+	_uint		Loading_ForStage_1();
 
 private:
 	HANDLE				m_hThread;

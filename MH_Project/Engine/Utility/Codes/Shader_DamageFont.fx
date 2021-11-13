@@ -1,5 +1,7 @@
 matrix		g_matWorld, g_matView, g_matProj;		// 상수 테이블
 
+float		g_fAlpha;
+
 texture		g_BaseTexture;
 
 sampler BaseSampler = sampler_state
@@ -56,6 +58,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	float2 vTexUV = In.vTexUV;
 
 	Out.vColor = tex2D(BaseSampler, vTexUV);
+	Out.vColor.a -= g_fAlpha;
 
 	return Out;
 }

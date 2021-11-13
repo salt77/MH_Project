@@ -8,7 +8,6 @@ BEGIN(Engine)
 class CTransform;
 class CRenderer;
 class CStaticMesh;
-class COptimization;
 class CShader;
 
 END
@@ -35,7 +34,6 @@ private:
 	CRenderer*		m_pRendererCom = nullptr;
 	CStaticMesh*	m_pMeshCom = nullptr;
 	CShader*		m_pShaderCom = nullptr;
-	//COptimization*	m_pOptimizationCom = nullptr;
 
 	_vec3		m_vDir;
 	_bool		m_bColl = false;

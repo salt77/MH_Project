@@ -3,6 +3,7 @@
 #include "Ahglan_FontName.h"
 #include "Ahglan_StageUI.h"
 #include "DamageFont.h"
+#include "CollisionMgr.h"
 
 #include "Export_Function.h"
 
@@ -38,6 +39,8 @@ HRESULT CStage::LateReady_Scene()
 	FAILED_CHECK_RETURN(Load_AhglanCol(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_Navimesh(), E_FAIL);
 
+	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+
 	return S_OK;
 }
 
@@ -45,7 +48,11 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 {
 	m_fTime += fTimeDelta;
 
-	return CScene::Update_Scene(fTimeDelta);
+	_int iExit = CScene::Update_Scene(fTimeDelta);
+
+	CCollisionMgr::GetInstance()->Update_CollisionMgr();
+
+	return iExit;
 }
 
 _int CStage::LateUpdate_Scene(const _float & fTimeDelta)
@@ -167,20 +174,28 @@ HRESULT CStage::Ready_Layer_UI(const wstring pLayerTag)
 	for (_uint i = 0; i < DAMAGEFONT_COUNT; ++i)
 	{
 		wstring wstrNormalFont = L"DamageFont_Normal_UI_";
-		wstring wstrSkillFont = L"DamageFont_Skill_UI_";
-		wstring wstrMonsterFont = L"DamageFont_Monster_UI_";
 		
 		wstrNormalFont += to_wstring(i);
-		wstrSkillFont += to_wstring(i);
-		wstrMonsterFont += to_wstring(i);
-
+		
 		pGameObject = CDamageFont::Create(m_pGraphicDev, DAMAGEFONT_NORMAL);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrNormalFont, pGameObject), E_FAIL);
+	}
+	for (_uint i = 0; i < DAMAGEFONT_SKILL_COUNT; ++i)
+	{
+		wstring wstrSkillFont = L"DamageFont_Skill_UI_";
+
+		wstrSkillFont += to_wstring(i);
 
 		pGameObject = CDamageFont::Create(m_pGraphicDev, DAMAGEFONT_SKILL);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrSkillFont, pGameObject), E_FAIL);
+	}
+	for (_uint i = 0; i < DAMAGEFONT_MONSTER_COUNT; ++i)
+	{
+		wstring wstrMonsterFont = L"DamageFont_Monster_UI_";
+
+		wstrMonsterFont += to_wstring(i);
 
 		pGameObject = CDamageFont::Create(m_pGraphicDev, DAMAGEFONT_MONSTER);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -546,5 +561,7 @@ CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CStage::Free(void)
 {
+	CCollisionMgr::DestroyInstance();
+
 	CScene::Free();
 }

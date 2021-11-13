@@ -67,6 +67,12 @@
     <Filter Include="01.View\00.Form\00.UITool">
       <UniqueIdentifier>{7defac07-f13b-42da-a6db-84b8622648ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.MFC_Stage\00.Stage">
+      <UniqueIdentifier>{4ce4294d-ccf4-4a01-ba31-d974d1271cf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.MFC_Stage\01.Stage_1">
+      <UniqueIdentifier>{2a48f336-91bd-4c18-be10-8478df1aaef2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -132,11 +138,14 @@
     <ClInclude Include="..\Codes\MFC_Ahglan.h">
       <Filter>02.GameObject\03.MFC_Ahglan</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\MFC_Stage.h">
-      <Filter>02.GameObject\05.MFC_Stage</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\UITool.h">
       <Filter>01.View\00.Form\00.UITool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Stage.h">
+      <Filter>02.GameObject\05.MFC_Stage\00.Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Stage_1.h">
+      <Filter>02.GameObject\05.MFC_Stage\01.Stage_1</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,11 +203,14 @@
     <ClCompile Include="..\Codes\MFC_Ahglan.cpp">
       <Filter>02.GameObject\03.MFC_Ahglan</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\MFC_Stage.cpp">
-      <Filter>02.GameObject\05.MFC_Stage</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\UITool.cpp">
       <Filter>01.View\00.Form\00.UITool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Stage.cpp">
+      <Filter>02.GameObject\05.MFC_Stage\00.Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Stage_1.cpp">
+      <Filter>02.GameObject\05.MFC_Stage\01.Stage_1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

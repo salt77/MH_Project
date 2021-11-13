@@ -21,10 +21,10 @@ HRESULT CDamageFont::Ready_Object(DAMAGEFONT_ID eID)
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	m_vPos = _vec3(0.f, -999.f, 0.f);
+	m_vPos = POOLING_POS;
 
 	m_pTransformCom->Set_Pos(&m_vPos);
-	m_pTransformCom->Set_Scale(0.35f, 0.35f, 0.35f);
+	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
 	m_vOriginScale = *m_pTransformCom->Get_ScaleInfo();
 
@@ -63,7 +63,7 @@ _int CDamageFont::Update_Object(const _float & fTimeDelta)
 
 	Position_Interpolation(fTimeDelta);
 	Scale_Interpolation(fTimeDelta);
-
+	Alpha_Interpolation(fTimeDelta);
 
 	Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -163,6 +163,8 @@ HRESULT CDamageFont::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
+	pEffect->SetFloat("g_fAlpha", m_fAlpha);
+
 	m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", m_iFontNum);
 
 	return S_OK;
@@ -179,15 +181,16 @@ void CDamageFont::Position_Interpolation(const _float& fTimeDelta)
 			_vec3	vRightDir = pCamera->Get_CamDirVector(DIR_RIGHT);
 
 			m_vOriginPos.y += 0.5f * fTimeDelta;
+			_float	fInterval = m_pTransformCom->Get_ScaleInfo()->x * 1.3f;
 
 			switch (m_iDigit)
 			{
 			case 1:
-				m_vPos = m_vOriginPos + (vRightDir * 0.4f);
+				m_vPos = m_vOriginPos + (vRightDir * fInterval);
 				break;
 
 			case 10:
-				m_vPos = m_vOriginPos + (vRightDir * 0.2f);
+				m_vPos = m_vOriginPos + (vRightDir * fInterval * 0.5f);
 				break;
 
 			case 100:
@@ -195,7 +198,7 @@ void CDamageFont::Position_Interpolation(const _float& fTimeDelta)
 				break;
 
 			case 1000:
-				m_vPos = m_vOriginPos - (vRightDir * 0.2f);
+				m_vPos = m_vOriginPos - (vRightDir * fInterval * 0.5f);
 				break;
 			}
 
@@ -212,16 +215,38 @@ void CDamageFont::Scale_Interpolation(const _float& fTimeDelta)
 {
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
-		_vec3	vScale = *m_pTransformCom->Get_ScaleInfo();
-		vScale.x -= m_fScaleDown * fTimeDelta;
-		vScale.y -= m_fScaleDown * fTimeDelta;
-		vScale.z -= m_fScaleDown * fTimeDelta;
+		CDynamicCamera*		pCamera = static_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
+		NULL_CHECK(pCamera);
 
-		m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
+		_vec3	vScale = *m_pTransformCom->Get_ScaleInfo();
+		vScale.x = D3DXVec3Length(&(pCamera->Get_EyePos() - *m_pTransformCom->Get_Info(INFO_POS))) * 0.08f - m_fScaleDown * fTimeDelta;
+		vScale.y = D3DXVec3Length(&(pCamera->Get_EyePos() - *m_pTransformCom->Get_Info(INFO_POS))) * 0.08f - m_fScaleDown * fTimeDelta;
+		vScale.z = D3DXVec3Length(&(pCamera->Get_EyePos() - *m_pTransformCom->Get_Info(INFO_POS))) * 0.08f - m_fScaleDown * fTimeDelta;
+
+		if (0.f <= vScale.x)
+		{
+			m_fScaleDown += m_fOriginScaleDown;
+
+			m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
+		}
+		else
+		{
+			m_pTransformCom->Set_Scale(0.f, 0.f, 0.f);
+		}
 	}
 	else
 	{
+		m_fScaleDown = m_fOriginScaleDown;
+
 		m_pTransformCom->Set_Scale(m_vOriginScale.x, m_vOriginScale.y, m_vOriginScale.z);
+	}
+}
+
+void CDamageFont::Alpha_Interpolation(const _float & fTimeDelta)
+{
+	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
+	{
+		m_fAlpha += fTimeDelta * 0.7f;
 	}
 }
 
@@ -233,30 +258,13 @@ void CDamageFont::Set_EnableDamageFont(_vec3 vPos, _uint iFontNum, _uint iDigit)
 
 	m_dwFontStart = GetTickCount();
 
-	CDynamicCamera*		pCamera = static_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
+	m_vPos = POOLING_POS + POOLING_POS;
 
-	_vec3	vRightDir = pCamera->Get_CamDirVector(DIR_RIGHT);
-
-	switch (m_iDigit)
-	{
-	case 1:
-		m_vPos = m_vOriginPos + (vRightDir * 1.5f);
-		break;
-
-	case 10:
-		m_vPos = m_vOriginPos + (vRightDir * 0.5f);
-		break;
-
-	case 100:
-		m_vPos = m_vOriginPos - (vRightDir * 0.5f);
-		break;
-
-	case 1000:
-		m_vPos = m_vOriginPos - (vRightDir * 1.5f);
-		break;
-	}
+	m_fScaleDown = m_fOriginScaleDown;
+	m_fAlpha = m_fOriginAlpha;
 
 	m_pTransformCom->Set_Pos(&m_vPos);
+	m_pTransformCom->Set_Scale(m_vOriginScale.x, m_vOriginScale.y, m_vOriginScale.z);
 }
 
 

@@ -40,8 +40,13 @@ public:
 
 public:
 	const PL_INFO&	Get_TagPlayerInfo() { return m_tPlayerInfo; }
+	const _bool&	Get_CanHit() { return m_bCanHit; }
+	const PL_STATE&	Get_CurState() { return m_eCurState; }
 
 public:
+	void			Set_CanHit(_bool bValue) { m_bCanHit = bValue; }
+	void			Set_SpPoint(_bool bIsSmash);
+	void			Set_StopMotion(_bool bStopMotion, _ulong dwTime);
 	void			Set_PlayerStemina(_float fStemina) 
 	{ 
 		if (0 < m_tPlayerInfo.fStamina)
@@ -51,14 +56,16 @@ public:
 		}
 	}
 
+	virtual	void	Set_Damage(_int iDamage, const _matrix* pMatDamageFontPos, _bool bFront = false);
+
 private:
 	// 기본 함수들
 	HRESULT			Add_Component(void);
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Key_Input(const _float& fTimeDelta);
 	void			SecondaryMode_MouseMove();
-	void			SetUp_OnTerrain(void);
-	_vec3			PickUp_OnTerrain(void);
+	//void			SetUp_OnTerrain(void);
+	//_vec3			PickUp_OnTerrain(void);
 	void			Animation_Control();
 	void			Collision_Control();
 	void			Update_UI();
@@ -67,20 +74,19 @@ private:
 	// 객체 함수들
 	void			Compute_CanAction();
 	void			Compute_Buff();
-	void			Compute_Critical();
-	void			Add_Buff(BUFF_ID eID, _ulong dwBuffDuration);
 	void			Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector);
 	void			Rotate_PlayerLook(_vec3& TargetLookVector);
-	//void			MoveOn_Skill(const _float& fTimeDelta);
 	void			MoveOn_Skill(const _float& fTimeDelta);
 	void			StopMotion();
 	void			FootStepSound();
 	void			Weapon_Change();
 	void			SetNextSmash(PL_STATE eState, _ulong dwDelay) { m_eNextSmash = eState; m_dwNextSmashCheckTime = GetTickCount();  m_dwNextSmashDelay = dwDelay; }
-	void			Create_DamageFont(_uint iDamage, const _matrix* pMatrix, DAMAGEFONT_ID eID);
+	void			Pooling_DamageFont(_uint iDamage, const _matrix* pMatrix, DAMAGEFONT_ID eID);
 	void			Make_TrailEffect(const _float& fDeltaTime);
 
 public:
+	void			Compute_Critical();
+	void			Add_Buff(BUFF_ID eID, _ulong dwBuffDuration);
 	HRESULT			Add_NaviMesh();
 
 private:
@@ -171,10 +177,7 @@ private:
 
 #define SKILL_MOVE_BYANI(StartTime, Speed, EndTime)		m_bSkillMove = TRUE; m_fSkillMoveStartTime = StartTime;	m_fSkillMoveEndTime = EndTime;	m_fSkillMoveSpeed = Speed;
 #define SKILL_MOVE_END									m_bSkillMove = FALSE; m_fSkillMoveStartTime = 0.f; m_fSkillMoveEndTime = (_float)m_lfAniEnd; m_fSkillMoveSpeed = 0.f;
-//#define	SKILL_MOVE(ReadyTime, Speed, Time)		m_bSkillMove = TRUE; m_dwSkillMoveReady = GetTickCount();		\
-//												m_dwSkillMoveReadyTime = ReadyTime;	m_fSkillMoveSpeed = Speed; m_dwSkillMoveTime = Time;
-//#define SKILL_MOVE_END							m_bSkillMove = FALSE; m_fSkillMoveSpeed = 0.f; m_dwSkillMoveTime = 0;
-#define STOP_MOTION(Time)						m_bStopMotion = TRUE; m_dwStopMotionStart = GetTickCount();	m_dwStopMotionTime = Time;
-#define STOP_MOTION_END							m_bStopMotion = FALSE; m_dwStopMotionTime = 0;
+#define STOP_MOTION(Time)								m_bStopMotion = TRUE; m_dwStopMotionStart = GetTickCount();	m_dwStopMotionTime = Time;
+#define STOP_MOTION_END									m_bStopMotion = FALSE; m_dwStopMotionTime = 0;
 
 #endif // Player_h__

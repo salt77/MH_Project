@@ -20,6 +20,7 @@
 #include "MFC_CamAt.h"
 #include "MFC_CamInterpol.h"
 #include "MFC_Stage.h"
+#include "MFC_Stage_1.h"
 #include "Layer.h"
 
 #ifdef _DEBUG
@@ -199,6 +200,7 @@ HRESULT CMFCToolView::Add_Prototype()
 
 	// Meshes
 	Engine::Ready_Prototype(L"Proto_StaticMesh_Stage", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Stage/", L"Stage.X"));
+	Engine::Ready_Prototype(L"Proto_StaticMesh_Stage_1", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Stage_1/", L"Stage_1.X"));
 
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Lethita/", L"Lethita.X"));
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Ahglan", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Ahglan/", L"Ahglan.X"));
@@ -221,36 +223,36 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 
 	CGameObject* pObj = nullptr;
 
-	// Terrain_Grass 추가
-	pObj = CMFC_Terrain::Create(m_pGraphicDev, 1);
-	NULL_CHECK_RETURN(pObj, E_FAIL);
-	m_pLayer->Add_GameObject(L"MFC_Terrain2", pObj);
-	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+	//// Terrain_Grass 추가
+	//pObj = CMFC_Terrain::Create(m_pGraphicDev, 1);
+	//NULL_CHECK_RETURN(pObj, E_FAIL);
+	//m_pLayer->Add_GameObject(L"MFC_Terrain2", pObj);
+	//Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
-	m_pTerrain2 = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain2"));
+	//m_pTerrain2 = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain2"));
 
-	pObj = CMFC_Terrain::Create(m_pGraphicDev, 2);
-	NULL_CHECK_RETURN(pObj, E_FAIL);
-	m_pLayer->Add_GameObject(L"MFC_Terrain3", pObj);
-	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+	//pObj = CMFC_Terrain::Create(m_pGraphicDev, 2);
+	//NULL_CHECK_RETURN(pObj, E_FAIL);
+	//m_pLayer->Add_GameObject(L"MFC_Terrain3", pObj);
+	//Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
-	m_pTerrain3 = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain3"));
+	//m_pTerrain3 = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain3"));
 
-	// Terrain 추가
-	pObj = CMFC_Terrain::Create(m_pGraphicDev, 0);
-	NULL_CHECK_RETURN(pObj, E_FAIL);
-	m_pLayer->Add_GameObject(L"MFC_Terrain", pObj);
-	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+	//// Terrain 추가
+	//pObj = CMFC_Terrain::Create(m_pGraphicDev, 0);
+	//NULL_CHECK_RETURN(pObj, E_FAIL);
+	//m_pLayer->Add_GameObject(L"MFC_Terrain", pObj);
+	//Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
-	m_pTerrain = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
+	//m_pTerrain = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
 
 	// Stage 추가
-	pObj = CMFC_Stage::Create(m_pGraphicDev);
+	pObj = CMFC_Stage_1::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pObj, E_FAIL);
-	m_pLayer->Add_GameObject(L"MFC_Stage", pObj);
+	m_pLayer->Add_GameObject(L"MFC_Stage_1", pObj);
 	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
-	m_pStage = dynamic_cast<CMFC_Stage*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Stage"));
+	m_pStage = dynamic_cast<CMFC_Stage*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Stage_1"));
 
 	// Camera 추가 
 	pObj = CMFC_Camera::Create(m_pGraphicDev,
@@ -728,7 +730,7 @@ void CMFCToolView::OnTimer(UINT_PTR nIDEvent)
 		Render_Begin(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f));
 
 		Engine::Render_GameObject(m_pGraphicDev);
-		m_pTerrain->Render_Object();
+		//m_pTerrain->Render_Object();
 		//m_pLayer->Render_Layer(m_fDeltaTime);
 
 		Render_End();

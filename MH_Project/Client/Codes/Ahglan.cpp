@@ -983,6 +983,8 @@ void CAhglan::Animation_Control()
 
 	if (m_fAniTime >= m_lfAniEnd * m_fAniEndDelay + m_fRandSpeed)
 	{
+		m_bCanAction = true;
+
 		_uint	iRandomPattern = rand() % 2;
 
 		if (m_iAniIndex == (_uint)WALK || 
@@ -995,7 +997,11 @@ void CAhglan::Animation_Control()
 			m_bAnimation = false;
 		}
 
-		if (m_iAniIndex == (_uint)ATK_ROLLING_ONETIME_BEGIN)
+		if (0 >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
+		{
+			m_iAniIndex = (_uint)IDLE;
+		}
+		else if (m_iAniIndex == (_uint)ATK_ROLLING_ONETIME_BEGIN)
 		{
 			m_iAniIndex = (_uint)ATK_ROLLING_ONETIME_END;
 		}
@@ -1072,7 +1078,7 @@ void CAhglan::Animation_Control()
 			m_pMeshCom->Set_TrackSpeed(2.f);
 			m_fRandSpeed = (rand() % 300) * 0.001f;
 
-			m_bCanAction = true;
+			//m_bCanAction = true;
 		}
 		else if (m_iAniIndex == (_uint)ENTRY_CONTACT)
 		{
