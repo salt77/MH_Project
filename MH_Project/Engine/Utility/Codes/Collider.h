@@ -26,9 +26,9 @@ public:
 	void	Set_RenderColType(COLTYPE _eColType) { m_eColType = _eColType; }
 	void	Set_BoneName(wstring eBoneName) { m_cstrBoneName = eBoneName; }
 	void	Set_Matrix(_matrix* matInfo) { m_matColParts = matInfo; *m_matColParts *= 0.01f; }
-	void	Set_MatrixInterpolX(_float fX) { m_fInterpolX = fX; m_fInterpolX *= 0.01f; }
-	void	Set_MatrixInterpolY(_float fY) { m_fInterpolY = fY; m_fInterpolY *= 0.01f; }
-	void	Set_MatrixInterpolZ(_float fZ) { m_fInterpolZ = fZ; m_fInterpolZ *= 0.01f; }
+	void	Set_MatrixInterpolX(_float fX);
+	void	Set_MatrixInterpolY(_float fY);
+	void	Set_MatrixInterpolZ(_float fZ);
 	// Render 대신에 콜라이더 행렬을 넘겨받는다. (매 프레임)
 	void	Set_ColliderMatrix(const _matrix* pColliderMatrix) { m_matColMatrix = *pColliderMatrix; }
 
@@ -48,6 +48,7 @@ private:
 	_float			m_fInterpolZ = 0.f;
 
 	_vec3			m_vCenter;
+	_vec3			m_vPos = _vec3(0.f, 0.f, 0.f);
 
 	wstring			m_cstrBoneName;
 

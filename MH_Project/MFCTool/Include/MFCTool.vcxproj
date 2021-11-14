@@ -197,8 +197,12 @@
     <ClInclude Include="..\Codes\MFC_Camera.h" />
     <ClInclude Include="..\Codes\MFC_CamEye.h" />
     <ClInclude Include="..\Codes\MFC_CamInterpol.h" />
+    <ClInclude Include="..\Codes\MFC_Cloyan.h" />
+    <ClInclude Include="..\Codes\MFC_Dog.h" />
+    <ClInclude Include="..\Codes\MFC_Knight.h" />
     <ClInclude Include="..\Codes\MFC_Line.h" />
     <ClInclude Include="..\Codes\MFC_Player.h" />
+    <ClInclude Include="..\Codes\MFC_Soldier.h" />
     <ClInclude Include="..\Codes\MFC_Stage.h" />
     <ClInclude Include="..\Codes\MFC_Stage_1.h" />
     <ClInclude Include="..\Codes\MFC_Terrain.h" />
@@ -223,8 +227,12 @@
     <ClCompile Include="..\Codes\MFC_Camera.cpp" />
     <ClCompile Include="..\Codes\MFC_CamEye.cpp" />
     <ClCompile Include="..\Codes\MFC_CamInterpol.cpp" />
+    <ClCompile Include="..\Codes\MFC_Cloyan.cpp" />
+    <ClCompile Include="..\Codes\MFC_Dog.cpp" />
+    <ClCompile Include="..\Codes\MFC_Knight.cpp" />
     <ClCompile Include="..\Codes\MFC_Line.cpp" />
     <ClCompile Include="..\Codes\MFC_Player.cpp" />
+    <ClCompile Include="..\Codes\MFC_Soldier.cpp" />
     <ClCompile Include="..\Codes\MFC_Stage.cpp" />
     <ClCompile Include="..\Codes\MFC_Stage_1.cpp" />
     <ClCompile Include="..\Codes\MFC_Terrain.cpp" />

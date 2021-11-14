@@ -9,6 +9,10 @@
 #include "afxdialogex.h"
 #include "MFC_Player.h"
 #include "MFC_Ahglan.h"
+#include "MFC_Cloyan.h"
+#include "MFC_Dog.h"
+#include "MFC_Soldier.h"
+#include "MFC_Knight.h"
 
 
 // CCollisionTool 대화 상자입니다.
@@ -106,6 +110,10 @@ BOOL CCollisionTool::OnInitDialog()
 	m_hRoot = m_TreeObj.InsertItem(TEXT("Object"), 0, 0, TVI_ROOT, TVI_LAST);
 	m_hPlayer = m_TreeObj.InsertItem(TEXT("Player"), 0, 0, m_hRoot, TVI_LAST);
 	m_hAhglan = m_TreeObj.InsertItem(TEXT("Ahglan"), 0, 0, m_hRoot, TVI_LAST);
+	m_hCloyan = m_TreeObj.InsertItem(TEXT("Cloyan"), 0, 0, m_hRoot, TVI_LAST);
+	m_hDog = m_TreeObj.InsertItem(TEXT("Dog"), 0, 0, m_hRoot, TVI_LAST);
+	m_hSoldier = m_TreeObj.InsertItem(TEXT("Soldier"), 0, 0, m_hRoot, TVI_LAST);
+	m_hKnight = m_TreeObj.InsertItem(TEXT("Knight"), 0, 0, m_hRoot, TVI_LAST);
 
 	m_ComboBox.AddString(L"Sphere_Damaged");
 	m_ComboBox.AddString(L"Sphere_Hit");
@@ -136,6 +144,14 @@ void CCollisionTool::OnBnClickedObjectAdd()
 		pToolView->Add_Object(OBJECTADD_MFC_PLAYER);
 	else if (m_TreeObj.GetSelectedItem() == m_hAhglan)
 		pToolView->Add_Object(OBJECTADD_MFC_AHGLAN);
+	else if (m_TreeObj.GetSelectedItem() == m_hCloyan)
+		pToolView->Add_Object(OBJECTADD_MFC_CLOYAN);
+	else if (m_TreeObj.GetSelectedItem() == m_hDog)
+		pToolView->Add_Object(OBJECTADD_MFC_DOG);
+	else if (m_TreeObj.GetSelectedItem() == m_hSoldier)
+		pToolView->Add_Object(OBJECTADD_MFC_SOLDIER);
+	else if (m_TreeObj.GetSelectedItem() == m_hKnight)
+		pToolView->Add_Object(OBJECTADD_MFC_KNIGHT);
 
 	// Bone 추가
 	_uint iIndex = 0;
@@ -190,6 +206,102 @@ void CCollisionTool::OnBnClickedObjectAdd()
 			++iIndex;
 		}
 	}
+	else if (m_TreeObj.GetSelectedItem() == m_hCloyan)
+	{
+		list<D3DXMESHCONTAINER_DERIVED*>		listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_CLOYAN);
+		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
+
+		for (; iter != listTemp.end(); ++iter)
+		{
+			char pName[16] = "Cloyan_Bone";
+			string pInt = to_string(iIndex);
+			const char* pTemp = pInt.c_str();
+			strcat_s(pName, sizeof(pName), pTemp);
+
+			HTREEITEM hTemp = m_TreeBone.InsertItem((CA2W)pName);
+
+			for (_uint i = 0; i < (*iter)->dwNumBones; ++i)
+			{
+				const char* pBoneName = (*iter)->pSkinInfo->GetBoneName(i);
+
+				m_TreeBone.InsertItem((CA2W)pBoneName, 0, 0, hTemp, TVI_LAST);
+			}
+
+			++iIndex;
+		}
+	}
+	else if (m_TreeObj.GetSelectedItem() == m_hDog)
+	{
+		list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_DOG);
+		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
+
+		for (; iter != listTemp.end(); ++iter)
+		{
+			char pName[16] = "Dog_Bone";
+			string pInt = to_string(iIndex);
+			const char* pTemp = pInt.c_str();
+			strcat_s(pName, sizeof(pName), pTemp);
+
+			HTREEITEM hTemp = m_TreeBone.InsertItem((CA2W)pName);
+
+			for (_uint i = 0; i < (*iter)->dwNumBones; ++i)
+			{
+				const char* pBoneName = (*iter)->pSkinInfo->GetBoneName(i);
+
+				m_TreeBone.InsertItem((CA2W)pBoneName, 0, 0, hTemp, TVI_LAST);
+			}
+
+			++iIndex;
+		}
+	}
+	else if (m_TreeObj.GetSelectedItem() == m_hSoldier)
+	{
+		list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_SOLDIER);
+		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
+
+		for (; iter != listTemp.end(); ++iter)
+		{
+			char pName[16] = "Soldier_Bone";
+			string pInt = to_string(iIndex);
+			const char* pTemp = pInt.c_str();
+			strcat_s(pName, sizeof(pName), pTemp);
+
+			HTREEITEM hTemp = m_TreeBone.InsertItem((CA2W)pName);
+
+			for (_uint i = 0; i < (*iter)->dwNumBones; ++i)
+			{
+				const char* pBoneName = (*iter)->pSkinInfo->GetBoneName(i);
+
+				m_TreeBone.InsertItem((CA2W)pBoneName, 0, 0, hTemp, TVI_LAST);
+			}
+
+			++iIndex;
+		}
+	}
+	else if (m_TreeObj.GetSelectedItem() == m_hKnight)
+	{
+		list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_KNIGHT);
+		list<D3DXMESHCONTAINER_DERIVED*>::iterator	iter = listTemp.begin();
+
+		for (; iter != listTemp.end(); ++iter)
+		{
+			char pName[16] = "Knight_Bone";
+			string pInt = to_string(iIndex);
+			const char* pTemp = pInt.c_str();
+			strcat_s(pName, sizeof(pName), pTemp);
+
+			HTREEITEM hTemp = m_TreeBone.InsertItem((CA2W)pName);
+
+			for (_uint i = 0; i < (*iter)->dwNumBones; ++i)
+			{
+				const char* pBoneName = (*iter)->pSkinInfo->GetBoneName(i);
+
+				m_TreeBone.InsertItem((CA2W)pBoneName, 0, 0, hTemp, TVI_LAST);
+			}
+
+			++iIndex;
+		}
+	}
 }
 
 void CCollisionTool::OnBnClickedDeleteObject()
@@ -218,6 +330,14 @@ void CCollisionTool::OnBnClickedAddCollider()
 		eObjType = OBJECTADD_MFC_PLAYER;
 	else if (L"Ahglan" == cstrObjName)
 		eObjType = OBJECTADD_MFC_AHGLAN;
+	else if (L"Cloyan" == cstrObjName)
+		eObjType = OBJECTADD_MFC_CLOYAN;
+	else if (L"Dog" == cstrObjName)
+		eObjType = OBJECTADD_MFC_DOG;
+	else if (L"Soldier" == cstrObjName)
+		eObjType = OBJECTADD_MFC_SOLDIER;
+	else if (L"Knight" == cstrObjName)
+		eObjType = OBJECTADD_MFC_KNIGHT;
 
 	switch (eSel)
 	{
@@ -299,10 +419,25 @@ void CCollisionTool::OnBnClickedDeleteCol()
 	{
 		pToolView->Delete_Collider((wstring)cstrColName, eSel, OBJECTADD_MFC_PLAYER);
 	}
-
 	else if (L"Ahglan" == cstrObjName)
 	{
 		pToolView->Delete_Collider((wstring)cstrColName, eSel, OBJECTADD_MFC_AHGLAN);
+	}
+	else if (L"Cloyan" == cstrObjName)
+	{
+		pToolView->Delete_Collider((wstring)cstrColName, eSel, OBJECTADD_MFC_CLOYAN);
+	}
+	else if (L"Dog" == cstrObjName)
+	{
+		pToolView->Delete_Collider((wstring)cstrColName, eSel, OBJECTADD_MFC_DOG);
+	}
+	else if (L"Soldier" == cstrObjName)
+	{
+		pToolView->Delete_Collider((wstring)cstrColName, eSel, OBJECTADD_MFC_SOLDIER);
+	}
+	else if (L"Knight" == cstrObjName)
+	{
+		pToolView->Delete_Collider((wstring)cstrColName, eSel, OBJECTADD_MFC_KNIGHT);
 	}
 
 	UpdateData(FALSE);
@@ -402,6 +537,22 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 		{
 			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_AHGLAN);
 		}
+		else if (L"Cloyan" == cstrObjName)
+		{
+			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_CLOYAN);
+		}
+		else if (L"Dog" == cstrObjName)
+		{
+			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_DOG);
+		}
+		else if (L"Soldier" == cstrObjName)
+		{
+			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_SOLDIER);
+		}
+		else if (L"Knight" == cstrObjName)
+		{
+			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_KNIGHT);
+		}
 		else
 		{
 			MessageBoxW(L"Not Selected Obj", L"Error", MB_OK);
@@ -432,7 +583,26 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
 							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_AHGLAN);
 						}
-
+						else if (L"Cloyan" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_CLOYAN);
+						}
+						else if (L"Dog" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_DOG);
+						}
+						else if (L"Soldier" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_SOLDIER);
+						}
+						else if (L"Knight" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_KNIGHT);
+						}
 						break;
 
 					case Engine::COLTYPE_BOX_HIT:
@@ -446,7 +616,26 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
 							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_AHGLAN);
 						}
-
+						else if (L"Cloyan" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_CLOYAN);
+						}
+						else if (L"Dog" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_DOG);
+						}
+						else if (L"Soldier" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_SOLDIER);
+						}
+						else if (L"Knight" == cstrObjName)
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrListBoxCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListBoxCol, eColType, OBJECTADD_MFC_KNIGHT);
+						}
 						break;
 
 					case Engine::COLTYPE_SPHERE_DAMAGED:
@@ -460,7 +649,26 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
 							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_AHGLAN);
 						}
-
+						else if (L"Cloyan" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_CLOYAN);
+						}
+						else if (L"Dog" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_DOG);
+						}
+						else if (L"Soldier" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_SOLDIER);
+						}
+						else if (L"Knight" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_KNIGHT);
+						}
 						break;
 
 					case Engine::COLTYPE_SPHERE_HIT:
@@ -474,7 +682,26 @@ void CCollisionTool::OnTreeBoneSelchanged(NMHDR *pNMHDR, LRESULT *pResult)
 							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
 							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_AHGLAN);
 						}
-
+						else if (L"Cloyan" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_CLOYAN);
+						}
+						else if (L"Dog" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_DOG);
+						}
+						else if (L"Soldier" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_SOLDIER);
+						}
+						else if (L"Knight" == cstrObjName)
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrListSphereCol, ID_STATIC))->Set_BoneName(wstring(cstrItemName));
+							pToolView->Set_ColliderMatrix((*iter)->ppCombinedTransformMatrix[i], (wstring)cstrListSphereCol, eColType, OBJECTADD_MFC_KNIGHT);
+						}
 						break;
 					}
 
@@ -507,6 +734,14 @@ void CCollisionTool::OnEditChangeAni()
 			pToolView->Set_ObjectAniIndex(m_AniIndex, OBJECTADD_MFC_PLAYER);
 		else if (L"Ahglan" == cstrObjName)
 			pToolView->Set_ObjectAniIndex(m_AniIndex, OBJECTADD_MFC_AHGLAN);
+		else if (L"Cloyan" == cstrObjName)
+			pToolView->Set_ObjectAniIndex(m_AniIndex, OBJECTADD_MFC_CLOYAN);
+		else if (L"Dog" == cstrObjName)
+			pToolView->Set_ObjectAniIndex(m_AniIndex, OBJECTADD_MFC_DOG);
+		else if (L"Soldier" == cstrObjName)
+			pToolView->Set_ObjectAniIndex(m_AniIndex, OBJECTADD_MFC_SOLDIER);
+		else if (L"Knight" == cstrObjName)
+			pToolView->Set_ObjectAniIndex(m_AniIndex, OBJECTADD_MFC_KNIGHT);
 	}
 
 	UpdateData(FALSE);
@@ -524,7 +759,19 @@ void CCollisionTool::OnBnClickedButtonX()
 	CString cstrListBoxCol;
 	m_ListBoxCollider.GetText(m_iListCulSelCol, cstrListBoxCol);
 
-	pToolView->Set_ColliderMatrixInterpolX(m_fColX, (wstring)cstrListBoxCol);
+	HTREEITEM hItem = m_TreeObj.GetSelectedItem();
+	CString cstrObjName = m_TreeObj.GetItemText(hItem);
+
+	if (L"Player" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolX(m_fColX, (wstring)cstrListBoxCol, OBJECTADD_MFC_PLAYER);
+	else if (L"Ahglan" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolX(m_fColX, (wstring)cstrListBoxCol, OBJECTADD_MFC_AHGLAN);
+	else if (L"Dog" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolX(m_fColX, (wstring)cstrListBoxCol, OBJECTADD_MFC_DOG);
+	else if (L"Soldier" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolX(m_fColX, (wstring)cstrListBoxCol, OBJECTADD_MFC_SOLDIER);
+	else if (L"Knight" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolX(m_fColX, (wstring)cstrListBoxCol, OBJECTADD_MFC_KNIGHT);
 
 	UpdateData(FALSE);
 }
@@ -541,7 +788,19 @@ void CCollisionTool::OnBnClickedButtonY()
 	CString cstrListBoxCol;
 	m_ListBoxCollider.GetText(m_iListCulSelCol, cstrListBoxCol);
 
-	pToolView->Set_ColliderMatrixInterpolY(m_fColY, (wstring)cstrListBoxCol);
+	HTREEITEM hItem = m_TreeObj.GetSelectedItem();
+	CString cstrObjName = m_TreeObj.GetItemText(hItem);
+
+	if (L"Player" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolY(m_fColY, (wstring)cstrListBoxCol, OBJECTADD_MFC_PLAYER);
+	else if (L"Ahglan" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolY(m_fColY, (wstring)cstrListBoxCol, OBJECTADD_MFC_AHGLAN);
+	else if (L"Dog" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolY(m_fColY, (wstring)cstrListBoxCol, OBJECTADD_MFC_DOG);
+	else if (L"Soldier" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolY(m_fColY, (wstring)cstrListBoxCol, OBJECTADD_MFC_SOLDIER);
+	else if (L"Knight" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolY(m_fColY, (wstring)cstrListBoxCol, OBJECTADD_MFC_KNIGHT);
 
 	UpdateData(FALSE);
 }
@@ -558,7 +817,19 @@ void CCollisionTool::OnBnClickedButtonZ()
 	CString cstrListBoxCol;
 	m_ListBoxCollider.GetText(m_iListCulSelCol, cstrListBoxCol);
 
-	pToolView->Set_ColliderMatrixInterpolZ(m_fColZ, (wstring)cstrListBoxCol);
+	HTREEITEM hItem = m_TreeObj.GetSelectedItem();
+	CString cstrObjName = m_TreeObj.GetItemText(hItem);
+
+	if (L"Player" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolZ(m_fColZ, (wstring)cstrListBoxCol, OBJECTADD_MFC_PLAYER);
+	else if (L"Ahglan" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolZ(m_fColZ, (wstring)cstrListBoxCol, OBJECTADD_MFC_AHGLAN);
+	else if (L"Dog" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolZ(m_fColZ, (wstring)cstrListBoxCol, OBJECTADD_MFC_DOG);
+	else if (L"Soldier" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolZ(m_fColZ, (wstring)cstrListBoxCol, OBJECTADD_MFC_SOLDIER);
+	else if (L"Knight" == cstrObjName)
+		pToolView->Set_ColliderMatrixInterpolZ(m_fColZ, (wstring)cstrListBoxCol, OBJECTADD_MFC_KNIGHT);
 
 	UpdateData(FALSE);
 }
@@ -575,18 +846,6 @@ void CCollisionTool::OnBtnClickedSave()
 	TCHAR szFilePath[MAX_PATH] = L"";
 
 	GetCurrentDirectory(MAX_PATH, szFilePath);
-	//PathRemoveFileSpec(szFilePath);
-
-	//lstrcat(szFilePath, L"\\Data\\Terrain\\");
-
-	/*if (!PathIsDirectory(szFilePath))
-	{
-	PathRemoveFileSpec(szFilePath);
-	PathRemoveFileSpec(szFilePath);
-	PathRemoveFileSpec(szFilePath);
-	PathRemoveFileSpec(szFilePath);
-	lstrcat(szFilePath, L"\\Data\\Terrain\\");
-	}*/
 	Dlg.m_ofn.lpstrInitialDir = szFilePath;
 
 	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
@@ -615,7 +874,6 @@ void CCollisionTool::OnBtnClickedSave()
 			mapBoxTemp = pPlayer->Get_BoxColliderMap();
 			iterBox = mapBoxTemp.begin();
 		}
-
 		else if (L"Ahglan" == cstrItemName)
 		{
 			CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
@@ -626,7 +884,46 @@ void CCollisionTool::OnBtnClickedSave()
 			mapBoxTemp = pAhglan->Get_BoxColliderMap();
 			iterBox = mapBoxTemp.begin();
 		}
-		
+		else if (L"Cloyan" == cstrItemName)
+		{
+			CMFC_Cloyan* pAhglan = dynamic_cast<CMFC_Cloyan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Cloyan"));
+
+			mapTemp = pAhglan->Get_ColliderMap();
+			iter = mapTemp.begin();
+
+			mapBoxTemp = pAhglan->Get_BoxColliderMap();
+			iterBox = mapBoxTemp.begin();
+		}
+		else if (L"Dog" == cstrItemName)
+		{
+			CMFC_Dog* pEnemy = dynamic_cast<CMFC_Dog*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Dog_0"));
+
+			mapTemp = pEnemy->Get_ColliderMap();
+			iter = mapTemp.begin();
+
+			mapBoxTemp = pEnemy->Get_BoxColliderMap();
+			iterBox = mapBoxTemp.begin();
+		}
+		else if (L"Soldier" == cstrItemName)
+		{
+			CMFC_Soldier* pEnemy = dynamic_cast<CMFC_Soldier*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Soldier_0"));
+
+			mapTemp = pEnemy->Get_ColliderMap();
+			iter = mapTemp.begin();
+
+			mapBoxTemp = pEnemy->Get_BoxColliderMap();
+			iterBox = mapBoxTemp.begin();
+		}
+		else if (L"Knight" == cstrItemName)
+		{
+			CMFC_Knight* pEnemy = dynamic_cast<CMFC_Knight*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Knight_0"));
+
+			mapTemp = pEnemy->Get_ColliderMap();
+			iter = mapTemp.begin();
+
+			mapBoxTemp = pEnemy->Get_BoxColliderMap();
+			iterBox = mapBoxTemp.begin();
+		}
 		else
 		{
 			MessageBoxW(L"Error", L"TreeObj 제대로 선택", MB_OK);
@@ -688,23 +985,6 @@ void CCollisionTool::OnBtnClickedSave()
 			WriteFile(hFile, &iterBox->second->Get_ColldierType(), sizeof(COLLIDERTYPE), &dwbyte, nullptr);
 		}
 
-		//TILEINFO m_tTielInfo;
-		//m_tTielInfo = m_pTerrain->Tile_Save();
-		//m_tTielInfo.bMap_Collider = m_Radio_Collider.GetCheck() ? true : false;
-
-		//WriteFile(hFile, &m_tTielInfo.m_iFVF, sizeof(_uint), &dwbyte, nullptr);
-		//WriteFile(hFile, &m_tTielInfo.m_iVertexCountX, sizeof(_uint), &dwbyte, nullptr);
-		//WriteFile(hFile, &m_tTielInfo.m_iVertexCountZ, sizeof(_uint), &dwbyte, nullptr);
-		//WriteFile(hFile, &m_tTielInfo.m_iVertexSize, sizeof(_uint), &dwbyte, nullptr);
-		//WriteFile(hFile, &m_tTielInfo.m_iIndexSize, sizeof(_uint), &dwbyte, nullptr);
-		//WriteFile(hFile, &m_tTielInfo.m_IndexFormat, sizeof(D3DFORMAT), &dwbyte, nullptr);
-		//WriteFile(hFile, &m_tTielInfo.ivecSize[0], sizeof(int), &dwbyte, nullptr);
-		//WriteFile(hFile, &m_tTielInfo.ivecSize[1], sizeof(int), &dwbyte, nullptr);
-		//for (int i = 0; i < m_tTielInfo.ivecSize[0]; i++)
-		//	WriteFile(hFile, &m_tTielInfo.pVertices[i], sizeof(VTX_MFCTEXTURE), &dwbyte, nullptr);
-		//for (int i = 0; i < m_tTielInfo.ivecSize[1]; i++)
-		//	WriteFile(hFile, &m_tTielInfo.pIndices[i], sizeof(INDEX16), &dwbyte, nullptr);
-
 		CloseHandle(hFile);
 	}
 	else
@@ -725,20 +1005,6 @@ void CCollisionTool::OnBnClickedButtonLoad()
 		OFN_OVERWRITEPROMPT,
 		0, 0, 0, 0);
 	TCHAR szFilePath[MAX_PATH]{};
-
-	//GetCurrentDirectory(MAX_PATH, szFilePath);
-	//PathRemoveFileSpec(szFilePath);
-
-	//lstrcat(szFilePath, L"\\Data\\Terrain\\");
-	//if (!PathIsDirectory(szFilePath))
-	//{
-	//	PathRemoveFileSpec(szFilePath);
-	//	PathRemoveFileSpec(szFilePath);
-	//	PathRemoveFileSpec(szFilePath);
-	//	PathRemoveFileSpec(szFilePath);
-	//	lstrcat(szFilePath, L"\\Data\\Terrain\\");
-	//}
-	//Dlg.m_ofn.lpstrInitialDir = szFilePath;
 
 	CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	CMFCToolView* pToolView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
@@ -825,7 +1091,6 @@ void CCollisionTool::OnBnClickedButtonLoad()
 					}
 				}
 			}
-			
 			else if (L"Ahglan" == hItemName)
 			{
 				CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
@@ -854,7 +1119,118 @@ void CCollisionTool::OnBnClickedButtonLoad()
 					}
 				}
 			}
+			else if (L"Cloyan" == hItemName)
+			{
+				CMFC_Cloyan* pCloyan = dynamic_cast<CMFC_Cloyan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Cloyan"));
+				CTransform*	pCloyanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
 
+				pCloyan->Add_Collider(fRadius, pNameBuff, pCloyanTrans->Get_WorldMatrix(), eColliderType);
+				m_ListBoxCollider.AddString(pNameBuff);
+
+				list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_CLOYAN);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
+				{
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+					{
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+						if (!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_CLOYAN);
+
+							break;
+						}
+					}
+				}
+			}
+			else if (L"Dog" == hItemName)
+			{
+				CMFC_Dog* pEnemy = dynamic_cast<CMFC_Dog*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Dog_0"));
+				CTransform*	pEnemyTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", L"Com_Transform", ID_DYNAMIC));
+
+				pEnemy->Add_Collider(fRadius, pNameBuff, pEnemyTrans->Get_WorldMatrix(), eColliderType);
+				m_ListBoxCollider.AddString(pNameBuff);
+
+				list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_DOG);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
+				{
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+					{
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+						if (!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_DOG);
+
+							break;
+						}
+					}
+				}
+			}
+			else if (L"Soldier" == hItemName)
+			{
+				CMFC_Soldier* pEnemy = dynamic_cast<CMFC_Soldier*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Soldier_0"));
+				CTransform*	pEnemyTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", L"Com_Transform", ID_DYNAMIC));
+
+				pEnemy->Add_Collider(fRadius, pNameBuff, pEnemyTrans->Get_WorldMatrix(), eColliderType);
+				m_ListBoxCollider.AddString(pNameBuff);
+
+				list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_SOLDIER);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
+				{
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+					{
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+						if (!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_SOLDIER);
+
+							break;
+						}
+					}
+				}
+			}
+			else if (L"Knight" == hItemName)
+			{
+				CMFC_Knight* pEnemy = dynamic_cast<CMFC_Knight*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Knight_0"));
+				CTransform*	pEnemyTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", L"Com_Transform", ID_DYNAMIC));
+
+				pEnemy->Add_Collider(fRadius, pNameBuff, pEnemyTrans->Get_WorldMatrix(), eColliderType);
+				m_ListBoxCollider.AddString(pNameBuff);
+
+				list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_KNIGHT);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
+				{
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+					{
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+						if (!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_KNIGHT);
+
+							break;
+						}
+					}
+				}
+			}
 			else
 			{
 				MessageBoxW(L"Error", L"TreeObj 제대로 선택", MB_OK);
@@ -919,7 +1295,6 @@ void CCollisionTool::OnBnClickedButtonLoad()
 					}
 				}
 			}
-
 			else if (L"Ahglan" == hItemName)
 			{
 				CMFC_Ahglan* pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
@@ -930,7 +1305,7 @@ void CCollisionTool::OnBnClickedButtonLoad()
 				m_ListBoxCol.AddString(pNameBuff);
 
 				// Bone 찾기
-				list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_PLAYER);
+				list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_AHGLAN);
 				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
 
 				for (; iterList != listTemp.end(); ++iterList)
@@ -942,7 +1317,7 @@ void CCollisionTool::OnBnClickedButtonLoad()
 
 						if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
 						{
-							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
 							//::g_wstrBoneName = m_pParsing->wstrBoneName;
 							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType);
 
@@ -951,7 +1326,124 @@ void CCollisionTool::OnBnClickedButtonLoad()
 					}
 				}
 			}
+			else if (L"Cloyan" == hItemName)
+			{
+				CMFC_Cloyan* pCloyan = dynamic_cast<CMFC_Cloyan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Cloyan"));
+				CTransform*	pCloyanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
 
+				pCloyan->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff,
+									  pCloyanTrans->Get_WorldMatrix(), eColliderType);
+				m_ListBoxCol.AddString(pNameBuff);
+
+				// Bone 찾기
+				list<D3DXMESHCONTAINER_DERIVED*>	listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_CLOYAN);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
+				{
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+					{
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+						if (/*(*iterList)->pSkinInfo->GetBoneName(i)*/!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							//::g_wstrBoneName = m_pParsing->wstrBoneName;
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_CLOYAN);
+
+							break;
+						}
+					}
+				}
+			}
+			else if (L"Dog" == hItemName)
+			{
+				CMFC_Dog* pEnemy = dynamic_cast<CMFC_Dog*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Dog_0"));
+				CTransform*	pEnemyTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", L"Com_Transform", ID_DYNAMIC));
+
+				pEnemy->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff,
+									 pEnemyTrans->Get_WorldMatrix(), eColliderType);
+				m_ListBoxCol.AddString(pNameBuff);
+
+				list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_DOG);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
+				{
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+					{
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+						if (!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_DOG);
+
+							break;
+						}
+					}
+				}
+			}
+			else if (L"Soldier" == hItemName)
+			{
+				CMFC_Soldier* pEnemy = dynamic_cast<CMFC_Soldier*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Soldier_0"));
+				CTransform*	pEnemyTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", L"Com_Transform", ID_DYNAMIC));
+
+				pEnemy->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff,
+									 pEnemyTrans->Get_WorldMatrix(), eColliderType);
+				m_ListBoxCol.AddString(pNameBuff);
+
+				list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_SOLDIER);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
+				{
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+					{
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+						if (!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_SOLDIER);
+
+							break;
+						}
+					}
+				}
+			}
+			else if (L"Knight" == hItemName)
+			{
+				CMFC_Knight* pEnemy = dynamic_cast<CMFC_Knight*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Knight_0"));
+				CTransform*	pEnemyTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", L"Com_Transform", ID_DYNAMIC));
+
+				pEnemy->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff,
+									 pEnemyTrans->Get_WorldMatrix(), eColliderType);
+				m_ListBoxCol.AddString(pNameBuff);
+
+				list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pToolView->Get_MeshContainerList(OBJECTADD_MFC_KNIGHT);
+				list<D3DXMESHCONTAINER_DERIVED*>::iterator	iterList = listTemp.begin();
+
+				for (; iterList != listTemp.end(); ++iterList)
+				{
+					for (_uint i = 0; i < (*iterList)->dwNumBones; ++i)
+					{
+						_tchar	pTemp[64] = L"";
+						MultiByteToWideChar(CP_ACP, 0, (*iterList)->pSkinInfo->GetBoneName(i), strlen((*iterList)->pSkinInfo->GetBoneName(i)), pTemp, 64);
+
+						if (!StrCmpCW(pTemp, pNameBuff2))
+						{
+							dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", cstrColName.operator LPCWSTR(), ID_STATIC))->Set_BoneName(cstrBoneName.operator LPCWSTR());
+							pToolView->Set_ColliderMatrix((*iterList)->ppCombinedTransformMatrix[i], cstrColName.operator LPCWSTR(), eColliderType, OBJECTADD_MFC_KNIGHT);
+
+							break;
+						}
+					}
+				}
+			}
 			else
 			{
 				MessageBoxW(L"Error", L"TreeObj 제대로 선택", MB_OK);

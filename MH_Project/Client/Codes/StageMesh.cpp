@@ -114,11 +114,6 @@ HRESULT CStageMesh::Add_Component(void)
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Shader", pComponent);
 
-	//// Optimization
-	//pComponent = m_pOptimizationCom = dynamic_cast<COptimization*>(Clone_Prototype(L"Proto_Optimization"));
-	//NULL_CHECK_RETURN(m_pOptimizationCom, E_FAIL);
-	//m_mapComponent[ID_STATIC].emplace(L"Com_Optimization", pComponent);
-
 	return S_OK;
 }
 

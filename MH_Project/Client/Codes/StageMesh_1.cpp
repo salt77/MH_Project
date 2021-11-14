@@ -94,7 +94,7 @@ HRESULT CStageMesh_1::Add_Component(void)
 	CComponent*		pComponent = nullptr;
 
 	// Mesh
-	pComponent = m_pMeshCom = dynamic_cast<CStaticMesh*>(Clone_Prototype(L"Proto_Mesh_Stage"));
+	pComponent = m_pMeshCom = dynamic_cast<CStaticMesh*>(Clone_Prototype(L"Proto_Mesh_Stage_1"));
 	NULL_CHECK_RETURN(m_pMeshCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Mesh", pComponent);
 
@@ -113,11 +113,6 @@ HRESULT CStageMesh_1::Add_Component(void)
 	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Clone_Prototype(L"Proto_Shader_Mesh"));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Shader", pComponent);
-
-	//// Optimization
-	//pComponent = m_pOptimizationCom = dynamic_cast<COptimization*>(Clone_Prototype(L"Proto_Optimization"));
-	//NULL_CHECK_RETURN(m_pOptimizationCom, E_FAIL);
-	//m_mapComponent[ID_STATIC].emplace(L"Com_Optimization", pComponent);
 
 	return S_OK;
 }

@@ -1114,7 +1114,7 @@ void CPlayer::Pooling_DamageFont(_uint iDamage, const _matrix* pMatrix, DAMAGEFO
 		break;
 
 	case Engine::DAMAGEFONT_SKILL:
-		for (_uint i = 0; i < DAMAGEFONT_COUNT; ++i)
+		for (_uint i = 0; i < DAMAGEFONT_SKILL_COUNT; ++i)
 		{
 			wstrSkillFont = L"DamageFont_Skill_UI_";
 			wstrSkillFont += to_wstring(i);
@@ -1154,7 +1154,7 @@ void CPlayer::Pooling_DamageFont(_uint iDamage, const _matrix* pMatrix, DAMAGEFO
 		break;
 
 	case Engine::DAMAGEFONT_MONSTER:
-		for (_uint i = 0; i < DAMAGEFONT_COUNT; ++i)
+		for (_uint i = 0; i < DAMAGEFONT_MONSTER_COUNT; ++i)
 		{
 			wstrMonsterFont = L"DamageFont_Monster_UI_";
 			wstrMonsterFont += to_wstring(i);

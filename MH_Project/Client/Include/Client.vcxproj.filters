@@ -34,9 +34,6 @@
     <Filter Include="01.Scene\01.Stage">
       <UniqueIdentifier>{230b2d10-0dc9-4861-af13-916ccee498e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Scene\02.Loading">
-      <UniqueIdentifier>{d6465a76-7059-4a49-84bd-4ebfbb74290d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\00.BackGround">
       <UniqueIdentifier>{210af0c9-855f-4b98-b61f-0f2cda69304a}</UniqueIdentifier>
     </Filter>
@@ -178,6 +175,12 @@
     <Filter Include="97.Manager\02.CollisionMgr">
       <UniqueIdentifier>{18779f9a-be58-4be8-a2a6-3ea4f71c4120}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Scene\99.Loading">
+      <UniqueIdentifier>{d6465a76-7059-4a49-84bd-4ebfbb74290d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\02.Stage_1">
+      <UniqueIdentifier>{752521ce-bec6-446f-949a-2da2e488993a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -205,7 +208,7 @@
       <Filter>01.Scene\01.Stage</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Loading.h">
-      <Filter>01.Scene\02.Loading</Filter>
+      <Filter>01.Scene\99.Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\BackGround.h">
       <Filter>02.GameObject\00.BackGround</Filter>
@@ -309,6 +312,9 @@
     <ClInclude Include="..\Codes\CollisionMgr.h">
       <Filter>97.Manager\02.CollisionMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Stage_1.h">
+      <Filter>01.Scene\02.Stage_1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -324,7 +330,7 @@
       <Filter>01.Scene\01.Stage</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Loading.cpp">
-      <Filter>01.Scene\02.Loading</Filter>
+      <Filter>01.Scene\99.Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\BackGround.cpp">
       <Filter>02.GameObject\00.BackGround</Filter>
@@ -430,6 +436,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\CollisionMgr.cpp">
       <Filter>97.Manager\02.CollisionMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Stage_1.cpp">
+      <Filter>01.Scene\02.Stage_1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

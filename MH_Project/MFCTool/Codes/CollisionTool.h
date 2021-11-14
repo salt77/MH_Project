@@ -58,7 +58,8 @@ public:
 	CTreeCtrl m_TreeObj;
 	CTreeCtrl m_TreeBone;
 
-	HTREEITEM	m_hRoot, m_hPlayer, m_hAhglan;
+	HTREEITEM	m_hRoot, m_hPlayer, m_hAhglan, m_hCloyan;
+	HTREEITEM	m_hDog, m_hSoldier, m_hKnight;
 	//HTREEITEM	m_hBoneRoot1, m_hBoneRoot2, m_hBoneRoot3, m_hBoneRoot4, m_hBoneRoot5, m_hBoneRoot6, m_hBoneRoot7;
 
 	CListBox m_ListBoxCollider;		// Sphere Collider Box

@@ -134,17 +134,28 @@ void CMFC_Player::Key_Input(const _float & fTimeDelta)
 {
 	m_pTransformCom->Get_INFO(INFO_LOOK, &m_vDir);
 
-	if (m_pNaviMeshCom)
+	_vec3	vRight = *m_pTransformCom->Get_Info(INFO_RIGHT);
+
+	if (m_pNaviMeshCom && 0 < m_pNaviMeshCom->Get_CellVector().size())
 	{
 		if (GetAsyncKeyState(VK_UP) & 0x8000)
 			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &m_vDir, 300.f, fTimeDelta));
+
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &m_vDir, -300.f, fTimeDelta));
+
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vRight, -300.f, fTimeDelta));
+
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vRight, 300.f, fTimeDelta));
 	}
 
-	//if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-	//	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
+	/*if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
 
-	//if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-	//	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));*/
 }
 
 HRESULT CMFC_Player::Add_NaviMesh(_uint iCellCount, vector<_matrix> vecPoint)

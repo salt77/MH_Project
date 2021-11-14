@@ -26,6 +26,57 @@ CCollider::~CCollider()
 }
 
 
+void CCollider::Set_MatrixInterpolX(_float fX)
+{
+	m_fInterpolX = fX;
+
+	m_vPos.x = m_matColMatrix._41;
+	m_vPos.y = m_matColMatrix._42;
+	m_vPos.z = m_matColMatrix._43;
+
+	_matrix		matWorld;
+	m_pGraphicDev->GetTransform(D3DTS_WORLD, &matWorld);
+
+	D3DXMatrixInverse(&matWorld, nullptr, &matWorld);
+	D3DXVec3TransformCoord(&m_vPos, &m_vPos, &matWorld);
+
+	m_vPos.x += m_fInterpolX;
+}
+
+void CCollider::Set_MatrixInterpolY(_float fY)
+{
+	m_fInterpolY = fY;
+
+	m_vPos.x = m_matColMatrix._41;
+	m_vPos.y = m_matColMatrix._42;
+	m_vPos.z = m_matColMatrix._43;
+
+	_matrix		matWorld;
+	m_pGraphicDev->GetTransform(D3DTS_WORLD, &matWorld);
+
+	D3DXMatrixInverse(&matWorld, nullptr, &matWorld);
+	D3DXVec3TransformCoord(&m_vPos, &m_vPos, &matWorld);
+
+	m_vPos.y += m_fInterpolY;
+}
+
+void CCollider::Set_MatrixInterpolZ(_float fZ)
+{
+	m_fInterpolZ = fZ;
+
+	m_vPos.x = m_matColMatrix._41;
+	m_vPos.y = m_matColMatrix._42;
+	m_vPos.z = m_matColMatrix._43;
+
+	_matrix		matWorld;
+	m_pGraphicDev->GetTransform(D3DTS_WORLD, &matWorld);
+
+	D3DXMatrixInverse(&matWorld, nullptr, &matWorld);
+	D3DXVec3TransformCoord(&m_vPos, &m_vPos, &matWorld);
+
+	m_vPos.z += m_fInterpolZ;
+}
+
 HRESULT CCollider::Ready_Collider(const _float& fRadius, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType)
 {
 	// 메시 사이즈에 맞는 바운딩 박스를 만들기 가장 작은 좌표 값과 가장 큰 좌표 값을 만들어주는 함수
@@ -81,12 +132,18 @@ void CCollider::Render_Collider(COLTYPE eType, const _matrix * pColliderMatrix)
 
 	memcpy(&m_vCenter, &m_matColMatrix._41, sizeof(_vec3));
 
-	if (0.f != m_fInterpolX)
-		m_matColMatrix._41 += m_fInterpolX;
-	if (0.f != m_fInterpolY)
-		m_matColMatrix._42 += m_fInterpolY;
-	if (0.f != m_fInterpolZ)
-		m_matColMatrix._43 += m_fInterpolZ;
+	if (0.f != m_vPos.x)
+	{
+		m_matColMatrix._41 = m_vPos.x * m_matColMatrix._41;
+	}
+	else if (0.f != m_vPos.y)
+	{
+		m_matColMatrix._42 = m_vPos.y * m_matColMatrix._42;
+	}
+	else if (0.f != m_vPos.z)
+	{
+		m_matColMatrix._43 = m_vPos.z * m_matColMatrix._43;
+	}
 
 #ifdef _DEBUG
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matColMatrix);

@@ -1,0 +1,15 @@
+1. Attack
+2. DamageFromBack
+3. DamageFromFront
+4. Dead 
+5. Idle 
+6. Low_Health
+7. Run
+8. SlashAndPierce
+9. SlipDash
+10. Spawn
+11. Step_Back 
+12. Step_Front 
+13. Step_Pierce 
+14. Twin_Bolt
+15. 

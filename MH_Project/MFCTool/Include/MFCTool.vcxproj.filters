@@ -73,6 +73,21 @@
     <Filter Include="02.GameObject\05.MFC_Stage\01.Stage_1">
       <UniqueIdentifier>{2a48f336-91bd-4c18-be10-8478df1aaef2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\06.MFC_Enemy">
+      <UniqueIdentifier>{de6c687f-7882-4d03-8ecc-6b287c8f8c2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.MFC_Enemy\00.MFC_Dog">
+      <UniqueIdentifier>{a1004d63-29a9-4020-b3e3-3860c358e3b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.MFC_Enemy\01.MFC_Soldier">
+      <UniqueIdentifier>{5e966db6-56c8-41ab-9e03-ffcd4fd50d90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.MFC_Enemy\02.MFC_Knight">
+      <UniqueIdentifier>{0614a8e6-7cba-4405-9f66-a7fef27a86ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.MFC_Enemy\03.MFC_Cloyan">
+      <UniqueIdentifier>{d30b288a-4e1e-4a10-b0b9-edd9c67f07b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -147,6 +162,18 @@
     <ClInclude Include="..\Codes\MFC_Stage_1.h">
       <Filter>02.GameObject\05.MFC_Stage\01.Stage_1</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Dog.h">
+      <Filter>02.GameObject\06.MFC_Enemy\00.MFC_Dog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Soldier.h">
+      <Filter>02.GameObject\06.MFC_Enemy\01.MFC_Soldier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Knight.h">
+      <Filter>02.GameObject\06.MFC_Enemy\02.MFC_Knight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\MFC_Cloyan.h">
+      <Filter>02.GameObject\06.MFC_Enemy\03.MFC_Cloyan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -211,6 +238,18 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MFC_Stage_1.cpp">
       <Filter>02.GameObject\05.MFC_Stage\01.Stage_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Dog.cpp">
+      <Filter>02.GameObject\06.MFC_Enemy\00.MFC_Dog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Soldier.cpp">
+      <Filter>02.GameObject\06.MFC_Enemy\01.MFC_Soldier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Knight.cpp">
+      <Filter>02.GameObject\06.MFC_Enemy\02.MFC_Knight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MFC_Cloyan.cpp">
+      <Filter>02.GameObject\06.MFC_Enemy\03.MFC_Cloyan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -232,6 +232,33 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
 					return E_FAIL;
 			}
+			else if (!lstrcmp(szFileName, L"mankind_cloyan.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"mankind_cloyan_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+			else if (!lstrcmp(szFileName, L"mankind_cloyan_hair.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"mankind_cloyan_hair_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+			else if (!lstrcmp(szFileName, L"mankind_cloyan_mask.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"mankind_cloyan_mask_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
 		}
 	}
 	// 재질 정보가 없는 경우

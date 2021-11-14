@@ -88,13 +88,13 @@ HRESULT Engine::CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 			}
 			else if (1 == iGrass)
 			{
-				pVertex[dwIndex].vTexUV = _vec2(_float(j) / (dwCntX - 1) * 100.f,
-					_float(i) / (dwCntZ - 1) * 30.f);
+				pVertex[dwIndex].vTexUV = _vec2(_float(j) / (dwCntX - 1) * 50.f,
+					_float(i) / (dwCntZ - 1) * 15.f);
 			}
 			else
 			{
-				pVertex[dwIndex].vTexUV = _vec2(_float(j) / (dwCntX - 1) * 100.f,
-					_float(i) / (dwCntZ - 1) * 30.f);
+				pVertex[dwIndex].vTexUV = _vec2(_float(j) / (dwCntX - 1) * 50.f,
+					_float(i) / (dwCntZ - 1) * 15.f);
 			}
 		}
 	}	

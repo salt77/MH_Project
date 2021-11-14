@@ -47,7 +47,8 @@ public:
 
 public:
 	HTREEITEM	m_hMainObj, m_hSubObj;
-	HTREEITEM	m_hPlayer, m_hAhglan;
+	HTREEITEM	m_hPlayer, m_hAhglan, m_hCloyan;
+	HTREEITEM	m_hDog, m_hSoldier, m_hKnight;
 
 	CTreeCtrl m_TreeObjectTool;
 	CListBox m_ListObjAdd;
@@ -58,6 +59,10 @@ public:
 	CCalculator*	m_pCalculatorCom = nullptr;
 
 	CString m_cstrObjName;
+
+	_uint	m_iDogCount = 0;
+	_uint	m_iSoldierCount = 0;
+	_uint	m_iKnightCount = 0;
 
 	float m_fObjPosX;
 	float m_fObjPosY;

@@ -15,6 +15,8 @@ public:
 	const _vec3*			Get_VtxPos(void) { return m_pVtxPos; }
 	const _ulong&			Get_Stride(void) { return m_dwStride; }
 	const _ulong&			Get_VtxCnt(void) { return m_dwVtxCnt; }
+
+public:
 	_bool					Find_Alpha(const char* pFileName);
 
 public:
@@ -40,8 +42,8 @@ private:
 
 
 public:
-	static	CStaticMesh* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pFilePath, const wstring pFileName);
-	virtual CComponent * Clone(void) override;
+	static	CStaticMesh*	Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pFilePath, const wstring pFileName);
+	virtual CComponent *	Clone(void) override;
 
 private:
 	virtual void	Free();

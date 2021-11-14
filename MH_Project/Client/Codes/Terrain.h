@@ -22,6 +22,7 @@ private:
 
 public:
 	virtual HRESULT Ready_Object(_uint iGrass = 0);
+	virtual HRESULT	LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 

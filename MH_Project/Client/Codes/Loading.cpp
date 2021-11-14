@@ -31,7 +31,8 @@ unsigned int CALLBACK CLoading::Thread_Main(void* pArg)
 		iFlag = pLoading->Loading_ForStage();
 		break;
 
-	case LOADING_BOSS:
+	case LOADING_STAGE_1:
+		iFlag = pLoading->Loading_ForStage_1();
 		break;
 	}
 
@@ -144,22 +145,19 @@ _uint CLoading::Loading_ForStage_1()
 {
 	lstrcpy(m_szLoading, L"Loading Buffer..");
 
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 64, 48)), E_FAIL);
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_TerrainTex2", CTerrainTex::Create(m_pGraphicDev, 96, 48, 1, 1)), E_FAIL);
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_TerrainTex3", CTerrainTex::Create(m_pGraphicDev, 96, 48, 1, 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 128, 164)), E_FAIL);
 
 	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_CubeTex", CCubeTex::Create(m_pGraphicDev)), E_FAIL);
 
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_Trail", CTrail::Create(m_pGraphicDev)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_Trail", CTrail::Create(m_pGraphicDev)), E_FAIL);
 
 	lstrcpy(m_szLoading, L"Loading Texture..");
 
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Ortel_%d.tga", TEX_NORMAL, 2)), E_FAIL);
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Terrain2", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Ortel2_%d.tga", TEX_NORMAL, 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Ortel_%d.tga", TEX_NORMAL, 2)), E_FAIL);
 
 	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SkyBox", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/SkyBox/SkyBox%d.dds", TEX_CUBE, 2)), E_FAIL);
 
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SwordTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_effect_blade_trail2.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SwordTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_effect_blade_trail2.tga", TEX_NORMAL)), E_FAIL);
 
 	// Player UI
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Hpbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Hpbar_Back.png", TEX_NORMAL)), E_FAIL);
@@ -211,7 +209,7 @@ _uint CLoading::Loading_ForStage_1()
 
 	lstrcpy(m_szLoading, L"Loading Stage..");
 
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Stage", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Stage/", L"Stage.X")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Stage_1", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Stage_1/", L"Stage_1.X")), E_FAIL);
 
 	lstrcpy(m_szLoading, L"Loading Player..");
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Lethita/", L"Lethita.X")), E_FAIL);

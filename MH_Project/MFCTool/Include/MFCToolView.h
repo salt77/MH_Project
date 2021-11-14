@@ -39,15 +39,16 @@ public:
 	// Object Tool 관련 Get 함수들
 	const _bool&						Get_ObjMouseMode() { return m_bObjOnMouse; }
 	const OBJECTADD_MFC&				Get_ObjMode() { return m_eObjMode; }
+	const vector<CTransform*>			Get_ObjVector(OBJECTADD_MFC eObj);
 
 public:
 	void	Set_RenderTerrain(_uint _iRenderType) { m_iRenderTerrain = _iRenderType; }
 	void	Set_ChangeColType(wstring cstrName, COLTYPE eColType, COLLIDERTYPE eColliderType = COLTYPE_SPHERE_DAMAGED, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
 	void	Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
 	void	Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName, COLLIDERTYPE eColType = COLTYPE_SPHERE_DAMAGED, OBJECTADD_MFC eObjType = OBJECTADD_MFC_PLAYER);
-	void	Set_ColliderMatrixInterpolX(_float fX, wstring cstrColName);
-	void	Set_ColliderMatrixInterpolY(_float fY, wstring cstrColName);
-	void	Set_ColliderMatrixInterpolZ(_float fZ, wstring cstrColName);
+	void	Set_ColliderMatrixInterpolX(_float fX, wstring cstrColName, OBJECTADD_MFC eObjType);
+	void	Set_ColliderMatrixInterpolY(_float fY, wstring cstrColName, OBJECTADD_MFC eObjType);
+	void	Set_ColliderMatrixInterpolZ(_float fZ, wstring cstrColName, OBJECTADD_MFC eObjType);
 	void	Set_NavMeshToolPointer(CNavmeshTool* pNavmeshToolPointer) { m_pNavMeshTool = pNavmeshToolPointer; }
 	void	Set_ObjectToolMode(_bool bObjOnMouse, OBJECTADD_MFC eObjMode) { m_bObjOnMouse = bObjOnMouse;  m_eObjMode = eObjMode; }
 
@@ -89,6 +90,10 @@ private:
 	// Object Tool 관련 변수들
 	_bool				m_bObjOnMouse = false;
 	OBJECTADD_MFC		m_eObjMode = OBJECTADD_MFC_END;
+
+	vector<CTransform*>	m_vecDogTrans;
+	vector<CTransform*>	m_vecSoldierTrans;
+	vector<CTransform*>	m_vecKnightTrans;
 	////////////////
 
 	// NavMesh Tool 관련 변수들
@@ -103,6 +108,9 @@ private:
 	vector<_matrix>		m_vecPoint;
 	////////////////
 
+	_uint		m_iDogIndex = 0;
+	_uint		m_iSoldierIndex = 0;
+	_uint		m_iKnightIndex = 0;
 	_uint		m_iRenderTerrain = 0;
 
 	_float		m_fDeltaTime = 0.f;

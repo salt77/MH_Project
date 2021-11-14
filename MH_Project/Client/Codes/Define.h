@@ -136,8 +136,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define POOLING_POS			_vec3(0.f, -999.f, 0.f)
 
 #define DAMAGEFONT_COUNT	20
-#define DAMAGEFONT_SKILL_COUNT	10
-#define DAMAGEFONT_MONSTER_COUNT 5
+#define DAMAGEFONT_SKILL_COUNT	15
+#define DAMAGEFONT_MONSTER_COUNT 15
 
 
 

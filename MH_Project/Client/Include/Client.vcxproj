@@ -183,6 +183,7 @@
     <ClInclude Include="..\Codes\Stage.h" />
     <ClInclude Include="..\Codes\StageMesh.h" />
     <ClInclude Include="..\Codes\StageMesh_1.h" />
+    <ClInclude Include="..\Codes\Stage_1.h" />
     <ClInclude Include="..\Codes\StickyBomb.h" />
     <ClInclude Include="..\Codes\Terrain.h" />
     <ClInclude Include="..\Codes\Trail_Sword.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\Codes\Stage.cpp" />
     <ClCompile Include="..\Codes\StageMesh.cpp" />
     <ClCompile Include="..\Codes\StageMesh_1.cpp" />
+    <ClCompile Include="..\Codes\Stage_1.cpp" />
     <ClCompile Include="..\Codes\StickyBomb.cpp" />
     <ClCompile Include="..\Codes\Terrain.cpp" />
     <ClCompile Include="..\Codes\Trail_Sword.cpp" />

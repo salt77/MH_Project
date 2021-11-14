@@ -24,6 +24,11 @@ HRESULT CMFC_Terrain::Ready_Object(_uint iGrass)
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	_vec3	vPos = *m_pTransformCom->Get_Info(INFO_POS);
+	vPos.y += 2.6f;
+	vPos.z -= 50.f;
+	m_pTransformCom->Set_Pos(&vPos);
+
 	return S_OK;
 }
 

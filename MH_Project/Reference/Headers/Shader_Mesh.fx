@@ -83,21 +83,18 @@ technique Default_Device
 {
 	pass 
 	{
-	
 		vertexshader = compile vs_3_0 VS_MAIN();
 		pixelshader = compile ps_3_0 PS_MAIN();	
-
 	}
 
 	pass AlphaTest
 	{
-		alphatestenable = true;
-		alphafunc = greater;
-		alpharef = 0xc0;
-		cullmode = none;
+		AlphaTestEnable = true;
+		AlphaFunc = greater;
+		AlphaRef = 0xc0;
+		Cullmode = none;
 	
 		vertexshader = compile vs_3_0 VS_MAIN();
 		pixelshader = compile ps_3_0 PS_ALPHATEST();
-		
 	}
 };

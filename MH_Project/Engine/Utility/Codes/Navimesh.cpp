@@ -32,19 +32,14 @@ HRESULT Engine::CNaviMesh::Ready_NaviMesh(_uint iCellCount, vector<_matrix> vecP
 
 	for (_uint index = 0; index < iCellCount; ++index)
 	{
-		memcpy(vFirstPoint,  &vecPoint[index]._11, sizeof(_vec3));
-		memcpy(vSecondPoint, &vecPoint[index]._21, sizeof(_vec3));
-		memcpy(vThirdPoint,	 &vecPoint[index]._31, sizeof(_vec3));
+		memcpy(&vFirstPoint, &vecPoint[index]._11, sizeof(_vec3));
+		memcpy(&vSecondPoint, &vecPoint[index]._21, sizeof(_vec3));
+		memcpy(&vThirdPoint, &vecPoint[index]._31, sizeof(_vec3));
 
 		pCell = CCell::Create(m_pGraphicDev, (_ulong)index, &vFirstPoint, &vSecondPoint, &vThirdPoint);
 		NULL_CHECK_RETURN(pCell, E_FAIL);
 		m_vecCell.push_back(pCell);
 	}
-
-	//// 0
-	//pCell = CCell::Create(m_pGraphicDev, m_vecCell.size(), &_vec3(0.f, 0.f, 2.f), &_vec3(2.f, 0.f, 0.f), &_vec3(0.f, 0.f, 0.f));
-	//NULL_CHECK_RETURN(pCell, E_FAIL);
-	//m_vecCell.push_back(pCell);
 
 	FAILED_CHECK_RETURN(Link_Cell(), E_FAIL);
 

@@ -16,6 +16,10 @@
 #include "MFC_Terrain.h"
 #include "MFC_Player.h"
 #include "MFC_Ahglan.h"
+#include "MFC_Cloyan.h"
+#include "MFC_Dog.h"
+#include "MFC_Soldier.h"
+#include "MFC_Knight.h"
 #include "MFC_CamEye.h"
 #include "MFC_CamAt.h"
 #include "MFC_CamInterpol.h"
@@ -67,18 +71,51 @@ list<D3DXMESHCONTAINER_DERIVED*> CMFCToolView::Get_MeshContainerList(OBJECTADD_M
 		{
 			return dynamic_cast<CDynamicMesh*>(m_pPlayer->Get_Component(L"Com_Mesh", ID_STATIC))->Get_MeshContainerList();
 		}
-
 		break;
+
 	case OBJECTADD_MFC_AHGLAN:
 		if (m_pAhglan)
 		{
 			return dynamic_cast<CDynamicMesh*>(m_pAhglan->Get_Component(L"Com_Mesh", ID_STATIC))->Get_MeshContainerList();
 		}
+		break;
 
+	case OBJECTADD_MFC_CLOYAN:
+		return dynamic_cast<CDynamicMesh*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Mesh", ID_STATIC))->Get_MeshContainerList();
+		break;
+
+	case OBJECTADD_MFC_DOG:
+		return dynamic_cast<CDynamicMesh*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", L"Com_Mesh", ID_STATIC))->Get_MeshContainerList();
+		break;
+
+	case OBJECTADD_MFC_SOLDIER:
+		return dynamic_cast<CDynamicMesh*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", L"Com_Mesh", ID_STATIC))->Get_MeshContainerList();
+		break;
+
+	case OBJECTADD_MFC_KNIGHT:
+		return dynamic_cast<CDynamicMesh*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", L"Com_Mesh", ID_STATIC))->Get_MeshContainerList();
 		break;
 	}
-	
+
 	return list<D3DXMESHCONTAINER_DERIVED*>();
+}
+
+const vector<CTransform*> CMFCToolView::Get_ObjVector(OBJECTADD_MFC eObj)
+{
+	if (OBJECTADD_MFC_AHGLAN == eObj)
+	{
+		return m_vecDogTrans;
+	}
+	else if (OBJECTADD_MFC_SOLDIER == eObj)
+	{
+		return m_vecSoldierTrans;
+	}
+	else if (OBJECTADD_MFC_KNIGHT == eObj)
+	{
+		return m_vecKnightTrans;
+	}
+
+	return vector<CTransform*>();
 }
 
 void CMFCToolView::Set_ChangeColType(wstring cstrName, COLTYPE eColType, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType)
@@ -93,8 +130,25 @@ void CMFCToolView::Set_ObjectAniIndex(_uint iIndex, OBJECTADD_MFC eObjType)
 	case OBJECTADD_MFC_PLAYER:
 		m_pPlayer->Set_AniIndex(iIndex);
 		break;
+
 	case OBJECTADD_MFC_AHGLAN:
 		m_pAhglan->Set_AniIndex(iIndex);
+		break;
+
+	case OBJECTADD_MFC_CLOYAN:
+		dynamic_cast<CMFC_Cloyan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Cloyan"))->Set_AniIndex(iIndex);
+		break;
+
+	case OBJECTADD_MFC_DOG:
+		dynamic_cast<CMFC_Dog*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Dog_0"))->Set_AniIndex(iIndex);
+		break;
+
+	case OBJECTADD_MFC_SOLDIER:
+		dynamic_cast<CMFC_Soldier*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Soldier_0"))->Set_AniIndex(iIndex);
+		break;
+
+	case OBJECTADD_MFC_KNIGHT:
+		dynamic_cast<CMFC_Knight*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Knight_0"))->Set_AniIndex(iIndex);
 		break;
 	}
 }
@@ -122,7 +176,6 @@ void CMFCToolView::Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName, COL
 				break;
 			}
 		}
-
 		break;
 
 	case OBJECTADD_MFC_AHGLAN:
@@ -144,32 +197,148 @@ void CMFCToolView::Set_ColliderMatrix(_matrix* matInfo, wstring cstrColName, COL
 				break;
 			}
 		}
+		break;
 
+	case OBJECTADD_MFC_CLOYAN:
+		switch (eColType)
+		{
+		case Engine::COLTYPE_BOX_DAMAGED:
+			dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_BOX_HIT:
+			dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_SPHERE_DAMAGED:
+			dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_SPHERE_HIT:
+			dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		}
+		break;
+
+	case OBJECTADD_MFC_DOG:
+		switch (eColType)
+		{
+		case Engine::COLTYPE_BOX_DAMAGED:
+			dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_BOX_HIT:
+			dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_SPHERE_DAMAGED:
+			dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_SPHERE_HIT:
+			dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		}
+		break;
+
+	case OBJECTADD_MFC_SOLDIER:
+		switch (eColType)
+		{
+		case Engine::COLTYPE_BOX_DAMAGED:
+			dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_BOX_HIT:
+			dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_SPHERE_DAMAGED:
+			dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_SPHERE_HIT:
+			dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		}
+		break;
+
+	case OBJECTADD_MFC_KNIGHT:
+		switch (eColType)
+		{
+		case Engine::COLTYPE_BOX_DAMAGED:
+			dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_BOX_HIT:
+			dynamic_cast<CBoxCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_SPHERE_DAMAGED:
+			dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		case Engine::COLTYPE_SPHERE_HIT:
+			dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrColName, ID_STATIC))->Set_Matrix(matInfo);
+			break;
+		}
 		break;
 	}
 }
 
-void CMFCToolView::Set_ColliderMatrixInterpolX(_float fX, wstring cstrColName)
+void CMFCToolView::Set_ColliderMatrixInterpolX(_float fX, wstring cstrColName, OBJECTADD_MFC eObjType)
 {
-	if (m_pPlayer)
+	switch (eObjType)
 	{
+	case OBJECTADD_MFC_PLAYER:
 		dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_MatrixInterpolX(fX);
+		break;
+
+	case OBJECTADD_MFC_AHGLAN:
+		break;
+
+	case OBJECTADD_MFC_DOG:
+		break;
+
+	case OBJECTADD_MFC_SOLDIER:
+		break;
+
+	case OBJECTADD_MFC_KNIGHT:
+		dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrColName, ID_STATIC))->Set_MatrixInterpolX(fX);
+		break;
 	}
 }
 
-void CMFCToolView::Set_ColliderMatrixInterpolY(_float fY, wstring cstrColName)
+void CMFCToolView::Set_ColliderMatrixInterpolY(_float fY, wstring cstrColName, OBJECTADD_MFC eObjType)
 {
-	if (m_pPlayer)
+	switch (eObjType)
 	{
+	case OBJECTADD_MFC_PLAYER:
 		dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_MatrixInterpolY(fY);
+		break;
+
+	case OBJECTADD_MFC_AHGLAN:
+		break;
+
+	case OBJECTADD_MFC_DOG:
+		break;
+
+	case OBJECTADD_MFC_SOLDIER:
+		break;
+
+	case OBJECTADD_MFC_KNIGHT:
+		dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrColName, ID_STATIC))->Set_MatrixInterpolY(fY);
+		break;
 	}
 }
 
-void CMFCToolView::Set_ColliderMatrixInterpolZ(_float fZ, wstring cstrColName)
+void CMFCToolView::Set_ColliderMatrixInterpolZ(_float fZ, wstring cstrColName, OBJECTADD_MFC eObjType)
 {
-	if (m_pPlayer)
+	switch (eObjType)
 	{
+	case OBJECTADD_MFC_PLAYER:
 		dynamic_cast<CCollider*>(m_pPlayer->Get_Component((wstring)cstrColName, ID_STATIC))->Set_MatrixInterpolZ(fZ);
+		break;
+
+	case OBJECTADD_MFC_AHGLAN:
+		break;
+
+	case OBJECTADD_MFC_DOG:
+		break;
+
+	case OBJECTADD_MFC_SOLDIER:
+		break;
+
+	case OBJECTADD_MFC_KNIGHT:
+		dynamic_cast<CCollider*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", (wstring)cstrColName, ID_STATIC))->Set_MatrixInterpolZ(fZ);
+		break;
 	}
 }
 
@@ -188,7 +357,7 @@ HRESULT CMFCToolView::Add_Prototype()
 	// Components
 	Engine::Ready_Prototype(L"Proto_Transform", CTransform::Create(m_pGraphicDev));
 
-	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 48, 48));
+	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 128, 164));
 	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex2", CTerrainTex::Create(m_pGraphicDev, 96, 48, 1, 1));
 	Engine::Ready_Prototype(L"Proto_Buffer_TerrainTex3", CTerrainTex::Create(m_pGraphicDev, 96, 48, 1, 2));
 
@@ -204,7 +373,11 @@ HRESULT CMFCToolView::Add_Prototype()
 
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Player", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Lethita/", L"Lethita.X"));
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Ahglan", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Ahglan/", L"Ahglan.X"));
-	
+	Engine::Ready_Prototype(L"Proto_DynamicMesh_Cloyan", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Mankind/Cloyan/", L"Cloyan.X"));
+	Engine::Ready_Prototype(L"Proto_DynamicMesh_Dog", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Mankind/Dog/", L"Dog.X"));
+	Engine::Ready_Prototype(L"Proto_DynamicMesh_Soldier", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Mankind/Soldier/", L"Soldier.X"));
+	Engine::Ready_Prototype(L"Proto_DynamicMesh_Knight", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Mankind/Knight/", L"Knight.X"));
+
 	//Engine::Ready_Prototype(L"Proto_StaticMesh_Player", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Lethita/", L"Lethita.X"));
 
 	return S_OK;
@@ -238,13 +411,13 @@ HRESULT CMFCToolView::Ready_DefaultSettings()
 
 	//m_pTerrain3 = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain3"));
 
-	//// Terrain 추가
-	//pObj = CMFC_Terrain::Create(m_pGraphicDev, 0);
-	//NULL_CHECK_RETURN(pObj, E_FAIL);
-	//m_pLayer->Add_GameObject(L"MFC_Terrain", pObj);
-	//Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+	// Terrain 추가
+	pObj = CMFC_Terrain::Create(m_pGraphicDev, 0);
+	NULL_CHECK_RETURN(pObj, E_FAIL);
+	m_pLayer->Add_GameObject(L"MFC_Terrain", pObj);
+	Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
-	//m_pTerrain = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
+	m_pTerrain = dynamic_cast<CMFC_Terrain*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Terrain"));
 
 	// Stage 추가
 	pObj = CMFC_Stage_1::Create(m_pGraphicDev);
@@ -357,6 +530,8 @@ HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 {
 	CGameObject* pObj = nullptr;
 
+	wstring	wstrName = L"";
+
 	switch (_eObjectType)
 	{
 	case OBJECTADD_MFC_PLAYER:
@@ -367,7 +542,6 @@ HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
 		m_pPlayer = dynamic_cast<CMFC_Player*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Player"));
-
 		break;
 
 	case OBJECTADD_MFC_AHGLAN:
@@ -378,7 +552,58 @@ HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
 		m_pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Ahglan"));
+		break;
 
+	case OBJECTADD_MFC_CLOYAN:
+		pObj = CMFC_Cloyan::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pObj, E_FAIL);
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Add_GameObject(L"MFC_Cloyan", pObj);
+		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+		//m_pAhglan = dynamic_cast<CMFC_Ahglan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Cloyan"));
+		break;
+
+	case OBJECTADD_MFC_DOG:
+		wstrName = L"MFC_Dog_";
+		wstrName += to_wstring(m_iDogIndex);
+
+		pObj = CMFC_Dog::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pObj, E_FAIL);
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Add_GameObject(wstrName, pObj);
+
+		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+		++m_iDogIndex;
+		break;
+
+	case OBJECTADD_MFC_SOLDIER:
+		wstrName = L"MFC_Soldier_";
+		wstrName += to_wstring(m_iSoldierIndex);
+
+		pObj = CMFC_Soldier::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pObj, E_FAIL);
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Add_GameObject(wstrName, pObj);
+
+		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+		++m_iSoldierIndex;
+		break;
+
+	case OBJECTADD_MFC_KNIGHT:
+		wstrName = L"MFC_Knight_";
+		wstrName += to_wstring(m_iKnightIndex);
+
+		pObj = CMFC_Knight::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pObj, E_FAIL);
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Add_GameObject(wstrName, pObj);
+
+		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
+
+		++m_iKnightIndex;
 		break;
 
 	case OBJECTADD_MFC_CAMEYE:
@@ -389,7 +614,6 @@ HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
 		m_pCamEye = dynamic_cast<CMFC_CamEye*>(Engine::Get_MFCGameObject(L"GameLogic", ObjTag));
-
 		break;
 
 	case OBJECTADD_MFC_CAMAT:
@@ -400,7 +624,6 @@ HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 		Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 
 		m_pCamAt = dynamic_cast<CMFC_CamAt*>(Engine::Get_MFCGameObject(L"GameLogic", ObjTag));
-
 		break;
 
 	case OBJECTADD_MFC_CAMINTERPOL:
@@ -414,7 +637,6 @@ HRESULT CMFCToolView::Add_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 			m_pLayer->Add_GameObject(ObjTag, pObj);
 			Engine::AddGameObjectInManager(L"GameLogic", m_pLayer);
 		}
-
 		break;
 	}
 
@@ -435,6 +657,12 @@ HRESULT CMFCToolView::Delete_Object(OBJECTADD_MFC _eObjectType, wstring ObjTag)
 	case OBJECTADD_MFC_AHGLAN:
 		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
 		m_pLayer->Delete_Layer(L"MFC_Ahglan");
+		m_pPlayer = nullptr;
+		break;
+
+	case OBJECTADD_MFC_CLOYAN:
+		NULL_CHECK_RETURN(m_pLayer, E_FAIL);
+		m_pLayer->Delete_Layer(L"MFC_Cloyan");
 		m_pPlayer = nullptr;
 		break;
 
@@ -459,18 +687,37 @@ HRESULT CMFCToolView::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYP
 
 	CTransform*	pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
 	CTransform*	pAhglanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
+	CTransform*	pCloyanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+	CTransform*	pDogTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", L"Com_Transform", ID_DYNAMIC));
+	CTransform*	pSoldierTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", L"Com_Transform", ID_DYNAMIC));
+	CTransform*	pKnightTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", L"Com_Transform", ID_DYNAMIC));
+
 	switch (eObjType)
 	{
 	case OBJECTADD_MFC_PLAYER:
 		if (m_pPlayer)
 			m_pPlayer->Add_Collider(fRadius, cstrName, pPlayerTrans->Get_WorldMatrix(), eColliderType);
-
 		break;
 
 	case OBJECTADD_MFC_AHGLAN:
 		if (m_pAhglan)
 			m_pAhglan->Add_Collider(fRadius, cstrName, pAhglanTrans->Get_WorldMatrix(), eColliderType);
+		break;
 
+	case OBJECTADD_MFC_CLOYAN:
+		dynamic_cast<CMFC_Cloyan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Cloyan"))->Add_Collider(fRadius, cstrName, pCloyanTrans->Get_WorldMatrix(), eColliderType);
+		break;
+
+	case OBJECTADD_MFC_DOG:
+		dynamic_cast<CMFC_Dog*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Dog_0"))->Add_Collider(fRadius, cstrName, pDogTrans->Get_WorldMatrix(), eColliderType);
+		break;
+
+	case OBJECTADD_MFC_SOLDIER:
+		dynamic_cast<CMFC_Soldier*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Soldier_0"))->Add_Collider(fRadius, cstrName, pSoldierTrans->Get_WorldMatrix(), eColliderType);
+		break;
+
+	case OBJECTADD_MFC_KNIGHT:
+		dynamic_cast<CMFC_Knight*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Knight_0"))->Add_Collider(fRadius, cstrName, pKnightTrans->Get_WorldMatrix(), eColliderType);
 		break;
 	}
 
@@ -479,19 +726,43 @@ HRESULT CMFCToolView::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYP
 
 HRESULT CMFCToolView::Add_Collider(_float vMinX, _float vMinY, _float vMinZ, _float vMaxX, _float vMaxY, _float vMaxZ, wstring wstrName, COLLIDERTYPE eColliderType, OBJECTADD_MFC eObjType)
 {
+	CTransform*	pCloyanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+	CTransform*	pDogTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", L"Com_Transform", ID_DYNAMIC));
+	CTransform*	pSoldierTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", L"Com_Transform", ID_DYNAMIC));
+	CTransform*	pKnightTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight_0", L"Com_Transform", ID_DYNAMIC));
+
 	switch (eObjType)
 	{
 	case OBJECTADD_MFC_PLAYER:
 		if (m_pPlayer)
 			m_pPlayer->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName,
-									dynamic_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
-
+				dynamic_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
 		break;
+
 	case OBJECTADD_MFC_AHGLAN:
 		if (m_pAhglan)
-			m_pAhglan->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName, 
-									dynamic_cast<CTransform*>(m_pAhglan->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
+			m_pAhglan->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName,
+				dynamic_cast<CTransform*>(m_pAhglan->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
+		break;
 
+	case OBJECTADD_MFC_CLOYAN:
+		dynamic_cast<CMFC_Cloyan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Cloyan"))->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName,
+			pCloyanTrans->Get_WorldMatrix(), eColliderType);
+		break;
+
+	case OBJECTADD_MFC_DOG:
+		dynamic_cast<CMFC_Dog*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Dog_0"))->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName,
+			pDogTrans->Get_WorldMatrix(), eColliderType);
+		break;
+
+	case OBJECTADD_MFC_SOLDIER:
+		dynamic_cast<CMFC_Soldier*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Soldier_0"))->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName,
+			pSoldierTrans->Get_WorldMatrix(), eColliderType);
+		break;
+
+	case OBJECTADD_MFC_KNIGHT:
+		dynamic_cast<CMFC_Knight*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Knight_0"))->Add_Collider(vMinX, vMinY, vMinZ, vMaxX, vMaxY, vMaxZ, wstrName,
+			pKnightTrans->Get_WorldMatrix(), eColliderType);
 		break;
 	}
 
@@ -507,14 +778,29 @@ HRESULT CMFCToolView::Delete_Collider(wstring wstrName, COLLIDERTYPE eColliderTy
 		{
 			m_pPlayer->Delete_Collider(wstrName, eColliderType);
 		}
-
 		break;
+
 	case OBJECTADD_MFC_AHGLAN:
 		if (m_pAhglan)
 		{
 			m_pAhglan->Delete_Collider(wstrName, eColliderType);
 		}
+		break;
 
+	case OBJECTADD_MFC_CLOYAN:
+		dynamic_cast<CMFC_Cloyan*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Cloyan"))->Delete_Collider(wstrName, eColliderType);
+		break;
+
+	case OBJECTADD_MFC_DOG:
+		dynamic_cast<CMFC_Dog*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Dog_0"))->Delete_Collider(wstrName, eColliderType);
+		break;
+
+	case OBJECTADD_MFC_SOLDIER:
+		dynamic_cast<CMFC_Soldier*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Soldier_0"))->Delete_Collider(wstrName, eColliderType);
+		break;
+
+	case OBJECTADD_MFC_KNIGHT:
+		dynamic_cast<CMFC_Knight*>(Engine::Get_MFCGameObject(L"GameLogic", L"MFC_Knight_0"))->Delete_Collider(wstrName, eColliderType);
 		break;
 	}
 
@@ -615,6 +901,10 @@ void CMFCToolView::OnInitialUpdate()
 
 	pMain->SetWindowPos(nullptr, 0, 0, MAPTOOL_WINCX + iGapX, MAPTOOL_WINCY + iGapY, SWP_NOMOVE);
 
+	m_vecDogTrans.reserve(32);
+	m_vecSoldierTrans.reserve(32);
+	m_vecKnightTrans.reserve(16);
+
 	Add_Prototype();
 	Ready_DefaultSettings();
 }
@@ -646,22 +936,11 @@ void CMFCToolView::OnRButtonDown(UINT nFlags, CPoint point)
 
 	_vec3 vPoint = m_pCalculatorCom->Picking_OnTerrain(g_hWnd, m_pTerrainTex, m_pTerrainTrans);
 
-	//for (; iter != vecCell.end(); ++iter)
-	//{
-	//	for (_uint i = 0; i < CCell::POINT_END; ++i)
-	//	{
-	//		if (D3DXVec3Length(&(vPoint - iter->Get_Point((CCell::POINT) i)) <= 3.f))
-	//		{
-	//			vPoint = iter->Get_Point((CCell::POINT) i);
-	//		}
-	//	}
-	//}
-
 	for (_uint i = 0; i < vecCell.size(); ++i)
 	{
 		for (_uint j = 0; j < CCell::POINT_END; ++j)
 		{
-			if (D3DXVec3Length(&(vPoint - *(vecCell[i]->Get_Point((CCell::POINT) j)))) <= 1.f)
+			if (D3DXVec3Length(&(vPoint - *(vecCell[i]->Get_Point((CCell::POINT) j)))) <= 0.2f)
 			{
 				vPoint = *(vecCell[i]->Get_Point((CCell::POINT) j));
 			}
@@ -742,23 +1021,51 @@ void CMFCToolView::OnTimer(UINT_PTR nIDEvent)
 
 			CTransform*	pPlayerTrans = nullptr;
 			CTransform*	pAhglanTrans = nullptr;
+			CTransform*	pCloyanTrans = nullptr;
 
 			switch (m_eObjMode)
 			{
 			case OBJECTADD_MFC_PLAYER:
 				pPlayerTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
 				pPlayerTrans->Set_Pos(&vPoint);
-
 				break;
 
 			case OBJECTADD_MFC_AHGLAN:
 				pAhglanTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
 				pAhglanTrans->Set_Pos(&vPoint);
-
 				break;
 
-			default:
+			case OBJECTADD_MFC_CLOYAN:
+				pCloyanTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+				pCloyanTrans->Set_Pos(&vPoint);
 				break;
+			}
+
+			wstring wstrName = L"";
+
+			if (OBJECTADD_MFC_DOG == m_eObjMode)
+			{
+				wstrName = L"MFC_Dog_";
+				wstrName += to_wstring(m_iDogIndex - 1);
+
+				CTransform*	pTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+				pTrans->Set_Pos(&vPoint);
+			}
+			else if (OBJECTADD_MFC_SOLDIER == m_eObjMode)
+			{
+				wstrName = L"MFC_Soldier_";
+				wstrName += to_wstring(m_iSoldierIndex - 1);
+
+				CTransform*	pTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+				pTrans->Set_Pos(&vPoint);
+			}
+			else if (OBJECTADD_MFC_KNIGHT == m_eObjMode)
+			{
+				wstrName = L"MFC_Knight_";
+				wstrName += to_wstring(m_iKnightIndex - 1);
+
+				CTransform*	pTrans = static_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+				pTrans->Set_Pos(&vPoint);
 			}
 		}
 
@@ -776,6 +1083,30 @@ void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	if (m_bObjOnMouse)
 	{
+		wstring		wstrName = L"";
+
+		if (OBJECTADD_MFC_DOG == m_eObjMode)
+		{
+			wstrName = L"MFC_Dog_";
+			wstrName += to_wstring(m_iDogIndex - 1);
+
+			m_vecDogTrans.emplace_back(dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC)));
+		}
+		else if (OBJECTADD_MFC_SOLDIER == m_eObjMode)
+		{
+			wstrName = L"MFC_Soldier_";
+			wstrName += to_wstring(m_iSoldierIndex - 1);
+
+			m_vecSoldierTrans.emplace_back(dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC)));
+		}
+		else if (OBJECTADD_MFC_KNIGHT == m_eObjMode)
+		{
+			wstrName = L"MFC_Knight_";
+			wstrName += to_wstring(m_iKnightIndex - 1);
+
+			m_vecKnightTrans.emplace_back(dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC)));
+		}
+
 		m_bObjOnMouse = false;
 		m_eObjMode = OBJECTADD_MFC_END;
 	}

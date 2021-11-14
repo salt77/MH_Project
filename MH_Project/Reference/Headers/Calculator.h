@@ -6,6 +6,7 @@
 BEGIN(Engine)
 class CTransform;
 class CTerrainTex;
+class CStaticMesh;
 
 class ENGINE_DLL CCalculator : public CComponent
 {
@@ -34,6 +35,7 @@ public:
 											const _ulong& dwVtxItv = 1);
 
 	_vec3			Picking_OnTerrain(HWND hWnd, const CTerrainTex* pTerrainBufferCom, const CTransform* pTerrainTransCom);
+	_vec3			Picking_OnMesh(HWND hWnd, CStaticMesh* pMeshBufferCom, const CTransform* pMeshTransCom);
 
 	_bool			Collision_Sphere(const _vec3& vDstCenter, const _float& fDstRadius, const _vec3& vSrcCenter, const _float& fSrcRadius);
 	_bool			Collision_AABB(const _vec3* pDestMin, const _vec3* pDestMax, const _matrix* pDestWorld,

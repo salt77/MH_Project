@@ -30,6 +30,21 @@ HRESULT CTerrain::Ready_Object(_uint iGrass)
 	return S_OK;
 }
 
+HRESULT CTerrain::LateReady_Object()
+{
+	SCENE_ID	eID = Engine::Get_SceneID();
+
+	if (SCENE_STAGE_1 == eID)
+	{
+		_vec3	vPos = *m_pTransformCom->Get_Info(INFO_POS);
+		vPos.y += 2.6f;
+		vPos.z -= 50.f;
+		m_pTransformCom->Set_Pos(&vPos);
+	}
+
+	return S_OK;
+}
+
 _int CTerrain::Update_Object(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
@@ -41,8 +56,6 @@ _int CTerrain::Update_Object(const _float& fTimeDelta)
 
 void CTerrain::Render_Object(void)
 {
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
-
 	//	m_pBufferCom->Copy_Indices(m_pIndex, m_dwTriCnt);
 
 	LPD3DXEFFECT	 pEffect = m_pShaderCom->Get_EffectHandle();
@@ -62,8 +75,6 @@ void CTerrain::Render_Object(void)
 	pEffect->End();
 
 	Safe_Release(pEffect);
-
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
 CTerrain* CTerrain::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iGrass)

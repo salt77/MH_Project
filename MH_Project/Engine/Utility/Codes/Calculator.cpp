@@ -2,6 +2,7 @@
 
 #include "Transform.h"
 #include "TerrainTex.h"
+#include "StaticMesh.h"
 
 USING(Engine)
 
@@ -27,11 +28,11 @@ HRESULT Engine::CCalculator::Ready_Calculator(void)
 	return S_OK;
 }
 
-Engine::_float Engine::CCalculator::Compute_HeightOnTerrain(const _vec3* pPos, 
-															const _vec3* pTerrainVtx, 
-															const _ulong& dwCntX,
-															const _ulong& dwCntZ,
-															const _ulong& dwVtxItv)
+Engine::_float Engine::CCalculator::Compute_HeightOnTerrain(const _vec3* pPos,
+	const _vec3* pTerrainVtx,
+	const _ulong& dwCntX,
+	const _ulong& dwCntZ,
+	const _ulong& dwVtxItv)
 {
 	_ulong	dwIndex = _ulong(pPos->z / dwVtxItv) * dwCntX + _ulong(pPos->x / dwVtxItv);
 
@@ -39,12 +40,12 @@ Engine::_float Engine::CCalculator::Compute_HeightOnTerrain(const _vec3* pPos,
 	_float	fRatioZ = (pTerrainVtx[dwIndex + dwCntX].z - pPos->z) / dwVtxItv;
 
 	_float	fHeight[4] = {
-			pTerrainVtx[dwIndex + dwCntX].y, 
+			pTerrainVtx[dwIndex + dwCntX].y,
 			pTerrainVtx[dwIndex + dwCntX + 1].y,
 			pTerrainVtx[dwIndex + 1].y,
 			pTerrainVtx[dwIndex].y
 	};
-	
+
 
 	// 오른쪽 위 삼각형
 	if (fRatioX > fRatioZ)
@@ -77,23 +78,22 @@ Engine::CComponent* Engine::CCalculator::Clone(void)
 	return new CCalculator(*this);
 }
 
-Engine::_vec3 Engine::CCalculator::Picking_OnTerrain(HWND hWnd, 
-													const CTerrainTex* pTerrainBufferCom,
-													const CTransform*  pTerrainTransCom)
+Engine::_vec3 Engine::CCalculator::Picking_OnTerrain(HWND hWnd,
+													 const CTerrainTex* pTerrainBufferCom,
+													 const CTransform*  pTerrainTransCom)
 {
 	POINT		ptMouse{};
 
 	GetCursorPos(&ptMouse);
 	ScreenToClient(hWnd, &ptMouse);
 
-	
 	_vec3		vMousePos;
 
 	D3DVIEWPORT9		ViewPort;
 	ZeroMemory(&ViewPort, sizeof(D3DVIEWPORT9));
 
 	m_pGraphicDev->GetViewport(&ViewPort);
-	
+
 	// 윈도우 좌표를 투영 좌표로 변환
 	vMousePos.x = ptMouse.x / (ViewPort.Width * 0.5f) - 1.f;
 	vMousePos.y = ptMouse.y / (ViewPort.Height * -0.5f) + 1.f;
@@ -136,6 +136,8 @@ Engine::_vec3 Engine::CCalculator::Picking_OnTerrain(HWND hWnd,
 
 	_ulong	dwVtxIdx[3];
 
+	_vec3	vTerrainPos;
+	memcpy(&vTerrainPos, &matWorld._41, sizeof(_vec3));
 
 	for (_ulong i = 0; i < dwVtXCntZ - 1; ++i)
 	{
@@ -157,8 +159,8 @@ Engine::_vec3 Engine::CCalculator::Picking_OnTerrain(HWND hWnd,
 				&fU, &fV, &fDist))
 			{
 				return _vec3(pTerrainVtx[dwVtxIdx[1]].x + fU * (pTerrainVtx[dwVtxIdx[0]].x - pTerrainVtx[dwVtxIdx[1]].x),
-							0.f,
-							pTerrainVtx[dwVtxIdx[1]].z + fV * (pTerrainVtx[dwVtxIdx[2]].z - pTerrainVtx[dwVtxIdx[1]].z));
+							 -vTerrainPos.y,
+							 (pTerrainVtx[dwVtxIdx[1]].z + fV * (pTerrainVtx[dwVtxIdx[2]].z - pTerrainVtx[dwVtxIdx[1]].z) - 50.f));
 			}
 
 			// 왼쪽 아래 삼각형
@@ -175,10 +177,85 @@ Engine::_vec3 Engine::CCalculator::Picking_OnTerrain(HWND hWnd,
 				&fU, &fV, &fDist))
 			{
 				return _vec3(pTerrainVtx[dwVtxIdx[2]].x + fU * (pTerrainVtx[dwVtxIdx[1]].x - pTerrainVtx[dwVtxIdx[2]].x),
-							0.f,
-							pTerrainVtx[dwVtxIdx[2]].z + fV * (pTerrainVtx[dwVtxIdx[0]].z - pTerrainVtx[dwVtxIdx[2]].z));
+							 -vTerrainPos.y,
+							 (pTerrainVtx[dwVtxIdx[2]].z + fV * (pTerrainVtx[dwVtxIdx[0]].z - pTerrainVtx[dwVtxIdx[2]].z) - 50.f));
 			}
 
+		}
+	}
+
+	return _vec3(0.f, 0.f, 0.f);
+}
+
+_vec3 CCalculator::Picking_OnMesh(HWND hWnd, CStaticMesh * pMeshBufferCom, const CTransform * pMeshTransCom)
+{
+	POINT		ptMouse{};
+
+	GetCursorPos(&ptMouse);
+	ScreenToClient(hWnd, &ptMouse);
+
+	_vec3		vMousePos;
+
+	D3DVIEWPORT9		ViewPort;
+	ZeroMemory(&ViewPort, sizeof(D3DVIEWPORT9));
+
+	m_pGraphicDev->GetViewport(&ViewPort);
+
+	// 윈도우 좌표를 투영 좌표로 변환
+	vMousePos.x = ptMouse.x / (ViewPort.Width * 0.5f) - 1.f;
+	vMousePos.y = ptMouse.y / (ViewPort.Height * -0.5f) + 1.f;
+	vMousePos.z = 0.f;
+
+	// 투영 좌표에서 뷰스페이스로 변환
+	_matrix		matProj;
+	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+	D3DXMatrixInverse(&matProj, NULL, &matProj);
+	D3DXVec3TransformCoord(&vMousePos, &vMousePos, &matProj);
+
+	// 뷰스페이스에서 월드 스페이스로 변환
+	_vec3	vRayPos, vRayDir;
+
+	vRayPos = _vec3(0.f, 0.f, 0.f);
+	vRayDir = vMousePos - vRayPos;
+
+	_matrix		matView;
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	D3DXMatrixInverse(&matView, NULL, &matView);
+
+	D3DXVec3TransformCoord(&vRayPos, &vRayPos, &matView);
+	D3DXVec3TransformNormal(&vRayDir, &vRayDir, &matView);
+
+	// 월드스페이스에서 로컬 스페이스로 변환
+
+	_matrix		matWorld;
+	pMeshTransCom->Get_WorldMatrix(&matWorld);
+	D3DXMatrixInverse(&matWorld, NULL, &matWorld);
+
+	D3DXVec3TransformCoord(&vRayPos, &vRayPos, &matWorld);
+	D3DXVec3TransformNormal(&vRayDir, &vRayDir, &matWorld);
+
+	//_ulong		dwVtXCntX = pTerrainBufferCom->Get_VtxCntX();
+	//_ulong		dwVtXCntZ = pTerrainBufferCom->Get_VtxCntZ();
+
+	const _vec3*	pTerrainVtx = pMeshBufferCom->Get_VtxPos();
+
+	_float	fU, fV, fDist;
+
+	_ulong	dwVtxIdx[3];
+
+
+	for (_ulong i = 0; i < pMeshBufferCom->Get_VtxCnt() - 2; ++i)
+	{
+		if (D3DXIntersectTri(&pTerrainVtx[i],
+			&pTerrainVtx[i + 1],
+			&pTerrainVtx[i + 2],
+			&vRayPos,
+			&vRayDir,
+			&fU, &fV, &fDist))
+		{
+			return _vec3(pTerrainVtx[dwVtxIdx[1]].x + fU * (pTerrainVtx[dwVtxIdx[0]].x - pTerrainVtx[dwVtxIdx[1]].x),
+						 0.f,
+						 pTerrainVtx[dwVtxIdx[1]].z + fV * (pTerrainVtx[dwVtxIdx[2]].z - pTerrainVtx[dwVtxIdx[1]].z));
 		}
 	}
 
@@ -261,12 +338,12 @@ _bool CCalculator::Collision_OBB(const _vec3 * pDestMin, const _vec3 * pDestMax,
 		for (_ulong j = 0; j < 3; ++j)
 		{
 			fDistance[0] = fabs(D3DXVec3Dot(&tObb[0].vProjAxis[0], &tObb[i].vAxis[j])) +
-						   fabs(D3DXVec3Dot(&tObb[0].vProjAxis[1], &tObb[i].vAxis[j])) +
-						   fabs(D3DXVec3Dot(&tObb[0].vProjAxis[2], &tObb[i].vAxis[j]));
+				fabs(D3DXVec3Dot(&tObb[0].vProjAxis[1], &tObb[i].vAxis[j])) +
+				fabs(D3DXVec3Dot(&tObb[0].vProjAxis[2], &tObb[i].vAxis[j]));
 
 			fDistance[1] = fabs(D3DXVec3Dot(&tObb[1].vProjAxis[0], &tObb[i].vAxis[j])) +
-						   fabs(D3DXVec3Dot(&tObb[1].vProjAxis[1], &tObb[i].vAxis[j])) +
-						   fabs(D3DXVec3Dot(&tObb[1].vProjAxis[2], &tObb[i].vAxis[j]));
+				fabs(D3DXVec3Dot(&tObb[1].vProjAxis[1], &tObb[i].vAxis[j])) +
+				fabs(D3DXVec3Dot(&tObb[1].vProjAxis[2], &tObb[i].vAxis[j]));
 
 			fDistance[2] = fabs(D3DXVec3Dot(&(tObb[0].vCenter - tObb[1].vCenter), &tObb[i].vAxis[j]));
 

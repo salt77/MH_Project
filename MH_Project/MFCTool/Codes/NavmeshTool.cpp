@@ -18,7 +18,7 @@ IMPLEMENT_DYNAMIC(CNavmeshTool, CDialogEx)
 CNavmeshTool::CNavmeshTool(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_DIALOG3, pParent)
 {
-	m_vecSavePoint.reserve(64);
+	m_vecSavePoint.reserve(128);
 }
 
 CNavmeshTool::~CNavmeshTool()

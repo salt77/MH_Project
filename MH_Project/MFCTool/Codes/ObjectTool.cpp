@@ -97,6 +97,34 @@ void CObjectTool::OnBnClickedObjAdd()
 
 		m_ListObjAdd.AddString(m_cstrObjName);
 	}
+	else if (m_TreeObjectTool.GetSelectedItem() == m_hCloyan)
+	{
+		pToolView->Add_Object(OBJECTADD_MFC_CLOYAN);
+		pToolView->Set_ObjectToolMode(TRUE, OBJECTADD_MFC_CLOYAN);
+
+		m_ListObjAdd.AddString(m_cstrObjName);
+	}
+	else if (m_TreeObjectTool.GetSelectedItem() == m_hDog)
+	{
+		pToolView->Add_Object(OBJECTADD_MFC_DOG);
+		pToolView->Set_ObjectToolMode(TRUE, OBJECTADD_MFC_DOG);
+
+		m_ListObjAdd.AddString(m_cstrObjName);
+	}
+	else if (m_TreeObjectTool.GetSelectedItem() == m_hSoldier)
+	{
+		pToolView->Add_Object(OBJECTADD_MFC_SOLDIER);
+		pToolView->Set_ObjectToolMode(TRUE, OBJECTADD_MFC_SOLDIER);
+
+		m_ListObjAdd.AddString(m_cstrObjName);
+	}
+	else if (m_TreeObjectTool.GetSelectedItem() == m_hKnight)
+	{
+		pToolView->Add_Object(OBJECTADD_MFC_KNIGHT);
+		pToolView->Set_ObjectToolMode(TRUE, OBJECTADD_MFC_KNIGHT);
+
+		m_ListObjAdd.AddString(m_cstrObjName);
+	}
 
 	UpdateData(FALSE);
 }
@@ -132,6 +160,38 @@ void CObjectTool::OnEditChangePosX()
 		vPos.x = m_fObjPosX;
 		pObjTrans->Set_Pos(&vPos);
 	}
+	else if (L"Cloyan" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.x = m_fObjPosX;
+		pObjTrans->Set_Pos(&vPos);
+	}
+	else if (L"Dog" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.x = m_fObjPosX;
+		pObjTrans->Set_Pos(&vPos);
+	}
+	else if (L"Soldier" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.x = m_fObjPosX;
+		pObjTrans->Set_Pos(&vPos);
+	}
+	else if (L"Knight" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.x = m_fObjPosX;
+		pObjTrans->Set_Pos(&vPos);
+	}
 
 	UpdateData(FALSE);
 }
@@ -156,6 +216,38 @@ void CObjectTool::OnEditChangePosY()
 	else if (L"Ahglan" == cstrItemName)
 	{
 		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.y = m_fObjPosY;
+		pObjTrans->Set_Pos(&vPos);
+	}
+	else if (L"Cloyan" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.y = m_fObjPosY;
+		pObjTrans->Set_Pos(&vPos);
+	}
+	else if (L"Dog" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.y = m_fObjPosY;
+		pObjTrans->Set_Pos(&vPos);
+	}
+	else if (L"Soldier" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.y = m_fObjPosY;
+		pObjTrans->Set_Pos(&vPos);
+	}
+	else if (L"Knight" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight", L"Com_Transform", ID_DYNAMIC));
 
 		vPos = *pObjTrans->Get_Info(INFO_POS);
 		vPos.y = m_fObjPosY;
@@ -190,6 +282,38 @@ void CObjectTool::OnEditChangePosZ()
 		vPos.z = m_fObjPosZ;
 		pObjTrans->Set_Pos(&vPos);
 	}
+	else if (L"Cloyan" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.z = m_fObjPosZ;
+		pObjTrans->Set_Pos(&vPos);
+	}
+	else if (L"Dog" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.z = m_fObjPosZ;
+		pObjTrans->Set_Pos(&vPos);
+	}
+	else if (L"Soldier" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.z = m_fObjPosZ;
+		pObjTrans->Set_Pos(&vPos);
+	}
+	else if (L"Knight" == cstrItemName)
+	{
+		CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight", L"Com_Transform", ID_DYNAMIC));
+
+		vPos = *pObjTrans->Get_Info(INFO_POS);
+		vPos.z = m_fObjPosZ;
+		pObjTrans->Set_Pos(&vPos);
+	}
 
 	UpdateData(FALSE);
 }
@@ -215,6 +339,47 @@ void CObjectTool::OnEditChangeRotX()
 		else if (OBJECTADD_MFC_AHGLAN == pView->Get_ObjMode())
 		{
 			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_CLOYAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_DOG == pView->Get_ObjMode())
+		{
+			wstring wstrName = L"MFC_Dog_";
+			wstrName += to_wstring(m_iDogCount);
+
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_SOLDIER == pView->Get_ObjMode())
+		{
+			wstring wstrName = L"MFC_Soldier_";
+			wstrName += to_wstring(m_iSoldierCount);
+
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_KNIGHT == pView->Get_ObjMode())
+		{
+			wstring wstrName = L"MFC_Knight_";
+			wstrName += to_wstring(m_iKnightCount);
+
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
 
 			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
 			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
@@ -251,6 +416,47 @@ void CObjectTool::OnEditChangeRotY()
 			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
 			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
 		}
+		else if (OBJECTADD_MFC_CLOYAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_DOG == pView->Get_ObjMode())
+		{
+			wstring wstrName = L"MFC_Dog_";
+			wstrName += to_wstring(m_iDogCount);
+
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_SOLDIER == pView->Get_ObjMode())
+		{
+			wstring wstrName = L"MFC_Soldier_";
+			wstrName += to_wstring(m_iSoldierCount);
+
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_KNIGHT == pView->Get_ObjMode())
+		{
+			wstring wstrName = L"MFC_Knight_";
+			wstrName += to_wstring(m_iKnightCount);
+
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
 	}
 
 	UpdateData(FALSE);
@@ -277,6 +483,38 @@ void CObjectTool::OnEditChangeRotZ()
 		else if (OBJECTADD_MFC_AHGLAN == pView->Get_ObjMode())
 		{
 			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_CLOYAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_DOG == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_SOLDIER == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
+			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
+			pObjTrans->RotationFromOriginAngle(ROT_Z, D3DXToRadian(m_fObjRotZ));
+		}
+		else if (OBJECTADD_MFC_KNIGHT == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight", L"Com_Transform", ID_DYNAMIC));
 
 			pObjTrans->RotationFromOriginAngle(ROT_X, D3DXToRadian(m_fObjRotX));
 			pObjTrans->RotationFromOriginAngle(ROT_Y, D3DXToRadian(m_fObjRotY));
@@ -309,6 +547,30 @@ void CObjectTool::OnEditChangeSclX()
 
 			pObjTrans->Set_ScaleX(m_fObjSclX);
 		}
+		else if (OBJECTADD_MFC_CLOYAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleX(m_fObjSclX);
+		}
+		else if (OBJECTADD_MFC_DOG == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleX(m_fObjSclX);
+		}
+		else if (OBJECTADD_MFC_SOLDIER == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleX(m_fObjSclX);
+		}
+		else if (OBJECTADD_MFC_KNIGHT == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleX(m_fObjSclX);
+		}
 	}
 
 	UpdateData(FALSE);
@@ -336,6 +598,30 @@ void CObjectTool::OnEditChangeSclY()
 
 			pObjTrans->Set_ScaleY(m_fObjSclY);
 		}
+		else if (OBJECTADD_MFC_CLOYAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleY(m_fObjSclX);
+		}
+		else if (OBJECTADD_MFC_DOG == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleY(m_fObjSclY);
+		}
+		else if (OBJECTADD_MFC_SOLDIER == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleY(m_fObjSclY);
+		}
+		else if (OBJECTADD_MFC_KNIGHT == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleY(m_fObjSclY);
+		}
 	}
 
 	UpdateData(FALSE);
@@ -360,6 +646,30 @@ void CObjectTool::OnEditChangeSclZ()
 		else if (OBJECTADD_MFC_AHGLAN == pView->Get_ObjMode())
 		{
 			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleZ(m_fObjSclZ);
+		}
+		else if (OBJECTADD_MFC_CLOYAN == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleZ(m_fObjSclX);
+		}
+		else if (OBJECTADD_MFC_DOG == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleZ(m_fObjSclZ);
+		}
+		else if (OBJECTADD_MFC_SOLDIER == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier", L"Com_Transform", ID_DYNAMIC));
+
+			pObjTrans->Set_ScaleZ(m_fObjSclZ);
+		}
+		else if (OBJECTADD_MFC_KNIGHT == pView->Get_ObjMode())
+		{
+			CTransform*	pObjTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Knight", L"Com_Transform", ID_DYNAMIC));
 
 			pObjTrans->Set_ScaleZ(m_fObjSclZ);
 		}
@@ -395,37 +705,80 @@ void CObjectTool::OnBnClickedObjSave()
 
 		DWORD	dwbyte = 0;
 
-		CTransform* pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
 		// SceneType : 0. Ahglan	1. Normal	2. MidBoss
 		_uint iComboSel = m_ComboObjScene.GetCurSel();
 		_uint iListCount = m_ListObjAdd.GetCount() - 1;
+		_uint iObjCount = 0;
 
 		WriteFile(hFile, &iComboSel, sizeof(_uint), &dwbyte, nullptr);
 		WriteFile(hFile, &iListCount, sizeof(_uint), &dwbyte, nullptr);
-		WriteFile(hFile, pPlayerTrans->Get_Info(INFO_POS), sizeof(_vec3), &dwbyte, nullptr);
-		WriteFile(hFile, pPlayerTrans->Get_ScaleInfo(), sizeof(_vec3), &dwbyte, nullptr);
-		WriteFile(hFile, pPlayerTrans->Get_RotateInfo(), sizeof(_vec3), &dwbyte, nullptr);
 
-		for (_uint i = 0; i < iListCount; ++i)
+		if (0 == iComboSel)
 		{
-			CTransform* pTrans = nullptr;
+			CTransform* pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
 
-			switch (iComboSel)
+			WriteFile(hFile, pPlayerTrans->Get_Info(INFO_POS), sizeof(_vec3), &dwbyte, nullptr);
+			WriteFile(hFile, pPlayerTrans->Get_ScaleInfo(), sizeof(_vec3), &dwbyte, nullptr);
+			WriteFile(hFile, pPlayerTrans->Get_RotateInfo(), sizeof(_vec3), &dwbyte, nullptr);
+		}
+		else if (1 == iComboSel)
+		{
+			CTransform* pBossTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+
+			WriteFile(hFile, pBossTrans->Get_Info(INFO_POS), sizeof(_vec3), &dwbyte, nullptr);
+			WriteFile(hFile, pBossTrans->Get_ScaleInfo(), sizeof(_vec3), &dwbyte, nullptr);
+			WriteFile(hFile, pBossTrans->Get_RotateInfo(), sizeof(_vec3), &dwbyte, nullptr);
+		}
+		else if (2 == iComboSel)
+		{
+			CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+			CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
+
+			vector<CTransform*>	vecTrans = pView->Get_ObjVector(OBJECTADD_MFC_DOG);
+
+			iObjCount = vecTrans.size();
+			WriteFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
+
+			for (_uint i = 0; i < vecTrans.size(); ++i)
 			{
-			case 0:
-				pTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
-				break;
-
-			case 1:
-				break;
-
-			case 2:
-				break;
+				WriteFile(hFile, vecTrans[i]->Get_Info(INFO_POS), sizeof(_vec3), &dwbyte, nullptr);
+				WriteFile(hFile, vecTrans[i]->Get_ScaleInfo(), sizeof(_vec3), &dwbyte, nullptr);
+				WriteFile(hFile, vecTrans[i]->Get_RotateInfo(), sizeof(_vec3), &dwbyte, nullptr);
 			}
+		}
+		else if (3 == iComboSel)
+		{
+			CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+			CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
 
-			WriteFile(hFile, pTrans->Get_Info(INFO_POS), sizeof(_vec3), &dwbyte, nullptr);
-			WriteFile(hFile, pTrans->Get_ScaleInfo(), sizeof(_vec3), &dwbyte, nullptr);
-			WriteFile(hFile, pTrans->Get_RotateInfo(), sizeof(_vec3), &dwbyte, nullptr);
+			vector<CTransform*>	vecTrans = pView->Get_ObjVector(OBJECTADD_MFC_SOLDIER);
+
+			iObjCount = vecTrans.size();
+			WriteFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
+
+			for (_uint i = 0; i < vecTrans.size(); ++i)
+			{
+				WriteFile(hFile, vecTrans[i]->Get_Info(INFO_POS), sizeof(_vec3), &dwbyte, nullptr);
+				WriteFile(hFile, vecTrans[i]->Get_ScaleInfo(), sizeof(_vec3), &dwbyte, nullptr);
+				WriteFile(hFile, vecTrans[i]->Get_RotateInfo(), sizeof(_vec3), &dwbyte, nullptr);
+			}
+		}
+		else if (4 == iComboSel)
+		{
+			CMainFrame* pMain = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+			CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_tMainSplitter.GetPane(0, 1));
+
+			vector<CTransform*>	vecTrans = pView->Get_ObjVector(OBJECTADD_MFC_KNIGHT);
+
+			iObjCount = vecTrans.size();
+			WriteFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
+
+			for (_uint i = 0; i < vecTrans.size(); ++i)
+			{
+				WriteFile(hFile, vecTrans[i]->Get_Info(INFO_POS), sizeof(_vec3), &dwbyte, nullptr);
+				WriteFile(hFile, vecTrans[i]->Get_ScaleInfo(), sizeof(_vec3), &dwbyte, nullptr);
+				WriteFile(hFile, vecTrans[i]->Get_RotateInfo(), sizeof(_vec3), &dwbyte, nullptr);
+			}
 		}
 
 		CloseHandle(hFile);
@@ -459,55 +812,117 @@ void CObjectTool::OnBnClickedObjLoad()
 
 		_uint iSceneType = -1;
 		_uint iObjCount = -1;
+		_uint iTargetCount = 0;
+
+		m_iDogCount = 0;
+		m_iSoldierCount = 0;
+		m_iKnightCount = 0;
 
 		_vec3	vPos, vScale, vRotate;
+
+		wstring	wstrName = L"";
 
 		ReadFile(hFile, &iSceneType, sizeof(_uint), &dwbyte, nullptr);
 		ReadFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
 
-		ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
-		ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
-		ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
-
-		pToolView->Add_Object(OBJECTADD_MFC_PLAYER, L"MFC_Player");
-		CTransform* pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
-		pPlayerTrans->Set_Pos(&vPos);
-		pPlayerTrans->Set_Scale(vScale.x, vScale.y, vScale.z);
-		pPlayerTrans->RotationFromOriginAngle(ROT_X, vRotate.x);
-		pPlayerTrans->RotationFromOriginAngle(ROT_Y, vRotate.y);
-		pPlayerTrans->RotationFromOriginAngle(ROT_Z, vRotate.z);
-
-		for (_uint i = 0; i < iObjCount; ++i)
+		if (0 == iSceneType)
 		{
-			if (0 == dwbyte)
-				return;
-
 			ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
 			ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
 			ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
 
-			CTransform* pTrans = nullptr;
+			pToolView->Add_Object(OBJECTADD_MFC_PLAYER, L"MFC_Player");
+			CTransform* pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+			pPlayerTrans->Set_Pos(&vPos);
+			pPlayerTrans->Set_Scale(vScale.x, vScale.y, vScale.z);
+			pPlayerTrans->RotationFromOriginAngle(ROT_X, vRotate.x);
+			pPlayerTrans->RotationFromOriginAngle(ROT_Y, vRotate.y);
+			pPlayerTrans->RotationFromOriginAngle(ROT_Z, vRotate.z);
+		}
+		else if (1 == iSceneType)
+		{
+			ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
+			ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
+			ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
 
-			switch (iSceneType)
+			pToolView->Add_Object(OBJECTADD_MFC_CLOYAN, L"MFC_Cloyan");
+			CTransform* pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
+			pPlayerTrans->Set_Pos(&vPos);
+			pPlayerTrans->Set_Scale(vScale.x, vScale.y, vScale.z);
+			pPlayerTrans->RotationFromOriginAngle(ROT_X, vRotate.x);
+			pPlayerTrans->RotationFromOriginAngle(ROT_Y, vRotate.y);
+			pPlayerTrans->RotationFromOriginAngle(ROT_Z, vRotate.z);
+		}
+		else if (2 == iSceneType)
+		{
+			ReadFile(hFile, &iTargetCount, sizeof(_uint), &dwbyte, nullptr);
+
+			for (_uint i = 0; i < iTargetCount; ++i)
 			{
-			case 0:
-				pToolView->Add_Object(OBJECTADD_MFC_AHGLAN, L"MFC_Ahglan");
-				pTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
-				if (pTrans)
-				{
-					pTrans->Set_Pos(&vPos);
-					pTrans->Set_Scale(vScale.x, vScale.y, vScale.z);
-					pTrans->RotationFromOriginAngle(ROT_X, vRotate.x);
-					pTrans->RotationFromOriginAngle(ROT_Y, vRotate.y);
-					pTrans->RotationFromOriginAngle(ROT_Z, vRotate.z);
-				}
-				break;
+				wstrName = L"MFC_Dog_";
+				wstrName += to_wstring(m_iDogCount);
 
-			case 1:
-				break;
+				ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
+				ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
+				ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
 
-			case 2:
-				break;
+				pToolView->Add_Object(OBJECTADD_MFC_DOG, wstrName);
+				CTransform*	pTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+				pTrans->Set_Pos(&vPos);
+				pTrans->Set_Scale(vScale.x, vScale.y, vScale.z);
+				pTrans->RotationFromOriginAngle(ROT_X, vRotate.x);
+				pTrans->RotationFromOriginAngle(ROT_Y, vRotate.y);
+				pTrans->RotationFromOriginAngle(ROT_Z, vRotate.z);
+
+				++m_iDogCount;
+			}
+		}
+		else if (3 == iSceneType)
+		{
+			ReadFile(hFile, &iTargetCount, sizeof(_uint), &dwbyte, nullptr);
+
+			for (_uint i = 0; i < iTargetCount; ++i)
+			{
+				wstrName = L"MFC_Soldier_";
+				wstrName += to_wstring(m_iSoldierCount);
+
+				ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
+				ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
+				ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
+
+				pToolView->Add_Object(OBJECTADD_MFC_SOLDIER, wstrName);
+				CTransform*	pTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+				pTrans->Set_Pos(&vPos);
+				pTrans->Set_Scale(vScale.x, vScale.y, vScale.z);
+				pTrans->RotationFromOriginAngle(ROT_X, vRotate.x);
+				pTrans->RotationFromOriginAngle(ROT_Y, vRotate.y);
+				pTrans->RotationFromOriginAngle(ROT_Z, vRotate.z);
+
+				++m_iSoldierCount;
+			}
+		}
+		else if (4 == iSceneType)
+		{
+			ReadFile(hFile, &iTargetCount, sizeof(_uint), &dwbyte, nullptr);
+
+			for (_uint i = 0; i < iTargetCount; ++i)
+			{
+				wstrName = L"MFC_Knight_";
+				wstrName += to_wstring(m_iKnightCount);
+
+				ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
+				ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
+				ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
+
+				pToolView->Add_Object(OBJECTADD_MFC_KNIGHT, wstrName);
+				CTransform*	pTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", wstrName, L"Com_Transform", ID_DYNAMIC));
+				pTrans->Set_Pos(&vPos);
+				pTrans->Set_Scale(vScale.x, vScale.y, vScale.z);
+				pTrans->RotationFromOriginAngle(ROT_X, vRotate.x);
+				pTrans->RotationFromOriginAngle(ROT_Y, vRotate.y);
+				pTrans->RotationFromOriginAngle(ROT_Z, vRotate.z);
+
+				++m_iKnightCount;
 			}
 		}
 
@@ -533,10 +948,17 @@ BOOL CObjectTool::OnInitDialog()
 
 	m_hPlayer = m_TreeObjectTool.InsertItem(TEXT("Player"), 0, 0, m_hMainObj, TVI_LAST);
 	m_hAhglan = m_TreeObjectTool.InsertItem(TEXT("Ahglan"), 0, 0, m_hMainObj, TVI_LAST);
+	m_hCloyan = m_TreeObjectTool.InsertItem(TEXT("Cloyan"), 0, 0, m_hMainObj, TVI_LAST);;
 
-	m_ComboObjScene.AddString(L"1_Ahglan");
-	m_ComboObjScene.AddString(L"2_Normal");
-	m_ComboObjScene.AddString(L"3_MidBoss");
+	m_hDog = m_TreeObjectTool.InsertItem(TEXT("Dog"), 0, 0, m_hSubObj, TVI_LAST);
+	m_hSoldier = m_TreeObjectTool.InsertItem(TEXT("Soldier"), 0, 0, m_hSubObj, TVI_LAST);
+	m_hKnight = m_TreeObjectTool.InsertItem(TEXT("Knight"), 0, 0, m_hSubObj, TVI_LAST);
+
+	m_ComboObjScene.AddString(L"1_Player");
+	m_ComboObjScene.AddString(L"2_Cloyan");
+	m_ComboObjScene.AddString(L"3_Dog");
+	m_ComboObjScene.AddString(L"4_Soldier");
+	m_ComboObjScene.AddString(L"5_Knight");
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.

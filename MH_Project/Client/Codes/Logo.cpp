@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Logo.h"
 #include "Stage.h"
+#include "Stage_1.h"
 
 #include "Export_Function.h"
 

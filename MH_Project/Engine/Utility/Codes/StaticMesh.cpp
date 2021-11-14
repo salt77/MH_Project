@@ -160,271 +160,262 @@ HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileNa
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_0_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_1.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_1_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_2.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_2_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_3.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_3_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_4.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_4_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_5.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_5_n.tga");
+			lstrcat(szFullPath, szFileName);
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_6.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_6_n.tga");
+			lstrcat(szFullPath, szFileName);
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_7.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_7_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_8.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_8_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_9.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_9_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_10.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_10_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_11.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_11_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_12.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_12_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_13.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_13_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_14.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_14_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_15.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_15_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_16.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_16_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_17.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_17_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_18.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_18_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_19.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_19_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_20.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_20_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_21.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_21_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_22.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_22_n.tga");
+			lstrcat(szFullPath, szFileName);
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_23.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_23_n.tga");
+			lstrcat(szFullPath, szFileName);
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_24.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_24_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_25.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_25_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_26.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_26_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_27.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_27_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_28.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_28_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_29.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_29_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_30.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_30_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_31.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_31_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
 		else if (!lstrcmp(szFileName, L"Map_material_32.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"Map_material_32_n.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_33.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_33_n.tga");
+			lstrcat(szFullPath, szFileName);
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_34.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_34_n.tga");
+			lstrcat(szFullPath, szFileName);
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_35.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_35_n.tga");
+			lstrcat(szFullPath, szFileName);
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_36.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_36_n.tga");
+			lstrcat(szFullPath, szFileName);
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_37.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_37_n.tga");
+			lstrcat(szFullPath, szFileName);
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_38.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_38_n.tga");
+			lstrcat(szFullPath, szFileName);
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_39.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_39_n.tga");
+			lstrcat(szFullPath, szFileName);
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_40.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_40_n.tga");
+			lstrcat(szFullPath, szFileName);
+		}
+		else if (!lstrcmp(szFileName, L"Map_material_41.tga"))
+		{
+			lstrcpy(szFullPath, pFilePath.c_str());
+			lstrcpy(szFileName, L"Map_material_41_n.tga");
+			lstrcat(szFullPath, szFileName);
 		}
 		else if (!lstrcmp(szFileName, L"sticky_bomb.tga"))
 		{
 			lstrcpy(szFullPath, pFilePath.c_str());
 			lstrcpy(szFileName, L"sticky_bomb_normal.tga");
 			lstrcat(szFullPath, szFileName);
-
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
-				return E_FAIL;
 		}
+
+		if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
+			return E_FAIL;
 	}
 
 	m_pMesh->UnlockVertexBuffer();
