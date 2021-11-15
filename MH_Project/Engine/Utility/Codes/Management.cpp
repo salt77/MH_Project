@@ -28,14 +28,14 @@ HRESULT CManagement::Ready_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Normal", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 1.f)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Normal", 50.f, 0.f, 50.f, 50.f), E_FAIL);
 
-	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Depth", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(1.f, 1.f, 1.f, 1.f)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Depth", ViewPort.Width, ViewPort.Height, D3DFMT_A32B32G32R32F, D3DXCOLOR(1.f, 1.f, 1.f, 1.f)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Depth", 0.f, 50.f, 50.f, 50.f), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Shade", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 1.f)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Shade", 50.f, 50.f, 50.f, 50.f), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_RenderTarget(pGraphicDev, L"Target_Specular", ViewPort.Width, ViewPort.Height, D3DFMT_A16B16G16R16F, D3DXCOLOR(0.f, 0.f, 0.f, 0.f)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Specular", 0.f, 100.f, 50.f, 50.f), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_DebugBuffer(L"Target_Specular", 0.f, 100.f, 250.f, 250.f), E_FAIL);
 
 	// 멀티 렌더 그룹 편성
 	FAILED_CHECK_RETURN(Ready_MRT(L"MRT_Deferred", L"Target_Albedo"), E_FAIL);
@@ -68,6 +68,10 @@ HRESULT CManagement::Ready_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Ahglan.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Ahglan", pShader), E_FAIL);
+
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_StageMesh.fx");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_StageMesh", pShader), E_FAIL);
 
 	// shader_shade
 	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Shade.fx");

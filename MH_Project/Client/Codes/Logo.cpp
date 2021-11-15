@@ -16,16 +16,33 @@ CLogo::~CLogo(void)
 
 }
 
-HRESULT CLogo::Ready_Scene(void)
+HRESULT CLogo::Ready_Scene(_uint iStageNum)
 {
+	m_iStageNum = iStageNum;
+
 	FAILED_CHECK_RETURN(CScene::Ready_Scene(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 
-	m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
-	NULL_CHECK_RETURN(m_pLoading, E_FAIL);
+	switch (iStageNum)
+	{
+	case 0:
+		m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
+		NULL_CHECK_RETURN(m_pLoading, E_FAIL);
+		break;
+
+	case 1:
+		m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE_1);
+		NULL_CHECK_RETURN(m_pLoading, E_FAIL);
+		break;
+
+	default:
+		m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
+		NULL_CHECK_RETURN(m_pLoading, E_FAIL);
+		break;
+	}
 
 	return S_OK;
 }
@@ -48,8 +65,23 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 	{
 		CScene*		pScene = nullptr;
 
-		pScene = CStage::Create(m_pGraphicDev);
-		NULL_CHECK_RETURN(pScene, E_FAIL);
+		switch (m_iStageNum)
+		{
+		case 0:
+			pScene = CStage::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pScene, E_FAIL);
+			break;
+
+		case 1:
+			pScene = CStage_1::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pScene, E_FAIL);
+			break;
+
+		default:
+			pScene = CStage::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pScene, E_FAIL);
+			break;
+		}
 
 		FAILED_CHECK_RETURN(Set_Scene(pScene), E_FAIL);
 
@@ -72,7 +104,7 @@ HRESULT CLogo::Ready_Layer_Environment(const wstring pLayerTag)
 	CGameObject*		pGameObject = nullptr;
 
 	// BackGround
-	pGameObject = CBackGround::Create(m_pGraphicDev);
+	pGameObject = CBackGround::Create(m_pGraphicDev, m_iStageNum);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BackGround", pGameObject), E_FAIL);
 
@@ -111,7 +143,8 @@ HRESULT CLogo::Ready_Prototype(void)
 	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Buffer_RcTex", CRcTex::Create(m_pGraphicDev)), E_FAIL);
 
 	// 로딩씬 텍스쳐
-	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Texture_Logo", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Logo/Stage1.dds", TEX_NORMAL, 1)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Texture_Loading_Stage", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Logo/Stage1.dds", TEX_NORMAL, 1)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Texture_Loading_Stage_1", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Logo/Stage2.dds", TEX_NORMAL, 1)), E_FAIL);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Texture_Loading_BackEffect_UI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Loading_BackEffect.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Texture_Loading_Back_UI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Loading_Back.png", TEX_NORMAL)), E_FAIL);
@@ -200,11 +233,11 @@ void CLogo::Update_ProgressUI(const _float& fTimeDelta)
 	}
 }
 
-CLogo* CLogo::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CLogo* CLogo::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iStageNum)
 {
 	CLogo*	pInstance = new CLogo(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Scene()))
+	if (FAILED(pInstance->Ready_Scene(iStageNum)))
 		Safe_Release(pInstance);
 
 	return pInstance;

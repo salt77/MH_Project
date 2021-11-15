@@ -378,5 +378,8 @@
     <FxCompile Include="..\Codes\Shader_DamageFont.fx">
       <Filter>04.Component\10.Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="..\Codes\Shader_StageMesh.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -213,16 +213,6 @@ HRESULT CTerrain::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	D3DXMatrixInverse(&matView, NULL, &matView);
 	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
 
-	//CTransform*	pPlayerTransform = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
-	//NULL_CHECK_RETURN(pPlayerTransform, E_FAIL);
-
-	//_vec3 vPlayerPos;
-	//pPlayerTransform->Get_INFO(INFO_POS, &vPlayerPos);
-	//pEffect->SetVector("g_vPlayerPos", &_vec4(vPlayerPos, 1.f));
-
-	//_float	fRange = 5.f;
-	//pEffect->SetFloat("g_fRange", fRange);
-
 	return S_OK;
 }
 

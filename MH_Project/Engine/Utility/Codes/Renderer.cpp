@@ -80,6 +80,7 @@ void CRenderer::Render_LightAcc(LPDIRECT3DDEVICE9 & pGraphicDev)
 	pEffect->AddRef();
 
 	Get_RenderTargetTexture(pEffect, L"Target_Normal", "g_NormalTexture");
+	Get_RenderTargetTexture(pEffect, L"Target_Depth", "g_DepthTexture");
 
 	pEffect->Begin(NULL, 0);
 

@@ -47,6 +47,16 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 
 	_ulong	dwFVF = pMesh->GetFVF();
 
+	const D3DVERTEXELEMENT9	vertexDecl[] = 
+	{
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 }, 
+		{ 0, 12, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 32, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
+		{ 0, 44, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 }, 
+		D3DDECL_END()
+	};
+
 	if (!(dwFVF & D3DFVF_NORMAL))
 	{
 		pMesh->CloneMeshFVF(pMesh->GetOptions(), dwFVF | D3DFVF_NORMAL, m_pGraphicDev, &pDerivedMeshContainer->MeshData.pMesh);
@@ -54,6 +64,7 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 	}
 	else
 	{
+		//pMesh->CloneMesh(pMesh->GetOptions(), vertexDecl, m_pGraphicDev, &pDerivedMeshContainer->MeshData.pMesh);
 		pMesh->CloneMeshFVF(pMesh->GetOptions(), dwFVF, m_pGraphicDev, &pDerivedMeshContainer->MeshData.pMesh);
 	}
 
@@ -122,6 +133,15 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_head.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"pc_male_plate_head_normal.tga");
+				lstrcat(szFullPath, szFileName);
+
+				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+					return E_FAIL;
+			}
+			else if (!lstrcmp(szFileName, L"pc_male_plate_head_fur.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_head_normal.tga");
@@ -280,6 +300,16 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 	pDerivedMeshContainer->pSkinInfo->AddRef();
 
 	pDerivedMeshContainer->MeshData.pMesh->CloneMeshFVF(pDerivedMeshContainer->MeshData.pMesh->GetOptions(), pDerivedMeshContainer->MeshData.pMesh->GetFVF(), m_pGraphicDev, &pDerivedMeshContainer->pOriMesh);
+	//pDerivedMeshContainer->MeshData.pMesh->CloneMesh(pDerivedMeshContainer->MeshData.pMesh->GetOptions(), vertexDecl, m_pGraphicDev, &pDerivedMeshContainer->pOriMesh);
+
+
+	//D3DXComputeTangentFrameEx(pMesh,
+	//	D3DDECLUSAGE_TEXCOORD, 0,
+	//	D3DDECLUSAGE_BINORMAL, 0,
+	//	D3DDECLUSAGE_TANGENT, 0,
+	//	D3DDECLUSAGE_NORMAL, 0,
+	//	D3DXTANGENT_WRAP_UV | D3DXTANGENT_ORTHOGONALIZE_FROM_V | D3DXTANGENT_CALCULATE_NORMALS | D3DXTANGENT_GENERATE_IN_PLACE,
+	//	pDerivedMeshContainer->pAdjacency, 0.01f, 0.01f, 0.01f, NULL, NULL);
 
 	// 뼈의 개수를 반환
 	pDerivedMeshContainer->dwNumBones = pDerivedMeshContainer->pSkinInfo->GetNumBones();

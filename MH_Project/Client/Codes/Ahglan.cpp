@@ -209,7 +209,7 @@ HRESULT CAhglan::Add_Component(void)
 	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
 
 	// Shader
-	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Mesh"));
+	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Ahglan"));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Shader", pComponent);
 

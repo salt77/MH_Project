@@ -20,8 +20,10 @@ CBackGround::~CBackGround(void)
 
 }
 
-HRESULT CBackGround::Ready_Object()
+HRESULT CBackGround::Ready_Object(_uint iTexIndex)
 {
+	m_iTexIndex = iTexIndex;
+
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
@@ -48,11 +50,11 @@ void CBackGround::Render_Object(void)
 	m_pBufferCom->Render_Buffer();
 }
 
-CBackGround* CBackGround::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CBackGround* CBackGround::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iTexIndex)
 {
 	CBackGround*	pInstance = new CBackGround(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Object()))
+	if (FAILED(pInstance->Ready_Object(iTexIndex)))
 		Safe_Release(pInstance);
 
 	return pInstance;
@@ -73,9 +75,18 @@ HRESULT CBackGround::Add_Component(void)
 	m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
 
 	// texture
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Logo"));
-	NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	if (0 == m_iTexIndex)
+	{
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Loading_Stage"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	}
+	else if (1 == m_iTexIndex)
+	{
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Loading_Stage_1"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	}
 
 	// Renderer
 	pComponent = m_pRendererCom = Engine::Get_Renderer();

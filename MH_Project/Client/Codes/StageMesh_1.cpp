@@ -110,7 +110,7 @@ HRESULT CStageMesh_1::Add_Component(void)
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
 	// Shader
-	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Clone_Prototype(L"Proto_Shader_Mesh"));
+	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Clone_Prototype(L"Proto_Shader_StageMesh"));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Shader", pComponent);
 

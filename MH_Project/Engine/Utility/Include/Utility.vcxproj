@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Codes\Shader_DamageFont.fx" />
+    <FxCompile Include="..\Codes\Shader_StageMesh.fx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}</ProjectGuid>

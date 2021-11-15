@@ -20,7 +20,7 @@ private:
 	virtual ~CLogo(void);
 
 public:
-	virtual HRESULT Ready_Scene(void) override;
+	virtual HRESULT Ready_Scene(_uint iStageNum);
 	virtual HRESULT	LateReady_Scene() override;
 	virtual _int	Update_Scene(const _float& fTimeDelta) override;
 	virtual void	Render_Scene(void) override;
@@ -37,11 +37,13 @@ private:
 private:
 	CLoading*			m_pLoading = nullptr;
 
+	_uint				m_iStageNum = 0;
+
 	_float				m_fProgressBar = 0.f;
 	_float				m_fFadeOut = 0.f;
 
 public:
-	static CLogo*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CLogo*		Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iStageNum = 0);
 
 private:
 	virtual void Free(void) override;

@@ -96,6 +96,8 @@ void CLight::Render_Light(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matInvView", &matView);
 	pEffect->SetMatrix("g_matInvProj", &matProj);
 
+	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
+
 	pEffect->CommitChanges();
 
 	pEffect->BeginPass(0);
