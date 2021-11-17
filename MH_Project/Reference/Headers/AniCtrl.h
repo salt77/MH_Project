@@ -3,6 +3,8 @@
 #include "Engine_Define.h"
 #include "Base.h"
 
+#include "HierachyLoader.h"
+
 BEGIN(Engine)
 
 class ENGINE_DLL CAniCtrl : public CBase

@@ -3,6 +3,9 @@
 #include "DamageFont.h"
 #include "CollisionMgr.h"
 
+#include "Dog.h"
+#include "Soldier.h"
+
 #include "Export_Function.h"
 
 CStage_1::CStage_1(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -33,9 +36,12 @@ HRESULT CStage_1::LateReady_Scene()
 {
 	m_eSceneID = SCENE_STAGE_1;
 
-	FAILED_CHECK_RETURN(Load_ObjectInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_NaviMesh(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_Navimesh(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_EnemyInfo(), E_FAIL);
+
+	m_pLayer = CLayer::Create();
 
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 
@@ -129,6 +135,9 @@ HRESULT CStage_1::Ready_Layer_GameLogic(const wstring pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HitBox_Pos", pGameObject), E_FAIL);
 
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Soldier", pGameObject), E_FAIL);
+
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
 	return S_OK;
@@ -204,7 +213,7 @@ HRESULT CStage_1::Ready_LightInfo(void)
 	return S_OK;
 }
 
-HRESULT CStage_1::Load_ObjectInfo()
+HRESULT CStage_1::Load_PlayerInfo()
 {
 	HANDLE hFile = CreateFile(L"../../Data/Stage_1_Player.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
@@ -213,12 +222,12 @@ HRESULT CStage_1::Load_ObjectInfo()
 
 	DWORD dwbyte = 0;
 
-	_uint iSceneType = -1;
+	_uint iObjType = -1;
 	_uint iObjCount = -1;
 
 	_vec3	vPos, vScale, vRotate;
 
-	ReadFile(hFile, &iSceneType, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iObjType, sizeof(_uint), &dwbyte, nullptr);
 	ReadFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
 
 	ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
@@ -233,7 +242,38 @@ HRESULT CStage_1::Load_ObjectInfo()
 	pPlayerTrans->RotationFromOriginAngle(ROT_Y, vRotate.y);
 	pPlayerTrans->RotationFromOriginAngle(ROT_Z, vRotate.z);
 
-	for (_uint i = 0; i < iObjCount; ++i)
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CStage_1::Load_EnemyInfo()
+{
+	HANDLE hFile = CreateFile(L"../../Data/Dog_Obj.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	CLayer*		pLayer = CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	CGameObject*			pGameObject = nullptr;
+
+	DWORD dwbyte = 0;
+
+	_uint iObjType = -1;
+	_uint iObjCount = -1;
+	_uint iTargetCount = -1;
+
+	_vec3	vPos, vScale, vRotate;
+
+	ReadFile(hFile, &iObjType, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iTargetCount, sizeof(_uint), &dwbyte, nullptr);
+
+	_uint	iIndex = 0;
+
+	for (_uint i = 0; i < iTargetCount; ++i)
 	{
 		if (0 == dwbyte)
 			return E_FAIL;
@@ -242,19 +282,64 @@ HRESULT CStage_1::Load_ObjectInfo()
 		ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
 		ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
 
-		CTransform* pTrans = nullptr;
+		wstring wstrName = L"";
 
-		switch (iSceneType)
+		switch (iObjType)
 		{
-		case 0:
-			break;
-
-		case 1:
-			break;
-
 		case 2:
+			wstrName = L"Dog_";
+			break;
+			
+		case 3:
+			wstrName = L"Soldier_";
+			break;
+
+		case 4:
+			wstrName = L"Knight_";
 			break;
 		}
+
+		wstrName += to_wstring(iIndex);
+		++iIndex;
+
+		switch (iObjType)
+		{
+		case 2:
+			pGameObject = nullptr;
+
+			pGameObject = CDog::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pGameObject, E_FAIL);
+			FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+
+			//dynamic_cast<CDog*>(pGameObject)->Add_NaviMesh();
+
+			dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&vPos);
+			dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_X, vRotate.x);
+			dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Y, vRotate.y);
+			dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Z, vRotate.z);
+			break;
+
+		case 3:
+			break;
+
+		case 4:
+			break;
+		}
+	}
+
+	switch (iObjType)
+	{
+	case 2:
+		m_mapLayer.emplace(L"Enemies_Dog", pLayer);
+		break;
+
+	case 3:
+		m_mapLayer.emplace(L"Enemies_Soldier", pLayer);
+		break;
+
+	case 4:
+		m_mapLayer.emplace(L"Enemies_Knight", pLayer);
+		break;
 	}
 
 	CloseHandle(hFile);
@@ -407,7 +492,7 @@ HRESULT CStage_1::Load_PlayerCol()
 	return S_OK;
 }
 
-HRESULT CStage_1::Load_Navimesh()
+HRESULT CStage_1::Load_NaviMesh()
 {
 	HANDLE hFile = CreateFile(L"../../Data/Stage_1_Navi20.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 

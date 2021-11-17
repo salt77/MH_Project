@@ -320,12 +320,11 @@ void CPlayer::Free(void)
 
 void CPlayer::Set_Damage(_int iDamage, const _matrix* pMatDamageFontPos, _bool bFront)
 {
-	if (iDamage <= m_tPlayerInfo.tagInfo.iHp)
+	if (iDamage < m_tPlayerInfo.tagInfo.iHp)
 	{
 		m_tPlayerInfo.tagInfo.iHp -= iDamage;
 
-		if (80.f <= Engine::Random(0.f, 100.f) &&
-			iDamage < m_tPlayerInfo.tagInfo.iHp)
+		if (80.f <= Engine::Random(0.f, 100.f))
 		{
 			m_eCurAction = PL_DAMAGED;
 			m_iAniIndex = STATE_DAMAGE_RESIST;
@@ -362,7 +361,17 @@ void CPlayer::Set_Damage(_int iDamage, const _matrix* pMatDamageFontPos, _bool b
 	}
 	else
 	{
+		m_eCurAction = PL_DEAD;
 		m_tPlayerInfo.tagInfo.iHp = 0;
+
+		if (bFront)
+		{
+			m_iAniIndex = STATE_DAMAGEFROM_FRONT;
+		}
+		else
+		{
+			m_iAniIndex = STATE_DAMAGEFROM_BACK;
+		}
 	}
 
 	if (CDynamicCamera::MODE_NORMAL != m_pMainCam->Get_CamMode() ||
@@ -561,26 +570,29 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		else if (Key_Down('F'))
 		{
-			CStickyBomb*	pBomb = static_cast<CStickyBomb*>(Engine::Get_GameObject(L"StickyBomb", L"StickyBomb"));
-
-			if (m_bCanAction)
+			if (SCENE_STAGE == Engine::Get_SceneID())
 			{
-				if (STATE_THROW_DURING == m_eCurState)
-				{
-					m_eCurAction = PL_IDLE;
-					m_eCurWeaponMode = WEAPON_DUALSWORD;
+				CStickyBomb*	pBomb = static_cast<CStickyBomb*>(Engine::Get_GameObject(L"StickyBomb", L"StickyBomb"));
 
-					Rotate_PlayerLook(+*m_pTransformCom->Get_Info(INFO_LOOK));
-					m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_NORMAL);
-				}
-				else
+				if (m_bCanAction)
 				{
-					if (!pBomb)
+					if (STATE_THROW_DURING == m_eCurState)
 					{
-						m_eCurAction = PL_SKILL;
-						m_iAniIndex = (_uint)STATE_THROW_DURING;
+						m_eCurAction = PL_IDLE;
+						m_eCurWeaponMode = WEAPON_DUALSWORD;
 
-						m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_SECONDARY);
+						Rotate_PlayerLook(+*m_pTransformCom->Get_Info(INFO_LOOK));
+						m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_NORMAL);
+					}
+					else
+					{
+						if (!pBomb)
+						{
+							m_eCurAction = PL_SKILL;
+							m_iAniIndex = (_uint)STATE_THROW_DURING;
+
+							m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_SECONDARY);
+						}
 					}
 				}
 			}
@@ -873,7 +885,9 @@ void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVecto
 	D3DXVec3Normalize(&TargetLookVector, &TargetLookVector);
 	D3DXVec3Normalize(&vPlayerRight, &vPlayerRight);
 
-	if (D3DXToDegree(acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight))) > 5.f)
+	_float	fAngle = D3DXToDegree(acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
+
+	if (fAngle > 5.f)
 	{
 		if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
 		{
@@ -882,6 +896,17 @@ void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVecto
 		else if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
 		{
 			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * -fTimeDelta * 2.25f));
+		}
+	}
+	else if (fAngle <= 5.f)
+	{
+		if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
+		{
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(45.f * fTimeDelta));
+		}
+		else if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
+		{
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(45.f * -fTimeDelta));
 		}
 	}
 }
@@ -1276,6 +1301,7 @@ void CPlayer::Animation_Control()
 		m_pMeshCom->Set_TrackSpeed(1.9f);
 	}
 
+
 	// 스테미나 오링 
 	if (PL_TIRED >= m_eCurAction)
 	{
@@ -1621,11 +1647,6 @@ void CPlayer::Animation_Control()
 			m_bAnimation = false;
 		}
 
-		if (Engine::STATE_FURY == m_eCurState)
-		{
-			_int a = 0;
-		}
-
 		switch (m_eCurState)
 		{
 		case Engine::STATE_DEAD:
@@ -1736,7 +1757,7 @@ void CPlayer::Collision_Control()
 				m_fAniTime >= 0.6f)
 			{
 				m_bAtkSound[0] = true;
-				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
+				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT3);
 			}
 			break;
 
@@ -1785,7 +1806,7 @@ void CPlayer::Collision_Control()
 				m_fAniTime >= 0.37f)
 			{
 				m_bSkillSound[0] = true;
-				SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.27f);
+				SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT3, 0.23f);
 
 				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
 			}
@@ -1816,7 +1837,7 @@ void CPlayer::Collision_Control()
 				m_fAniTime >= 0.37f)
 			{
 				m_bSkillSound[0] = true;
-				SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.27f);
+				SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT2, 0.25f);
 
 				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
 			}
@@ -1997,7 +2018,7 @@ void CPlayer::Update_UI()
 void CPlayer::Update_State()
 {
 	// 체력 관련
-	if (0 > m_tPlayerInfo.tagInfo.iHp)
+	if (0 >= m_tPlayerInfo.tagInfo.iHp)
 	{
 		m_tPlayerInfo.tagInfo.iHp = 0;
 

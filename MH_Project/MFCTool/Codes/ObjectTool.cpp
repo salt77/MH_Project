@@ -110,6 +110,8 @@ void CObjectTool::OnBnClickedObjAdd()
 		pToolView->Set_ObjectToolMode(TRUE, OBJECTADD_MFC_DOG);
 
 		m_ListObjAdd.AddString(m_cstrObjName);
+
+		++m_iDogCount;
 	}
 	else if (m_TreeObjectTool.GetSelectedItem() == m_hSoldier)
 	{
@@ -117,6 +119,8 @@ void CObjectTool::OnBnClickedObjAdd()
 		pToolView->Set_ObjectToolMode(TRUE, OBJECTADD_MFC_SOLDIER);
 
 		m_ListObjAdd.AddString(m_cstrObjName);
+
+		++m_iSoldierCount;
 	}
 	else if (m_TreeObjectTool.GetSelectedItem() == m_hKnight)
 	{
@@ -124,6 +128,8 @@ void CObjectTool::OnBnClickedObjAdd()
 		pToolView->Set_ObjectToolMode(TRUE, OBJECTADD_MFC_KNIGHT);
 
 		m_ListObjAdd.AddString(m_cstrObjName);
+
+		++m_iKnightCount;
 	}
 
 	UpdateData(FALSE);

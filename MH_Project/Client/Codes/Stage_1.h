@@ -7,7 +7,6 @@
 #include "BackGround.h"
 
 #include "Player.h"
-#include "Ahglan.h"
 #include "Terrain.h"
 #include "DynamicCamera.h"
 #include "SkyBox.h"
@@ -35,9 +34,10 @@ private:
 	HRESULT				Ready_Prototype(void);
 	HRESULT				Ready_LightInfo(void);
 
-	HRESULT				Load_ObjectInfo();
+	HRESULT				Load_PlayerInfo();
+	HRESULT				Load_EnemyInfo();
 	HRESULT				Load_PlayerCol();
-	HRESULT				Load_Navimesh();
+	HRESULT				Load_NaviMesh();
 
 private:
 	_ulong					m_dwRenderCnt = 0;
@@ -46,12 +46,13 @@ private:
 
 	vector<_matrix>			m_vecSavePoint;
 
+	CLayer*					m_pLayer = nullptr;
+
 public:
 	static CStage_1*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void	Free(void) override;
-
 };
 
 

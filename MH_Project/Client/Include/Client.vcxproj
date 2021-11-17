@@ -160,6 +160,7 @@
     <ClInclude Include="..\Codes\Boss_NamingScene.h" />
     <ClInclude Include="..\Codes\CollisionMgr.h" />
     <ClInclude Include="..\Codes\DamageFont.h" />
+    <ClInclude Include="..\Codes\Dog.h" />
     <ClInclude Include="..\Codes\Player_Buff_CriticalUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_BackUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_ValueUI.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="..\Codes\Player_Hpbar_ValueUI.h" />
     <ClInclude Include="..\Codes\Player_Steminabar_ValueUI.h" />
     <ClInclude Include="..\Codes\SkyBox.h" />
+    <ClInclude Include="..\Codes\Soldier.h" />
     <ClInclude Include="..\Codes\SoundMgr.h" />
     <ClInclude Include="..\Codes\Stage.h" />
     <ClInclude Include="..\Codes\StageMesh.h" />
@@ -206,6 +208,7 @@
     <ClCompile Include="..\Codes\Boss_NamingScene.cpp" />
     <ClCompile Include="..\Codes\CollisionMgr.cpp" />
     <ClCompile Include="..\Codes\DamageFont.cpp" />
+    <ClCompile Include="..\Codes\Dog.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
     <ClCompile Include="..\Codes\Player_Buff_CriticalUI.cpp" />
     <ClCompile Include="..\Codes\Player_Spbar_BackUI.cpp" />
@@ -224,6 +227,7 @@
     <ClCompile Include="..\Codes\Player_Hpbar_ValueUI.cpp" />
     <ClCompile Include="..\Codes\Player_Steminabar_ValueUI.cpp" />
     <ClCompile Include="..\Codes\SkyBox.cpp" />
+    <ClCompile Include="..\Codes\Soldier.cpp" />
     <ClCompile Include="..\Codes\SoundMgr.cpp" />
     <ClCompile Include="..\Codes\Stage.cpp" />
     <ClCompile Include="..\Codes\StageMesh.cpp" />

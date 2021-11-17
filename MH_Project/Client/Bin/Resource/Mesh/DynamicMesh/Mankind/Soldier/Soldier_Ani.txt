@@ -1,0 +1,27 @@
+13. Run
+
+12. DamageFront 
+
+11. StapFront
+
+10. StapRight
+
+9. StapLeft
+
+8. StapBack
+
+7. Stand
+
+6. Dying 
+
+5. DownEnd
+
+4. Downing
+
+3. DownBegin
+
+2. DMGup
+
+1. DMGbottom
+
+0. Attack 

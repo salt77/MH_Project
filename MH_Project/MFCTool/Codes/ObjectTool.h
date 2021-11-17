@@ -60,9 +60,9 @@ public:
 
 	CString m_cstrObjName;
 
-	_uint	m_iDogCount = 0;
-	_uint	m_iSoldierCount = 0;
-	_uint	m_iKnightCount = 0;
+	_int	m_iDogCount = -1;
+	_int	m_iSoldierCount = -1;
+	_int	m_iKnightCount = -1;
 
 	float m_fObjPosX;
 	float m_fObjPosY;

@@ -21,10 +21,11 @@ CAniCtrl::CAniCtrl(const CAniCtrl & rhs)
 	, m_dPeriod(0.0)
 {
 	rhs.m_pAniCtrl->CloneAnimationController(rhs.m_pAniCtrl->GetMaxNumAnimationOutputs(),// 복제 시 원본객체가 가진 최대 애니메이션의 개수
-		rhs.m_pAniCtrl->GetMaxNumAnimationSets(),	// 복제 시 구동 가능한 애니메이션 셋의 최대 개수(대개 첫 번째 인자값과 동일)
-		rhs.m_pAniCtrl->GetMaxNumTracks(),	// 제공되어지는 최대 트랙의 개수(진짜 많이 사용해야 두 개)
-		rhs.m_pAniCtrl->GetMaxNumEvents(),	// 애니메이션이 지닌 내부적인 이벤트 정보(우리는 사용하지 않음)
-		&m_pAniCtrl);
+											 rhs.m_pAniCtrl->GetMaxNumAnimationSets(),	// 복제 시 구동 가능한 애니메이션 셋의 최대 개수(대개 첫 번째 인자값과 동일)
+											 rhs.m_pAniCtrl->GetMaxNumTracks(),	// 제공되어지는 최대 트랙의 개수(진짜 많이 사용해야 두 개)
+											 rhs.m_pAniCtrl->GetMaxNumEvents(),	// 애니메이션이 지닌 내부적인 이벤트 정보(우리는 사용하지 않음)
+											 &m_pAniCtrl);
+	m_pAniCtrl->AddRef();
 }
 
 CAniCtrl::~CAniCtrl()

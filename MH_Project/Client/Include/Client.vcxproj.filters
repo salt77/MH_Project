@@ -52,9 +52,6 @@
     <Filter Include="02.GameObject\03.StageMesh">
       <UniqueIdentifier>{8fb7fe41-b783-4568-8e95-bc053acb4b45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\06.Ahglan">
-      <UniqueIdentifier>{4cc3c394-9057-4bf1-9b09-4e1133ce99c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Manager">
       <UniqueIdentifier>{f6921372-5d52-43e1-ac0a-37510c790150}</UniqueIdentifier>
     </Filter>
@@ -181,6 +178,27 @@
     <Filter Include="01.Scene\02.Stage_1">
       <UniqueIdentifier>{752521ce-bec6-446f-949a-2da2e488993a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\06.Enemy">
+      <UniqueIdentifier>{4cc3c394-9057-4bf1-9b09-4e1133ce99c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Enemy\00.Ahglan">
+      <UniqueIdentifier>{92e3196a-fb19-4449-b15c-b871940e88b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Enemy\01.Cloyan">
+      <UniqueIdentifier>{bfb98969-6e27-45ff-9450-2876de252d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Enemy\02.Mankind">
+      <UniqueIdentifier>{de304286-c372-4a86-b5ab-b1ddb4fcec1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Enemy\02.Mankind\00.Dog">
+      <UniqueIdentifier>{4d7ce24b-e046-46d0-8009-7c2042189760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Enemy\02.Mankind\01.Soldier">
+      <UniqueIdentifier>{5b211554-4e25-4dae-abd0-6b77dcb2bff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Enemy\02.Mankind\02.Knight">
+      <UniqueIdentifier>{f202b93f-f1ac-464e-992f-84960a315565}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -224,9 +242,6 @@
     </ClInclude>
     <ClInclude Include="..\Codes\SkyBox.h">
       <Filter>02.GameObject\05.SkyBox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Ahglan.h">
-      <Filter>02.GameObject\06.Ahglan</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\SoundMgr.h">
       <Filter>97.Manager\00.SoundMgr</Filter>
@@ -315,6 +330,15 @@
     <ClInclude Include="..\Codes\Stage_1.h">
       <Filter>01.Scene\02.Stage_1</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Ahglan.h">
+      <Filter>02.GameObject\06.Enemy\00.Ahglan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Dog.h">
+      <Filter>02.GameObject\06.Enemy\02.Mankind\00.Dog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Soldier.h">
+      <Filter>02.GameObject\06.Enemy\02.Mankind\01.Soldier</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -343,9 +367,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SkyBox.cpp">
       <Filter>02.GameObject\05.SkyBox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Ahglan.cpp">
-      <Filter>02.GameObject\06.Ahglan</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\SoundMgr.cpp">
       <Filter>97.Manager\00.SoundMgr</Filter>
@@ -439,6 +460,15 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Stage_1.cpp">
       <Filter>01.Scene\02.Stage_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Ahglan.cpp">
+      <Filter>02.GameObject\06.Enemy\00.Ahglan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Dog.cpp">
+      <Filter>02.GameObject\06.Enemy\02.Mankind\00.Dog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Soldier.cpp">
+      <Filter>02.GameObject\06.Enemy\02.Mankind\01.Soldier</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

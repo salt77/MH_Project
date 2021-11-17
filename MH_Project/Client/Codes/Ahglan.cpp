@@ -306,7 +306,7 @@ void CAhglan::Movement()
 				m_bTargetIsRight = true;
 
 
-			if (m_bCanAction && m_pPlayerTrans)
+			if ((m_bCanAction && m_pPlayerTrans) || !m_bAnimation) // m_bAnimation은 디버깅용
 			{
 				if (BS_DAMAGED <= m_eBossAction)
 				{
@@ -501,6 +501,9 @@ void CAhglan::Animation_Control()
 			break;
 
 		case SPAWN:
+			m_dwRollingAtkCoolDown = GetTickCount();
+			m_dwWindmillCoolDown = GetTickCount();
+
 			pGameObject = CBoss_Hpbar_BackUI::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, BOSS_HPBAR_SCALE_X, BOSS_HPBAR_SCALE_Y);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"0.Boss_Hpbar_BackUI", pGameObject), );
@@ -804,7 +807,8 @@ void CAhglan::Animation_Control()
 		break;
 
 	case IDLE:
-		if (DIS_SHORT > m_fDistance)
+		if (DIS_SHORT > m_fDistance && 
+			0.f < m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 		{
 			// 강제로 다음 행동이 ATK을 수행하게 한다. 
 			m_eBossAction = BS_ATK;
@@ -999,7 +1003,7 @@ void CAhglan::Animation_Control()
 
 		if (0 >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 		{
-			m_iAniIndex = (_uint)IDLE;
+			m_eBossAction = BS_IDLE;
 		}
 		else if (m_iAniIndex == (_uint)ATK_ROLLING_ONETIME_BEGIN)
 		{

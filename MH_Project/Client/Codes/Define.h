@@ -96,6 +96,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define SoundMgrHigherVol(SoundName, ChannelID, Volume) CSoundMgr::GetInstance()->PlaySoundHigherVol(SoundName, ChannelID, Volume);
 
 
+#define DIS_FACETOFACE	1.5f
+#define DIS_VERY_SHORTEST	2.f
 #define DIS_SHORTEST	3.25f
 #define DIS_SHORT		5.f
 #define DIS_MID			10.f
@@ -103,6 +105,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 
 #define SCALE_PLAYER	0.01f
 #define SCALE_AHGLAN	0.07f
+#define SCALE_NORMAL	0.01f
+#define SCALE_MANKIND	0.012f
 
 #define CAMSHAKE_POWER	0.025f
 
@@ -121,7 +125,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define FADEOUTSPEED		0.0005f
 #define PROGRESSBARSPEED	0.05f
 
-#define LERP_PLAYERHPBAR	2.f
+#define LERP_PLAYERHPBAR	0.008f
 
 #define	INFINITY_INT		999999
 #define INFINITY_FLOAT		999999.f

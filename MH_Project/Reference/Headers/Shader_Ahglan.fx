@@ -102,7 +102,7 @@ PS_OUT		PS_MAIN(PS_IN In)
 
 	float3	TempLightDir = g_vLightDir.xyz;
 
-	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.4f;
+	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.55f;
 	//bright = max(0.f, bright);
 	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 

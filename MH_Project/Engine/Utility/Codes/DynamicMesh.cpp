@@ -14,6 +14,7 @@ CDynamicMesh::CDynamicMesh(const CDynamicMesh & rhs)
 	, m_pRootFrame(rhs.m_pRootFrame)
 	, m_pLoader(rhs.m_pLoader)
 	, m_MeshContainerList(rhs.m_MeshContainerList)
+	, m_wstrFullPath(rhs.m_wstrFullPath)
 {
 	m_pAniCtrl = CAniCtrl::Create(*rhs.m_pAniCtrl);
 }
@@ -42,6 +43,8 @@ HRESULT CDynamicMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileN
 	lstrcpy(szFullPath, pFilePath.c_str());
 	lstrcat(szFullPath, pFileName.c_str());
 
+	m_wstrFullPath = szFullPath;
+
 	m_pLoader = CHierachyLoader::Create(m_pGraphicDev, pFilePath);
 	NULL_CHECK_RETURN(m_pLoader, E_FAIL);
 
@@ -55,7 +58,7 @@ HRESULT CDynamicMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileN
 		&m_pRootFrame,
 		&pAniCtrl)))	// AniCtrl
 		return E_FAIL;
-
+	
 	m_pAniCtrl = CAniCtrl::Create(pAniCtrl);
 	NULL_CHECK_RETURN(m_pAniCtrl, E_FAIL);
 
@@ -66,6 +69,35 @@ HRESULT CDynamicMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileN
 	Update_FrameMatrices((D3DXFRAME_DERIVED*)m_pRootFrame, D3DXMatrixIdentity(&matTemp));
 
 	SetUp_FrameMatrices((D3DXFRAME_DERIVED*)m_pRootFrame);
+
+	return S_OK;
+}
+
+HRESULT CDynamicMesh::Ready_Meshes()
+{
+	//m_pLoader = CHierachyLoader::Create(m_pGraphicDev, m_wstrFullPath);
+	//NULL_CHECK_RETURN(m_pLoader, E_FAIL);
+
+	LPD3DXANIMATIONCONTROLLER		pAniCtrl = nullptr;
+
+	if (FAILED(D3DXLoadMeshHierarchyFromX(m_wstrFullPath.c_str(),
+		D3DXMESH_MANAGED,
+		m_pGraphicDev,
+		m_pLoader, // HierarchyLoader
+		NULL,
+		&m_pRootFrame,
+		&pAniCtrl)))	// AniCtrl
+		return E_FAIL;
+
+	m_pAniCtrl = CAniCtrl::Create(pAniCtrl);
+	NULL_CHECK_RETURN(m_pAniCtrl, E_FAIL);
+
+	Safe_Release(pAniCtrl);
+
+	//_matrix		matTemp;
+
+	//Update_FrameMatrices((D3DXFRAME_DERIVED*)m_pRootFrame, D3DXMatrixIdentity(&matTemp));
+	//SetUp_FrameMatrices((D3DXFRAME_DERIVED*)m_pRootFrame);
 
 	return S_OK;
 }
@@ -240,7 +272,7 @@ CDynamicMesh * CDynamicMesh::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring
 	return pInstance;
 }
 
-CComponent * CDynamicMesh::Clone(void)
+CComponent * CDynamicMesh::Clone()
 {
 	return new CDynamicMesh(*this);
 }

@@ -179,7 +179,7 @@ void CPlayer_Hpbar_LerpUI::Lerp()
 {
 	if (m_fLerpValue > m_fValueRatio)
 	{
-		m_fLerpValue -= LERP_PLAYERHPBAR;
+		m_fLerpValue -= (m_fLerpValue - m_fValueRatio) * LERP_PLAYERHPBAR;
 	}
 	else if (m_fLerpValue < m_fValueRatio)
 	{

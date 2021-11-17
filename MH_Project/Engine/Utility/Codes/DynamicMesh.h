@@ -29,6 +29,7 @@ public:
 
 public:
 	HRESULT		Ready_Meshes(const wstring pFilePath, const wstring pFileName);
+	HRESULT		Ready_Meshes();
 	void		Render_Meshes(void);
 	void		Render_Meshes(LPD3DXEFFECT& pEffect, const wstring& wstrNoRender = L"");
 	void		Render_Meshes(LPD3DXEFFECT& pEffect, map<const wstring, _bool>	mapActiveParts);
@@ -44,9 +45,11 @@ private:
 	list<D3DXMESHCONTAINER_DERIVED*>			m_MeshContainerList;
 	CAniCtrl*									m_pAniCtrl;
 
+	wstring			m_wstrFullPath = L"";
+
 public:
 	static CDynamicMesh*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pFilePath, const wstring pFileName);
-	virtual CComponent*			Clone(void);
+	virtual CComponent *		Clone(void) override;
 
 private:
 	virtual void	Free(void);

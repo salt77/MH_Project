@@ -82,6 +82,7 @@ struct PS_OUT
 {
 	vector			vColor : COLOR0;
 	vector			vNormal : COLOR1;
+	vector			vDepth	: COLOR2;
 };
 
 PS_OUT		PS_MAIN(PS_IN In)
@@ -110,6 +111,11 @@ PS_OUT		PS_MAIN(PS_IN In)
 	//Out.vColor.g = Out.vColor.g * bright;
 	//Out.vColor.b = Out.vColor.b * bright;
 	Out.vColor.rgb = bright * Out.vColor.xyz;
+
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w,
+						In.vProjPos.w * 0.03f,
+						0.f,
+						0.f);
 
 	return Out;
 }
@@ -146,6 +152,11 @@ technique Default_Device
 {
 	pass
 	{
+		alphatestenable = true;
+		alphafunc = greater;
+		alpharef = 0xc0;
+		cullmode = none;
+
 		vertexshader = compile vs_3_0 VS_MAIN();
 		pixelshader = compile ps_3_0 PS_MAIN();
 	}

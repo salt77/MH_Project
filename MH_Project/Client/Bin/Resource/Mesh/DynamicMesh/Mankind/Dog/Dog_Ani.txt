@@ -1,0 +1,18 @@
+17. Run 
+
+
+
+14. KnockBack
+
+10. DownDMG
+
+9. Turn_Right
+
+8. Turn_Left
+
+7. Stand
+
+6. Dying 
+
+0. Attack 
+

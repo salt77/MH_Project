@@ -102,7 +102,7 @@ list<D3DXMESHCONTAINER_DERIVED*> CMFCToolView::Get_MeshContainerList(OBJECTADD_M
 
 const vector<CTransform*> CMFCToolView::Get_ObjVector(OBJECTADD_MFC eObj)
 {
-	if (OBJECTADD_MFC_AHGLAN == eObj)
+	if (OBJECTADD_MFC_DOG == eObj)
 	{
 		return m_vecDogTrans;
 	}
