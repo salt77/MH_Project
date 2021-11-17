@@ -36,6 +36,8 @@ public:
 private:
 	void			Collision_PlayerAttack();
 	void			Collision_MonsterAttack();
+
+	void			Update_MultipleCollision();
 	
 private:
 	_bool			Collision_Sphere(const _vec3& vDstCenter, const _float& fDstRadius, const _vec3& vSrcCenter, const _float& fSrcRadius);
@@ -56,6 +58,11 @@ private:
 	CPlayer*		m_pPlayer = nullptr;
 	CAhglan*		m_pAhglan = nullptr;
 	CStickyBomb*	m_pStickyBomb = nullptr;
+
+	PL_STATE		m_ePlayerCurState = STATE_END;
+	PL_STATE		m_ePlayerPreState = STATE_END;
+
+	list<CBoxCollider*>		m_listEnemyDamagedCol;
 
 public:
 	virtual void Free(void) override;

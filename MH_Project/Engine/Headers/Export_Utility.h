@@ -40,6 +40,9 @@ inline HRESULT		Set_RenderColType(const wstring pColType, COLTYPE eColType, COLL
 inline CGameObject*	Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
 inline CComponent*	Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
 inline const SCENE_ID& Get_SceneID();
+inline const map<const wstring, CLayer*>&	Get_MapLayer();
+inline CLayer*   Get_Layer(const wstring wstrLayerTag);
+inline const map<const wstring, CGameObject*>&	Get_MapObject(const wstring wstrLayerTag);
 inline HRESULT		Create_Management(LPDIRECT3DDEVICE9& pGraphicDev, CManagement** ppManagement);
 inline HRESULT		Set_Scene(CScene* pScene);
 inline _int			Update_Scene(const _float& fTimeDelta);

@@ -339,6 +339,9 @@
     <ClInclude Include="..\Codes\Soldier.h">
       <Filter>02.GameObject\06.Enemy\02.Mankind\01.Soldier</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Knight.h">
+      <Filter>02.GameObject\06.Enemy\02.Mankind\02.Knight</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -469,6 +472,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Soldier.cpp">
       <Filter>02.GameObject\06.Enemy\02.Mankind\01.Soldier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Knight.cpp">
+      <Filter>02.GameObject\06.Enemy\02.Mankind\02.Knight</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

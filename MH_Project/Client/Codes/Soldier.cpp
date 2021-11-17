@@ -70,6 +70,21 @@ _int CSoldier::Update_Object(const _float & fTimeDelta)
 
 	m_fTimeDelta = fTimeDelta;
 
+	//if (m_vPlayerPos)
+	//{
+	//	if (10.f > D3DXVec3Length(&(m_vPlayerPos - *m_pTransformCom->Get_Info(INFO_POS))))
+	//	{
+	//		Movement();
+	//		Animation_Control();
+	//		Collision_Control();
+	//		MoveOn_Skill();
+
+	//		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
+
+	//		Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+	//	}
+	//}
+
 	Movement();
 	Animation_Control();
 	Collision_Control();
@@ -110,53 +125,89 @@ _int CSoldier::LateUpdate_Object(const _float & fTimeDelta)
 
 void CSoldier::Render_Object(void)
 {
-	if (m_bAnimation)
-		m_pMeshCom->Play_Animation(m_fTimeDelta);
-
-	if (!m_mapColliderCom.empty())
+	if (m_vPlayerPos)
 	{
-		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
-
-		for (; iter != m_mapColliderCom.end(); ++iter)
+		if (10.f > D3DXVec3Length(&(m_vPlayerPos - *m_pTransformCom->Get_Info(INFO_POS))))
 		{
-			if (iter->second->Get_CanCollision())
+			if (m_bAnimation)
+				m_pMeshCom->Play_Animation(m_fTimeDelta);
+
+			if (!m_mapColliderCom.empty())
 			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+				map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+
+				for (; iter != m_mapColliderCom.end(); ++iter)
+				{
+					if (iter->second->Get_CanCollision())
+					{
+						iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+					}
+				}
+			}
+			if (!m_mapBoxColliderCom.empty())
+			{
+				map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+
+				for (; iter != m_mapBoxColliderCom.end(); ++iter)
+				{
+					if (iter->second->Get_CanCollision())
+					{
+						iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+					}
+				}
+			}
+
+			m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
+
+			LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
+			pEffect->AddRef();
+
+			FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
+
+			_uint iMaxPass = 0;
+
+			pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
+													// 2인자 : 시작하는 방식을 묻는 FLAG
+			pEffect->BeginPass(0);
+
+			m_pMeshCom->Render_Meshes(pEffect, m_mapActiveParts);
+
+			pEffect->EndPass();
+			pEffect->End();
+
+			Safe_Release(pEffect);
+		}
+	}
+}
+
+void CSoldier::Set_Damage(_int iDamage)
+{
+	if (iDamage <= m_tInfo.iHp)
+	{
+		m_tInfo.iHp -= iDamage;
+
+		if (1000 <= iDamage)
+		{
+			m_iAniIndex = SOLSTATE_DOWN_BEGIN;
+		}
+		else
+		{
+			_uint iRandom = rand() % 2;
+
+			if (0 == iRandom)
+			{
+				m_iAniIndex = SOLSTATE_DAMAGED;
+			}
+			else
+			{
+				m_iAniIndex = SOLSTATE_DAMAGED2;
 			}
 		}
 	}
-	if (!m_mapBoxColliderCom.empty())
+	else
 	{
-		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
-
-		for (; iter != m_mapBoxColliderCom.end(); ++iter)
-		{
-			if (iter->second->Get_CanCollision())
-			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-			}
-		}
+		m_tInfo.iHp = 0;
 	}
-
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-
-	LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
-	pEffect->AddRef();
-
-	FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
-
-	_uint iMaxPass = 0;
-
-	pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
-											// 2인자 : 시작하는 방식을 묻는 FLAG
-	pEffect->BeginPass(0);
-
-	m_pMeshCom->Render_Meshes(pEffect, m_mapActiveParts);
-
-	pEffect->EndPass();
-	pEffect->End();
-
-	Safe_Release(pEffect);
 }
 
 HRESULT CSoldier::Add_Component(void)
@@ -394,23 +445,28 @@ void CSoldier::Animation_Control()
 
 		case SOLSTATE_DAMAGED:
 			m_bCanAction = false;
+			m_lfAniEnd = 0.85f;
 			break;
 
 		case SOLSTATE_DAMAGED2:
 			m_bCanAction = false;
+			m_lfAniEnd = 0.85f;
 			break;
 
-			//case SOLSTATE_DEAD_BEGIN:
-			//	m_eSolAction = SOL_DEAD;
-			//	break;
+		case SOLSTATE_DOWN_BEGIN:
+			m_bCanAction = false;
+			m_lfAniEnd = 1.f;
+			break;
 
-			//case SOLSTATE_DEAD_DURING:
-			//	m_eSolAction = SOL_DEAD;
-			//	break;
+		case SOLSTATE_DOWN_IDLE:
+			m_bCanAction = false;
+			m_lfAniEnd = 1.f;
+			break;
 
-			//case SOLSTATE_DEAD_END:
-			//	m_eSolAction = SOL_DEAD;
-			//	break;
+		case SOLSTATE_DOWN_END:
+			m_bCanAction = false;
+			m_lfAniEnd = 1.f;
+			break;
 		}
 
 		m_ePreState = m_eCurState;
@@ -487,8 +543,8 @@ void CSoldier::Animation_Control()
 	{
 		m_bCanAction = true;
 
-		if (m_iAniIndex == SOLSTATE_RUN ||
-			m_iAniIndex == SOLSTATE_IDLE)
+		if (SOLSTATE_RUN == m_iAniIndex ||
+			SOLSTATE_IDLE == m_iAniIndex)
 		{
 			m_bAnimation = true;
 		}
@@ -497,12 +553,24 @@ void CSoldier::Animation_Control()
 			m_bAnimation = false;
 		}
 
-		if (0 >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
+		if (SOLSTATE_DOWN_BEGIN == m_eCurState)
+		{
+			m_iAniIndex = SOLSTATE_DOWN_IDLE;
+
+			Animation_Control();
+		}
+		else if (SOLSTATE_DOWN_IDLE == m_eCurState)
+		{
+			m_iAniIndex = SOLSTATE_DOWN_END;
+
+			Animation_Control();
+		}
+		else if (0 >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 		{
 			m_iAniIndex = SOLSTATE_IDLE;
 		}
-		else if (m_eCurState != SOLSTATE_IDLE &&
-				 m_eCurState != SOLSTATE_RUN)
+		else if (SOLSTATE_IDLE != m_eCurState &&
+				 SOLSTATE_RUN != m_eCurState)
 		{
 			//RotateLookVector();
 

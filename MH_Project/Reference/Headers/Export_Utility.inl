@@ -40,6 +40,21 @@ inline const SCENE_ID & Get_SceneID()
 	return CManagement::GetInstance()->Get_SceneID();
 }
 
+inline const map<const wstring, CLayer*>& Get_MapLayer()
+{
+	return CManagement::GetInstance()->Get_MapLayer();
+}
+
+inline CLayer * Get_Layer(const wstring wstrLayerTag)
+{
+	return CManagement::GetInstance()->Get_Layer(wstrLayerTag);
+}
+
+inline const map<const wstring, CGameObject*>& Get_MapObject(const wstring wstrLayerTag)
+{
+	return CManagement::GetInstance()->Get_MapObject(wstrLayerTag);
+}
+
 HRESULT		Create_Management(LPDIRECT3DDEVICE9& pGraphicDev, CManagement** ppManagement)
 {
 	CManagement*		pManagement = CManagement::GetInstance();

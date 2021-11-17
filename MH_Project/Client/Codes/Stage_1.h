@@ -35,7 +35,9 @@ private:
 	HRESULT				Ready_LightInfo(void);
 
 	HRESULT				Load_PlayerInfo();
-	HRESULT				Load_EnemyInfo();
+	HRESULT				Load_DogInfo();
+	HRESULT				Load_SoldierInfo();
+	HRESULT				Load_KnightInfo();
 	HRESULT				Load_PlayerCol();
 	HRESULT				Load_NaviMesh();
 

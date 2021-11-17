@@ -97,3 +97,18 @@ Engine::CComponent* Engine::CScene::Get_Component(const wstring pLayerTag, const
 	return iter->second->Get_Component(pObjTag, pComponentTag, eID);
 }
 
+CLayer * CScene::Get_Layer(const wstring wstrLayerTag)
+{
+	map<const wstring, CLayer*>::iterator	iter = m_mapLayer.begin();
+
+	for (; iter != m_mapLayer.end(); ++iter)
+	{
+		if (L"Enemies" == iter->first)
+		{
+			return iter->second;
+		}
+	}
+
+	return nullptr;
+}
+

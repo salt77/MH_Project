@@ -230,6 +230,33 @@ const SCENE_ID & CManagement::Get_SceneID()
 	return m_pScene->Get_SceneID();
 }
 
+const map<const wstring, CLayer*>& CManagement::Get_MapLayer()
+{
+	if (nullptr == m_pScene)
+		return map<const wstring, CLayer*>();
+
+	return m_pScene->Get_MapLayer();
+}
+
+CLayer * CManagement::Get_Layer(const wstring wstrLayerTag)
+{
+	if (nullptr == m_pScene)
+		return nullptr;
+
+	return m_pScene->Get_Layer(wstrLayerTag);
+}
+
+const map<const wstring, CGameObject*>& CManagement::Get_MapObject(const wstring wstrLayerTag)
+{
+	if (nullptr == m_pScene)
+		return map<const wstring, CGameObject*>();
+	
+	if (nullptr == Get_Layer(wstrLayerTag))
+		return map<const wstring, CGameObject*>();
+
+	return Get_Layer(wstrLayerTag)->Get_MapObject();
+}
+
 HRESULT CManagement::Set_RenderColType(const wstring pColName, COLTYPE eColType, COLLIDERTYPE eColliderType)
 {
 	CCollider*	pCollider = nullptr;

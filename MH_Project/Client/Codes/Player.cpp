@@ -238,8 +238,8 @@ void CPlayer::Render_Object(void)
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
-	//if (m_pNaviMeshCom)
-	//	m_pNaviMeshCom->Render_NaviMesh();
+	if (m_pNaviMeshCom)
+		m_pNaviMeshCom->Render_NaviMesh();
 
 	LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
 	pEffect->AddRef();
@@ -1784,7 +1784,8 @@ void CPlayer::Collision_Control()
 		case STATE_FURY2:
 			for (; iter != m_mapBoxColliderCom.end(); ++iter)
 			{
-				if (L"Other_Attack" == iter->first)
+				if (L"Hit_LHandLongLong" == iter->first || 
+					L"Hit_RHandLongLong" == iter->first)
 				{
 					if (0.37f <= m_fAniTime &&
 						0.6f >= m_fAniTime)
@@ -1815,7 +1816,8 @@ void CPlayer::Collision_Control()
 		case STATE_FURY:
 			for (; iter != m_mapBoxColliderCom.end(); ++iter)
 			{
-				if (L"Other_Attack" == iter->first)
+				if (L"Hit_LHandLongLong" == iter->first ||
+					L"Hit_RHandLongLong" == iter->first)
 				{
 					if (0.37f <= m_fAniTime &&
 						0.6f >= m_fAniTime)
@@ -1863,7 +1865,27 @@ void CPlayer::Collision_Control()
 			break;
 
 		case STATE_SMASH4:
-			HITBOX_CONTROLL(0.55f, 0.8f, TRUE);
+			for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			{
+				if (L"Hit_LHandLongLong" == iter->first ||
+					L"Hit_RHandLongLong" == iter->first)
+				{
+					if (0.55f <= m_fAniTime &&
+						0.8f >= m_fAniTime)
+					{
+						iter->second->Set_CanCollision(true);
+					}
+					else
+					{
+						iter->second->Set_CanCollision(false);
+					}
+				}
+				else
+				{
+					iter->second->Set_CanCollision(false);
+				}
+			}
+			//HITBOX_CONTROLL(0.55f, 0.8f, TRUE);
 			if (!m_bLethitaSound[0] &&
 				m_fAniTime >= 0.55f)
 			{

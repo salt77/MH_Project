@@ -19,12 +19,13 @@ public:
 	_float			Get_ViewZ(void) { return m_fViewZ; }
 
 	const TAGINFO&	Get_TagInfo() { return m_tInfo; }
+	const _bool&	Get_ArmorOn() { return m_bArmorOn; }
 
 	const map<const wstring, CCollider*>&		Get_MapCollider() { return m_mapColliderCom; }
 	const map<const wstring, CBoxCollider*>&	Get_MapBoxCollider() { return m_mapBoxColliderCom; }
 
 public:
-	void			Set_Damage(_int iDamage);
+	virtual		void			Set_Damage(_int iDamage);
 
 public:
 	virtual		HRESULT		Ready_Object();
@@ -51,6 +52,7 @@ protected:
 	_bool								m_bLateReady = false;
 	_bool								m_bSoundCheck = false;
 	_bool								m_bBoss = false;
+	_bool								m_bArmorOn = false;
 
 	// 보스 몬스터 라인 Hp 체크용
 	//_int								m_iPreHp;

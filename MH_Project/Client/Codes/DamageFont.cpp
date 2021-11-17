@@ -49,6 +49,10 @@ _int CDamageFont::Update_Object(const _float & fTimeDelta)
 		matBill._31 = matView._31;
 		matBill._33 = matView._33;
 
+		matBill._22 = matView._22;
+		matBill._23 = matView._23;
+		matBill._32 = matView._32;
+
 		D3DXMatrixInverse(&matBill, NULL, &matBill);
 
 		// 이 코드는 문제의 소지가 있음

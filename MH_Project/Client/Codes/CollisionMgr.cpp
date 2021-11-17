@@ -40,6 +40,8 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 
 _uint CCollisionMgr::Update_CollisionMgr()
 {
+	Update_MultipleCollision();
+
 	Collision_PlayerAttack();
 	Collision_MonsterAttack();
 
@@ -70,8 +72,6 @@ void CCollisionMgr::Collision_PlayerAttack()
 			{
 				if (m_pAhglan)
 				{
-					mapBossBoxCol = m_pAhglan->Get_MapBoxCollider();
-
 					for (; iter_PlayerHit != mapPlayerHit.end(); ++iter_PlayerHit)
 					{
 						iter_BossDamaged = mapBossBoxCol.begin();
@@ -234,6 +234,193 @@ void CCollisionMgr::Collision_PlayerAttack()
 			}
 		}
 	}
+
+	else if (SCENE_STAGE_1 == m_eSceneID)
+	{
+		// Player АјАн
+		for (; iter_PlayerHit != mapPlayerHit.end(); ++iter_PlayerHit)
+		{
+			map<const wstring, CGameObject*> mapObject = Engine::Get_MapObject(L"Enemies");
+			map<const wstring, CGameObject*>::iterator	iter_Enemy = mapObject.begin();
+
+			for (; iter_Enemy != mapObject.end(); ++iter_Enemy)
+			{
+				_bool	bAlreadyHit = false;
+
+				map<const wstring, CBoxCollider*>	mapEnemyBoxCol = iter_Enemy->second->Get_MapBoxCollider();
+				map<const wstring, CBoxCollider*>::iterator		iter_EnemyBoxCol = mapEnemyBoxCol.begin();
+
+				for (; iter_EnemyBoxCol != mapEnemyBoxCol.end(); ++iter_EnemyBoxCol)
+				{
+					list<CBoxCollider*>::iterator	iter_AlreadyDamaged = m_listEnemyDamagedCol.begin();
+
+					for (; iter_AlreadyDamaged != m_listEnemyDamagedCol.end(); ++iter_AlreadyDamaged)
+					{
+						if (iter_EnemyBoxCol->second == *iter_AlreadyDamaged)
+						{
+							bAlreadyHit = true;
+
+							break;
+						}
+					}
+
+					if (bAlreadyHit)
+						break;
+
+					if (iter_PlayerHit->second->Get_CanCollision() &&
+						iter_EnemyBoxCol->second->Get_CanCollision())
+					{
+						if (Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
+										  &iter_EnemyBoxCol->second->Get_Min(), &iter_EnemyBoxCol->second->Get_Max(), iter_EnemyBoxCol->second->Get_ColliderWorld()))
+						{
+							bPlayerAtkEnd = true;
+
+							m_listEnemyDamagedCol.emplace_back(iter_EnemyBoxCol->second);
+
+							switch (m_pPlayer->Get_CurState())
+							{
+							case Engine::STATE_SP_FEVER:
+								iter_Enemy->second->Set_Damage(PLAYER_SMASHPOWER2 + iInterpolDamage);
+								m_pPlayer->Add_Buff(BUFF_CRITICAL, 1500);
+								SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
+
+								Pooling_DamageFont(PLAYER_SMASHPOWER2 + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+								break;
+
+							case Engine::STATE_FURY:
+								m_pPlayer->Set_SpPoint(true);
+
+								iter_Enemy->second->Set_Damage(PLAYER_SMASHPOWER2 + iInterpolDamage);
+								m_pPlayer->Add_Buff(BUFF_CRITICAL, 1500);
+								SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
+
+								Pooling_DamageFont(PLAYER_SMASHPOWER2 + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+								break;
+
+							case Engine::STATE_FURY2:
+								m_pPlayer->Set_SpPoint(true);
+
+								iter_Enemy->second->Set_Damage(PLAYER_SMASHPOWER2 + iInterpolDamage);
+
+								Pooling_DamageFont(PLAYER_SMASHPOWER2 + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+								break;
+
+							case Engine::STATE_DOUBLE_CRECSENT:
+								SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
+								m_pPlayer->Set_StopMotion(true, 100);
+								m_pPlayer->Set_SpPoint(true);
+
+								iter_Enemy->second->Set_Damage(PLAYER_SMASH3POWER + iInterpolDamage);
+								m_pPlayer->Compute_Critical();
+								Pooling_DamageFont(PLAYER_SMASH3POWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+								break;
+
+							case Engine::STATE_SMASH4:
+								m_pPlayer->Set_StopMotion(true, 100);
+								SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
+								m_pPlayer->Set_SpPoint(true);
+
+								iter_Enemy->second->Set_Damage(PLAYER_SMASH4POWER + iInterpolDamage);
+								m_pPlayer->Compute_Critical();
+								Pooling_DamageFont(PLAYER_SMASH4POWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+								break;
+
+							case Engine::STATE_SMASH3:
+								m_pPlayer->Set_StopMotion(true, 100);
+								SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
+								m_pPlayer->Set_SpPoint(true);
+
+								iter_Enemy->second->Set_Damage(PLAYER_SMASH3POWER + iInterpolDamage);
+								m_pPlayer->Compute_Critical();
+								Pooling_DamageFont(PLAYER_SMASH3POWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+								break;
+
+							case Engine::STATE_SMASH2_B:
+								SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+								m_pPlayer->Set_SpPoint(false);
+
+								iter_Enemy->second->Set_Damage(PLAYER_SMASH2BPOWER + iInterpolDamage);
+								m_pPlayer->Compute_Critical();
+								Pooling_DamageFont(PLAYER_SMASH2BPOWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+								break;
+
+							case Engine::STATE_SMASH2:
+								m_pPlayer->Set_StopMotion(true, 100);
+								//SoundMgrLowerVol(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
+								m_pPlayer->Set_SpPoint(true);
+
+								iter_Enemy->second->Set_Damage(PLAYER_SMASH2POWER + iInterpolDamage);
+								m_pPlayer->Compute_Critical();
+								Pooling_DamageFont(PLAYER_SMASH2POWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+								break;
+
+							case Engine::STATE_SMASH1:
+								m_pPlayer->Set_StopMotion(true, 75);
+								SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT, 0.07f);
+								m_pPlayer->Set_SpPoint(true);
+
+								iter_Enemy->second->Set_Damage(PLAYER_SMASH1POWER + iInterpolDamage);
+								m_pPlayer->Compute_Critical();
+								Pooling_DamageFont(PLAYER_SMASH1POWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+								break;
+
+							case Engine::STATE_ATK1:
+								m_pPlayer->Set_StopMotion(true, 40);
+								SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+								m_pPlayer->Set_SpPoint(false);
+
+								iter_Enemy->second->Set_Damage(PLAYER_ATKPOWER + iInterpolDamage);
+								Pooling_DamageFont(PLAYER_ATKPOWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_NORMAL);
+								break;
+
+							case Engine::STATE_ATK2:
+								m_pPlayer->Set_StopMotion(true, 40);
+								SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+								m_pPlayer->Set_SpPoint(false);
+
+								iter_Enemy->second->Set_Damage(PLAYER_ATKPOWER + iInterpolDamage);
+								Pooling_DamageFont(PLAYER_ATKPOWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_NORMAL);
+								break;
+
+							case Engine::STATE_ATK3:
+								m_pPlayer->Set_StopMotion(true, 40);
+								SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+								m_pPlayer->Set_SpPoint(false);
+
+								iter_Enemy->second->Set_Damage(PLAYER_ATKPOWER + iInterpolDamage);
+								Pooling_DamageFont(PLAYER_ATKPOWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_NORMAL);
+								break;
+
+							case Engine::STATE_ATK4:
+								m_pPlayer->Set_StopMotion(true, 40);
+								SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+								m_pPlayer->Set_SpPoint(false);
+
+								iter_Enemy->second->Set_Damage(PLAYER_ATKPOWER + iInterpolDamage);
+								Pooling_DamageFont(PLAYER_ATKPOWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_NORMAL);
+								break;
+
+							case Engine::STATE_DASHATK:
+								SoundMgrLowerVol(L"Hit_Flesh_Slash.wav", CSoundMgr::PLAYER_EFFECT, 0.05f);
+								m_pPlayer->Set_SpPoint(false);
+
+								iter_Enemy->second->Set_Damage(PLAYER_ATKPOWER + iInterpolDamage);
+								m_pPlayer->Compute_Critical();
+								Pooling_DamageFont(PLAYER_ATKPOWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_NORMAL);
+								break;
+							}
+
+							break;
+						}
+					}
+				}
+
+
+				if (bPlayerAtkEnd)
+					break;
+			}
+		}
+	}
 }
 
 void CCollisionMgr::Collision_MonsterAttack()
@@ -300,6 +487,21 @@ void CCollisionMgr::Collision_MonsterAttack()
 						break;
 				}
 			}
+		}
+	}
+}
+
+void CCollisionMgr::Update_MultipleCollision()
+{
+	if (m_pPlayer)
+	{
+		m_ePlayerCurState = m_pPlayer->Get_CurState();
+
+		if (m_ePlayerPreState != m_ePlayerCurState)
+		{
+			m_listEnemyDamagedCol.clear();
+
+			m_ePlayerPreState = m_ePlayerCurState;
 		}
 	}
 }
@@ -505,7 +707,7 @@ void CCollisionMgr::Pooling_DamageFont(_uint iDamage, const _matrix * pMatrix, D
 		break;
 
 	case Engine::DAMAGEFONT_SKILL:
-		for (_uint i = 0; i < DAMAGEFONT_COUNT; ++i)
+		for (_uint i = 0; i < DAMAGEFONT_SKILL_COUNT; ++i)
 		{
 			wstrSkillFont = L"DamageFont_Skill_UI_";
 			wstrSkillFont += to_wstring(i);
@@ -545,7 +747,7 @@ void CCollisionMgr::Pooling_DamageFont(_uint iDamage, const _matrix * pMatrix, D
 		break;
 
 	case Engine::DAMAGEFONT_MONSTER:
-		for (_uint i = 0; i < DAMAGEFONT_COUNT; ++i)
+		for (_uint i = 0; i < DAMAGEFONT_MONSTER_COUNT; ++i)
 		{
 			wstrMonsterFont = L"DamageFont_Monster_UI_";
 			wstrMonsterFont += to_wstring(i);

@@ -14,6 +14,7 @@ private:
 public:
 	CGameObject*	Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
 	CComponent*		Get_Component(const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
+	const	map<const wstring, CGameObject*>&	Get_MapObject() { return m_mapObject; }
 	
 public:
 	HRESULT		Add_GameObject(const wstring pObjTag, CGameObject* pInstance);

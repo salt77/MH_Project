@@ -36,6 +36,21 @@ HRESULT Engine::CNaviMesh::Ready_NaviMesh(_uint iCellCount, vector<_matrix> vecP
 		memcpy(&vSecondPoint, &vecPoint[index]._21, sizeof(_vec3));
 		memcpy(&vThirdPoint, &vecPoint[index]._31, sizeof(_vec3));
 
+		//_vec3	vTemp = _vec3(0.f, 0.f, 0.f);
+
+		//_vec2	_1 = _vec2(vecPoint[index]._21, vecPoint[index]._23);
+		//_vec2	_2 = _vec2(vecPoint[index]._11, vecPoint[index]._13);
+		//_vec2	_3 = _vec2(vecPoint[index]._31, vecPoint[index]._33);
+
+		//_float fComputeCCW = _1.x * _2.y + _2.x * _3.y + _3.x * _1.y - (_2.x * _1.y + _3.x * _2.y + _1.x * _3.y);
+
+		//if (0.f > fComputeCCW)
+		//{
+		//	vTemp = vFirstPoint;
+		//	vFirstPoint = vThirdPoint;
+		//	vThirdPoint = vTemp;
+		//}
+
 		pCell = CCell::Create(m_pGraphicDev, (_ulong)index, &vFirstPoint, &vSecondPoint, &vThirdPoint);
 		NULL_CHECK_RETURN(pCell, E_FAIL);
 		m_vecCell.push_back(pCell);
@@ -94,6 +109,8 @@ _vec3 CNaviMesh::MoveOn_NaviMesh(const _vec3 * pTargetPos, const _vec3 * pTarget
 		else if (CCell::COMPARE_STOP == m_vecCell[m_dwIndex]->Compare_Position(&vEndPos, &m_dwIndex))
 			return *pTargetPos;
 	}
+
+	return *pTargetPos;
 }
 
 void CNaviMesh::DeleteAllCell()

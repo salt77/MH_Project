@@ -44,6 +44,9 @@ public:
 	virtual void	Render_Object(void) override;
 
 private:
+	virtual	void	Set_Damage(_int iDamage);
+
+private:
 	// 기본 함수들
 	HRESULT			Add_Component(void);
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);

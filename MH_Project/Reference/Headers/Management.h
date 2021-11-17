@@ -29,6 +29,9 @@ public:
 	CGameObject*	Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
 	CComponent*		Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
 	const SCENE_ID&	Get_SceneID();
+	const map<const wstring, CLayer*>&	Get_MapLayer();
+	CLayer*	Get_Layer(const wstring wstrLayerTag);
+	const map<const wstring, CGameObject*>&	Get_MapObject(const wstring wstrLayerTag);
 
 public:
 	HRESULT			Set_Scene(CScene* pScene);

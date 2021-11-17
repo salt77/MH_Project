@@ -1,0 +1,21 @@
+12. KnockBack
+
+11. StapFront 
+
+10. StapRight
+
+9. StapLeft 
+
+8. StapBack 
+
+7. Idle 
+
+6. Dying 
+
+5. 
+
+2. Damage_2
+
+1. Damage_1 
+
+0. Attack 

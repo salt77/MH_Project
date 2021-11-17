@@ -5,13 +5,14 @@
 
 #include "Dog.h"
 #include "Soldier.h"
+#include "Knight.h"
 
 #include "Export_Function.h"
 
 CStage_1::CStage_1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
 {
-	m_vecSavePoint.reserve(256);
+	m_vecSavePoint.reserve(400);
 }
 
 CStage_1::~CStage_1(void)
@@ -39,7 +40,9 @@ HRESULT CStage_1::LateReady_Scene()
 	FAILED_CHECK_RETURN(Load_NaviMesh(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_EnemyInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
 
 	m_pLayer = CLayer::Create();
 
@@ -135,8 +138,13 @@ HRESULT CStage_1::Ready_Layer_GameLogic(const wstring pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HitBox_Pos", pGameObject), E_FAIL);
 
+	//pGameObject = CDog::Create(m_pGraphicDev);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Soldier", pGameObject), E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dog", pGameObject), E_FAIL);
+
+	//pGameObject = CKnight::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Knight", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
@@ -159,9 +167,9 @@ HRESULT CStage_1::Ready_Layer_UI(const wstring pLayerTag)
 	for (_uint i = 0; i < DAMAGEFONT_COUNT; ++i)
 	{
 		wstring wstrNormalFont = L"DamageFont_Normal_UI_";
-		
+
 		wstrNormalFont += to_wstring(i);
-		
+
 		pGameObject = CDamageFont::Create(m_pGraphicDev, DAMAGEFONT_NORMAL);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrNormalFont, pGameObject), E_FAIL);
@@ -247,17 +255,12 @@ HRESULT CStage_1::Load_PlayerInfo()
 	return S_OK;
 }
 
-HRESULT CStage_1::Load_EnemyInfo()
+HRESULT CStage_1::Load_DogInfo()
 {
 	HANDLE hFile = CreateFile(L"../../Data/Dog_Obj.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
-	if (INVALID_HANDLE_VALUE == hFile)
-		return E_FAIL;
-
 	CLayer*		pLayer = CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
-
-	CGameObject*			pGameObject = nullptr;
 
 	DWORD dwbyte = 0;
 
@@ -282,65 +285,132 @@ HRESULT CStage_1::Load_EnemyInfo()
 		ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
 		ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
 
-		wstring wstrName = L"";
-
-		switch (iObjType)
-		{
-		case 2:
-			wstrName = L"Dog_";
-			break;
-			
-		case 3:
-			wstrName = L"Soldier_";
-			break;
-
-		case 4:
-			wstrName = L"Knight_";
-			break;
-		}
-
+		wstring wstrName = L"Dog_";
 		wstrName += to_wstring(iIndex);
+
+		CGameObject*		pGameObject = nullptr;
+
+		pGameObject = CDog::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+
 		++iIndex;
 
-		switch (iObjType)
-		{
-		case 2:
-			pGameObject = nullptr;
-
-			pGameObject = CDog::Create(m_pGraphicDev);
-			NULL_CHECK_RETURN(pGameObject, E_FAIL);
-			FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
-
-			//dynamic_cast<CDog*>(pGameObject)->Add_NaviMesh();
-
-			dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&vPos);
-			dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_X, vRotate.x);
-			dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Y, vRotate.y);
-			dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Z, vRotate.z);
-			break;
-
-		case 3:
-			break;
-
-		case 4:
-			break;
-		}
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&vPos);
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_X, vRotate.x);
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Y, vRotate.y);
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Z, vRotate.z);
 	}
 
-	switch (iObjType)
+	m_mapLayer.emplace(L"Enemies", pLayer);
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CStage_1::Load_SoldierInfo()
+{
+	HANDLE hFile = CreateFile(L"../../Data/Soldier_Obj.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+	CLayer*		pLayer = CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	DWORD dwbyte = 0;
+
+	_uint iObjType = -1;
+	_uint iObjCount = -1;
+	_uint iTargetCount = -1;
+
+	_vec3	vPos, vScale, vRotate;
+
+	ReadFile(hFile, &iObjType, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iTargetCount, sizeof(_uint), &dwbyte, nullptr);
+
+	_uint	iIndex = 0;
+
+	for (_uint i = 0; i < iTargetCount; ++i)
 	{
-	case 2:
-		m_mapLayer.emplace(L"Enemies_Dog", pLayer);
-		break;
+		if (0 == dwbyte)
+			return E_FAIL;
 
-	case 3:
-		m_mapLayer.emplace(L"Enemies_Soldier", pLayer);
-		break;
+		ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
+		ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
+		ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
 
-	case 4:
-		m_mapLayer.emplace(L"Enemies_Knight", pLayer);
-		break;
+		wstring wstrName = L"Soldier_";
+		wstrName += to_wstring(iIndex);
+
+		CGameObject*		pGameObject = nullptr;
+
+		pGameObject = CSoldier::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+
+		++iIndex;
+
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&vPos);
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_X, vRotate.x);
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Y, vRotate.y);
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Z, vRotate.z);
 	}
+
+	m_mapLayer.emplace(L"Enemies", pLayer);
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CStage_1::Load_KnightInfo()
+{
+	HANDLE hFile = CreateFile(L"../../Data/Knight_Obj.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+	CLayer*		pLayer = CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	DWORD dwbyte = 0;
+
+	_uint iObjType = -1;
+	_uint iObjCount = -1;
+	_uint iTargetCount = -1;
+
+	_vec3	vPos, vScale, vRotate;
+
+	ReadFile(hFile, &iObjType, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iTargetCount, sizeof(_uint), &dwbyte, nullptr);
+
+	_uint	iIndex = 0;
+
+	for (_uint i = 0; i < iTargetCount; ++i)
+	{
+		if (0 == dwbyte)
+			return E_FAIL;
+
+		ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
+		ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
+		ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
+
+		wstring wstrName = L"Knight_";
+		wstrName += to_wstring(iIndex);
+
+		CGameObject*		pGameObject = nullptr;
+
+		pGameObject = CKnight::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+
+		++iIndex;
+
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&vPos);
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_X, vRotate.x);
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Y, vRotate.y);
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Z, vRotate.z);
+	}
+
+	m_mapLayer.emplace(L"Enemies", pLayer);
 
 	CloseHandle(hFile);
 
@@ -452,8 +522,8 @@ HRESULT CStage_1::Load_PlayerCol()
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
 		CDynamicMesh* pMeshCom = dynamic_cast<CDynamicMesh*>(pPlayer->Get_Component(L"Com_Mesh", ID_STATIC));
 
-		pPlayer->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff, 
-							  dynamic_cast<CTransform*>(pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
+		pPlayer->Add_Collider(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z, pNameBuff,
+			dynamic_cast<CTransform*>(pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_WorldMatrix(), eColliderType);
 
 		// Bone Ã£±â
 		list<D3DXMESHCONTAINER_DERIVED*>			listTemp = pMeshCom->Get_MeshContainerList();
@@ -486,8 +556,7 @@ HRESULT CStage_1::Load_PlayerCol()
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
 	CTransform*	pHitBox_Pos = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
 
-	pPlayer->Add_Collider(-30.f, -60.f, -30.f, 30.f, 60.f, 30.f, L"Other_Attack",
-						  pHitBox_Pos->Get_WorldMatrix(), COLTYPE_BOX_OTHER);
+	pPlayer->Add_Collider(-30.f, -60.f, -30.f, 30.f, 60.f, 30.f, L"Other_Attack", pHitBox_Pos->Get_WorldMatrix(), COLTYPE_BOX_OTHER);
 
 	return S_OK;
 }
@@ -539,6 +608,8 @@ CStage_1* CStage_1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CStage_1::Free(void)
 {
+	Safe_Release(m_pLayer);
+
 	CCollisionMgr::DestroyInstance();
 
 	CScene::Free();

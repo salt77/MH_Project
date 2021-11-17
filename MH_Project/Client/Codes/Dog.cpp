@@ -39,9 +39,10 @@ HRESULT CDog::LateReady_Object()
 {
 	CGameObject::LateReady_Object();
 
-	// 디버그 용
-	//CTransform*	vPlayerPos = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
-	//dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Dog", L"Com_Transform", ID_DYNAMIC))->Set_Pos(vPlayerPos->Get_Info(INFO_POS));
+	m_pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+
+	if (m_pPlayer)
+		m_pPlayerTrans = dynamic_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
 
 	Load_ColInfo();
 	Add_NaviMesh();
@@ -57,10 +58,17 @@ _int CDog::Update_Object(const _float & fTimeDelta)
 		return iExit;
 
 	//// 디버그용
-	//if (Key_Down('G'))
-	//{
-	//	Set_Damage(15000);
-	//}
+	if (Key_Down('G'))
+	{
+		//Set_Damage(15000);
+		CTransform*	vPlayerPos = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
+		_vec3 vPos = *vPlayerPos->Get_Info(INFO_POS);
+		//vPos.y += 0.5f;
+		//CTransform*	pTransform = dynamic_cast<CTransform*>(Engine::Get_Component(L"Enemies_Dog", L"Dog_12", L"Com_Transform", ID_DYNAMIC));
+		//_vec3 vPos = *pTransform->Get_Info(INFO_POS);
+		// 19.1014271, 2.60000038, 56.5889587
+		dynamic_cast<CTransform*>(Engine::Get_Component(L"Enemies_Dog", L"Dog_12", L"Com_Transform", ID_DYNAMIC))->Set_Pos(&vPos);
+	}
 	//else if (Key_Down('H'))
 	//{
 	//	m_iAniIndex = SPAWN;
@@ -110,53 +118,59 @@ _int CDog::LateUpdate_Object(const _float & fTimeDelta)
 
 void CDog::Render_Object(void)
 {
-	if (m_bAnimation)
-		m_pMeshCom->Play_Animation(m_fTimeDelta);
-
-	if (!m_mapColliderCom.empty())
+	if (m_vPlayerPos)
 	{
-		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
-
-		for (; iter != m_mapColliderCom.end(); ++iter)
+		if (10.f > D3DXVec3Length(&(m_vPlayerPos - *m_pTransformCom->Get_Info(INFO_POS))))
 		{
-			if (iter->second->Get_CanCollision())
+			if (m_bAnimation)
+				m_pMeshCom->Play_Animation(m_fTimeDelta);
+
+			if (!m_mapColliderCom.empty())
 			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+				map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+
+				for (; iter != m_mapColliderCom.end(); ++iter)
+				{
+					if (iter->second->Get_CanCollision())
+					{
+						iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+					}
+				}
 			}
+			if (!m_mapBoxColliderCom.empty())
+			{
+				map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+
+				for (; iter != m_mapBoxColliderCom.end(); ++iter)
+				{
+					if (iter->second->Get_CanCollision())
+					{
+						iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+					}
+				}
+			}
+
+			m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
+
+			LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
+			pEffect->AddRef();
+
+			FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
+
+			_uint iMaxPass = 0;
+
+			pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
+													// 2인자 : 시작하는 방식을 묻는 FLAG
+			pEffect->BeginPass(0);
+
+			m_pMeshCom->Render_Meshes(pEffect, m_mapActiveParts);
+
+			pEffect->EndPass();
+			pEffect->End();
+
+			Safe_Release(pEffect);
 		}
 	}
-	if (!m_mapBoxColliderCom.empty())
-	{
-		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
-
-		for (; iter != m_mapBoxColliderCom.end(); ++iter)
-		{
-			if (iter->second->Get_CanCollision())
-			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-			}
-		}
-	}
-
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-
-	LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
-	pEffect->AddRef();
-
-	FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
-
-	_uint iMaxPass = 0;
-
-	pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
-											// 2인자 : 시작하는 방식을 묻는 FLAG
-	pEffect->BeginPass(0);
-
-	m_pMeshCom->Render_Meshes(pEffect, m_mapActiveParts);
-
-	pEffect->EndPass();
-	pEffect->End();
-
-	Safe_Release(pEffect);
 }
 
 HRESULT CDog::Add_Component(void)
@@ -412,6 +426,7 @@ void CDog::Animation_Control()
 	}
 
 
+	_vec3 vMovePos;
 	// 상태 변경 시 매 프레임 실행
 	switch (m_eCurState)
 	{

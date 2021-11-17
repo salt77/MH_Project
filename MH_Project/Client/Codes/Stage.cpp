@@ -367,8 +367,7 @@ HRESULT CStage::Load_PlayerCol()
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
 	CTransform*	pHitBox_Pos = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
 
-	pPlayer->Add_Collider(-30.f, -60.f, -30.f, 30.f, 60.f, 30.f, L"Other_Attack",
-						  pHitBox_Pos->Get_WorldMatrix(), COLTYPE_BOX_OTHER);
+	pPlayer->Add_Collider(-30.f, -60.f, -30.f, 30.f, 60.f, 30.f, L"Other_Attack", pHitBox_Pos->Get_WorldMatrix(), COLTYPE_BOX_OTHER);
 
 	return S_OK;
 }

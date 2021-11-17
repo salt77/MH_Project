@@ -161,6 +161,7 @@
     <ClInclude Include="..\Codes\CollisionMgr.h" />
     <ClInclude Include="..\Codes\DamageFont.h" />
     <ClInclude Include="..\Codes\Dog.h" />
+    <ClInclude Include="..\Codes\Knight.h" />
     <ClInclude Include="..\Codes\Player_Buff_CriticalUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_BackUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_ValueUI.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="..\Codes\CollisionMgr.cpp" />
     <ClCompile Include="..\Codes\DamageFont.cpp" />
     <ClCompile Include="..\Codes\Dog.cpp" />
+    <ClCompile Include="..\Codes\Knight.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
     <ClCompile Include="..\Codes\Player_Buff_CriticalUI.cpp" />
     <ClCompile Include="..\Codes\Player_Spbar_BackUI.cpp" />
