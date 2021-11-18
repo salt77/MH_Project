@@ -9,6 +9,7 @@
 BEGIN(Engine)
 
 class CTransform;
+class CStaticMesh;
 
 END
 
@@ -54,9 +55,11 @@ public:
 		m_dwHighlightStart = GetTickCount();
 		m_dwHighlightDelay = dwHighlightTime;
 	}
+	void		Set_PrePlayerPos(_vec3 vPlayerPos) { m_vPrePlayerPos = vPlayerPos; }
 
 public:
 	void		Sync_PlayerPos(_vec3 vDir, _float fSpeed, const _float& fTimeDelta) { if (MODE_NORMAL == m_eCurMode)	m_vEye += vDir * fSpeed * fTimeDelta; }
+	void		Sync_PlayerPos(_vec3 vDir);
 	void		Highlight_SkillShot();
 
 private:
@@ -67,6 +70,7 @@ private:
 	void		Mouse_Move(void);
 	void		Mouse_Fix(void);
 	void		CutScene_Eye(const _float& fTimeDelta);
+	void		Collision_StageMesh();
 
 private:
 	_bool		m_bClick = false;
@@ -103,6 +107,7 @@ private:
 	_ulong		m_dwCompleteTime = GetTickCount();
 	///////////////////////
 
+	_vec3		m_vPrePlayerPos = { 0.f, 0.f, 0.f };
 	_vec3		m_vShakeInterpol = { 0.f, 0.f, 0.f };
 	_vec3		m_vPreShakeInterpol = { 0.f, 0.f, 0.f };
 	//_vec3		m_vFollowDir = _vec3(0.f, 0.f, 0.f);
@@ -114,6 +119,7 @@ private:
 	CPlayer*	m_pPlayer = nullptr;
 	CTransform*	m_pPlayerTrans = nullptr;
 	CFadeInOut*	m_pFadeInOut = nullptr;
+	CStaticMesh*	m_pStageMesh = nullptr;
 
 #define		WaveFxProgressive	1.5f
 #define		WaveFyProgressive	0.9f

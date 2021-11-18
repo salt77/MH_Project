@@ -24,6 +24,9 @@ public:
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 
+public:
+	CStaticMesh*	Get_MeshInfo() { return m_pMeshCom; }
+
 private:
 	HRESULT			Add_Component(void);
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);

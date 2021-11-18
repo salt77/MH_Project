@@ -112,6 +112,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 
 #define AHGLAN_ATKPOWER	1200
 
+#define MANKIND_ATKPOWER 600
+
 #define PLAYER_ATKPOWER 450
 #define PLAYER_SMASH1POWER	3200
 #define PLAYER_SMASH2POWER	2800

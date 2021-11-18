@@ -252,7 +252,10 @@ const map<const wstring, CGameObject*>& CManagement::Get_MapObject(const wstring
 		return map<const wstring, CGameObject*>();
 	
 	if (nullptr == Get_Layer(wstrLayerTag))
+	{
 		return map<const wstring, CGameObject*>();
+	}
+		
 
 	return Get_Layer(wstrLayerTag)->Get_MapObject();
 }

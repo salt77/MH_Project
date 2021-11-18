@@ -117,22 +117,6 @@ HRESULT CStageMesh::Add_Component(void)
 	return S_OK;
 }
 
-HRESULT CStageMesh::SetUp_Material()
-{
-	D3DMATERIAL9		tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(0.45f, 0.45f, 0.45f, 1.f);
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 0.f;
-
-	m_pGraphicDev->SetMaterial(&tMtrl);
-
-	return S_OK;
-}
-
 HRESULT CStageMesh::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 {
 	_matrix		matWorld, matView, matProj;
@@ -150,7 +134,7 @@ HRESULT CStageMesh::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 
 	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tMtrl.Ambient = D3DXCOLOR(0., 1.f, 1.f, 1.f);
 	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
 	tMtrl.Power = 10.f;
 

@@ -46,7 +46,7 @@ HRESULT CSoldier::LateReady_Object()
 	Load_ColInfo();
 	Add_NaviMesh();
 
-	m_pTransformCom->Set_Pos(&_vec3(19.1014271, 2.60000038, 56.5889587));
+	//m_pTransformCom->Set_Pos(&_vec3(19.1014271f, 2.60000038f, 56.5889587f));
 
 	m_pNaviMeshCom->Set_CellIndex(Compute_InCell());
 
@@ -653,7 +653,9 @@ const _ulong & CSoldier::Compute_InCell()
 			D3DXVec3Normalize(&vDirCB, &vDirCB);
 			D3DXVec3Normalize(&vDirCP, &vDirCP);
 
-			if (0.f < D3DXVec3Cross(&vTemp, &vDirCP, &vDirCB))
+			if (0.f < D3DXVec3Cross(&vTemp, &vDirCP, &vDirCB)->y && 
+				0.f < D3DXVec3Cross(&vTemp, &vDirBP, &vDirBA)->y && 
+				0.f < D3DXVec3Cross(&vTemp, &vDirAP, &vDirAC)->y)
 			{
 				return *(*iter)->Get_CellIndex();
 			}

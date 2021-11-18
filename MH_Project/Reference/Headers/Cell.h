@@ -23,6 +23,10 @@ public:
 	const _ulong*		Get_CellIndex(void) { return &m_dwIndex; }
 
 public:
+	const _vec2&		Get_LineNormalVec(const _vec3* pEndPos, _ulong* pCellIndex);
+	const _uint&		Get_CantGoNeighbor(const _vec3* pEndPos, _ulong* pCellIndex);
+
+public:
 	void				Set_Neighbor(NEIGHBOR eType, CCell* pNeighbor) { m_pNeighbor[eType] = pNeighbor; }
 
 public:

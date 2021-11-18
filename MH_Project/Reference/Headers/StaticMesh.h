@@ -6,23 +6,35 @@ BEGIN(Engine)
 
 class ENGINE_DLL CStaticMesh : public CComponent
 {
+	struct tagVertexPNTBT
+	{
+		D3DXVECTOR3 pos;
+		D3DXVECTOR3 normal;
+		D3DXVECTOR2 tex0;
+		D3DXVECTOR3 binormal;
+		D3DXVECTOR3 tangent;
+		IDirect3DVertexDeclaration9* Decl;
+	};
+
 private:
 	explicit CStaticMesh(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CStaticMesh(const CStaticMesh& rhs);
 	virtual ~CStaticMesh();
 
 public:
-	const _vec3*			Get_VtxPos(void) { return m_pVtxPos; }
-	const _ulong&			Get_Stride(void) { return m_dwStride; }
-	const _ulong&			Get_VtxCnt(void) { return m_dwVtxCnt; }
+	const _vec3*			Get_VtxPos() { return m_pVtxPos; }
+	const _ulong&			Get_Stride() { return m_dwStride; }
+	const _ulong&			Get_VtxCnt() { return m_dwVtxCnt; }
+
+	const LPD3DXMESH&		Get_MeshInfo() { return m_pMesh; }
 
 public:
 	_bool					Find_Alpha(const char* pFileName);
 
 public:
-	HRESULT		Ready_Meshes(const wstring pFilePath, const wstring pFileName);
-	void		Render_Meshes();
-	void		Render_Meshes(LPD3DXEFFECT& pEffect);
+	HRESULT					Ready_Meshes(const wstring pFilePath, const wstring pFileName);
+	void					Render_Meshes();
+	void					Render_Meshes(LPD3DXEFFECT& pEffect);
 
 private:
 	LPD3DXMESH				m_pMesh;		// 노말정보를 삽입한 메쉬 정보를 담고 있는 객체
@@ -39,6 +51,8 @@ private:
 	_vec3*					m_pVtxPos;		// 메쉬가 지닌 정점의 위치값들을 동적 할당(배열)한 메모리 공간에 보관하기 위한 포인터
 	_ulong					m_dwStride;		// 정점의 크기를 저장하기 위한 변수
 	_ulong					m_dwVtxCnt;		// 메쉬가 지닌 정점의 개수를 저장
+
+	tagVertexPNTBT			m_tPNTBT;
 
 
 public:

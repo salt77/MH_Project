@@ -41,7 +41,7 @@ HRESULT CStage_1::LateReady_Scene()
 	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
 	//FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
 	//FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
 
 	m_pLayer = CLayer::Create();
@@ -142,9 +142,9 @@ HRESULT CStage_1::Ready_Layer_GameLogic(const wstring pLayerTag)
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dog", pGameObject), E_FAIL);
 
-	pGameObject = CSoldier::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Soldier", pGameObject), E_FAIL);
+	//pGameObject = CSoldier::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Soldier", pGameObject), E_FAIL);
 
 	//pGameObject = CKnight::Create(m_pGraphicDev);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -218,7 +218,7 @@ HRESULT CStage_1::Ready_LightInfo(void)
 	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.f);
-	tLightInfo.Direction = _vec3(-1.f, -1.f, -1.f);
+	tLightInfo.Direction = _vec3(-0.5f, -1.f, -0.5f);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 

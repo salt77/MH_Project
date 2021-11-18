@@ -15,7 +15,39 @@ Engine::CCell::CCell(LPDIRECT3DDEVICE9 pGraphicDev)
 
 Engine::CCell::~CCell(void)
 {
+}
 
+
+const _vec2 & CCell::Get_LineNormalVec(const _vec3 * pEndPos, _ulong * pCellIndex)
+{
+	for (_ulong i = 0; i < LINE_END; ++i)
+	{
+		if (CLine::COMPARE_OUT == m_pLine[i]->Compare(&_vec2(pEndPos->x, pEndPos->z)))
+		{
+			if (nullptr == m_pNeighbor[i])
+			{
+				return m_pLine[i]->Get_NormalVector();
+			}
+		}
+	}
+
+	return _vec2(0.f, 0.f);
+}
+
+const _uint& CCell::Get_CantGoNeighbor(const _vec3 * pEndPos, _ulong * pCellIndex)
+{
+	for (_ulong i = 0; i < LINE_END; ++i)
+	{
+		if (CLine::COMPARE_OUT == m_pLine[i]->Compare(&_vec2(pEndPos->x, pEndPos->z)))
+		{
+			if (nullptr == m_pNeighbor[i])
+			{
+				return i;
+			}
+		}
+	}
+
+	return 999;
 }
 
 HRESULT Engine::CCell::Ready_Cell(const _ulong& dwIndex,
@@ -168,6 +200,7 @@ Engine::CCell::COMPARE Engine::CCell::Compare_Position(const _vec3* pEndPos, _ul
 			else
 			{
 				*pCellIndex = *m_pNeighbor[i]->Get_CellIndex();
+
 				return COMPARE_MOVE;
 			}
 		}

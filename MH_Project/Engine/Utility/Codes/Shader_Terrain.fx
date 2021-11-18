@@ -58,8 +58,8 @@ VS_OUT			VS_MAIN(VS_IN In)
 
 	Out.vPosition = mul(vector(In.vPosition.xyz, 1.f), matWVP);
 	Out.vNormal = normalize(mul(In.vNormal.xyz, (float3x3)g_matWorld));
-	Out.vTangent = normalize(mul(In.vTangent.xyz, (float3x3)g_matWorld));
-	Out.vBiNormal = normalize(mul(In.vBiNormal.xyz, (float3x3)g_matWorld));
+	//Out.vTangent = normalize(mul(In.vTangent.xyz, (float3x3)g_matWorld));
+	//Out.vBiNormal = normalize(mul(In.vBiNormal.xyz, (float3x3)g_matWorld));
 
 	//matrix	mat = { float4(g_fTangent, 0.f), float4(g_fBinormal, 0.f), float4(g_fNormal, 0.f), { 0, 0, 0, 1 } };
 	//Out.vTranspose = transpose(mat);

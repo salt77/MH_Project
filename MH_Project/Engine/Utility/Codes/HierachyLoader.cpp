@@ -47,15 +47,17 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 
 	_ulong	dwFVF = pMesh->GetFVF();
 
-	const D3DVERTEXELEMENT9	vertexDecl[] = 
+	const D3DVERTEXELEMENT9	vertexDecl[] =
 	{
-		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 }, 
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
 		{ 0, 12, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
 		{ 0, 24, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
 		{ 0, 32, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
-		{ 0, 44, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 }, 
+		{ 0, 44, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 },
 		D3DDECL_END()
 	};
+
+	//m_pGraphicDev->CreateVertexDeclaration(vertexDecl, &m_tPNTBT.Decl);
 
 	if (!(dwFVF & D3DFVF_NORMAL))
 	{
@@ -67,6 +69,14 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 		//pMesh->CloneMesh(pMesh->GetOptions(), vertexDecl, m_pGraphicDev, &pDerivedMeshContainer->MeshData.pMesh);
 		pMesh->CloneMeshFVF(pMesh->GetOptions(), dwFVF, m_pGraphicDev, &pDerivedMeshContainer->MeshData.pMesh);
 	}
+
+	//D3DXComputeTangentFrameEx(pDerivedMeshContainer->MeshData.pMesh,
+	//						  D3DDECLUSAGE_TEXCOORD, 0,
+	//						  D3DDECLUSAGE_BINORMAL, 0,
+	//						  D3DDECLUSAGE_TANGENT, 0,
+	//						  D3DDECLUSAGE_NORMAL, 0,
+	//						  D3DXTANGENT_WRAP_UV | D3DXTANGENT_ORTHOGONALIZE_FROM_V | D3DXTANGENT_CALCULATE_NORMALS | D3DXTANGENT_GENERATE_IN_PLACE,
+	//						  (_ulong*)pDerivedMeshContainer->pAdjacency, 0.01f, 0.01f, 0.01f, NULL, NULL);
 
 	pDerivedMeshContainer->NumMaterials = (NumMaterials == 0 ? 1 : NumMaterials);
 

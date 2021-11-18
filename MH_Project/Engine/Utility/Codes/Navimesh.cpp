@@ -96,8 +96,7 @@ void CNaviMesh::Render_NaviMesh(void)
 		iter->Render_Cell();
 }
 
-_vec3 CNaviMesh::MoveOn_NaviMesh(const _vec3 * pTargetPos, const _vec3 * pTargetDir,
-								const _float & fSpeed, const _float & fTimeDelta)
+_vec3 CNaviMesh::MoveOn_NaviMesh(const _vec3 * pTargetPos, const _vec3 * pTargetDir, const _float & fSpeed, const _float & fTimeDelta)
 {
 	if (!m_vecCell.empty())
 	{
@@ -108,6 +107,50 @@ _vec3 CNaviMesh::MoveOn_NaviMesh(const _vec3 * pTargetPos, const _vec3 * pTarget
 
 		else if (CCell::COMPARE_STOP == m_vecCell[m_dwIndex]->Compare_Position(&vEndPos, &m_dwIndex))
 			return *pTargetPos;
+	}
+
+	return *pTargetPos;
+}
+
+_vec3 CNaviMesh::MoveOn_NaviMesh(const _vec3* pTargetPos, const _vec3* pTargetDir, const _float& fSpeed, const _float& fTimeDelta, _bool bPlayer)
+{
+	if (!m_vecCell.empty())
+	{
+		_vec3		vEndPos = *pTargetPos + (*pTargetDir * fSpeed * fTimeDelta);
+
+		if (CCell::COMPARE_MOVE == m_vecCell[m_dwIndex]->Compare_Position(&vEndPos, &m_dwIndex))
+			return vEndPos;
+
+		else if (CCell::COMPARE_STOP == m_vecCell[m_dwIndex]->Compare_Position(&vEndPos, &m_dwIndex))
+		{
+			_vec2	vTargetDir = m_vecCell[m_dwIndex]->Get_LineNormalVec(&vEndPos, &m_dwIndex);
+			_uint	iNeighborIndex = m_vecCell[m_dwIndex]->Get_CantGoNeighbor(&vEndPos, &m_dwIndex);
+			_vec3	vNormalDir = _vec3(0.f, 0.f, 0.f);
+
+			vNormalDir.x = vTargetDir.x;
+			vNormalDir.y = 0.f;//pTargetPos->y;
+			vNormalDir.z = vTargetDir.y;
+
+			_vec3 vSlidingDir = *pTargetDir - (D3DXVec3Dot(pTargetDir, &vNormalDir) * vNormalDir);
+			D3DXVec3Normalize(&vSlidingDir, &vSlidingDir);
+
+			vEndPos = *pTargetPos + (vSlidingDir * fSpeed * fTimeDelta);
+			
+			_vec3	vPoint = _vec3(0.f, 0.f, 0.f);
+			if (2 > iNeighborIndex)
+			{
+				vPoint = *m_vecCell[m_dwIndex]->Get_Point(CCell::POINT(iNeighborIndex + 1));
+			}
+			else if (2 == iNeighborIndex)
+			{
+				vPoint = *m_vecCell[m_dwIndex]->Get_Point(CCell::POINT(iNeighborIndex - 2));
+			}
+			_float	fLength = D3DXVec3Length(&(*pTargetPos - vEndPos));
+			_float	fCanGoLength = D3DXVec3Length(&(*pTargetPos - vPoint));
+
+			if (fLength < fCanGoLength)
+				return vEndPos;
+		}
 	}
 
 	return *pTargetPos;

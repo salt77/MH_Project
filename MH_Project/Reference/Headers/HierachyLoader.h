@@ -6,6 +6,16 @@ BEGIN(Engine)
 
 class CHierachyLoader : public ID3DXAllocateHierarchy
 {
+	struct tagVertexPNTBT
+	{
+		D3DXVECTOR3 pos;
+		D3DXVECTOR3 normal;
+		D3DXVECTOR2 tex0;
+		D3DXVECTOR3 binormal;
+		D3DXVECTOR3 tangent;
+		IDirect3DVertexDeclaration9* Decl;
+	};
+
 private:
 	explicit CHierachyLoader(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pPath);
 	virtual ~CHierachyLoader(void);
@@ -30,6 +40,8 @@ private:
 private:
 	LPDIRECT3DDEVICE9			m_pGraphicDev;
 	const wstring				m_pPath;
+
+	tagVertexPNTBT				m_tPNTBT;
 
 public:
 	static CHierachyLoader*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring pPath);

@@ -42,7 +42,7 @@ _uint CCollisionMgr::Update_CollisionMgr()
 {
 	Update_MultipleCollision();
 
-	//Collision_PlayerAttack();
+	Collision_PlayerAttack();
 	Collision_MonsterAttack();
 
 	return 0;
@@ -64,6 +64,9 @@ void CCollisionMgr::Collision_PlayerAttack()
 		map<const wstring, CBoxCollider*>::iterator		iter_BossDamaged = mapBossBoxCol.begin();
 
 		CTransform*		pAhglanTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+		if (!pAhglanTrans)
+			return;
 
 		// Player 공격
 		if (DIS_MID >= D3DXVec3Length(&(*pPlayerTrans->Get_Info(INFO_POS) - *pAhglanTrans->Get_Info(INFO_POS))))
@@ -240,6 +243,10 @@ void CCollisionMgr::Collision_PlayerAttack()
 		// Player 공격
 		for (; iter_PlayerHit != mapPlayerHit.end(); ++iter_PlayerHit)
 		{
+			CLayer*	pLayer = Engine::Get_Layer(L"Enemies");
+			if (!pLayer)
+				return;
+
 			map<const wstring, CGameObject*> mapObject = Engine::Get_MapObject(L"Enemies");
 			map<const wstring, CGameObject*>::iterator	iter_Enemy = mapObject.begin();
 
@@ -437,6 +444,9 @@ void CCollisionMgr::Collision_MonsterAttack()
 	{
 		CTransform*		pAhglanTrans = static_cast<CTransform*>(m_pAhglan->Get_Component(L"Com_Transform", ID_DYNAMIC));
 
+		if (!pAhglanTrans)
+			return;
+
 		map<const wstring, CCollider*>					mapBossSphereCol = m_pAhglan->Get_MapCollider();
 		map<const wstring, CCollider*>::iterator		iter_BossHit = mapBossSphereCol.begin();
 
@@ -456,7 +466,7 @@ void CCollisionMgr::Collision_MonsterAttack()
 							iter_BossHit->second->Get_CanCollision())
 						{
 							if (Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
-								iter_BossHit->second->Get_Center(), iter_BossHit->second->Get_Radius() * SCALE_AHGLAN))
+												 iter_BossHit->second->Get_Center(), iter_BossHit->second->Get_Radius() * SCALE_AHGLAN))
 							{
 								bEnemyAtkEnd = true;
 
@@ -486,6 +496,57 @@ void CCollisionMgr::Collision_MonsterAttack()
 					if (bEnemyAtkEnd)
 						break;
 				}
+			}
+		}
+	}
+
+	else if (SCENE_STAGE_1 == m_eSceneID)
+	{
+		CLayer*	pLayer = Engine::Get_Layer(L"Enemies");
+		if (!pLayer)
+			return;
+
+		map<const wstring, CGameObject*> mapObject = Engine::Get_MapObject(L"Enemies");
+		map<const wstring, CGameObject*>::iterator	iter_Enemy = mapObject.begin();
+
+		for (; iter_Enemy != mapObject.end(); ++iter_Enemy)
+		{
+			map<const wstring, CCollider*>	mapEnemyCol = iter_Enemy->second->Get_MapCollider();
+			map<const wstring, CCollider*>::iterator	iter_EnemyCol = mapEnemyCol.begin();
+
+			for (; iter_EnemyCol != mapEnemyCol.end(); ++iter_EnemyCol)
+			{
+				for (; iter_PlayerDamaged != mapPlayerDamaged.end(); ++iter_PlayerDamaged)
+				{
+					//if (iter_PlayerDamaged->second->Get_CanCollision() &&
+					//	iter_EnemyCol->second->Get_CanCollision())
+					//{
+						if (Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
+											 iter_EnemyCol->second->Get_Center(), iter_EnemyCol->second->Get_Radius() * SCALE_MANKIND))
+						{
+							bEnemyAtkEnd = true;
+
+							_vec3 vLookDir = *pPlayerTrans->Get_Info(INFO_RIGHT);
+							_vec3 vToEnemyDir = iter_EnemyCol->second->Get_Center() - *pPlayerTrans->Get_Info(INFO_POS);
+							D3DXVec3Normalize(&vLookDir, &vLookDir);
+							D3DXVec3Normalize(&vToEnemyDir, &vToEnemyDir);
+
+							if (D3DXVec3Dot(&vToEnemyDir, &vLookDir) > 0.f)
+							{
+								m_pPlayer->Set_Damage(MANKIND_ATKPOWER + iInterpolDamage, iter_PlayerDamaged->second->Get_ColliderWorld(), true);
+							}
+							else
+							{
+								m_pPlayer->Set_Damage(MANKIND_ATKPOWER + iInterpolDamage, iter_PlayerDamaged->second->Get_ColliderWorld(), false);
+							}
+
+							break;
+						//}
+					}
+				}
+
+				if (bEnemyAtkEnd)
+					break;
 			}
 		}
 	}

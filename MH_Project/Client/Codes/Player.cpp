@@ -683,15 +683,19 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		if (Key_Pressing(VK_SHIFT))
 		{
-			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed * 1.35f, fTimeDelta));
-			m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
+			m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed * 1.35f, fTimeDelta, true));
+			//m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
+			m_pMainCam->Sync_PlayerPos(vMoveDir);
 
 			m_iAniIndex = STATE_SPRINT;
 		}
 		else
 		{
-			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta));
-			m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed, fTimeDelta);
+			m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
+			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta, true));
+			//m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed, fTimeDelta);
+			m_pMainCam->Sync_PlayerPos(vMoveDir);
 
 			m_iAniIndex = STATE_RUN;
 		}
@@ -966,8 +970,10 @@ void CPlayer::MoveOn_Skill(const _float & fTimeDelta)
 			if (m_fSkillMoveStartTime <= m_fAniTime &&
 				m_fSkillMoveEndTime >= m_fAniTime)
 			{
-				m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
+				//m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
+				m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta, true));
 				m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT), m_fSkillMoveSpeed, fTimeDelta);
+				//m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT));
 			}
 			else if (m_fSkillMoveEndTime < m_fAniTime)
 			{

@@ -25,6 +25,7 @@ public:
 	HRESULT			Ready_NaviMesh();
 	void			Render_NaviMesh(void);
 	_vec3			MoveOn_NaviMesh(const _vec3* pTargetPos, const _vec3* pTargetDir, const _float& fSpeed, const _float& fTimeDelta);
+	_vec3			MoveOn_NaviMesh(const _vec3* pTargetPos, const _vec3* pTargetDir, const _float& fSpeed, const _float& fTimeDelta, _bool bPlayer);
 	void			DeleteAllCell();
 
 private:

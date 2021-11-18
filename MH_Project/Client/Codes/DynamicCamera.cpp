@@ -2,6 +2,8 @@
 #include "DynamicCamera.h"
 #include "Player.h"
 #include "Ahglan.h"
+#include "Stage.h"
+#include "Stage_1.h"
 
 #include "Export_Function.h"
 
@@ -41,6 +43,17 @@ HRESULT CDynamicCamera::LateReady_Object()
 	CCamera::LateReady_Object();
 
 	m_pFadeInOut = dynamic_cast<CFadeInOut*>(Engine::Get_GameObject(L"UI", L"FadeInOut_UI"));
+
+	switch (Engine::Get_SceneID())	
+	{
+	case SCENE_STAGE:
+		m_pStageMesh = dynamic_cast<CStageMesh*>(Engine::Get_GameObject(L"GameLogic", L"StageMesh"))->Get_MeshInfo();
+		break;
+
+	case SCENE_STAGE_1:
+		m_pStageMesh = dynamic_cast<CStageMesh_1*>(Engine::Get_GameObject(L"GameLogic", L"StageMesh"))->Get_MeshInfo();
+		break;
+	}
 
 	return S_OK;
 }
@@ -135,6 +148,13 @@ void CDynamicCamera::Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwE
 		m_fLongWaveInterpol = fWaveInterpol;
 		m_vShakeInterpol = _vec3(0.f, 0.f, 0.f);
 	}
+}
+
+void CDynamicCamera::Sync_PlayerPos(_vec3 vDir)
+{
+	_float	fDistance = D3DXVec3Length(&(m_vPrePlayerPos - *m_pPlayerTrans->Get_Info(INFO_POS)));
+
+	m_vEye += vDir * fDistance;
 }
 
 void CDynamicCamera::Highlight_SkillShot()
@@ -404,6 +424,8 @@ void CDynamicCamera::Mouse_Move(void)
 	//_matrix		matCamWorld;
 	//D3DXMatrixInverse(&matCamWorld, NULL, &m_matView);
 
+	//Collision_StageMesh();
+
 	if (MODE_NORMAL == m_eCurMode)
 	{
 		_long	dwMouse = 0;
@@ -611,6 +633,28 @@ void CDynamicCamera::CutScene_Eye(const _float& fTimeDelta)
 				}
 			}
 		}
+	}
+}
+
+void CDynamicCamera::Collision_StageMesh()
+{
+	BOOL	bHit = false;
+	_float	fDistance = 0.f;
+
+	_float	fCamToPlayerDistance = D3DXVec3Length(&(m_vEye - m_vAt));
+	_vec3	vCamToPlayer = m_vAt - m_vEye;
+	//D3DXVec3Normalize(&vCamToPlayer, &vCamToPlayer);
+
+	D3DXIntersect(m_pStageMesh->Get_MeshInfo(), &m_vEye, &vCamToPlayer, &bHit, nullptr, nullptr, nullptr, &fDistance, nullptr, nullptr);
+
+	if (bHit && 
+		fDistance < fCamToPlayerDistance)
+	{
+		m_fDistanceFromTarget = fDistance;
+	}
+	else
+	{
+		m_fDistanceFromTarget = m_fOriginDistanceFromTarget;
 	}
 }
 

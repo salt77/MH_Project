@@ -7,8 +7,10 @@ sampler BaseSampler = sampler_state
 {
 	texture = g_BaseTexture;
 
-	minfilter = linear;
-	magfilter = linear;
+	minfilter = AnisoTropic;
+	magfilter = AnisoTropic;
+
+	maxAnisoTropy = 16;
 };
 
 sampler NormalSampler = sampler_state
@@ -17,6 +19,8 @@ sampler NormalSampler = sampler_state
 
 	minfilter = linear;
 	magfilter = linear;
+
+	//maxanisotropy = 16;
 };
 
 
@@ -82,7 +86,7 @@ struct PS_OUT
 {
 	vector			vColor : COLOR0;
 	vector			vNormal : COLOR1;
-	vector			vDepth	: COLOR2;
+	//vector			vDepth	: COLOR2;
 };
 
 PS_OUT		PS_MAIN(PS_IN In)
@@ -92,59 +96,59 @@ PS_OUT		PS_MAIN(PS_IN In)
 	Out.vColor = tex2D(BaseSampler, In.vTexUV);
 	Out.vNormal = tex2D(NormalSampler, In.vTexUV);
 
-	float4 tempNormal = Out.vNormal;
-	float4 normalVec = 2 * tempNormal - 1.f;
-	normalVec = normalize(normalVec);
+	//float4 tempNormal = Out.vNormal;
+	//float4 normalVec = 2 * tempNormal - 1.f;
+	//normalVec = normalize(normalVec);
 
-	float3x3 TBN = float3x3(normalize(In.vTangent), normalize(In.vBiNormal), normalize(In.vNormal));
-	TBN = transpose(TBN);
-	float3	worldNormal = mul(TBN, normalVec);
-
-
-	float3	TempLightDir = g_vLightDir.xyz;
-
-	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.7f;
-	//bright = max(0.f, bright);
-	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-
-	//Out.vColor.r = Out.vColor.r * bright;
-	//Out.vColor.g = Out.vColor.g * bright;
-	//Out.vColor.b = Out.vColor.b * bright;
-	Out.vColor.rgb = bright * Out.vColor.xyz;
-
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w,
-						In.vProjPos.w * 0.03f,
-						0.f,
-						0.f);
-
-	return Out;
-}
-
-PS_OUT		PS_ALPHATEST(PS_IN In)
-{
-	PS_OUT		Out = (PS_OUT)0;
-
-	Out.vColor = tex2D(BaseSampler, In.vTexUV);
-	Out.vNormal = tex2D(NormalSampler, In.vTexUV);
-	float4 tempNormal = Out.vNormal;
-	float4 normalVec = 2 * tempNormal - 1.f;
-	normalVec = normalize(normalVec);
-
-	float3x3 TBN = float3x3(normalize(In.vTangent), normalize(In.vBiNormal), normalize(In.vNormal));
-	TBN = transpose(TBN);
-	float3	worldNormal = mul(TBN, normalVec);
+	//float3x3 TBN = float3x3(normalize(In.vTangent), normalize(In.vBiNormal), normalize(In.vNormal));
+	//TBN = transpose(TBN);
+	//float3	worldNormal = mul(TBN, normalVec);
 
 
-	float3	TempLightDir = g_vLightDir.xyz;
+	//float3	TempLightDir = g_vLightDir.xyz;
 
-	float3 bright = saturate(dot(-TempLightDir, worldNormal));
-	//bright = max(0.f, bright);
-	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	//float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.7f;
+	////bright = max(0.f, bright);
+	////Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
-	Out.vColor = ((Out.vColor.xyz * bright), 1.f);
+	////Out.vColor.r = Out.vColor.r * bright;
+	////Out.vColor.g = Out.vColor.g * bright;
+	////Out.vColor.b = Out.vColor.b * bright;
+	//Out.vColor.rgb = bright * Out.vColor.xyz;
+
+	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w,
+	//					In.vProjPos.w * 0.03f,
+	//					0.f,
+	//					0.f);
 
 	return Out;
 }
+
+//PS_OUT		PS_ALPHATEST(PS_IN In)
+//{
+//	PS_OUT		Out = (PS_OUT)0;
+//
+//	Out.vColor = tex2D(BaseSampler, In.vTexUV);
+//	Out.vNormal = tex2D(NormalSampler, In.vTexUV);
+//	float4 tempNormal = Out.vNormal;
+//	float4 normalVec = 2 * tempNormal - 1.f;
+//	normalVec = normalize(normalVec);
+//
+//	float3x3 TBN = float3x3(normalize(In.vTangent), normalize(In.vBiNormal), normalize(In.vNormal));
+//	TBN = transpose(TBN);
+//	float3	worldNormal = mul(TBN, normalVec);
+//
+//
+//	float3	TempLightDir = g_vLightDir.xyz;
+//
+//	float3 bright = saturate(dot(-TempLightDir, worldNormal));
+//	//bright = max(0.f, bright);
+//	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+//
+//	Out.vColor = ((Out.vColor.xyz * bright), 1.f);
+//
+//	return Out;
+//}
 
 
 
@@ -161,14 +165,14 @@ technique Default_Device
 		pixelshader = compile ps_3_0 PS_MAIN();
 	}
 
-	pass AlphaTest
-	{
-		alphatestenable = true;
-		alphafunc = greater;
-		alpharef = 0xc0;
-		cullmode = none;
+	//pass AlphaTest
+	//{
+	//	alphatestenable = true;
+	//	alphafunc = greater;
+	//	alpharef = 0xc0;
+	//	cullmode = none;
 
-		vertexshader = compile vs_3_0 VS_MAIN();
-		pixelshader = compile ps_3_0 PS_ALPHATEST();
-	}
+	//	vertexshader = compile vs_3_0 VS_MAIN();
+	//	pixelshader = compile ps_3_0 PS_ALPHATEST();
+	//}
 };

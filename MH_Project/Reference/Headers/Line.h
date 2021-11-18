@@ -20,6 +20,9 @@ public:
 	HRESULT				Ready_Line(const _vec2* pPointA, const _vec2* pPointB);
 	COMPARE				Compare(const _vec2* pEndPos);
 
+public:
+	const	_vec2&		Get_NormalVector() { return m_vNormal; }
+
 private:
 	_vec2				m_vPoint[POINT_END];
 	_vec2				m_vDirection;
