@@ -42,7 +42,7 @@ _uint CCollisionMgr::Update_CollisionMgr()
 {
 	Update_MultipleCollision();
 
-	Collision_PlayerAttack();
+	//Collision_PlayerAttack();
 	Collision_MonsterAttack();
 
 	return 0;

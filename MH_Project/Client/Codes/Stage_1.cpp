@@ -41,7 +41,7 @@ HRESULT CStage_1::LateReady_Scene()
 	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
 	//FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
 	//FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
 
 	m_pLayer = CLayer::Create();
@@ -141,6 +141,10 @@ HRESULT CStage_1::Ready_Layer_GameLogic(const wstring pLayerTag)
 	//pGameObject = CDog::Create(m_pGraphicDev);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dog", pGameObject), E_FAIL);
+
+	pGameObject = CSoldier::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Soldier", pGameObject), E_FAIL);
 
 	//pGameObject = CKnight::Create(m_pGraphicDev);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);

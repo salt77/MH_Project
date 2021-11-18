@@ -120,6 +120,8 @@ HRESULT CPlayer::LateReady_Object()
 	m_pSteminabarValueUI = dynamic_cast<CPlayer_Steminabar_ValueUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Steminabar_ValueUI"));
 	m_pSpbarValueUI = dynamic_cast<CPlayer_Spbar_ValueUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Spbar_ValueUI"));
 
+	m_pNaviMeshCom->Set_CellIndex(0);
+
 	return S_OK;
 }
 

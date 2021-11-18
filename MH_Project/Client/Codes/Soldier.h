@@ -52,6 +52,7 @@ private:
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Animation_Control();
 	void			Collision_Control();
+	const _ulong&	Compute_InCell();
 
 	// °´Ã¼ ÇÔ¼öµé
 	void			Contact();

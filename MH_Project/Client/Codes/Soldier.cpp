@@ -46,6 +46,10 @@ HRESULT CSoldier::LateReady_Object()
 	Load_ColInfo();
 	Add_NaviMesh();
 
+	m_pTransformCom->Set_Pos(&_vec3(19.1014271, 2.60000038, 56.5889587));
+
+	m_pNaviMeshCom->Set_CellIndex(Compute_InCell());
+
 	return S_OK;
 }
 
@@ -606,6 +610,57 @@ void CSoldier::Collision_Control()
 		}
 		break;
 	}
+}
+
+const _ulong & CSoldier::Compute_InCell()
+{
+	vector<CCell*>	vecCell = m_pNaviMeshCom->Get_CellVector();
+	vector<CCell*>::iterator	iter = vecCell.begin();
+
+	for (; iter != vecCell.end(); ++iter)
+	{
+		for (_uint i = 0; i < CCell::POINT_END; ++i)
+		{
+			_vec3	vTemp;
+			_vec3	vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
+			vMyPos.y = 0.f;
+
+			_vec3	vPointA = *(*iter)->Get_Point(CCell::POINT_A);
+			_vec3	vPointB = *(*iter)->Get_Point(CCell::POINT_B);
+			_vec3	vPointC = *(*iter)->Get_Point(CCell::POINT_C);
+			vPointA.y = 0.f;
+			vPointB.y = 0.f;
+			vPointC.y = 0.f;
+
+			_vec3	vDirAB = vPointB - vPointA;
+			_vec3	vDirAC = vPointC - vPointA;
+			_vec3	vDirAP = vMyPos - vPointA;
+			D3DXVec3Normalize(&vDirAB, &vDirAB);
+			D3DXVec3Normalize(&vDirAC, &vDirAC);
+			D3DXVec3Normalize(&vDirAP, &vDirAP);
+
+			_vec3	vDirBA = vPointA - vPointB;
+			_vec3	vDirBC = vPointC - vPointB;
+			_vec3	vDirBP = vMyPos - vPointB;
+			D3DXVec3Normalize(&vDirBA, &vDirBA);
+			D3DXVec3Normalize(&vDirBC, &vDirBC);
+			D3DXVec3Normalize(&vDirBP, &vDirBP);
+
+			_vec3	vDirCA = vPointA - vPointC;
+			_vec3	vDirCB = vPointB - vPointC;
+			_vec3	vDirCP = vMyPos - vPointC;
+			D3DXVec3Normalize(&vDirCA, &vDirCA);
+			D3DXVec3Normalize(&vDirCB, &vDirCB);
+			D3DXVec3Normalize(&vDirCP, &vDirCP);
+
+			if (0.f < D3DXVec3Cross(&vTemp, &vDirCP, &vDirCB))
+			{
+				return *(*iter)->Get_CellIndex();
+			}
+		}
+	}
+
+	return 0;
 }
 
 HRESULT CSoldier::Add_NaviMesh()
