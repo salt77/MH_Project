@@ -100,25 +100,25 @@ _int CStickyBomb::LateUpdate_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::LateUpdate_Object(fTimeDelta);
 
-	if (!m_mapBoxColliderCom.empty())
-	{
-		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+	//if (!m_mapBoxColliderCom.empty())
+	//{
+	//	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
 
-		for (; iter != m_mapBoxColliderCom.end(); ++iter)
-		{
-			if (iter->second->Get_CanCollision())
-			{
-				iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
-			}
-		}
-	}
+	//	for (; iter != m_mapBoxColliderCom.end(); ++iter)
+	//	{
+	//		if (iter->second->Get_CanCollision())
+	//		{
+	//			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+	//		}
+	//	}
+	//}
 
 	return iExit;
 }
 
 void CStickyBomb::Render_Object(void)
 {
-	/*if (!m_mapBoxColliderCom.empty())
+	if (!m_mapBoxColliderCom.empty())
 	{
 		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
 
@@ -129,7 +129,7 @@ void CStickyBomb::Render_Object(void)
 				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 			}
 		}
-	}*/
+	}
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 

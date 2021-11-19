@@ -14,6 +14,8 @@ class CStaticMesh;
 END
 
 class CPlayer;
+class CStageMesh;
+class CStageMesh_1;
 
 class CDynamicCamera : public CCamera
 {
@@ -31,16 +33,16 @@ private:
 	virtual ~CDynamicCamera(void);
 
 public:
-	HRESULT		Ready_Object(const _vec3* pEye,
-							 const _vec3* pAt,
-							 const _vec3* pUp,
-							 const _float& fFov,
-							 const _float& fAspect,
-							 const _float& fNear,
-							 const _float& fFar);
+	HRESULT			Ready_Object(const _vec3* pEye,
+								 const _vec3* pAt,
+								 const _vec3* pUp,
+								 const _float& fFov,
+								 const _float& fAspect,
+								 const _float& fNear,
+								 const _float& fFar);
 	virtual HRESULT	LateReady_Object() override;
-	virtual _int Update_Object(const _float& fTimeDelta) override;
-	virtual _int LateUpdate_Object(const _float& fTimeDelta) override;
+	virtual _int	Update_Object(const _float& fTimeDelta) override;
+	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 
 public:
 	_vec3		Get_CamDirVector(DIR eDir);
@@ -78,6 +80,7 @@ private:
 	_bool		m_bShake = false;
 	_bool		m_bLongShake = false;
 	_bool		m_bSoundGolemEntry = false;
+	_bool		m_bCollisionCam = false;
 
 	_ulong		m_dwHighlightStart = GetTickCount();
 	_ulong		m_dwHighlightDelay = 0;
@@ -115,10 +118,13 @@ private:
 	MODE		m_eCurMode = MODE_NORMAL;
 	MODE		m_ePreMode = MODE_END;
 
-	//CTransform*	m_pTransformCom = nullptr;
 	CPlayer*	m_pPlayer = nullptr;
 	CTransform*	m_pPlayerTrans = nullptr;
+	CTransform*	m_pTransformCom = nullptr;
+
 	CFadeInOut*	m_pFadeInOut = nullptr;
+	CStageMesh*		m_pStage = nullptr;
+	CStageMesh_1*	m_pStage_1 = nullptr;
 	CStaticMesh*	m_pStageMesh = nullptr;
 
 #define		WaveFxProgressive	1.5f

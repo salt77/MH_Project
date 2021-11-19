@@ -1,0 +1,115 @@
+﻿  AniCtrl.cpp
+  BoxCollider.cpp
+  Calculator.cpp
+  Camera.cpp
+  Cell.cpp
+  Collider.cpp
+  Component.cpp
+  CubeTex.cpp
+  DynamicMesh.cpp
+  Frustum.cpp
+  GameObject.cpp
+  HierachyLoader.cpp
+  Light.cpp
+  LightMgr.cpp
+  Line.cpp
+  MFC_ObjectManager.cpp
+  Layer.cpp
+  Management.cpp
+  Navimesh.cpp
+  Optimization.cpp
+  컴파일하고 있습니다...
+  ProtoMgr.cpp
+  QuadTree.cpp
+  RcTex.cpp
+  Renderer.cpp
+  RenderTarget.cpp
+  RenderTargetMgr.cpp
+  Scene.cpp
+  Shader.cpp
+  StaticMesh.cpp
+  TerrainTex.cpp
+  Texture.cpp
+  Trail.cpp
+  Transform.cpp
+  TriCol.cpp
+  VIBuffer.cpp
+LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무시됩니다.
+     ../Bin\Utility.lib 라이브러리 및 ../Bin\Utility.exp 개체를 생성하고 있습니다.
+  코드를 생성하고 있습니다.
+c:\users\user\desktop\mh_project\mh_project\engine\utility\codes\management.cpp(228): warning C4172: 지역 변수 또는 임시의 주소를 반환하고 있습니다.
+c:\users\user\desktop\mh_project\mh_project\engine\utility\codes\dynamicmesh.h(19): warning C4172: 지역 변수 또는 임시의 주소를 반환하고 있습니다.
+c:\users\user\desktop\mh_project\mh_project\engine\utility\codes\management.cpp(236): warning C4172: 지역 변수 또는 임시의 주소를 반환하고 있습니다.
+  1867 of 3175 functions (58.8%) were compiled, the rest were copied from previous compilation.
+    506 functions were new in current compilation
+    74 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  Utility.vcxproj -> C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Include\../Bin\Utility.dll
+  Utility.vcxproj -> ../Bin\Utility.pdb (Full PDB)
+  .\Engine\Utility\Codes\AniCtrl.h
+  .\Engine\Utility\Codes\BoxCollider.h
+  .\Engine\Utility\Codes\Calculator.h
+  .\Engine\Utility\Codes\Camera.h
+  .\Engine\Utility\Codes\Cell.h
+  .\Engine\Utility\Codes\Collider.h
+  .\Engine\Utility\Codes\Component.h
+  .\Engine\Utility\Codes\CubeTex.h
+  .\Engine\Utility\Codes\DynamicMesh.h
+  .\Engine\Utility\Codes\Frustum.h
+  .\Engine\Utility\Codes\GameObject.h
+  .\Engine\Utility\Codes\HierachyLoader.h
+  .\Engine\Utility\Codes\Layer.h
+  .\Engine\Utility\Codes\Light.h
+  .\Engine\Utility\Codes\LightMgr.h
+  .\Engine\Utility\Codes\Line.h
+  .\Engine\Utility\Codes\Management.h
+  .\Engine\Utility\Codes\MFC_ObjectManager.h
+  .\Engine\Utility\Codes\Navimesh.h
+  .\Engine\Utility\Codes\Optimization.h
+  .\Engine\Utility\Codes\ProtoMgr.h
+  .\Engine\Utility\Codes\QuadTree.h
+  .\Engine\Utility\Codes\RcTex.h
+  .\Engine\Utility\Codes\Renderer.h
+  .\Engine\Utility\Codes\RenderTarget.h
+  .\Engine\Utility\Codes\RenderTargetMgr.h
+  .\Engine\Utility\Codes\Scene.h
+  .\Engine\Utility\Codes\Shader.h
+  .\Engine\Utility\Codes\StaticMesh.h
+  .\Engine\Utility\Codes\TerrainTex.h
+  .\Engine\Utility\Codes\Texture.h
+  .\Engine\Utility\Codes\Trail.h
+  .\Engine\Utility\Codes\Transform.h
+  .\Engine\Utility\Codes\TriCol.h
+  .\Engine\Utility\Codes\VIBuffer.h
+         35개 파일이 복사되었습니다.
+  .\Engine\Utility\Codes\Shader_Ahglan.fx
+  .\Engine\Utility\Codes\Shader_Blend.fx
+  .\Engine\Utility\Codes\Shader_Boss_Hpbar.fx
+  .\Engine\Utility\Codes\Shader_DamageFont.fx
+  .\Engine\Utility\Codes\Shader_FadeInOut.fx
+  .\Engine\Utility\Codes\Shader_Loading_Progress.fx
+  .\Engine\Utility\Codes\Shader_Mesh.fx
+  .\Engine\Utility\Codes\Shader_Player.fx
+  .\Engine\Utility\Codes\Shader_Player_Hpbar.fx
+  .\Engine\Utility\Codes\Shader_Sample.fx
+  .\Engine\Utility\Codes\Shader_Shade.fx
+  .\Engine\Utility\Codes\Shader_StageMesh.fx
+  .\Engine\Utility\Codes\Shader_Terrain.fx
+  .\Engine\Utility\Codes\Shader_UI.fx
+         14개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+  .\Engine\Headers\Engine_Define.h
+  .\Engine\Headers\Engine_Enum.h
+  .\Engine\Headers\Engine_Function.h
+  .\Engine\Headers\Engine_Macro.h
+  .\Engine\Headers\Engine_Struct.h
+  .\Engine\Headers\Engine_Typedef.h
+  .\Engine\Headers\Export_Function.h
+  .\Engine\Headers\Export_System.h
+  .\Engine\Headers\Export_Utility.h
+          9개 파일이 복사되었습니다.
+  .\Engine\Headers\Export_System.inl
+  .\Engine\Headers\Export_Utility.inl
+          2개 파일이 복사되었습니다.

@@ -54,7 +54,7 @@ private:
 
 	LPD3DXMESH		m_pSphere;
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	LPDIRECT3DVERTEXBUFFER9		m_pVB;
 	LPDIRECT3DINDEXBUFFER9		m_pIB;
 	LPDIRECT3DTEXTURE9			m_pTexture[COLTYPE::COL_END];
@@ -62,7 +62,7 @@ private:
 	COLTYPE						m_eColType = COL_FALSE;
 	COLLIDERTYPE				m_eColliderType = COLLIDERTYPE::COLTYPE_END;
 
-#endif
+//#endif
 
 public:
 	static CCollider*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fRadius, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType = COLLIDERTYPE::COLTYPE_SPHERE_DAMAGED);

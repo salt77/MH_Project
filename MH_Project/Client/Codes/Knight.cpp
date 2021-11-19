@@ -87,7 +87,7 @@ _int CKnight::LateUpdate_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::LateUpdate_Object(fTimeDelta);
 
-	if (!m_mapColliderCom.empty())
+	/*if (!m_mapColliderCom.empty())
 	{
 		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
 
@@ -104,7 +104,7 @@ _int CKnight::LateUpdate_Object(const _float & fTimeDelta)
 		{
 			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
 		}
-	}
+	}*/
 
 	return iExit;
 }

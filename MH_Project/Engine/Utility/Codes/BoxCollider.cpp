@@ -44,7 +44,7 @@ HRESULT Engine::CBoxCollider::Ready_Collider(_float vMinX, _float vMinY, _float 
 	m_vMax.y = vMaxY;
 	m_vMax.z = vMaxZ;
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 
 	if (FAILED(m_pGraphicDev->CreateVertexBuffer(sizeof(VTXCUBE) * 8,
 		0, // 정적 버퍼(사이즈를 정해준 만큼 할당해서 사용한다는 뜻) - D3DUSAGE_DYNAMIC(동적 버퍼 : 파티클)
@@ -190,7 +190,7 @@ HRESULT Engine::CBoxCollider::Ready_Collider(_float vMinX, _float vMinY, _float 
 
 	m_eColliderType = eColliderType;
 
-#endif
+//#endif
 
 	return S_OK;
 }
@@ -202,21 +202,20 @@ void Engine::CBoxCollider::Render_Collider(COLTYPE eType, const _matrix* pCollid
 	else
 		m_matColMatrix = *pColliderMatrix;
 
-#ifdef _DEBUG
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matColMatrix);
-	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-
-	m_pGraphicDev->SetTexture(0, m_pTexture[m_eColType]);
-	//m_pSphere->DrawSubset(0);
-
-	m_pGraphicDev->SetStreamSource(0, m_pVB, 0, sizeof(VTXCUBE));
-	m_pGraphicDev->SetFVF(FVF_CUBE);
-	m_pGraphicDev->SetIndices(m_pIB);
-	m_pGraphicDev->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12); // 인덱스 버퍼도 활용하여 출력하는 함수
-
-	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-#endif
-
+//#ifdef _DEBUG
+//	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matColMatrix);
+//	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+//
+//	m_pGraphicDev->SetTexture(0, m_pTexture[m_eColType]);
+//	//m_pSphere->DrawSubset(0);
+//
+//	m_pGraphicDev->SetStreamSource(0, m_pVB, 0, sizeof(VTXCUBE));
+//	m_pGraphicDev->SetFVF(FVF_CUBE);
+//	m_pGraphicDev->SetIndices(m_pIB);
+//	m_pGraphicDev->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12); // 인덱스 버퍼도 활용하여 출력하는 함수
+//
+//	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+//#endif
 }
 
 Engine::CBoxCollider* Engine::CBoxCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev, 

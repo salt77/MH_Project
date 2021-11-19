@@ -26,6 +26,7 @@ public:
 
 public:
 	CStaticMesh*	Get_MeshInfo() { return m_pMeshCom; }
+	const _matrix*	Get_WorldMatrix() { return m_pTransformCom->Get_WorldMatrix(); }
 
 private:
 	HRESULT			Add_Component(void);

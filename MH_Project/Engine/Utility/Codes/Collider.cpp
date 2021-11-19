@@ -132,28 +132,28 @@ void CCollider::Render_Collider(COLTYPE eType, const _matrix * pColliderMatrix)
 
 	memcpy(&m_vCenter, &m_matColMatrix._41, sizeof(_vec3));
 
-	if (0.f != m_vPos.x)
-	{
-		m_matColMatrix._41 = m_vPos.x * m_matColMatrix._41;
-	}
-	else if (0.f != m_vPos.y)
-	{
-		m_matColMatrix._42 = m_vPos.y * m_matColMatrix._42;
-	}
-	else if (0.f != m_vPos.z)
-	{
-		m_matColMatrix._43 = m_vPos.z * m_matColMatrix._43;
-	}
+	//if (0.f != m_vPos.x)
+	//{
+	//	m_matColMatrix._41 = m_vPos.x * m_matColMatrix._41;
+	//}
+	//else if (0.f != m_vPos.y)
+	//{
+	//	m_matColMatrix._42 = m_vPos.y * m_matColMatrix._42;
+	//}
+	//else if (0.f != m_vPos.z)
+	//{
+	//	m_matColMatrix._43 = m_vPos.z * m_matColMatrix._43;
+	//}
 
-#ifdef _DEBUG
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matColMatrix);
-	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-
-	m_pGraphicDev->SetTexture(0, m_pTexture[m_eColType]);
-	m_pSphere->DrawSubset(0);
-
-	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-#endif
+//#ifdef _DEBUG
+//	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matColMatrix);
+//	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+//
+//	m_pGraphicDev->SetTexture(0, m_pTexture[m_eColType]);
+//	m_pSphere->DrawSubset(0);
+//
+//	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+//#endif
 }
 
 CCollider * CCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fRadius, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType)

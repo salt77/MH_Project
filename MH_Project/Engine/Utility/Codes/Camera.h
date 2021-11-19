@@ -5,8 +5,6 @@
 
 BEGIN(Engine)
 
-class CTransform;
-
 class ENGINE_DLL CCamera : public CGameObject
 {
 protected:
@@ -38,6 +36,7 @@ public:
 
 protected:
 	_vec3			m_vEye, m_vAt, m_vUp;
+	_vec3			m_vVirtualEye;
 	_float			m_fFov, m_fAspect, m_fNear, m_fFar;
 	_matrix			m_matView, m_matProj;
 

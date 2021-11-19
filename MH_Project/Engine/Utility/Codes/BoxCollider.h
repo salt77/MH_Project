@@ -45,14 +45,14 @@ private:
 
 	COLLIDERTYPE	m_eColliderType = COLLIDERTYPE::COLTYPE_END;
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	LPDIRECT3DVERTEXBUFFER9		m_pVB;
 	LPDIRECT3DINDEXBUFFER9		m_pIB;
 	LPDIRECT3DTEXTURE9			m_pTexture[COL_END];
 
 	COLTYPE						m_eColType = COL_FALSE;
 
-#endif
+//#endif
 
 public:
 	static CBoxCollider*	Create(LPDIRECT3DDEVICE9 pGraphicDev, _float vMinX, _float vMinY, _float vMinZ,

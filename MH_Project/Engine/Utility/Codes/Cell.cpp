@@ -70,9 +70,9 @@ HRESULT Engine::CCell::Ready_Cell(const _ulong& dwIndex,
 	m_pLine[LINE_CA] = CLine::Create(&_vec2(m_vPoint[POINT_C].x, m_vPoint[POINT_C].z),
 									&_vec2(m_vPoint[POINT_A].x, m_vPoint[POINT_A].z));
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	FAILED_CHECK_RETURN(D3DXCreateLine(m_pGraphicDev, &m_pD3DXLine), E_FAIL);
-#endif
+//#endif
 
 	return S_OK;
 }
@@ -182,9 +182,9 @@ void Engine::CCell::Free(void)
 	for (_ulong i = 0; i < LINE_END; ++i)
 		Safe_Release(m_pLine[i]);
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	Safe_Release(m_pD3DXLine);
-#endif
+//#endif
 
 	Safe_Release(m_pGraphicDev);
 }
