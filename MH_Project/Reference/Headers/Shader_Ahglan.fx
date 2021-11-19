@@ -7,10 +7,8 @@ sampler BaseSampler = sampler_state
 {
 	texture = g_BaseTexture;
 
-	minfilter = AnisoTropic;
-	magfilter = AnisoTropic;
-
-	maxAnisoTropy = 16;
+	minfilter = linear;
+	magfilter = linear;
 };
 
 sampler NormalSampler = sampler_state

@@ -31,6 +31,7 @@ public:
 	virtual HRESULT Ready_Object(void) override;
 	virtual HRESULT LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
+	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 
 private:

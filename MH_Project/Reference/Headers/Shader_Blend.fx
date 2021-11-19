@@ -4,6 +4,9 @@ texture		g_AlbedoTexture;
 sampler AlbedoSampler = sampler_state
 {
 	texture = g_AlbedoTexture;
+
+	mipfilter = linear;
+	magfilter = linear;
 };
 
 texture		g_ShadeTexture;
@@ -11,6 +14,9 @@ texture		g_ShadeTexture;
 sampler ShadeSampler = sampler_state
 {
 	texture = g_ShadeTexture;
+
+	mipfilter = linear;
+	magfilter = linear;
 };
 
 texture		g_SpecularTexture;
@@ -18,6 +24,9 @@ texture		g_SpecularTexture;
 sampler SpecularSampler = sampler_state
 {
 	texture = g_SpecularTexture;
+
+	mipfilter = linear;
+	magfilter = linear;
 };
 
 struct PS_IN				

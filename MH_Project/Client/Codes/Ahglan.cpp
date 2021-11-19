@@ -137,31 +137,6 @@ _int CAhglan::LateUpdate_Object(const _float & fTimeDelta)
 
 void CAhglan::Render_Object(void)
 {
-	if (!m_mapColliderCom.empty())
-	{
-		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
-
-		for (; iter != m_mapColliderCom.end(); ++iter)
-		{
-			if (iter->second->Get_CanCollision())
-			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-			}
-		}
-	}
-	if (!m_mapBoxColliderCom.empty())
-	{
-		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
-
-		for (; iter != m_mapBoxColliderCom.end(); ++iter)
-		{
-			if (iter->second->Get_CanCollision())
-			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-			}
-		}
-	}
-
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
 	LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();

@@ -204,40 +204,6 @@ _int CPlayer::LateUpdate_Object(const _float & fTimeDelta)
 
 void CPlayer::Render_Object(void)
 {
-	if (!m_mapColliderCom.empty())
-	{
-		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
-
-		for (; iter != m_mapColliderCom.end(); ++iter)
-		{
-			if (iter->second->Get_CanCollision())
-			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-			}
-		}
-	}
-	if (!m_mapBoxColliderCom.empty())
-	{
-		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
-
-		for (; iter != m_mapBoxColliderCom.end(); ++iter)
-		{
-			if (iter->second->Get_CanCollision())
-			{
-				if (L"Other_Attack" == iter->first)
-				{
-					CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
-
-					iter->second->Render_Collider(COL_FALSE, pHitBoxPosTrans->Get_WorldMatrix());
-				}
-				else
-				{
-					iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-				}
-			}
-		}
-	}
-
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
 	if (m_pNaviMeshCom)
@@ -893,7 +859,7 @@ void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVecto
 
 	_float	fAngle = D3DXToDegree(acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
 
-	if (fAngle > 5.f)
+	if (fAngle > 10.f)
 	{
 		if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
 		{
@@ -904,7 +870,7 @@ void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVecto
 			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * -fTimeDelta * 2.25f));
 		}
 	}
-	else if (fAngle <= 5.f)
+	else if (fAngle <= 10.f)
 	{
 		if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
 		{

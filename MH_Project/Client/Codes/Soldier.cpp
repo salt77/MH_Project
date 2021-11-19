@@ -346,13 +346,13 @@ void CSoldier::Movement()
 						}
 					}
 					else */
-					if (DIS_FACETOFACE < m_fDistance)
-					{
-						m_iAniIndex = SOLSTATE_RUN;
-					}
-					else
+					if (DIS_SHORT < m_fDistance)
 					{
 						m_iAniIndex = SOLSTATE_IDLE;
+					}
+					else if (DIS_FACETOFACE < m_fDistance)
+					{
+						m_iAniIndex = SOLSTATE_RUN;
 					}
 				}
 			}
