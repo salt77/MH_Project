@@ -25,7 +25,8 @@ HRESULT CSlashPoint::Ready_Object()
 	m_vPos = POOLING_POS;
 
 	m_pTransformCom->Set_Pos(&m_vPos);
-	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+	m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.5f);
+	m_pTransformCom->Rotation(ROT_Z, 90.f);
 
 	m_vOriginScale = *m_pTransformCom->Get_ScaleInfo();
 
@@ -57,25 +58,24 @@ _int CSlashPoint::Update_Object(const _float & fTimeDelta)
 		matBill._31 = matView._31;
 		matBill._33 = matView._33;
 
-		matBill._22 = matView._22;
-		matBill._23 = matView._23;
-		matBill._32 = matView._32;
+		//matBill._22 = matView._22;
+		//matBill._23 = matView._23;
+		//matBill._32 = matView._32;
 
 		D3DXMatrixInverse(&matBill, NULL, &matBill);
 
-		// 이 코드는 문제의 소지가 있음
-		// (자전의 역행렬) * (스 * 자 * 이)
 		m_pTransformCom->Set_WorldMatrix(&(matBill * matWorld));
 
 		_vec3 vPos;
 		m_pTransformCom->Get_INFO(INFO_POS, &vPos);
 
 		Compute_ViewZ(&vPos);
+
+		Position_Interpolation(fTimeDelta);
+		Scale_Interpolation(fTimeDelta);
+
+		Add_RenderGroup(RENDER_ALPHA, this);
 	}
-
-	Scale_Interpolation(fTimeDelta);
-
-	Add_RenderGroup(RENDER_ALPHA, this);
 
 	return iExit;
 }
@@ -167,9 +167,58 @@ HRESULT CSlashPoint::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	return S_OK;
 }
 
+void CSlashPoint::Set_EnableSlashPoint(_vec3 vPos, _bool bIsSmash)
+{
+	m_dwEffectStart = GetTickCount();
+
+	m_vScale = m_vOriginScale;
+	m_vPos = vPos;
+
+	m_pTransformCom->Set_Pos(&vPos);
+
+	_vec3	vScale;
+
+	if (!bIsSmash)
+	{
+		vScale = m_vOriginScale;
+	}
+	else
+	{
+		vScale = m_vOriginScale * 1.5f;
+	}
+
+	_float	fRand = Engine::Random(0.5f, 1.5f);
+	m_pTransformCom->Set_Scale(vScale.x * fRand, vScale.y * fRand, vScale.z * fRand);
+}
+
+void CSlashPoint::Position_Interpolation(const _float & fTimeDelta)
+{
+	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
+	{
+		if (m_dwEffectStart + m_dwEffectTime < GetTickCount())
+		{
+			m_pTransformCom->Set_Pos(&POOLING_POS);
+		}
+	}
+}
+
 void CSlashPoint::Scale_Interpolation(const _float & fTimeDelta)
 {
+	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
+	{
+		if (0.f < m_vScale.x)
+			m_vScale.x -= m_fScaleXInterpol * fTimeDelta;
+		if (0.f < m_vScale.y)
+			m_vScale.y -= m_fScaleYInterpol * fTimeDelta;
 
+		m_pTransformCom->Set_Scale(m_vScale.x, m_vScale.y, m_vScale.z);
+	}
+	else
+	{
+		m_vScale = m_vOriginScale;
+		
+		m_pTransformCom->Set_Scale(m_vOriginScale.x, m_vOriginScale.y, m_vOriginScale.z);
+	}
 }
 
 

@@ -50,6 +50,7 @@ private:
 	void			Set_Axis(OBB* pObb);
 
 	void			Pooling_DamageFont(_uint iDamage, const _matrix* pMatrix, DAMAGEFONT_ID eID);
+	void			Pooling_SlashPoint(const _matrix* pMatrix, _bool bIsSmash = false);
 
 private:
 	SCENE_ID		m_eSceneID = SCENE_END;

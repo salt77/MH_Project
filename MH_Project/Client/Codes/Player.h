@@ -42,6 +42,7 @@ public:
 	const PL_INFO&	Get_TagPlayerInfo() { return m_tPlayerInfo; }
 	const _bool&	Get_CanHit() { return m_bCanHit; }
 	const PL_STATE&	Get_CurState() { return m_eCurState; }
+	const PL_ACTION&	Get_CurAction() { return m_eCurAction; }
 
 public:
 	void			Set_CanHit(_bool bValue) { m_bCanHit = bValue; }

@@ -27,13 +27,13 @@ private:
 	HRESULT			Add_Component();
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
+public:
+	void			Set_EnableDamageFont(_vec3 vPos, _uint iFontNum, _uint iDigit);
+
 private:
 	void			Position_Interpolation(const _float& fTimeDelta);
 	void			Scale_Interpolation(const _float& fTimeDelta);
 	void			Alpha_Interpolation(const _float& fTimeDelta);
-
-public:
-	void			Set_EnableDamageFont(_vec3 vPos, _uint iFontNum, _uint iDigit);
 
 private:
 	_uint			m_iDigit = 0;

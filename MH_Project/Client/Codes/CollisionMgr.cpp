@@ -5,6 +5,7 @@
 #include "Ahglan.h"
 #include "StickyBomb.h"
 #include "DamageFont.h"
+#include "SlashPoint.h"
 #include "DynamicCamera.h"
 
 IMPLEMENT_SINGLETON(CCollisionMgr)
@@ -15,6 +16,7 @@ CCollisionMgr::CCollisionMgr()
 
 CCollisionMgr::~CCollisionMgr()
 {
+	Free();
 }
 
 
@@ -43,7 +45,7 @@ _uint CCollisionMgr::Update_CollisionMgr()
 	Update_MultipleCollision();
 
 	Collision_PlayerAttack();
-	Collision_MonsterAttack();
+	//Collision_MonsterAttack();
 
 	return 0;
 }
@@ -415,6 +417,16 @@ void CCollisionMgr::Collision_PlayerAttack()
 								m_pPlayer->Compute_Critical();
 								Pooling_DamageFont(PLAYER_ATKPOWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_NORMAL);
 								break;
+							}
+
+							if (PL_ATK == m_pPlayer->Get_CurAction())
+							{
+								Pooling_SlashPoint(iter_PlayerHit->second->Get_ColliderWorld());
+							}
+							else if (PL_SMASH == m_pPlayer->Get_CurAction() || 
+									 PL_SKILL == m_pPlayer->Get_CurAction())
+							{
+								Pooling_SlashPoint(iter_PlayerHit->second->Get_ColliderWorld(), true);
 							}
 
 							break;
@@ -885,6 +897,30 @@ void CCollisionMgr::Pooling_DamageFont(_uint iDamage, const _matrix * pMatrix, D
 		if (pFont3)
 		{
 			pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		}
+	}
+}
+
+void CCollisionMgr::Pooling_SlashPoint(const _matrix * pMatrix, _bool bIsSmash)
+{
+	_vec3	vPos;
+	memcpy(&vPos, &pMatrix->_41, sizeof(_vec3));
+
+	for (_uint i = 0; i < SLASHPOINT_COUNT; ++i)
+	{
+		wstring	wstrName = L"Efx_SlashPoint_";
+		wstrName += to_wstring(i);
+
+		CTransform*	pTransform = static_cast<CTransform*>(Engine::Get_Component(L"Effect", wstrName, L"Com_Transform", ID_DYNAMIC));
+
+		if (pTransform)
+		{
+			if (POOLING_POS == *pTransform->Get_Info(INFO_POS))
+			{
+				static_cast<CSlashPoint*>(Engine::Get_GameObject(L"Effect", wstrName))->Set_EnableSlashPoint(vPos, bIsSmash);
+
+				break;
+			}
 		}
 	}
 }

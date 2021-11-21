@@ -115,6 +115,9 @@
     <Filter Include="04.Component\10.Shader\HLSL">
       <UniqueIdentifier>{6a363f39-84c6-423f-8b6c-dd3bf48daaa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Component\00.VIBuffer\04.TrailBuffer">
+      <UniqueIdentifier>{1b7efccf-96ad-42c8-8eff-0e48b6b66aa0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Headers\Export_Utility.h">
@@ -261,6 +264,9 @@
     <ClInclude Include="..\Codes\Shader_UI.fx">
       <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\TrailBuffer.h">
+      <Filter>04.Component\00.VIBuffer\04.TrailBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Headers\Export_Utility.inl">
@@ -372,6 +378,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Trail.cpp">
       <Filter>04.Component\00.VIBuffer\04.Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\TrailBuffer.cpp">
+      <Filter>04.Component\00.VIBuffer\04.TrailBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

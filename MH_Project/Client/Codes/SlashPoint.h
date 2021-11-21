@@ -21,12 +21,19 @@ private:
 	HRESULT			Add_Component(void);
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
+public:
+	void			Set_EnableSlashPoint(_vec3 vPos, _bool bIsSmash = false);
+
 private:
+	void			Position_Interpolation(const _float& fTimeDelta);
 	void			Scale_Interpolation(const _float& fTimeDelta);
 
 private:
 	_ulong				m_dwEffectStart = GetTickCount();
-	_ulong				m_dwEffectTime = 1000;
+	_ulong				m_dwEffectTime = 300;
+
+	_float				m_fScaleYInterpol = 15.f;
+	_float				m_fScaleXInterpol = 15.f;
 
 	_vec3				m_vPos;
 	_vec3				m_vScale;

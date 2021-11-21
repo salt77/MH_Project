@@ -49,27 +49,25 @@ _int CDamageFont::Update_Object(const _float & fTimeDelta)
 		matBill._31 = matView._31;
 		matBill._33 = matView._33;
 
-		matBill._22 = matView._22;
-		matBill._23 = matView._23;
-		matBill._32 = matView._32;
+		//matBill._22 = matView._22;
+		//matBill._23 = matView._23;
+		//matBill._32 = matView._32;
 
 		D3DXMatrixInverse(&matBill, NULL, &matBill);
 
-		// 이 코드는 문제의 소지가 있음
-		// (자전의 역행렬) * (스 * 자 * 이)
 		m_pTransformCom->Set_WorldMatrix(&(matBill * matWorld));
 
 		_vec3 vPos;
 		m_pTransformCom->Get_INFO(INFO_POS, &vPos);
 
 		Compute_ViewZ(&vPos);
+
+		Position_Interpolation(fTimeDelta);
+		Scale_Interpolation(fTimeDelta);
+		Alpha_Interpolation(fTimeDelta);
+
+		Add_RenderGroup(RENDER_ALPHA, this);
 	}
-
-	Position_Interpolation(fTimeDelta);
-	Scale_Interpolation(fTimeDelta);
-	Alpha_Interpolation(fTimeDelta);
-
-	Add_RenderGroup(RENDER_ALPHA, this);
 
 	return iExit;
 }
