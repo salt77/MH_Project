@@ -31,6 +31,7 @@ private:
 	HRESULT				Ready_Layer_Environment(const wstring pLayerTag);
 	HRESULT				Ready_Layer_GameLogic(const wstring pLayerTag);
 	HRESULT				Ready_Layer_UI(const wstring pLayerTag);
+	HRESULT				Ready_Layer_Effect(const wstring pLayerTag);
 	HRESULT				Ready_Prototype(void);
 	HRESULT				Ready_LightInfo(void);
 
@@ -43,12 +44,14 @@ private:
 
 private:
 	_ulong					m_dwRenderCnt = 0;
-	_tchar					m_szFPS[256] = L"0";
+	_tchar					m_szFPS[256] = L"FPS : 0";
 	_float					m_fTime = 0.f;
 
 	vector<_matrix>			m_vecSavePoint;
 
 	CLayer*					m_pLayer = nullptr;
+	CLayer*					m_pSpawnLayer = nullptr;
+	CLayer*					m_pEnemyLayer = nullptr;
 
 public:
 	static CStage_1*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

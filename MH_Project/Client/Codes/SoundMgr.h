@@ -71,7 +71,7 @@ private:
 	bool			m_bEnable;
 
 public:
-	virtual void Free(void) override;
+	virtual void Free() override;
 };
 
 #endif //__SOUNDMGR_H__

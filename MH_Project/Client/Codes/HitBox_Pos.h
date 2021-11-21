@@ -5,9 +5,6 @@
 
 BEGIN(Engine)
 
-class CCubeTex;
-class CTexture;
-class CRenderer;
 class CTransform;
 
 END
@@ -30,7 +27,7 @@ private:
 	HRESULT			Add_Component(void);
 
 private:
-	CTransform*	m_pTransformCom = nullptr;
+	CTransform*		m_pTransformCom = nullptr;
 
 public:
 	static CHitBox_Pos*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -25,3 +25,73 @@
 1. DMGbottom
 
 0. Attack 
+
+
+
+///////////////////////////////////// 
+
+0. Attack 
+
+1. Idle 
+
+2. Run 
+
+3. Spawn 
+
+4. TurnLeft 
+
+5. TurnRight 
+
+6. Dying 
+
+7. Damaged 
+
+8. Damaged2 
+
+9. DownBegin 
+
+10. DownIdle 
+
+11. DownEnd 
+
+12. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

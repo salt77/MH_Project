@@ -23,25 +23,13 @@ class CPlayer;
 class CDog : public CGameObject
 {
 public:
-	enum DOG_ACTION
-	{
-		DOG_IDLE,
-		DOG_ATK,
-		DOG_DAMAGED,
-		DOG_DEAD,
-		DOG_ENTRY,
-
-		DOG_END
-	};
-
 	enum DOG_STATE
 	{
-		DOGSTATE_ATTACK, DOGSTATE_DAMAGED, DOGSTATE_DAMAGED2, DOGSTATE_DOWN_BEGIN, DOGSTATE_DOWN_IDLE, DOGSTATE_5,
-		DOGSTATE_6, DOGSTATE_IDLE, DOGSTATE_TURNLEFT, DOGSTATE_TURNRIGHT, DOGSTATE_DOWNDMG,
-		DOGSTATE_DEAD_BEGIN, DOGSTATE_DEAD_DURING, DOGSTATE_DEAD_END, 
-		DOGSTATE_KNOCKBACK, DOGSTATE_BRR, 
-		DOGSTATE_16, 
-		DOGSTATE_RUN, 
+		DOGSTATE_ATTACK, DOGSTATE_DAMAGED, DOGSTATE_DAMAGED2, DOGSTATE_DOWN_BEGIN, DOGSTATE_DOWN_IDLE, DOGSTATE_DOWN_END,
+		DOGSTATE_DYING, DOGSTATE_IDLE, DOGSTATE_TURNLEFT, DOGSTATE_TURNRIGHT, 
+		DOGSTATE_10, DOGSTATE_11, DOGSTATE_DEAD_12, DOGSTATE_13,
+		DOGSTATE_KNOCKBACK, DOGSTATE_THREAT, DOGSTATE_16,
+		DOGSTATE_RUN, DOGSTATE_SPAWN, 
 
 		DOGSTATE_END
 	};
@@ -57,15 +45,19 @@ public:
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 
+public:
+	virtual	void	Set_Damage(_int iDamage);
+	void			Set_Enable(_vec3 vPos, _vec3 vRotate);
+
 private:
 	// 기본 함수들
 	HRESULT			Add_Component(void);
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Animation_Control();
 	void			Collision_Control();
+	const _ulong&	Compute_InCell();
 
 	// 객체 함수들
-	void			Contact();
 	void			Movement();
 	void			MoveOn_Skill();
 
@@ -80,10 +72,10 @@ private:
 	//_bool			m_bSkillRotation = false;
 	_bool			m_bAnimation = true;
 
-	_uint			m_iAniIndex = DOGSTATE_IDLE;
+	_uint			m_iAniIndex = DOGSTATE_SPAWN;
 
-	_ulong			m_dwBreakTime = GetTickCount();
-	_ulong			m_dwBreakDelay = 1000;
+	//_ulong			m_dwBreakTime = GetTickCount();
+	//_ulong			m_dwBreakDelay = 1000;
 
 	_float			m_fTimeDelta = 0.f;
 	_float			m_fSpeed = 3.5f;
@@ -104,12 +96,8 @@ private:
 	_vec3			m_vMyPos;
 	_vec3			m_vPlayerPos;
 
-	DOG_ACTION		m_eDogAction = DOG_END;
-
 	DOG_STATE		m_eCurState = DOGSTATE_IDLE;
 	DOG_STATE		m_ePreState = DOGSTATE_END;
-
-	map<const wstring, _bool>	m_mapActiveParts;
 
 	CPlayer*		m_pPlayer = nullptr;
 	CTransform*		m_pPlayerTrans = nullptr;
@@ -126,7 +114,6 @@ private:
 public:
 	static CDog*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual void		Free(void);
-
 
 private:
 	// Sound 변수들

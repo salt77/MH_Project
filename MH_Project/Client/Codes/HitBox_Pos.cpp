@@ -58,7 +58,7 @@ _int CHitBox_Pos::Update_Object(const _float& fTimeDelta)
 		_vec3	vDir = -*pPlayerTrans->Get_Info(INFO_RIGHT);
 		_vec3	vMyPos = *pPlayerTrans->Get_Info(INFO_POS);
 		
-		vMyPos.y = 0.6f;
+		vMyPos.y += 0.6f;
 		vMyPos += vDir * 10.f;
 		m_pTransformCom->Set_Pos(&vMyPos);
 	}

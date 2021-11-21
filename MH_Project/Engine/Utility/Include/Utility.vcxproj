@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Codes\Shader_DamageFont.fx" />
+    <FxCompile Include="..\Codes\Shader_Normal.fx" />
     <FxCompile Include="..\Codes\Shader_StageMesh.fx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

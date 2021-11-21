@@ -30,6 +30,7 @@ public:
 public:
 	HRESULT			Ready_Collider(_float vMinX, _float vMinY, _float vMinZ,
 									_float vMaxX, _float vMaxY, _float vMaxZ, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType);
+	void			LateUpdate_Collider(const _matrix* pColliderMatrix);
 	void			Render_Collider(COLTYPE eType, const _matrix* pColliderMatrix);
 
 private:

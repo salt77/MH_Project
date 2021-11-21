@@ -199,6 +199,24 @@
     <Filter Include="02.GameObject\06.Enemy\02.Mankind\02.Knight">
       <UniqueIdentifier>{f202b93f-f1ac-464e-992f-84960a315565}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\08.Dummy\01.Spawn_Info">
+      <UniqueIdentifier>{1aa2eff7-b82d-4e3d-85a4-87c8ccf6a05e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Dummy\01.Spawn_Info\00.Dog_Info">
+      <UniqueIdentifier>{24900adb-10d0-45d3-907e-6b4ba860cdf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Dummy\01.Spawn_Info\01.Soldier_Info">
+      <UniqueIdentifier>{ab48cfbd-592e-4c06-be9f-f4a93390e584}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Dummy\01.Spawn_Info\02.Knight_Info">
+      <UniqueIdentifier>{03e58d83-9be2-4f31-998a-85c23a319801}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\12.Effect">
+      <UniqueIdentifier>{a39f31a9-f11a-4548-8e26-7543ffcbac9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\12.Effect\00.SlashPoint">
+      <UniqueIdentifier>{3a092054-3d2d-4a01-ba20-bb26697c98b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -342,6 +360,27 @@
     <ClInclude Include="..\Codes\Knight.h">
       <Filter>02.GameObject\06.Enemy\02.Mankind\02.Knight</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Soldier_Info.h">
+      <Filter>02.GameObject\08.Dummy\01.Spawn_Info\01.Soldier_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Spawn_Info.h">
+      <Filter>02.GameObject\08.Dummy\01.Spawn_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Knight_Info.h">
+      <Filter>02.GameObject\08.Dummy\01.Spawn_Info\02.Knight_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Dog_Info.h">
+      <Filter>02.GameObject\08.Dummy\01.Spawn_Info\00.Dog_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Effect.h">
+      <Filter>02.GameObject\12.Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\SlashPoint.h">
+      <Filter>02.GameObject\12.Effect\00.SlashPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\EffectMgr.h">
+      <Filter>97.Manager\01.EffectMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -475,6 +514,27 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Knight.cpp">
       <Filter>02.GameObject\06.Enemy\02.Mankind\02.Knight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Soldier_Info.cpp">
+      <Filter>02.GameObject\08.Dummy\01.Spawn_Info\01.Soldier_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Spawn_Info.cpp">
+      <Filter>02.GameObject\08.Dummy\01.Spawn_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Knight_Info.cpp">
+      <Filter>02.GameObject\08.Dummy\01.Spawn_Info\02.Knight_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Dog_Info.cpp">
+      <Filter>02.GameObject\08.Dummy\01.Spawn_Info\00.Dog_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Effect.cpp">
+      <Filter>02.GameObject\12.Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SlashPoint.cpp">
+      <Filter>02.GameObject\12.Effect\00.SlashPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\EffectMgr.cpp">
+      <Filter>97.Manager\01.EffectMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

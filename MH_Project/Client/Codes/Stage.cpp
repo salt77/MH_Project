@@ -4,6 +4,7 @@
 #include "Ahglan_StageUI.h"
 #include "DamageFont.h"
 #include "CollisionMgr.h"
+#include "SlashPoint.h"
 
 #include "Export_Function.h"
 
@@ -207,6 +208,29 @@ HRESULT CStage::Ready_Layer_UI(const wstring pLayerTag)
 	return S_OK;
 }
 
+HRESULT CStage::Ready_Layer_Effect(const wstring pLayerTag)
+{
+	CLayer*		pLayer = CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	CGameObject*		pGameObject = nullptr;
+
+	// SlashPoint
+	for (_uint i = 0; i < SLASHPOINT_COUNT; ++i)
+	{
+		wstring	wstrName = L"Efx_SlashPoint_";
+		wstrName += to_wstring(i);
+
+		pGameObject = CSlashPoint::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+	}
+
+	m_mapLayer.emplace(pLayerTag, pLayer);
+
+	return S_OK;
+}
+
 HRESULT CStage::Ready_Prototype(void)
 {
 	return S_OK;
@@ -220,7 +244,7 @@ HRESULT CStage::Ready_LightInfo(void)
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Ambient = D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f);
 	tLightInfo.Direction = _vec3(-0.5f, -1.f, -0.5f);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);

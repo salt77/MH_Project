@@ -25,10 +25,8 @@ class CSoldier : public CGameObject
 public:
 	enum SOL_STATE
 	{
-		SOLSTATE_ATTACK, SOLSTATE_DAMAGED, SOLSTATE_DAMAGED2, SOLSTATE_DOWN_BEGIN, SOLSTATE_DOWN_IDLE, SOLSTATE_DOWN_END,
-		SOLSTATE_DYING, SOLSTATE_IDLE, SOLSTATE_STAPBACK, SOLSTATE_STAPLEFT, SOLSTATE_STAPRIGHT,
-		SOLSTATE_STAPFRONT, SOLSTATE_DAMAGE_FRONT, SOLSTATE_RUN,
-
+		SOLSTATE_ATTACK, SOLSTATE_IDLE, SOLSTATE_RUN, SOLSTATE_SPAWN, SOLSTATE_TURNLEFT, SOLSTATE_TURNRIGHT,
+		SOLSTATE_DYING, SOLSTATE_DAMAGED, SOLSTATE_DAMAGED2, SOLSTATE_DOWN_BEGIN, SOLSTATE_DOWN_IDLE, SOLSTATE_DOWN_END,
 		SOLSTATE_END
 	};
 
@@ -43,8 +41,9 @@ public:
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 
-private:
+public:
 	virtual	void	Set_Damage(_int iDamage);
+	void			Set_Enable(_vec3 vPos, _vec3 vRotate);
 
 private:
 	// 기본 함수들
@@ -55,7 +54,6 @@ private:
 	const _ulong&	Compute_InCell();
 
 	// 객체 함수들
-	void			Contact();
 	void			Movement();
 	void			MoveOn_Skill();
 	void			RotateLookVector();
@@ -71,7 +69,7 @@ private:
 	//_bool			m_bSkillRotation = false;
 	_bool			m_bAnimation = true;
 
-	_uint			m_iAniIndex = SOLSTATE_IDLE;
+	_uint			m_iAniIndex = SOLSTATE_SPAWN;
 
 	_float			m_fTimeDelta = 0.f;
 	_float			m_fSpeed = 2.8f;
@@ -94,8 +92,6 @@ private:
 
 	SOL_STATE		m_eCurState = SOLSTATE_IDLE;
 	SOL_STATE		m_ePreState = SOLSTATE_END;
-
-	map<const wstring, _bool>	m_mapActiveParts;
 
 	CPlayer*		m_pPlayer = nullptr;
 	CTransform*		m_pPlayerTrans = nullptr;

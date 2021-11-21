@@ -648,53 +648,56 @@ void CDynamicCamera::CutScene_Eye(const _float& fTimeDelta)
 
 void CDynamicCamera::Collision_StageMesh()
 {
-	BOOL	bHit = false;
-	_float	fDistance = 0.f;
-
-	_float	fCamToPlayerDistance = D3DXVec3Length(&(m_vVirtualEye - m_vAt));
-
-	_vec3		vAtPos = m_vAt;
-	_vec3		vEyePos = m_vEye;
-	_vec3		vVirtualEyePos = m_vVirtualEye;
-	_vec3		vCamDir = vAtPos - vEyePos;
-	
-	_matrix		matWorld, matView, matProj;
-
-	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-	switch (Engine::Get_SceneID())
+	if (MODE_NORMAL == m_eCurMode)
 	{
-	case SCENE_STAGE:
-		matWorld = *m_pStage->Get_WorldMatrix();
-		break;
+		BOOL	bHit = false;
+		_float	fDistance = 0.f;
 
-	case SCENE_STAGE_1:
-		matWorld = *m_pStage_1->Get_WorldMatrix();
-		break;
-	}
+		_float	fCamToPlayerDistance = D3DXVec3Length(&(m_vVirtualEye - m_vAt));
 
-	D3DXMatrixInverse(&matView, nullptr, &matView);
-	D3DXMatrixInverse(&matWorld, nullptr, &matWorld);
+		_vec3		vAtPos = m_vAt;
+		_vec3		vEyePos = m_vEye;
+		_vec3		vVirtualEyePos = m_vVirtualEye;
+		_vec3		vCamDir = vAtPos - vEyePos;
 
-	D3DXVec3TransformCoord(&vAtPos, &vAtPos, &matWorld);
-	D3DXVec3TransformCoord(&vEyePos, &vEyePos, &matWorld);
-	D3DXVec3TransformCoord(&vVirtualEyePos, &vVirtualEyePos, &matWorld);
-	D3DXVec3TransformNormal(&vCamDir, &vCamDir, &matWorld);
-	D3DXVec3Normalize(&vCamDir, &vCamDir);
+		_matrix		matWorld, matView, matProj;
 
-	D3DXIntersect(m_pStageMesh->Get_MeshInfo(), &vVirtualEyePos, &vCamDir, &bHit, nullptr, nullptr, nullptr, &fDistance, nullptr, nullptr);
+		m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+		switch (Engine::Get_SceneID())
+		{
+		case SCENE_STAGE:
+			matWorld = *m_pStage->Get_WorldMatrix();
+			break;
 
-	fDistance *= 0.02f;
+		case SCENE_STAGE_1:
+			matWorld = *m_pStage_1->Get_WorldMatrix();
+			break;
+		}
 
-	if (bHit && 
-		fDistance < fCamToPlayerDistance)
-	{
-		m_bCollisionCam = true;
-		m_fDistanceFromTarget = fDistance * 0.7f;
-	}
-	else
-	{
-		m_bCollisionCam = false;
-		m_fDistanceFromTarget = m_fOriginDistanceFromTarget;
+		D3DXMatrixInverse(&matView, nullptr, &matView);
+		D3DXMatrixInverse(&matWorld, nullptr, &matWorld);
+
+		D3DXVec3TransformCoord(&vAtPos, &vAtPos, &matWorld);
+		D3DXVec3TransformCoord(&vEyePos, &vEyePos, &matWorld);
+		D3DXVec3TransformCoord(&vVirtualEyePos, &vVirtualEyePos, &matWorld);
+		D3DXVec3TransformNormal(&vCamDir, &vCamDir, &matWorld);
+		D3DXVec3Normalize(&vCamDir, &vCamDir);
+
+		D3DXIntersect(m_pStageMesh->Get_MeshInfo(), &vVirtualEyePos, &vCamDir, &bHit, nullptr, nullptr, nullptr, &fDistance, nullptr, nullptr);
+
+		fDistance *= 0.02f;
+
+		if (bHit &&
+			fDistance < fCamToPlayerDistance)
+		{
+			m_bCollisionCam = true;
+			m_fDistanceFromTarget = m_fOriginDistanceFromTarget - fDistance;
+		}
+		else
+		{
+			m_bCollisionCam = false;
+			m_fDistanceFromTarget = m_fOriginDistanceFromTarget;
+		}
 	}
 }
 

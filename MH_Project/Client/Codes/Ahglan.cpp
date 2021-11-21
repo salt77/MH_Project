@@ -143,10 +143,7 @@ void CAhglan::Render_Object(void)
 
 		for (; iter != m_mapColliderCom.end(); ++iter)
 		{
-			if (iter->second->Get_CanCollision())
-			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-			}
+			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 		}
 	}
 	if (!m_mapBoxColliderCom.empty())
@@ -155,10 +152,7 @@ void CAhglan::Render_Object(void)
 
 		for (; iter != m_mapBoxColliderCom.end(); ++iter)
 		{
-			if (iter->second->Get_CanCollision())
-			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-			}
+			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 		}
 	}
 

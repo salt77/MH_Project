@@ -116,6 +116,7 @@ Engine::_uint CLoading::Loading_ForStage()
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SlashSpin", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_slash_spin.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SlashPoint", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_slashpoint.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_LightRay", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/light_ray.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Critical", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/critical_roll.tga", TEX_NORMAL)), E_FAIL);
 
 	lstrcpy(m_szLoading, L"Loading Etc..");
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Calculator", CCalculator::Create(m_pGraphicDev)), E_FAIL);
@@ -201,6 +202,7 @@ _uint CLoading::Loading_ForStage_1()
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SlashSpin", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_slash_spin.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SlashPoint", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_slashpoint.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_LightRay", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/light_ray.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Critical", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/critical_roll.tga", TEX_NORMAL)), E_FAIL);
 
 	lstrcpy(m_szLoading, L"Loading Etc..");
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Calculator", CCalculator::Create(m_pGraphicDev)), E_FAIL);

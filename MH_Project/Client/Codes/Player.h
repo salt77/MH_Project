@@ -70,6 +70,7 @@ private:
 	void			Collision_Control();
 	void			Update_UI();
 	void			Update_State();
+	const _ulong&	Compute_InCell();
 
 	// °´Ã¼ ÇÔ¼öµé
 	void			Compute_CanAction();

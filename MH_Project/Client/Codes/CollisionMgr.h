@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Base.h"
-
 #include "Export_Function.h"
 
 USING(Engine)
@@ -15,7 +14,7 @@ class CCollisionMgr : public CBase
 	DECLARE_SINGLETON(CCollisionMgr)
 
 private:
-	explicit CCollisionMgr();
+	CCollisionMgr();
 	virtual ~CCollisionMgr();
 
 private:
@@ -65,6 +64,6 @@ private:
 	list<CBoxCollider*>		m_listEnemyDamagedCol;
 
 public:
-	virtual void Free(void) override;
+	virtual void Free() override;
 };
 

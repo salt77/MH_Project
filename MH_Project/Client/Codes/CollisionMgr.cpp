@@ -85,7 +85,7 @@ void CCollisionMgr::Collision_PlayerAttack()
 								iter_BossDamaged->second->Get_CanCollision())
 							{
 								if (Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
-									&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
+												  &iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
 								{
 									bPlayerAtkEnd = true;
 
@@ -511,42 +511,47 @@ void CCollisionMgr::Collision_MonsterAttack()
 
 		for (; iter_Enemy != mapObject.end(); ++iter_Enemy)
 		{
-			map<const wstring, CCollider*>	mapEnemyCol = iter_Enemy->second->Get_MapCollider();
-			map<const wstring, CCollider*>::iterator	iter_EnemyCol = mapEnemyCol.begin();
-
-			for (; iter_EnemyCol != mapEnemyCol.end(); ++iter_EnemyCol)
+			if (POOLING_POS != *static_cast<CTransform*>(iter_Enemy->second->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_Info(INFO_POS))
 			{
-				for (; iter_PlayerDamaged != mapPlayerDamaged.end(); ++iter_PlayerDamaged)
+				map<const wstring, CCollider*>	mapEnemyCol = iter_Enemy->second->Get_MapCollider();
+				map<const wstring, CCollider*>::iterator	iter_EnemyCol = mapEnemyCol.begin();
+
+				for (; iter_EnemyCol != mapEnemyCol.end(); ++iter_EnemyCol)
 				{
-					//if (iter_PlayerDamaged->second->Get_CanCollision() &&
-					//	iter_EnemyCol->second->Get_CanCollision())
-					//{
-						if (Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
-											 iter_EnemyCol->second->Get_Center(), iter_EnemyCol->second->Get_Radius() * SCALE_MANKIND))
+					iter_PlayerDamaged = mapPlayerDamaged.begin();
+
+					for (; iter_PlayerDamaged != mapPlayerDamaged.end(); ++iter_PlayerDamaged)
+					{
+						if (iter_PlayerDamaged->second->Get_CanCollision() &&
+							iter_EnemyCol->second->Get_CanCollision())
 						{
-							bEnemyAtkEnd = true;
-
-							_vec3 vLookDir = *pPlayerTrans->Get_Info(INFO_RIGHT);
-							_vec3 vToEnemyDir = iter_EnemyCol->second->Get_Center() - *pPlayerTrans->Get_Info(INFO_POS);
-							D3DXVec3Normalize(&vLookDir, &vLookDir);
-							D3DXVec3Normalize(&vToEnemyDir, &vToEnemyDir);
-
-							if (D3DXVec3Dot(&vToEnemyDir, &vLookDir) > 0.f)
+							if (Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
+								iter_EnemyCol->second->Get_Center(), iter_EnemyCol->second->Get_Radius() * SCALE_MANKIND))
 							{
-								m_pPlayer->Set_Damage(MANKIND_ATKPOWER + iInterpolDamage, iter_PlayerDamaged->second->Get_ColliderWorld(), true);
-							}
-							else
-							{
-								m_pPlayer->Set_Damage(MANKIND_ATKPOWER + iInterpolDamage, iter_PlayerDamaged->second->Get_ColliderWorld(), false);
-							}
+								bEnemyAtkEnd = true;
 
-							break;
-						//}
+								_vec3 vLookDir = *pPlayerTrans->Get_Info(INFO_RIGHT);
+								_vec3 vToEnemyDir = iter_EnemyCol->second->Get_Center() - *pPlayerTrans->Get_Info(INFO_POS);
+								D3DXVec3Normalize(&vLookDir, &vLookDir);
+								D3DXVec3Normalize(&vToEnemyDir, &vToEnemyDir);
+
+								if (D3DXVec3Dot(&vToEnemyDir, &vLookDir) > 0.f)
+								{
+									m_pPlayer->Set_Damage(MANKIND_ATKPOWER + iInterpolDamage, iter_PlayerDamaged->second->Get_ColliderWorld(), true);
+								}
+								else
+								{
+									m_pPlayer->Set_Damage(MANKIND_ATKPOWER + iInterpolDamage, iter_PlayerDamaged->second->Get_ColliderWorld(), false);
+								}
+
+								break;
+							}
+						}
 					}
-				}
 
-				if (bEnemyAtkEnd)
-					break;
+					if (bEnemyAtkEnd)
+						break;
+				}
 			}
 		}
 	}
@@ -644,12 +649,12 @@ _bool CCollisionMgr::Collision_OBB(const _vec3 * pDestMin, const _vec3 * pDestMa
 		for (_ulong j = 0; j < 3; ++j)
 		{
 			fDistance[0] = fabs(D3DXVec3Dot(&tObb[0].vProjAxis[0], &tObb[i].vAxis[j])) +
-				fabs(D3DXVec3Dot(&tObb[0].vProjAxis[1], &tObb[i].vAxis[j])) +
-				fabs(D3DXVec3Dot(&tObb[0].vProjAxis[2], &tObb[i].vAxis[j]));
+						   fabs(D3DXVec3Dot(&tObb[0].vProjAxis[1], &tObb[i].vAxis[j])) +
+						   fabs(D3DXVec3Dot(&tObb[0].vProjAxis[2], &tObb[i].vAxis[j]));
 
 			fDistance[1] = fabs(D3DXVec3Dot(&tObb[1].vProjAxis[0], &tObb[i].vAxis[j])) +
-				fabs(D3DXVec3Dot(&tObb[1].vProjAxis[1], &tObb[i].vAxis[j])) +
-				fabs(D3DXVec3Dot(&tObb[1].vProjAxis[2], &tObb[i].vAxis[j]));
+						   fabs(D3DXVec3Dot(&tObb[1].vProjAxis[1], &tObb[i].vAxis[j])) +
+						   fabs(D3DXVec3Dot(&tObb[1].vProjAxis[2], &tObb[i].vAxis[j]));
 
 			fDistance[2] = fabs(D3DXVec3Dot(&(tObb[0].vCenter - tObb[1].vCenter), &tObb[i].vAxis[j]));
 
@@ -850,25 +855,37 @@ void CCollisionMgr::Pooling_DamageFont(_uint iDamage, const _matrix * pMatrix, D
 
 	if (1000 <= iDamage)
 	{
-		pFont0->Set_EnableDamageFont(vPos, iDigitThousands, 1000);
-		pFont1->Set_EnableDamageFont(vPos, iDigitHundreds, 100);
-		pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
-		pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		if (pFont0 && pFont1 && pFont2 && pFont3)
+		{
+			pFont0->Set_EnableDamageFont(vPos, iDigitThousands, 1000);
+			pFont1->Set_EnableDamageFont(vPos, iDigitHundreds, 100);
+			pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
+			pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		}
 	}
 	else if (100 <= iDamage)
 	{
-		pFont1->Set_EnableDamageFont(vPos, iDigitHundreds, 100);
-		pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
-		pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		if (pFont1 && pFont2 && pFont3)
+		{
+			pFont1->Set_EnableDamageFont(vPos, iDigitHundreds, 100);
+			pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
+			pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		}
 	}
 	else if (10 <= iDamage)
 	{
-		pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
-		pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		if (pFont2 && pFont3)
+		{
+			pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
+			pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		}
 	}
 	else if (1 <= iDamage)
 	{
-		pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		if (pFont3)
+		{
+			pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		}
 	}
 }
 

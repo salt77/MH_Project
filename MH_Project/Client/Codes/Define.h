@@ -145,6 +145,12 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define DAMAGEFONT_SKILL_COUNT	40
 #define DAMAGEFONT_MONSTER_COUNT 12
 
+#define DOG_COUNT		6
+#define SOLDIER_COUNT	6
+#define KNIGHT_COUNT	4
+
+#define SLASHPOINT_COUNT	8
+
 
 
 

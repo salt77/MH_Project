@@ -168,7 +168,11 @@
     <ClInclude Include="..\Codes\CollisionMgr.h" />
     <ClInclude Include="..\Codes\DamageFont.h" />
     <ClInclude Include="..\Codes\Dog.h" />
+    <ClInclude Include="..\Codes\Dog_Info.h" />
+    <ClInclude Include="..\Codes\Effect.h" />
+    <ClInclude Include="..\Codes\EffectMgr.h" />
     <ClInclude Include="..\Codes\Knight.h" />
+    <ClInclude Include="..\Codes\Knight_Info.h" />
     <ClInclude Include="..\Codes\Player_Buff_CriticalUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_BackUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_ValueUI.h" />
@@ -188,8 +192,11 @@
     <ClInclude Include="..\Codes\Player_Hpbar_ValueUI.h" />
     <ClInclude Include="..\Codes\Player_Steminabar_ValueUI.h" />
     <ClInclude Include="..\Codes\SkyBox.h" />
+    <ClInclude Include="..\Codes\SlashPoint.h" />
     <ClInclude Include="..\Codes\Soldier.h" />
+    <ClInclude Include="..\Codes\Soldier_Info.h" />
     <ClInclude Include="..\Codes\SoundMgr.h" />
+    <ClInclude Include="..\Codes\Spawn_Info.h" />
     <ClInclude Include="..\Codes\Stage.h" />
     <ClInclude Include="..\Codes\StageMesh.h" />
     <ClInclude Include="..\Codes\StageMesh_1.h" />
@@ -217,7 +224,11 @@
     <ClCompile Include="..\Codes\CollisionMgr.cpp" />
     <ClCompile Include="..\Codes\DamageFont.cpp" />
     <ClCompile Include="..\Codes\Dog.cpp" />
+    <ClCompile Include="..\Codes\Dog_Info.cpp" />
+    <ClCompile Include="..\Codes\Effect.cpp" />
+    <ClCompile Include="..\Codes\EffectMgr.cpp" />
     <ClCompile Include="..\Codes\Knight.cpp" />
+    <ClCompile Include="..\Codes\Knight_Info.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
     <ClCompile Include="..\Codes\Player_Buff_CriticalUI.cpp" />
     <ClCompile Include="..\Codes\Player_Spbar_BackUI.cpp" />
@@ -236,8 +247,11 @@
     <ClCompile Include="..\Codes\Player_Hpbar_ValueUI.cpp" />
     <ClCompile Include="..\Codes\Player_Steminabar_ValueUI.cpp" />
     <ClCompile Include="..\Codes\SkyBox.cpp" />
+    <ClCompile Include="..\Codes\SlashPoint.cpp" />
     <ClCompile Include="..\Codes\Soldier.cpp" />
+    <ClCompile Include="..\Codes\Soldier_Info.cpp" />
     <ClCompile Include="..\Codes\SoundMgr.cpp" />
+    <ClCompile Include="..\Codes\Spawn_Info.cpp" />
     <ClCompile Include="..\Codes\Stage.cpp" />
     <ClCompile Include="..\Codes\StageMesh.cpp" />
     <ClCompile Include="..\Codes\StageMesh_1.cpp" />

@@ -27,7 +27,7 @@ HRESULT CSoldier::Ready_Object(void)
 
 	m_pTransformCom->Update_Component(0.f);
 
-	m_tInfo.iHp = 25000;
+	m_tInfo.iHp = 20000;
 	m_tInfo.iMaxHp = m_tInfo.iHp;
 
 	m_bBoss = false;
@@ -39,16 +39,8 @@ HRESULT CSoldier::LateReady_Object()
 {
 	CGameObject::LateReady_Object();
 
-	// 디버그 용
-	//CTransform*	vPlayerPos = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
-	//dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Dog", L"Com_Transform", ID_DYNAMIC))->Set_Pos(vPlayerPos->Get_Info(INFO_POS));
-
 	Load_ColInfo();
 	Add_NaviMesh();
-
-	//m_pTransformCom->Set_Pos(&_vec3(19.1014271f, 2.60000038f, 56.5889587f));
-
-	m_pNaviMeshCom->Set_CellIndex(Compute_InCell());
 
 	return S_OK;
 }
@@ -60,43 +52,19 @@ _int CSoldier::Update_Object(const _float & fTimeDelta)
 	if (m_bDead)
 		return iExit;
 
-	//// 디버그용
-	//if (Key_Down('G'))
-	//{
-	//	Set_Damage(15000);
-	//}
-	//else if (Key_Down('H'))
-	//{
-	//	m_iAniIndex = SPAWN;
-
-	//	Animation_Control();
-	//}
-
 	m_fTimeDelta = fTimeDelta;
 
-	//if (m_vPlayerPos)
-	//{
-	//	if (10.f > D3DXVec3Length(&(m_vPlayerPos - *m_pTransformCom->Get_Info(INFO_POS))))
-	//	{
-	//		Movement();
-	//		Animation_Control();
-	//		Collision_Control();
-	//		MoveOn_Skill();
+	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
+	{
+		Movement();
+		Animation_Control();
+		Collision_Control();
+		MoveOn_Skill();
 
-	//		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
+		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
-	//		Engine::Add_RenderGroup(RENDER_NONALPHA, this);
-	//	}
-	//}
-
-	Movement();
-	Animation_Control();
-	Collision_Control();
-	MoveOn_Skill();
-
-	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
-
-	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+		Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+	}
 
 	return iExit;
 }
@@ -105,13 +73,15 @@ _int CSoldier::LateUpdate_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::LateUpdate_Object(fTimeDelta);
 
-	/*if (!m_mapColliderCom.empty())
+	m_pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+
+	if (!m_mapColliderCom.empty())
 	{
 		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
 
 		for (; iter != m_mapColliderCom.end(); ++iter)
 		{
-			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+			iter->second->LateUpdate_Collider(m_pTransformCom->Get_WorldMatrix());
 		}
 	}
 	if (!m_mapBoxColliderCom.empty())
@@ -120,67 +90,39 @@ _int CSoldier::LateUpdate_Object(const _float & fTimeDelta)
 
 		for (; iter != m_mapBoxColliderCom.end(); ++iter)
 		{
-			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+			iter->second->LateUpdate_Collider(m_pTransformCom->Get_WorldMatrix());
 		}
-	}*/
+	}
 
 	return iExit;
 }
 
 void CSoldier::Render_Object(void)
 {
-	if (m_vPlayerPos)
+	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
-		if (10.f > D3DXVec3Length(&(m_vPlayerPos - *m_pTransformCom->Get_Info(INFO_POS))))
-		{
-			if (m_bAnimation)
-				m_pMeshCom->Play_Animation(m_fTimeDelta);
+		if (m_bAnimation)
+			m_pMeshCom->Play_Animation(m_fTimeDelta);
 
-			if (!m_mapColliderCom.empty())
-			{
-				map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+		m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
-				for (; iter != m_mapColliderCom.end(); ++iter)
-				{
-					if (iter->second->Get_CanCollision())
-					{
-						iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-					}
-				}
-			}
-			if (!m_mapBoxColliderCom.empty())
-			{
-				map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+		LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
+		pEffect->AddRef();
 
-				for (; iter != m_mapBoxColliderCom.end(); ++iter)
-				{
-					if (iter->second->Get_CanCollision())
-					{
-						iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-					}
-				}
-			}
+		FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
 
-			m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
+		_uint iMaxPass = 0;
 
-			LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
-			pEffect->AddRef();
+		pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
+												// 2인자 : 시작하는 방식을 묻는 FLAG
+		pEffect->BeginPass(0);
 
-			FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
+		m_pMeshCom->Render_Meshes(pEffect);
 
-			_uint iMaxPass = 0;
+		pEffect->EndPass();
+		pEffect->End();
 
-			pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
-													// 2인자 : 시작하는 방식을 묻는 FLAG
-			pEffect->BeginPass(0);
-
-			m_pMeshCom->Render_Meshes(pEffect, m_mapActiveParts);
-
-			pEffect->EndPass();
-			pEffect->End();
-
-			Safe_Release(pEffect);
-		}
+		Safe_Release(pEffect);
 	}
 }
 
@@ -192,9 +134,15 @@ void CSoldier::Set_Damage(_int iDamage)
 
 		if (1000 <= iDamage)
 		{
-			m_iAniIndex = SOLSTATE_DOWN_BEGIN;
+			if (SOLSTATE_DOWN_BEGIN != m_eCurState &&
+				SOLSTATE_DOWN_IDLE != m_eCurState && 
+				SOLSTATE_DOWN_END != m_eCurState)
+			{
+				m_iAniIndex = SOLSTATE_DOWN_BEGIN;
+			}
 		}
-		else
+		else if (SOLSTATE_DOWN_BEGIN != m_eCurState &&
+				 SOLSTATE_DOWN_IDLE != m_eCurState)
 		{
 			_uint iRandom = rand() % 2;
 
@@ -211,7 +159,26 @@ void CSoldier::Set_Damage(_int iDamage)
 	else
 	{
 		m_tInfo.iHp = 0;
+
+		m_iAniIndex = SOLSTATE_DYING;
 	}
+}
+
+void CSoldier::Set_Enable(_vec3 vPos, _vec3 vRotate)
+{
+	m_pTransformCom->Set_Pos(&vPos);
+	m_pTransformCom->RotationFromOriginAngle(ROT_X, vRotate.x);
+	m_pTransformCom->RotationFromOriginAngle(ROT_Y, vRotate.y);
+	m_pTransformCom->RotationFromOriginAngle(ROT_Z, vRotate.z);
+
+	m_pNaviMeshCom->Set_CellIndex(Compute_InCell());
+	m_pTransformCom->Rotation(ROT_Y, -90.f);
+
+	m_tInfo.iHp = m_tInfo.iMaxHp;
+
+	m_iAniIndex = SOLSTATE_SPAWN;
+
+	Animation_Control();
 }
 
 HRESULT CSoldier::Add_Component(void)
@@ -289,14 +256,8 @@ HRESULT CSoldier::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	return S_OK;
 }
 
-void CSoldier::Contact()
-{
-}
-
 void CSoldier::Movement()
 {
-	m_pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
-
 	if (m_pPlayer)
 	{
 		if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
@@ -313,7 +274,7 @@ void CSoldier::Movement()
 			m_fDistance = D3DXVec3Length(&(m_vMyPos - m_vPlayerPos));
 
 			_vec3	vPlayerDir = m_vPlayerPos - m_vMyPos;
-			m_vDir = -(*m_pTransformCom->Get_Info(INFO_LOOK));
+			m_vDir = -(*m_pTransformCom->Get_Info(INFO_RIGHT));
 			D3DXVec3Normalize(&m_vDir, &m_vDir);
 			D3DXVec3Normalize(&vPlayerDir, &vPlayerDir);
 
@@ -328,24 +289,23 @@ void CSoldier::Movement()
 
 			if ((m_bCanAction && m_pPlayerTrans) || !m_bAnimation) // m_bAnimation은 디버깅용
 			{
-				if (DIS_FACETOFACE >= m_fDistance)
+				if (15.f <= m_fAngle)
+				{
+					if (m_bTargetIsRight)
+					{
+						m_iAniIndex = SOLSTATE_TURNRIGHT;
+					}
+					else
+					{
+						m_iAniIndex = SOLSTATE_TURNLEFT;
+					}
+				}
+				else if (DIS_FACETOFACE >= m_fDistance)
 				{
 					m_iAniIndex = SOLSTATE_ATTACK;
 				}
 				else
 				{
-					/*if (50.f <= m_fAngle)
-					{
-						if (m_bTargetIsRight)
-						{
-							m_iAniIndex = SOLSTATE_TURNRIGHT;
-						}
-						else
-						{
-							m_iAniIndex = SOLSTATE_TURNLEFT;
-						}
-					}
-					else */
 					if (DIS_SHORT < m_fDistance)
 					{
 						m_iAniIndex = SOLSTATE_IDLE;
@@ -406,6 +366,7 @@ void CSoldier::Animation_Control()
 
 	// 상태 변경 시 한번만 실행
 	m_eCurState = (SOL_STATE)m_iAniIndex;
+
 	if (m_eCurState != m_ePreState)
 	{
 		m_bAnimation = true;
@@ -425,19 +386,16 @@ void CSoldier::Animation_Control()
 		case SOLSTATE_RUN:
 			m_bCanAction = true;
 
-			m_pMeshCom->Set_TrackSpeed(1.9f);
+			m_pMeshCom->Set_TrackSpeed(1.8f);
 			break;
-
-			//case SOLSTATE_TURNRIGHT:
-			//	m_eSolAction = SOL_IDLE;
-			//	break;
-
-			//case SOLSTATE_TURNLEFT:
-			//	m_eSolAction = SOL_IDLE;
-			//	break;
 
 		case SOLSTATE_IDLE:
 			m_bCanAction = true;
+			break;
+
+		case SOLSTATE_SPAWN:
+			m_bCanAction = false;
+			m_lfAniEnd = 2.5f;
 			break;
 
 		case SOLSTATE_ATTACK:
@@ -463,13 +421,24 @@ void CSoldier::Animation_Control()
 			break;
 
 		case SOLSTATE_DOWN_IDLE:
+			ENEMY_SKILL_MOVE_END;
 			m_bCanAction = false;
-			m_lfAniEnd = 1.f;
+			m_lfAniEnd = 2.f;
 			break;
 
 		case SOLSTATE_DOWN_END:
+			ENEMY_SKILL_MOVE_END;
 			m_bCanAction = false;
-			m_lfAniEnd = 1.f;
+
+			m_pMeshCom->Set_TrackSpeed(3.f);
+			m_lfAniEnd = 3.1f;
+			break;
+
+		case SOLSTATE_DYING:
+			m_bCanAction = false;
+
+			m_pMeshCom->Set_TrackSpeed(1.5f);
+			m_lfAniEnd = 0.7f;
 			break;
 		}
 
@@ -478,20 +447,22 @@ void CSoldier::Animation_Control()
 
 
 	// 상태 변경 시 매 프레임 실행
+	_vec3	vDir = -*m_pTransformCom->Get_Info(INFO_RIGHT);
+
 	switch (m_eCurState)
 	{
 	case SOLSTATE_RUN:
-		m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, &m_vDir, m_fSpeed, m_fTimeDelta));
+		m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, D3DXVec3Normalize(&vDir, &vDir), m_fSpeed, m_fTimeDelta));
 
-		if (5.f <= m_fAngle)
+		if (10.f <= m_fAngle)
 		{
 			if (m_bTargetIsRight)
 			{
-				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * m_fTimeDelta));
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * m_fTimeDelta));
 			}
 			else
 			{
-				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * -m_fTimeDelta));
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * -m_fTimeDelta));
 			}
 		}
 
@@ -502,28 +473,28 @@ void CSoldier::Animation_Control()
 		}
 		break;
 
-		//case SOLSTATE_TURNRIGHT:
-		//	if (5.f <= m_fAngle)
-		//	{
-		//		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * m_fTimeDelta));
-		//	}
-		//	else
-		//	{
-		//		m_iAniIndex = SOLSTATE_RUN;
-		//		Animation_Control();
-		//	}
-		//	break;
+	case SOLSTATE_TURNRIGHT:
+		if (10.f <= m_fAngle)
+		{
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * m_fTimeDelta));
+		}
+		else
+		{
+			m_iAniIndex = SOLSTATE_RUN;
+			Animation_Control();
+		}
+		break;
 
-		//case SOLSTATE_TURNLEFT:
-		//	if (5.f <= m_fAngle)
-		//	{
-		//		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * -m_fTimeDelta));
-		//	}
-		//	else
-		//	{
-		//		m_iAniIndex = SOLSTATE_RUN;
-		//		Animation_Control();
-		//	}
+	case SOLSTATE_TURNLEFT:
+		if (10.f <= m_fAngle)
+		{
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * -m_fTimeDelta));
+		}
+		else
+		{
+			m_iAniIndex = SOLSTATE_RUN;
+			Animation_Control();
+		}
 
 	case SOLSTATE_IDLE:
 		//if (DIS_FACETOFACE > m_fDistance &&
@@ -557,7 +528,12 @@ void CSoldier::Animation_Control()
 			m_bAnimation = false;
 		}
 
-		if (SOLSTATE_DOWN_BEGIN == m_eCurState)
+		if (SOLSTATE_DYING == m_eCurState)
+		{
+			m_pTransformCom->Set_Pos(&POOLING_POS);
+			m_pTransformCom->Update_Component(m_fTimeDelta);
+		}
+		else if (SOLSTATE_DOWN_BEGIN == m_eCurState)
 		{
 			m_iAniIndex = SOLSTATE_DOWN_IDLE;
 
@@ -599,7 +575,7 @@ void CSoldier::Collision_Control()
 	case CSoldier::SOLSTATE_ATTACK:
 		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
 		{
-			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.1f, m_lfAniEnd * 0.6f);
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.4f, m_lfAniEnd * 0.55f);
 		}
 		break;
 
@@ -653,8 +629,8 @@ const _ulong & CSoldier::Compute_InCell()
 			D3DXVec3Normalize(&vDirCB, &vDirCB);
 			D3DXVec3Normalize(&vDirCP, &vDirCP);
 
-			if (0.f < D3DXVec3Cross(&vTemp, &vDirCP, &vDirCB)->y && 
-				0.f < D3DXVec3Cross(&vTemp, &vDirBP, &vDirBA)->y && 
+			if (0.f < D3DXVec3Cross(&vTemp, &vDirCP, &vDirCB)->y &&
+				0.f < D3DXVec3Cross(&vTemp, &vDirBP, &vDirBA)->y &&
 				0.f < D3DXVec3Cross(&vTemp, &vDirAP, &vDirAC)->y)
 			{
 				return *(*iter)->Get_CellIndex();

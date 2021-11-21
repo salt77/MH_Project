@@ -27,7 +27,7 @@ public:
 	{
 		KNIGHT_ATTACK, KNIGHT_DAMAGED, KNIGHT_DAMAGED2, KNIGHT_DOWN_BEGIN, KNIGHT_DOWN_IDLE, KNIGHT_DOWN_END,
 		KNIGHT_DYING, KNIGHT_IDLE, KNIGHT_STAPBACK, KNIGHT_STAPLEFT, KNIGHT_STAPRIGHT, KNIGHT_STAPFRONT,
-		KNIGHT_KNOCKBACK, 
+		KNIGHT_KNOCKBACK, KNIGHT_SPAWN, KNIGHT_TURNLEFT, KNIGHT_TURNRIGHT, 
 
 		KNIGHT_END
 	};
@@ -43,15 +43,19 @@ public:
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 
+public:
+	virtual	void	Set_Damage(_int iDamage);
+	void			Set_Enable(_vec3 vPos, _vec3 vRotate);
+
 private:
 	// 기본 함수들
 	HRESULT			Add_Component(void);
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Animation_Control();
 	void			Collision_Control();
+	const _ulong&	Compute_InCell();
 
 	// 객체 함수들
-	void			Contact();
 	void			Movement();
 	void			MoveOn_Skill();
 	void			RotateLookVector();
@@ -68,7 +72,7 @@ private:
 	//_bool			m_bSkillRotation = false;
 	_bool			m_bAnimation = true;
 
-	_uint			m_iAniIndex = KNIGHT_IDLE;
+	_uint			m_iAniIndex = KNIGHT_SPAWN;
 
 	_float			m_fTimeDelta = 0.f;
 	_float			m_fSpeed = 1.5f;
@@ -93,8 +97,6 @@ private:
 
 	KNIGHT_STATE		m_eCurState = KNIGHT_IDLE;
 	KNIGHT_STATE		m_ePreState = KNIGHT_END;
-
-	map<const wstring, _bool>	m_mapActiveParts;
 
 	CPlayer*		m_pPlayer = nullptr;
 	CTransform*		m_pPlayerTrans = nullptr;

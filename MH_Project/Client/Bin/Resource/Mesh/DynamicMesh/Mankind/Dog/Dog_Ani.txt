@@ -1,3 +1,5 @@
+18. Spawn 
+
 17. Run 
 
 
@@ -13,6 +15,16 @@
 7. Stand
 
 6. Dying 
+
+5. DownEnd 
+
+4. DownIdle
+
+3. DownBegin 
+
+2. Damaged_2
+
+1. Damaged
 
 0. Attack 
 

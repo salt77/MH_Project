@@ -34,6 +34,7 @@ public:
 
 public:
 	HRESULT			Ready_Collider(const _float& fRadius, const _matrix * pColliderMatrix, COLLIDERTYPE eColliderType);
+	void			LateUpdate_Collider(const _matrix* pColliderMatrix);
 	void			Render_Collider(COLTYPE eType, const _matrix* pColliderMatrix);
 
 private:

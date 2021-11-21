@@ -195,6 +195,14 @@ HRESULT Engine::CBoxCollider::Ready_Collider(_float vMinX, _float vMinY, _float 
 	return S_OK;
 }
 
+void CBoxCollider::LateUpdate_Collider(const _matrix * pColliderMatrix)
+{
+	if (m_matColParts)
+		m_matColMatrix = (*m_matColParts) * *pColliderMatrix;
+	else
+		m_matColMatrix = *pColliderMatrix;
+}
+
 void Engine::CBoxCollider::Render_Collider(COLTYPE eType, const _matrix* pColliderMatrix)
 {
 	if (m_matColParts)
@@ -203,18 +211,18 @@ void Engine::CBoxCollider::Render_Collider(COLTYPE eType, const _matrix* pCollid
 		m_matColMatrix = *pColliderMatrix;
 
 //#ifdef _DEBUG
-//	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matColMatrix);
-//	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-//
-//	m_pGraphicDev->SetTexture(0, m_pTexture[m_eColType]);
-//	//m_pSphere->DrawSubset(0);
-//
-//	m_pGraphicDev->SetStreamSource(0, m_pVB, 0, sizeof(VTXCUBE));
-//	m_pGraphicDev->SetFVF(FVF_CUBE);
-//	m_pGraphicDev->SetIndices(m_pIB);
-//	m_pGraphicDev->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12); // 인덱스 버퍼도 활용하여 출력하는 함수
-//
-//	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matColMatrix);
+	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+
+	m_pGraphicDev->SetTexture(0, m_pTexture[m_eColType]);
+	//m_pSphere->DrawSubset(0);
+
+	m_pGraphicDev->SetStreamSource(0, m_pVB, 0, sizeof(VTXCUBE));
+	m_pGraphicDev->SetFVF(FVF_CUBE);
+	m_pGraphicDev->SetIndices(m_pIB);
+	m_pGraphicDev->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12); // 인덱스 버퍼도 활용하여 출력하는 함수
+
+	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 //#endif
 }
 

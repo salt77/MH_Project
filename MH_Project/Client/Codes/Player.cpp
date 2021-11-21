@@ -120,7 +120,7 @@ HRESULT CPlayer::LateReady_Object()
 	m_pSteminabarValueUI = dynamic_cast<CPlayer_Steminabar_ValueUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Steminabar_ValueUI"));
 	m_pSpbarValueUI = dynamic_cast<CPlayer_Spbar_ValueUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Spbar_ValueUI"));
 
-	m_pNaviMeshCom->Set_CellIndex(0);
+	m_pNaviMeshCom->Set_CellIndex(Compute_InCell());
 
 	return S_OK;
 }
@@ -140,6 +140,7 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 
 	m_pMainCam = static_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
 
+	m_pNaviMeshCom->Set_CellIndex(Compute_InCell());
 	//SetUp_OnTerrain();
 	Compute_CanAction();
 	Compute_Buff();
@@ -171,49 +172,16 @@ _int CPlayer::LateUpdate_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::LateUpdate_Object(fTimeDelta);
 
-	//if (!m_mapColliderCom.empty())
-	//{
-	//	map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
-
-	//	for (; iter != m_mapColliderCom.end(); ++iter)
-	//	{
-	//		iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
-	//	}
-	//}
-	//if (!m_mapBoxColliderCom.empty())
-	//{
-	//	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
-
-	//	for (; iter != m_mapBoxColliderCom.end(); ++iter)
-	//	{
-	//		if (L"Other_Attack" == iter->first)
-	//		{
-	//			CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
-
-	//			iter->second->Set_ColliderMatrix(pHitBoxPosTrans->Get_WorldMatrix());
-	//		}
-	//		else
-	//		{
-	//			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
-	//		}
-	//	}
-	//}
-
-	return iExit;
-}
-
-void CPlayer::Render_Object(void)
-{
 	if (!m_mapColliderCom.empty())
 	{
 		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
 
 		for (; iter != m_mapColliderCom.end(); ++iter)
 		{
-			if (iter->second->Get_CanCollision())
-			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-			}
+			//if (iter->second->Get_CanCollision())
+			//{
+			iter->second->LateUpdate_Collider(m_pTransformCom->Get_WorldMatrix());
+			//}
 		}
 	}
 	if (!m_mapBoxColliderCom.empty())
@@ -222,26 +190,65 @@ void CPlayer::Render_Object(void)
 
 		for (; iter != m_mapBoxColliderCom.end(); ++iter)
 		{
-			if (iter->second->Get_CanCollision())
+			//if (iter->second->Get_CanCollision())
+			//{
+			if (L"Other_Attack" == iter->first)
 			{
-				if (L"Other_Attack" == iter->first)
-				{
-					CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
+				CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
 
-					iter->second->Render_Collider(COL_FALSE, pHitBoxPosTrans->Get_WorldMatrix());
-				}
-				else
-				{
-					iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-				}
+				iter->second->LateUpdate_Collider(pHitBoxPosTrans->Get_WorldMatrix());
 			}
+			else
+			{
+				iter->second->LateUpdate_Collider(m_pTransformCom->Get_WorldMatrix());
+			}
+			//}
 		}
 	}
 
+	return iExit;
+}
+
+void CPlayer::Render_Object(void)
+{
+	//if (!m_mapColliderCom.empty())
+	//{
+	//	map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+
+	//	for (; iter != m_mapColliderCom.end(); ++iter)
+	//	{
+	//		//if (iter->second->Get_CanCollision())
+	//		//{
+	//			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	//		//}
+	//	}
+	//}
+	//if (!m_mapBoxColliderCom.empty())
+	//{
+	//	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+
+	//	for (; iter != m_mapBoxColliderCom.end(); ++iter)
+	//	{
+	//		//if (iter->second->Get_CanCollision())
+	//		//{
+	//			if (L"Other_Attack" == iter->first)
+	//			{
+	//				CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
+
+	//				iter->second->Render_Collider(COL_FALSE, pHitBoxPosTrans->Get_WorldMatrix());
+	//			}
+	//			else
+	//			{
+	//				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	//			}
+	//		//}
+	//	}
+	//}
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
-	if (m_pNaviMeshCom)
-		m_pNaviMeshCom->Render_NaviMesh();
+	//if (m_pNaviMeshCom)
+	//	m_pNaviMeshCom->Render_NaviMesh();
 
 	LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
 	pEffect->AddRef();
@@ -971,7 +978,7 @@ void CPlayer::MoveOn_Skill(const _float & fTimeDelta)
 				m_fSkillMoveEndTime >= m_fAniTime)
 			{
 				//m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
-				m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta, true));
+				m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
 				m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT), m_fSkillMoveSpeed, fTimeDelta);
 				//m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT));
 			}
@@ -1413,6 +1420,7 @@ void CPlayer::Animation_Control()
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
 
+			m_lfAniEnd *= 1.1f;
 			SoundPlayerHurt;
 			SoundMgr(L"Skill_DownResist.wav", CSoundMgr::PLAYER_EFFECT);
 			break;
@@ -1425,7 +1433,8 @@ void CPlayer::Animation_Control()
 
 			SKILL_MOVE_BYANI(0.2f, 350.f, 0.85f);
 
-			m_lfAniEnd *= 0.7f;
+			//m_lfAniEnd *= 0.7f;
+			m_lfAniEnd = 0.9f;
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
 			break;
@@ -1447,7 +1456,7 @@ void CPlayer::Animation_Control()
 			m_eNextSmash = STATE_DASHATK;
 
 			//m_lfAniEnd *= 0.85f
-			m_lfAniEnd = 1.23f;
+			m_lfAniEnd = 1.3f;
 			SoundPlayerHurt;
 			break;
 
@@ -1485,14 +1494,14 @@ void CPlayer::Animation_Control()
 			break;
 
 		case STATE_FURY2:
-			SKILL_MOVE_BYANI(0.45f, 4000.f, 0.6f);
+			SKILL_MOVE_BYANI(0.45f, 3250.f, 0.6f);
 			m_lfAniEnd = 1.9f;
 
 			Set_PlayerStemina(-30.f);
 			break;
 
 		case STATE_FURY:
-			SKILL_MOVE_BYANI(0.45f, 3250.f, 0.6f);
+			SKILL_MOVE_BYANI(0.45f, 2750.f, 0.6f);
 			m_lfAniEnd = 1.7f;
 
 			Set_PlayerStemina(-30.f);
@@ -1502,10 +1511,11 @@ void CPlayer::Animation_Control()
 			//	break;
 
 		case STATE_DASH_S:
-			SKILL_MOVE_BYANI(0.125f, 700.f, 0.3f);
+			SKILL_MOVE_BYANI(0.125f, 900.f, 0.3f);
 
 			Set_PlayerStemina(-9.f);
 
+			m_lfAniEnd = 0.568f;
 			m_eNextAtk = STATE_ATK1;
 			SetNextSmash(STATE_DOUBLE_CRECSENT, 750);
 			break;
@@ -1515,6 +1525,7 @@ void CPlayer::Animation_Control()
 
 			Set_PlayerStemina(-15.f);
 
+			m_lfAniEnd = 0.568f;
 			m_eNextAtk = STATE_ATK1;
 			SetNextSmash(STATE_DOUBLE_CRECSENT, 750);
 			break;
@@ -2095,4 +2106,57 @@ void CPlayer::Update_State()
 	{
 		m_tPlayerInfo.iSkillPoint = m_tPlayerInfo.iMaxSkillPoint;
 	}
+}
+
+const _ulong & CPlayer::Compute_InCell()
+{
+	vector<CCell*>	vecCell = m_pNaviMeshCom->Get_CellVector();
+	vector<CCell*>::iterator	iter = vecCell.begin();
+
+	for (; iter != vecCell.end(); ++iter)
+	{
+		for (_uint i = 0; i < CCell::POINT_END; ++i)
+		{
+			_vec3	vTemp;
+			_vec3	vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
+			vMyPos.y = 0.f;
+
+			_vec3	vPointA = *(*iter)->Get_Point(CCell::POINT_A);
+			_vec3	vPointB = *(*iter)->Get_Point(CCell::POINT_B);
+			_vec3	vPointC = *(*iter)->Get_Point(CCell::POINT_C);
+			vPointA.y = 0.f;
+			vPointB.y = 0.f;
+			vPointC.y = 0.f;
+
+			_vec3	vDirAB = vPointB - vPointA;
+			_vec3	vDirAC = vPointC - vPointA;
+			_vec3	vDirAP = vMyPos - vPointA;
+			D3DXVec3Normalize(&vDirAB, &vDirAB);
+			D3DXVec3Normalize(&vDirAC, &vDirAC);
+			D3DXVec3Normalize(&vDirAP, &vDirAP);
+
+			_vec3	vDirBA = vPointA - vPointB;
+			_vec3	vDirBC = vPointC - vPointB;
+			_vec3	vDirBP = vMyPos - vPointB;
+			D3DXVec3Normalize(&vDirBA, &vDirBA);
+			D3DXVec3Normalize(&vDirBC, &vDirBC);
+			D3DXVec3Normalize(&vDirBP, &vDirBP);
+
+			_vec3	vDirCA = vPointA - vPointC;
+			_vec3	vDirCB = vPointB - vPointC;
+			_vec3	vDirCP = vMyPos - vPointC;
+			D3DXVec3Normalize(&vDirCA, &vDirCA);
+			D3DXVec3Normalize(&vDirCB, &vDirCB);
+			D3DXVec3Normalize(&vDirCP, &vDirCP);
+
+			if (0.f < D3DXVec3Cross(&vTemp, &vDirCP, &vDirCB)->y &&
+				0.f < D3DXVec3Cross(&vTemp, &vDirBP, &vDirBA)->y &&
+				0.f < D3DXVec3Cross(&vTemp, &vDirAP, &vDirAC)->y)
+			{
+				return *(*iter)->Get_CellIndex();
+			}
+		}
+	}
+
+	return 0;
 }

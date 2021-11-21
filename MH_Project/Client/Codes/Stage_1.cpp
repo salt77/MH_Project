@@ -6,6 +6,11 @@
 #include "Dog.h"
 #include "Soldier.h"
 #include "Knight.h"
+#include "Dog_Info.h"
+#include "Soldier_Info.h"
+#include "Knight_Info.h"
+
+#include "SlashPoint.h"
 
 #include "Export_Function.h"
 
@@ -29,6 +34,7 @@ HRESULT CStage_1::Ready_Scene(void)
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Effect(L"Effect"), E_FAIL);
 
 	return S_OK;
 }
@@ -37,14 +43,19 @@ HRESULT CStage_1::LateReady_Scene()
 {
 	m_eSceneID = SCENE_STAGE_1;
 
+	m_pLayer = CLayer::Create();
+	m_pSpawnLayer = CLayer::Create();
+	m_pEnemyLayer = CLayer::Create();
+
 	FAILED_CHECK_RETURN(Load_NaviMesh(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
 
-	m_pLayer = CLayer::Create();
+	m_mapLayer.emplace(L"GameLogic_Spawn", m_pSpawnLayer);
+	m_mapLayer.emplace(L"Enemies", m_pEnemyLayer);
 
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 
@@ -204,6 +215,29 @@ HRESULT CStage_1::Ready_Layer_UI(const wstring pLayerTag)
 	return S_OK;
 }
 
+HRESULT CStage_1::Ready_Layer_Effect(const wstring pLayerTag)
+{
+	CLayer*		pLayer = CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	CGameObject*		pGameObject = nullptr;
+
+	// SlashPoint
+	for (_uint i = 0; i < SLASHPOINT_COUNT; ++i)
+	{
+		wstring	wstrName = L"Efx_SlashPoint_";
+		wstrName += to_wstring(i);
+
+		pGameObject = CSlashPoint::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+	}
+
+	m_mapLayer.emplace(pLayerTag, pLayer);
+
+	return S_OK;
+}
+
 HRESULT CStage_1::Ready_Prototype(void)
 {
 	return S_OK;
@@ -263,8 +297,7 @@ HRESULT CStage_1::Load_DogInfo()
 {
 	HANDLE hFile = CreateFile(L"../../Data/Dog_Obj.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
-	CLayer*		pLayer = CLayer::Create();
-	NULL_CHECK_RETURN(pLayer, E_FAIL);
+	NULL_CHECK_RETURN(m_pSpawnLayer, E_FAIL);
 
 	DWORD dwbyte = 0;
 
@@ -278,8 +311,6 @@ HRESULT CStage_1::Load_DogInfo()
 	ReadFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
 	ReadFile(hFile, &iTargetCount, sizeof(_uint), &dwbyte, nullptr);
 
-	_uint	iIndex = 0;
-
 	for (_uint i = 0; i < iTargetCount; ++i)
 	{
 		if (0 == dwbyte)
@@ -289,16 +320,15 @@ HRESULT CStage_1::Load_DogInfo()
 		ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
 		ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
 
-		wstring wstrName = L"Dog_";
-		wstrName += to_wstring(iIndex);
+		//wstring wstrName = L"Dog_";
+		wstring wstrName = L"Dog_Info_";
+		wstrName += to_wstring(i);
 
 		CGameObject*		pGameObject = nullptr;
 
-		pGameObject = CDog::Create(m_pGraphicDev);
+		pGameObject = CDog_Info::Create(m_pGraphicDev);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
-
-		++iIndex;
+		FAILED_CHECK_RETURN(m_pSpawnLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
 
 		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&vPos);
 		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_X, vRotate.x);
@@ -306,7 +336,22 @@ HRESULT CStage_1::Load_DogInfo()
 		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Z, vRotate.z);
 	}
 
-	m_mapLayer.emplace(L"Enemies", pLayer);
+	// Pooling且 按眉 积己 
+	NULL_CHECK_RETURN(m_pEnemyLayer, E_FAIL);
+
+	for (_uint i = 0; i < DOG_COUNT; ++i)
+	{
+		wstring wstrName = L"Dog_";
+		wstrName += to_wstring(i);
+
+		CGameObject*		pGameObject = nullptr;
+
+		pGameObject = CDog::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(m_pEnemyLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&POOLING_POS);
+	}
 
 	CloseHandle(hFile);
 
@@ -317,8 +362,7 @@ HRESULT CStage_1::Load_SoldierInfo()
 {
 	HANDLE hFile = CreateFile(L"../../Data/Soldier_Obj.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
-	CLayer*		pLayer = CLayer::Create();
-	NULL_CHECK_RETURN(pLayer, E_FAIL);
+	NULL_CHECK_RETURN(m_pSpawnLayer, E_FAIL);
 
 	DWORD dwbyte = 0;
 
@@ -332,8 +376,6 @@ HRESULT CStage_1::Load_SoldierInfo()
 	ReadFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
 	ReadFile(hFile, &iTargetCount, sizeof(_uint), &dwbyte, nullptr);
 
-	_uint	iIndex = 0;
-
 	for (_uint i = 0; i < iTargetCount; ++i)
 	{
 		if (0 == dwbyte)
@@ -343,16 +385,18 @@ HRESULT CStage_1::Load_SoldierInfo()
 		ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
 		ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
 
-		wstring wstrName = L"Soldier_";
-		wstrName += to_wstring(iIndex);
+		//wstring wstrName = L"Soldier_";
+		wstring wstrName = L"Soldier_Info_";
+		wstrName += to_wstring(i);
 
 		CGameObject*		pGameObject = nullptr;
 
-		pGameObject = CSoldier::Create(m_pGraphicDev);
+		//pGameObject = CSoldier::Create(m_pGraphicDev);
+		//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		//FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+		pGameObject = CSoldier_Info::Create(m_pGraphicDev);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
-
-		++iIndex;
+		FAILED_CHECK_RETURN(m_pSpawnLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
 
 		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&vPos);
 		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_X, vRotate.x);
@@ -360,7 +404,22 @@ HRESULT CStage_1::Load_SoldierInfo()
 		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Z, vRotate.z);
 	}
 
-	m_mapLayer.emplace(L"Enemies", pLayer);
+	// Pooling且 按眉 积己 
+	NULL_CHECK_RETURN(m_pEnemyLayer, E_FAIL);
+
+	for (_uint i = 0; i < SOLDIER_COUNT; ++i)
+	{
+		wstring wstrName = L"Soldier_";
+		wstrName += to_wstring(i);
+
+		CGameObject*		pGameObject = nullptr;
+
+		pGameObject = CSoldier::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(m_pEnemyLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&POOLING_POS);
+	}
 
 	CloseHandle(hFile);
 
@@ -371,8 +430,7 @@ HRESULT CStage_1::Load_KnightInfo()
 {
 	HANDLE hFile = CreateFile(L"../../Data/Knight_Obj.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
-	CLayer*		pLayer = CLayer::Create();
-	NULL_CHECK_RETURN(pLayer, E_FAIL);
+	NULL_CHECK_RETURN(m_pSpawnLayer, E_FAIL);
 
 	DWORD dwbyte = 0;
 
@@ -386,8 +444,6 @@ HRESULT CStage_1::Load_KnightInfo()
 	ReadFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
 	ReadFile(hFile, &iTargetCount, sizeof(_uint), &dwbyte, nullptr);
 
-	_uint	iIndex = 0;
-
 	for (_uint i = 0; i < iTargetCount; ++i)
 	{
 		if (0 == dwbyte)
@@ -397,16 +453,15 @@ HRESULT CStage_1::Load_KnightInfo()
 		ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
 		ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
 
-		wstring wstrName = L"Knight_";
-		wstrName += to_wstring(iIndex);
+		//wstring wstrName = L"Knight_";
+		wstring wstrName = L"Knight_Info_";
+		wstrName += to_wstring(i);
 
-		CGameObject*		pGameObject = nullptr;
+		CGameObject*	pGameObject = nullptr;
 
-		pGameObject = CKnight::Create(m_pGraphicDev);
+		pGameObject = CKnight_Info::Create(m_pGraphicDev);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
-
-		++iIndex;
+		FAILED_CHECK_RETURN(m_pSpawnLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
 
 		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&vPos);
 		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_X, vRotate.x);
@@ -414,7 +469,22 @@ HRESULT CStage_1::Load_KnightInfo()
 		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Z, vRotate.z);
 	}
 
-	m_mapLayer.emplace(L"Enemies", pLayer);
+	// Pooling且 按眉 积己 
+	NULL_CHECK_RETURN(m_pEnemyLayer, E_FAIL);
+
+	for (_uint i = 0; i < KNIGHT_COUNT; ++i)
+	{
+		wstring wstrName = L"Knight_";
+		wstrName += to_wstring(i);
+
+		CGameObject*		pGameObject = nullptr;
+
+		pGameObject = CKnight::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(m_pEnemyLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+
+		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&POOLING_POS);
+	}
 
 	CloseHandle(hFile);
 
@@ -613,6 +683,8 @@ CStage_1* CStage_1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CStage_1::Free(void)
 {
 	Safe_Release(m_pLayer);
+	Safe_Release(m_pSpawnLayer);
+	Safe_Release(m_pEnemyLayer);
 
 	CCollisionMgr::DestroyInstance();
 

@@ -103,7 +103,7 @@ CLayer * CScene::Get_Layer(const wstring wstrLayerTag)
 
 	for (; iter != m_mapLayer.end(); ++iter)
 	{
-		if (L"Enemies" == iter->first)
+		if (wstrLayerTag == iter->first)
 		{
 			return iter->second;
 		}

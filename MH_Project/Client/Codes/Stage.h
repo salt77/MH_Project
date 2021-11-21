@@ -32,6 +32,7 @@ private:
 	HRESULT				Ready_Layer_Environment(const wstring pLayerTag);
 	HRESULT				Ready_Layer_GameLogic(const wstring pLayerTag);
 	HRESULT				Ready_Layer_UI(const wstring pLayerTag);
+	HRESULT				Ready_Layer_Effect(const wstring pLayerTag);
 	HRESULT				Ready_Prototype(void);
 	HRESULT				Ready_LightInfo(void);
 
