@@ -121,6 +121,36 @@ void CTrail::Management_Point()
 		vPoint[0] = _vec3(0.f, 0.f, 0.f);
 		vPoint[1] = _vec3(0.f, 0.f, 0.f);
 
+		//////////////
+		VTXTEX*		pVertex = nullptr;
+		m_pVB->Lock(0, 0, (void**)&pVertex, 0);
+
+		//pVertex = new VTXTEX[20];
+		//ZeroMemory(pVertex, sizeof(VTXTEX) * 20);
+
+		list<_vec3>::iterator	iter = m_listPoint.begin();
+
+		for (_uint i = 0; iter != m_listPoint.end(); )
+		{
+			pVertex[i].vPosition = *iter;
+
+			if (i % 2)
+			{
+				pVertex[i].vTexUV = _vec2(1 / (20 - 1.f), 0.f);
+			}
+			else
+			{
+				pVertex[i].vTexUV = _vec2(i - 1 / (20 - 1.f), 1.f);
+			}
+
+			++i;
+			++iter;
+		}
+
+		m_pVB->Unlock();
+
+		//////////////
+
 		D3DXVec3TransformCoord(&vPoint[0], &m_vWeaponUpper, m_pMatWeapon);
 		D3DXVec3TransformCoord(&vPoint[1], &m_vWeaponLower, m_pMatWeapon);
 

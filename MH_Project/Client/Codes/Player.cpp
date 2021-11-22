@@ -211,39 +211,39 @@ _int CPlayer::LateUpdate_Object(const _float & fTimeDelta)
 
 void CPlayer::Render_Object(void)
 {
-	//if (!m_mapColliderCom.empty())
-	//{
-	//	map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+	if (!m_mapColliderCom.empty())
+	{
+		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
 
-	//	for (; iter != m_mapColliderCom.end(); ++iter)
-	//	{
-	//		//if (iter->second->Get_CanCollision())
-	//		//{
-	//			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-	//		//}
-	//	}
-	//}
-	//if (!m_mapBoxColliderCom.empty())
-	//{
-	//	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+		for (; iter != m_mapColliderCom.end(); ++iter)
+		{
+			//if (iter->second->Get_CanCollision())
+			//{
+				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+			//}
+		}
+	}
+	if (!m_mapBoxColliderCom.empty())
+	{
+		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
 
-	//	for (; iter != m_mapBoxColliderCom.end(); ++iter)
-	//	{
-	//		//if (iter->second->Get_CanCollision())
-	//		//{
-	//			if (L"Other_Attack" == iter->first)
-	//			{
-	//				CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
+		for (; iter != m_mapBoxColliderCom.end(); ++iter)
+		{
+			//if (iter->second->Get_CanCollision())
+			//{
+				if (L"Other_Attack" == iter->first)
+				{
+					CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
 
-	//				iter->second->Render_Collider(COL_FALSE, pHitBoxPosTrans->Get_WorldMatrix());
-	//			}
-	//			else
-	//			{
-	//				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-	//			}
-	//		//}
-	//	}
-	//}
+					iter->second->Render_Collider(COL_FALSE, pHitBoxPosTrans->Get_WorldMatrix());
+				}
+				else
+				{
+					iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+				}
+			//}
+		}
+	}
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 

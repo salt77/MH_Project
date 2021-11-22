@@ -1,4 +1,4 @@
-#ifndef TerrainTex_h__
+ #ifndef TerrainTex_h__
 #define TerrainTex_h__
 
 #include "VIBuffer.h"

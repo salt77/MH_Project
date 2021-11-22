@@ -12,6 +12,13 @@ public:
 	virtual ~CTrailBuffer();
 
 public:
+	HRESULT			Create_Buffer();
+
+private:
+	_ulong			m_dwCreateTime = GetTickCount();
+	_ulong			m_dwCreateDelay = 100;
+
+public:
 	static	CTrailBuffer*	Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual CComponent *	Clone() override;
 	virtual void			Free() override;
