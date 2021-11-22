@@ -98,7 +98,7 @@ private:
 	_float		m_fDistanceFromTarget = 2.15f;
 	_float		m_fOriginDistanceFromTarget = 2.15f;
 	_float		m_fHighlightDistance = 2.15f;
-	_float		m_fInterpolY = 0.85f;
+	_float		m_fInterpolY = 0.75f;
 
 	// Ahglan Cutscene
 	_float		m_fRiseUp = 0.05f;

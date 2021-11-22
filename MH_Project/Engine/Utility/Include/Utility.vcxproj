@@ -64,7 +64,6 @@
     <ClInclude Include="..\Codes\TerrainTex.h" />
     <ClInclude Include="..\Codes\Texture.h" />
     <ClInclude Include="..\Codes\Trail.h" />
-    <ClInclude Include="..\Codes\TrailBuffer.h" />
     <ClInclude Include="..\Codes\Transform.h" />
     <ClInclude Include="..\Codes\TriCol.h" />
     <ClInclude Include="..\Codes\VIBuffer.h" />
@@ -105,7 +104,6 @@
     <ClCompile Include="..\Codes\TerrainTex.cpp" />
     <ClCompile Include="..\Codes\Texture.cpp" />
     <ClCompile Include="..\Codes\Trail.cpp" />
-    <ClCompile Include="..\Codes\TrailBuffer.cpp" />
     <ClCompile Include="..\Codes\Transform.cpp" />
     <ClCompile Include="..\Codes\TriCol.cpp" />
     <ClCompile Include="..\Codes\VIBuffer.cpp" />
@@ -114,6 +112,7 @@
     <FxCompile Include="..\Codes\Shader_DamageFont.fx" />
     <FxCompile Include="..\Codes\Shader_Normal.fx" />
     <FxCompile Include="..\Codes\Shader_StageMesh.fx" />
+    <FxCompile Include="..\Codes\Shader_Trail.fx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3EE30CCD-3A0D-4D6C-9265-01740CDE4783}</ProjectGuid>

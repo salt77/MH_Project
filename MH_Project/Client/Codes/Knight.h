@@ -19,6 +19,7 @@ class CShader;
 END
 
 class CPlayer;
+class CTrail_Sword;
 
 class CKnight : public CGameObject
 {
@@ -59,6 +60,7 @@ private:
 	void			Movement();
 	void			MoveOn_Skill();
 	void			RotateLookVector();
+	void			Make_TrailEffect(const _float& fDeltaTime);
 
 public:
 	HRESULT			Add_NaviMesh();
@@ -100,7 +102,8 @@ private:
 
 	CPlayer*		m_pPlayer = nullptr;
 	CTransform*		m_pPlayerTrans = nullptr;
-	
+	CTrail_Sword*	m_pTrailSword = nullptr;
+
 	// Component
 	CDynamicMesh*	m_pMeshCom = nullptr;
 	CTransform*		m_pTransformCom = nullptr;

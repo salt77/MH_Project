@@ -10,6 +10,7 @@
 #include "Soldier_Info.h"
 #include "Knight_Info.h"
 
+#include "Trail_Sword.h"
 #include "SlashPoint.h"
 
 #include "Export_Function.h"
@@ -148,6 +149,15 @@ HRESULT CStage_1::Ready_Layer_GameLogic(const wstring pLayerTag)
 	pGameObject = CHitBox_Pos::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HitBox_Pos", pGameObject), E_FAIL);
+
+	// Trail_Sword
+	pGameObject = CTrail_Sword::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Sword_Trail", pGameObject), E_FAIL);
+
+	pGameObject = CTrail_Sword::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Sword_Trail2", pGameObject), E_FAIL);
 
 	//pGameObject = CDog::Create(m_pGraphicDev);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);

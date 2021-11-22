@@ -159,7 +159,8 @@ private:
 	CAhglan*		m_pAhglan = nullptr;
 	CLayer*			m_pUILayer = nullptr;
 	CLayer*			m_pOtherLayer = nullptr;
-	CTrail_Sword*	m_pTrailSword = nullptr;
+	CTrail_Sword*	m_pTrailSwordL = nullptr;
+	CTrail_Sword*	m_pTrailSwordR = nullptr;
 	CPlayer_Hpbar_ValueUI*	m_pHpbarValueUI = nullptr;
 	CPlayer_Hpbar_LerpUI*	m_pHpbarLerpUI = nullptr;
 	CPlayer_Steminabar_ValueUI*	m_pSteminabarValueUI = nullptr;

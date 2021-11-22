@@ -19,7 +19,7 @@ CTrail::~CTrail()
 
 HRESULT CTrail::Ready_Buffer()
 {
-	m_dwTriCnt = 20;
+	m_dwTriCnt = 15;
 	m_dwVtxCnt = m_dwTriCnt * 2;
 	m_dwVtxSize = sizeof(VTXTEX);
 	m_dwFVF = FVF_TEX;
@@ -115,8 +115,10 @@ void CTrail::Management_Point()
 
 	m_fInTime += m_fDeltaTime;
 
-	if (0.01f <= m_fInTime)
+	if (0.001f <= m_fInTime)
 	{
+		m_dwTriCnt = m_dwVtxCnt * 0.5f;
+
 		_vec3	vPoint[2];
 		vPoint[0] = _vec3(0.f, 0.f, 0.f);
 		vPoint[1] = _vec3(0.f, 0.f, 0.f);
@@ -124,9 +126,6 @@ void CTrail::Management_Point()
 		//////////////
 		VTXTEX*		pVertex = nullptr;
 		m_pVB->Lock(0, 0, (void**)&pVertex, 0);
-
-		//pVertex = new VTXTEX[20];
-		//ZeroMemory(pVertex, sizeof(VTXTEX) * 20);
 
 		list<_vec3>::iterator	iter = m_listPoint.begin();
 
@@ -136,11 +135,11 @@ void CTrail::Management_Point()
 
 			if (i % 2)
 			{
-				pVertex[i].vTexUV = _vec2(1 / (20 - 1.f), 0.f);
+				pVertex[i].vTexUV = _vec2(i / _float(m_dwVtxCnt - 2.f), 1.f);
 			}
 			else
 			{
-				pVertex[i].vTexUV = _vec2(i - 1 / (20 - 1.f), 1.f);
+				pVertex[i].vTexUV = _vec2(i / _float(m_dwVtxCnt - 2.f), 0.f);
 			}
 
 			++i;
@@ -148,6 +147,22 @@ void CTrail::Management_Point()
 		}
 
 		m_pVB->Unlock();
+
+		INDEX16*	pIndex = nullptr;
+		m_pIB->Lock(0, 0, (void**)&pIndex, 0);
+
+		for (_uint i = 0; i < m_dwTriCnt; i += 2)
+		{
+			pIndex[i]._0 = i + 3;
+			pIndex[i]._1 = i + 1;
+			pIndex[i]._2 = i;
+
+			pIndex[i + 1]._0 = i + 2;
+			pIndex[i + 1]._1 = i + 3;
+			pIndex[i + 1]._2 = i;
+		}
+
+		m_pIB->Unlock();
 
 		//////////////
 

@@ -217,6 +217,9 @@
     <Filter Include="02.GameObject\12.Effect\00.SlashPoint">
       <UniqueIdentifier>{3a092054-3d2d-4a01-ba20-bb26697c98b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\04.Slot">
+      <UniqueIdentifier>{40db719d-c9b3-4d0b-b654-bab9209858a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -381,6 +384,9 @@
     <ClInclude Include="..\Codes\EffectMgr.h">
       <Filter>97.Manager\01.EffectMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Player_SlotUI.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\04.Slot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -535,6 +541,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\EffectMgr.cpp">
       <Filter>97.Manager\01.EffectMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player_SlotUI.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\04.Slot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

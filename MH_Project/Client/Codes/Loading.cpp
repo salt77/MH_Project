@@ -73,7 +73,7 @@ Engine::_uint CLoading::Loading_ForStage()
 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SkyBox", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/SkyBox/SkyBox%d.dds", TEX_CUBE, 2)), E_FAIL);
 
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SwordTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_effect_blade_trail2.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SwordTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_longblade_trail02.tga", TEX_NORMAL)), E_FAIL);
 
 	// Player UI
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Hpbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Hpbar_Back.png", TEX_NORMAL)), E_FAIL);
@@ -85,6 +85,8 @@ Engine::_uint CLoading::Loading_ForStage()
 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Spbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Spbar_Back.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Spbar_ValueUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Spbar_Value.png", TEX_NORMAL)), E_FAIL);
+
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_SlotUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Slot.png", TEX_NORMAL)), E_FAIL);
 
 	// Boss Hpbar(모든 보스 공용)
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_Hpbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossHpBar_Base.png", TEX_NORMAL)), E_FAIL);
@@ -105,7 +107,7 @@ Engine::_uint CLoading::Loading_ForStage()
 
 	// Buff UI
 	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_CriticalUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/skill_lethita_glidingfury.tga", TEX_NORMAL)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_ReinforceFuryUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/skill_lethita_spirit_wind.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_ReinforceFuryUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/skill_lethita_spirit_wind.tga", TEX_NORMAL)), E_FAIL);
 
 	// Damage Font UI
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Damage_Font_NormalUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Font_Damage/Font_Damage_Normal_%d.png", TEX_NORMAL, 10)), E_FAIL);
@@ -159,7 +161,8 @@ _uint CLoading::Loading_ForStage_1()
 
 	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SkyBox", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/SkyBox/SkyBox%d.dds", TEX_CUBE, 2)), E_FAIL);
 
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SwordTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_effect_blade_trail2.tga", TEX_NORMAL)), E_FAIL);
+	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SwordTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_longblade_trail01.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SwordTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_longblade_trail02.tga", TEX_NORMAL)), E_FAIL);
 
 	// Player UI
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Hpbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Hpbar_Back.png", TEX_NORMAL)), E_FAIL);
@@ -171,6 +174,9 @@ _uint CLoading::Loading_ForStage_1()
 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Spbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Spbar_Back.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Spbar_ValueUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Spbar_Value.png", TEX_NORMAL)), E_FAIL);
+
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_SlotUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Slot.png", TEX_NORMAL)), E_FAIL);
+
 
 	// Boss Hpbar(모든 보스 공용)
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_Hpbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossHpBar_Base.png", TEX_NORMAL)), E_FAIL);
@@ -191,7 +197,7 @@ _uint CLoading::Loading_ForStage_1()
 
 	// Buff UI
 	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_CriticalUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/skill_lethita_glidingfury.tga", TEX_NORMAL)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_ReinforceFuryUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/skill_lethita_spirit_wind.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_ReinforceFuryUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/skill_lethita_spirit_wind.tga", TEX_NORMAL)), E_FAIL);
 
 	// Damage Font UI
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Damage_Font_NormalUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Font_Damage/Font_Damage_Normal_%d.png", TEX_NORMAL, 10)), E_FAIL);
@@ -203,6 +209,8 @@ _uint CLoading::Loading_ForStage_1()
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SlashPoint", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_slashpoint.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_LightRay", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/light_ray.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Critical", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/critical_roll.tga", TEX_NORMAL)), E_FAIL);
+
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Dissolve", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/dissolve.png", TEX_NORMAL)), E_FAIL);
 
 	lstrcpy(m_szLoading, L"Loading Etc..");
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Calculator", CCalculator::Create(m_pGraphicDev)), E_FAIL);

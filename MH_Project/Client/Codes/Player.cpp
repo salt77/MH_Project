@@ -15,6 +15,7 @@
 #include "Player_Spbar_BackUI.h"
 #include "Player_Spbar_ValueUI.h"
 #include "Player_Buff_CriticalUI.h"
+#include "Player_SlotUI.h"
 #include "DamageFont.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -67,45 +68,42 @@ HRESULT CPlayer::LateReady_Object()
 	CGameObject*			pGameObject = nullptr;
 
 	// Hpbar
-	pGameObject = CPlayer_Hpbar_BackUI::Create(m_pGraphicDev, 340.f, WINCY - 135.f, 650.f, 25.f);
+	pGameObject = CPlayer_Hpbar_BackUI::Create(m_pGraphicDev, 340.f, WINCY - 185.f, 650.f, 25.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Hpbar_BackUI", pGameObject), E_FAIL);
 
-	pGameObject = CPlayer_Hpbar_LerpUI::Create(m_pGraphicDev, 340.f, WINCY - 135.f, 650.f, 25.f);
+	pGameObject = CPlayer_Hpbar_LerpUI::Create(m_pGraphicDev, 340.f, WINCY - 185.f, 650.f, 25.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Hpbar_LerpUI", pGameObject), E_FAIL);
 
-	pGameObject = CPlayer_Hpbar_ValueUI::Create(m_pGraphicDev, 340.f, WINCY - 135.f, 650.f, 25.f);
+	pGameObject = CPlayer_Hpbar_ValueUI::Create(m_pGraphicDev, 340.f, WINCY - 185.f, 650.f, 25.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Hpbar_ValueUI", pGameObject), E_FAIL);
 
 	// Steminabar
-	pGameObject = CPlayer_Steminabar_BackUI::Create(m_pGraphicDev, 340.f, WINCY - 115.f, 650.f, 25.f);
+	pGameObject = CPlayer_Steminabar_BackUI::Create(m_pGraphicDev, 340.f, WINCY - 165.f, 650.f, 25.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Steminabar_BackUI", pGameObject), E_FAIL);
 
-	pGameObject = CPlayer_Steminabar_ValueUI::Create(m_pGraphicDev, 340.f, WINCY - 115.f, 650.f, 25.f);
+	pGameObject = CPlayer_Steminabar_ValueUI::Create(m_pGraphicDev, 340.f, WINCY - 165.f, 650.f, 25.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Steminabar_ValueUI", pGameObject), E_FAIL);
 
 	// Spbar
-	pGameObject = CPlayer_Spbar_BackUI::Create(m_pGraphicDev, 210.f, WINCY - 100.f, 350.f, 25.f);
+	pGameObject = CPlayer_Spbar_BackUI::Create(m_pGraphicDev, 210.f, WINCY - 150.f, 350.f, 25.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Spbar_BackUI", pGameObject), E_FAIL);
 
-	pGameObject = CPlayer_Spbar_ValueUI::Create(m_pGraphicDev, 210.f, WINCY - 100.f, 350.f, 25.f);
+	pGameObject = CPlayer_Spbar_ValueUI::Create(m_pGraphicDev, 210.f, WINCY - 150.f, 350.f, 25.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Spbar_ValueUI", pGameObject), E_FAIL);
 
-	Engine::Emplace_Layer(L"Player_UI", m_pUILayer);
-
-
-	// Trail_Sword
-	pGameObject = CTrail_Sword::Create(m_pGraphicDev);
+	// Slot
+	pGameObject = CPlayer_SlotUI::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 80.f, 560.f, 80.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(m_pOtherLayer->Add_GameObject(L"Player_Sword_Trail", pGameObject), E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_SlotUI", pGameObject), E_FAIL);
 
-	Engine::Emplace_Layer(L"Player_Sword_Trail", m_pOtherLayer);
+	Engine::Emplace_Layer(L"Player_UI", m_pUILayer);
 
 
 	m_mapActiveParts.emplace(L"dualsword_vanquisher.tga", TRUE);
@@ -113,7 +111,8 @@ HRESULT CPlayer::LateReady_Object()
 
 	m_pAhglan = dynamic_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"));
 
-	m_pTrailSword = dynamic_cast<CTrail_Sword*>(Engine::Get_GameObject(L"Player_Sword_Trail", L"Player_Sword_Trail"));
+	m_pTrailSwordL = dynamic_cast<CTrail_Sword*>(Engine::Get_GameObject(L"GameLogic", L"Player_Sword_Trail"));
+	m_pTrailSwordR = dynamic_cast<CTrail_Sword*>(Engine::Get_GameObject(L"GameLogic", L"Player_Sword_Trail2"));
 
 	m_pHpbarValueUI = dynamic_cast<CPlayer_Hpbar_ValueUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Hpbar_ValueUI"));
 	m_pHpbarLerpUI = dynamic_cast<CPlayer_Hpbar_LerpUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Hpbar_LerpUI"));
@@ -211,39 +210,39 @@ _int CPlayer::LateUpdate_Object(const _float & fTimeDelta)
 
 void CPlayer::Render_Object(void)
 {
-	if (!m_mapColliderCom.empty())
-	{
-		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+	//if (!m_mapColliderCom.empty())
+	//{
+	//	map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
 
-		for (; iter != m_mapColliderCom.end(); ++iter)
-		{
-			//if (iter->second->Get_CanCollision())
-			//{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-			//}
-		}
-	}
-	if (!m_mapBoxColliderCom.empty())
-	{
-		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+	//	for (; iter != m_mapColliderCom.end(); ++iter)
+	//	{
+	//		//if (iter->second->Get_CanCollision())
+	//		//{
+	//			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	//		//}
+	//	}
+	//}
+	//if (!m_mapBoxColliderCom.empty())
+	//{
+	//	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
 
-		for (; iter != m_mapBoxColliderCom.end(); ++iter)
-		{
-			//if (iter->second->Get_CanCollision())
-			//{
-				if (L"Other_Attack" == iter->first)
-				{
-					CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
+	//	for (; iter != m_mapBoxColliderCom.end(); ++iter)
+	//	{
+	//		//if (iter->second->Get_CanCollision())
+	//		//{
+	//			if (L"Other_Attack" == iter->first)
+	//			{
+	//				CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
 
-					iter->second->Render_Collider(COL_FALSE, pHitBoxPosTrans->Get_WorldMatrix());
-				}
-				else
-				{
-					iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-				}
-			//}
-		}
-	}
+	//				iter->second->Render_Collider(COL_FALSE, pHitBoxPosTrans->Get_WorldMatrix());
+	//			}
+	//			else
+	//			{
+	//				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	//			}
+	//		//}
+	//	}
+	//}
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
@@ -1262,18 +1261,45 @@ void CPlayer::Make_TrailEffect(const _float& fDeltaTime)
 {
 	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
 
-	for (; iter != m_mapBoxColliderCom.end(); )
+	for (; iter != m_mapBoxColliderCom.end(); ++iter)
 	{
-		if (L"Hit_LHandLong" == iter->first)
+		if (STATE_SMASH4 == m_eCurState)
 		{
-			m_pTrailSword->Set_InfoForTrail(fDeltaTime, iter->second->Get_Min(), iter->second->Get_Max(), iter->second->Get_ColliderWorld());
+			if (L"Hit_LHandLong" == iter->first)
+			{
+				// 축을 맞춰주기 위해서 반대로 매개변수를 줬다. 
+				m_pTrailSwordL->Set_InfoForTrail(fDeltaTime, iter->second->Get_Max(), iter->second->Get_Min(), iter->second->Get_ColliderWorld());
+			}
+			else if (L"Hit_RHandLong" == iter->first)
+			{
+				m_pTrailSwordR->Set_InfoForTrail(fDeltaTime, iter->second->Get_Min(), iter->second->Get_Max(), iter->second->Get_ColliderWorld());
+			}
 		}
-		else if (L"Hit_RHandLong" == iter->first)
+		else
 		{
-			m_pTrailSword->Set_InfoForTrail(fDeltaTime, iter->second->Get_Min(), iter->second->Get_Max(), iter->second->Get_ColliderWorld());
+			if (L"Trail_LHand" == iter->first)
+			{
+				// 축을 맞춰주기 위해서 반대로 매개변수를 줬다. 
+				m_pTrailSwordL->Set_InfoForTrail(fDeltaTime, iter->second->Get_Max(), iter->second->Get_Min(), iter->second->Get_ColliderWorld());
+			}
+			else if (L"Trail_RHand" == iter->first)
+			{
+				m_pTrailSwordR->Set_InfoForTrail(fDeltaTime, iter->second->Get_Min(), iter->second->Get_Max(), iter->second->Get_ColliderWorld());
+			}
 		}
+	}
 
-		++iter;
+	if (PL_ATK == m_eCurAction ||
+		PL_SMASH == m_eCurAction ||
+		PL_SKILL == m_eCurAction)
+	{
+		m_pTrailSwordL->Set_Render(true);
+		m_pTrailSwordR->Set_Render(true);
+	}
+	else
+	{
+		m_pTrailSwordL->Set_Render(false);
+		m_pTrailSwordR->Set_Render(false);
 	}
 }
 

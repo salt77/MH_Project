@@ -63,13 +63,28 @@ PS_OUT PS_MAIN(PS_IN In)
 
 technique Default_Technique
 {
-	pass Default
+	pass AlphaBlend_Default
 	{
 		AlphaTestEnable = false;
 		AlphaBlendEnable = true;
 		srcblend = srcalpha;
 		destblend = invsrcalpha;
 		
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_MAIN();
+	}
+
+	pass AlphaBlend_Black
+	{
+		cullmode = none;
+
+		zenable = true;
+		zwriteenable = false;
+
+		AlphaBlendenable = true;
+		srcblend = srcalpha;
+		destblend = one;
+
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_MAIN();
 	}

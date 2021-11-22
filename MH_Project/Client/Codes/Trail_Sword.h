@@ -30,15 +30,21 @@ protected:
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 public:
-	void		Set_InfoForTrail(const _float& fDeltaTime, const _vec3& vWeaponLower, const _vec3& vWeaponUpper, const _matrix* pMatWeapon)
+	void		Set_InfoForTrail(const _float& fDeltaTime, const _vec3& vWeaponLower, const _vec3& vWeaponUpper, const _matrix* pMatWeapon/*, _ulong dwMaxVtxCnt = 30*/)
 	{
 		m_fDeltaTime = fDeltaTime;
 		m_vWeaponLower = vWeaponLower;
 		m_vWeaponUpper = vWeaponUpper;
 		m_pMatWeapon = pMatWeapon;
+		//m_dwMaxVtxCnt = dwMaxVtxCnt;
 	}
+	void		Set_Render(_bool bValue) { m_bRender = bValue; }
 
 private:
+	_bool		m_bRender = false;
+
+	_ulong		m_dwMaxVtxCnt = 15;
+
 	_float		m_fDeltaTime = 0.f;
 
 	_vec3		m_vWeaponLower;

@@ -2,6 +2,7 @@
 #include "Soldier.h"
 
 #include "Player.h"
+#include "Trail_Sword.h"
 
 #include "Export_Function.h"
 #include "Export_Utility.h"

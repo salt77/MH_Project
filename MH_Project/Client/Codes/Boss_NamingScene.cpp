@@ -36,6 +36,9 @@ _int CBoss_NamingScene::Update_Object(const _float& fTimeDelta)
 {
 	_int iExit = CUI::Update_Object(fTimeDelta);
 
+	if (m_bDead)
+		return OBJ_DEAD;
+
 	D3DXMatrixOrthoLH(&m_matProj, WINCX, WINCY, 0.f, 1.f);
 
 	FadeInOut(fTimeDelta);
@@ -252,6 +255,6 @@ void CBoss_NamingScene::FadeInOut(const _float& fTimeDelta)
 	if (1 == m_iFadeCount &&
 		0.f >= m_fValueRatio)
 	{
-		//Engine::Delete_Layer(L"");
+		m_bDead = true;
 	}
 }

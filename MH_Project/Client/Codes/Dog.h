@@ -9,6 +9,7 @@
 BEGIN(Engine)
 
 class CDynamicMesh;
+class CTexture;
 class CTransform;
 class CRenderer;
 class CCalculator;
@@ -104,6 +105,7 @@ private:
 	
 	// Component
 	CDynamicMesh*	m_pMeshCom = nullptr;
+	CTexture*		m_pTextureCom = nullptr;
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
 	CCalculator*	m_pCalculatorCom = nullptr;

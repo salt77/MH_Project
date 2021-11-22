@@ -401,6 +401,7 @@ void CDog::Animation_Control()
 
 		case DOGSTATE_DYING:
 			m_bCanAction = false; 
+			m_lfAniEnd = 0.8f;
 			break;
 
 		case DOGSTATE_SPAWN:

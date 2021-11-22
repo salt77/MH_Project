@@ -2,6 +2,7 @@
 #include "Knight.h"
 
 #include "Player.h"
+#include "Trail_Sword.h"
 
 #include "Export_Function.h"
 #include "Export_Utility.h"
@@ -48,6 +49,7 @@ HRESULT CKnight::LateReady_Object()
 	Add_NaviMesh();
 
 	m_pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+	//m_pTrailSword = static_cast<CTrail_Sword*>(Engine::Get_GameObject(L"GameLogic", L"Knight_Axe_Trail"));
 
 	return S_OK;
 }
@@ -79,6 +81,7 @@ _int CKnight::Update_Object(const _float & fTimeDelta)
 		Animation_Control();
 		Collision_Control();
 		MoveOn_Skill();
+		Make_TrailEffect(fTimeDelta);
 
 		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
@@ -382,6 +385,35 @@ void CKnight::RotateLookVector()
 			m_pTransformCom->Rotation(ROT_Y, -acos(D3DXVec3Dot(&vToPlayerDir, &vMyLook)));
 		}
 	}
+}
+
+void CKnight::Make_TrailEffect(const _float & fDeltaTime)
+{
+	//map<const wstring, CCollider*>::iterator		iter = m_mapColliderCom.begin();
+
+	//for (; iter != m_mapColliderCom.end(); ++iter)
+	//{
+	//	if (L"Attack" == iter->first)
+	//	{
+	//		_float	fRadius = iter->second->Get_Radius();
+	//		_vec3	vPos = iter->second->Get_Center();
+	//		vPos.x += fRadius;
+	//		vPos.y += fRadius;
+	//		vPos.z += fRadius;
+
+	//		// 축을 맞춰주기 위해서 반대로 매개변수를 줬다. 
+	//		m_pTrailSword->Set_InfoForTrail(fDeltaTime, iter->second->Get_Center(), vPos, iter->second->Get_ColliderWorld());
+	//	}
+	//}
+
+	//if (KNIGHT_ATTACK == m_eCurState)
+	//{
+	//	m_pTrailSword->Set_Render(true);
+	//}
+	//else
+	//{
+	//	m_pTrailSword->Set_Render(false);
+	//}
 }
 
 void CKnight::Animation_Control()

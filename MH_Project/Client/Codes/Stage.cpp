@@ -4,6 +4,7 @@
 #include "Ahglan_StageUI.h"
 #include "DamageFont.h"
 #include "CollisionMgr.h"
+#include "Trail_Sword.h"
 #include "SlashPoint.h"
 
 #include "Export_Function.h"
@@ -11,7 +12,7 @@
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
 {
-	m_vecSavePoint.reserve(32);
+	m_vecSavePoint.reserve(400);
 }
 
 CStage::~CStage(void)
@@ -144,6 +145,16 @@ HRESULT CStage::Ready_Layer_GameLogic(const wstring pLayerTag)
 	pGameObject = CHitBox_Pos::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HitBox_Pos", pGameObject), E_FAIL);
+
+	// Trail_Sword
+	pGameObject = CTrail_Sword::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Sword_Trail", pGameObject), E_FAIL);
+
+	pGameObject = CTrail_Sword::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Sword_Trail2", pGameObject), E_FAIL);
+
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 

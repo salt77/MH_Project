@@ -25,6 +25,11 @@ _int CTrail_Sword::Update_Object(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
 
+	//if (!m_bRender)
+	//{
+	//	m_pTrailCom->Clear_TrailBuffer();
+	//}
+
 	Add_RenderGroup(RENDER_ALPHA, this);
 
 	return iExit;
@@ -32,29 +37,28 @@ _int CTrail_Sword::Update_Object(const _float& fTimeDelta)
 
 void CTrail_Sword::Render_Object(void)
 {
-	LPD3DXEFFECT	 pEffect = m_pShaderCom->Get_EffectHandle();
-	pEffect->AddRef();
+	m_pTrailCom->Set_InfoForTrail(m_fDeltaTime, m_vWeaponLower, m_vWeaponUpper, m_pMatWeapon/*, m_dwMaxVtxCnt*/);
 
-	FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
+	if (m_bRender)
+	{
+		LPD3DXEFFECT	 pEffect = m_pShaderCom->Get_EffectHandle();
+		pEffect->AddRef();
 
-	_uint iMaxPass = 0;
+		FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
 
-	pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
-											// 2인자 : 시작하는 방식을 묻는 FLAG
-	pEffect->BeginPass(0);
+		_uint iMaxPass = 0;
 
-	_vec3 vUpper = m_vWeaponUpper;
-	_vec3 vLower = m_vWeaponLower;
-	vLower.y *= 0.5f;
-	vUpper.y *= 0.5f;
-	
-	m_pTrailCom->Set_InfoForTrail(m_fDeltaTime, vLower, vUpper, m_pMatWeapon);
-	m_pTrailCom->Render_Buffer();
+		pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
+												// 2인자 : 시작하는 방식을 묻는 FLAG
+		pEffect->BeginPass(0);
 
-	pEffect->EndPass();
-	pEffect->End();
+		m_pTrailCom->Render_Buffer();
 
-	Safe_Release(pEffect);
+		pEffect->EndPass();
+		pEffect->End();
+
+		Safe_Release(pEffect);
+	}
 }
 
 CTrail_Sword* CTrail_Sword::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -98,7 +102,7 @@ HRESULT CTrail_Sword::Add_Component(void)
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
 	// Shader
-	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Normal"));
+	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Trail"));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Shader", pComponent);
 
@@ -117,7 +121,24 @@ HRESULT CTrail_Sword::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
-	pEffect->SetTexture("g_BaseTexture", 0);
+	//pEffect->SetTexture("g_BaseTexture", 0);
+	m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture");
+
+	//_matrix		matWorld, matView, matProj;
+
+	//m_pGraphicDev->GetTransform(D3DTS_WORLD, &matWorld);
+	//m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	//m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+
+	//m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
+	//m_pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
+	//m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
+
+	//pEffect->SetMatrix("g_matWorld", &matWorld);
+	//pEffect->SetMatrix("g_matView", &matView);
+	//pEffect->SetMatrix("g_matProj", &matProj);
+
+	//m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture");
 
 	return S_OK;
 }
