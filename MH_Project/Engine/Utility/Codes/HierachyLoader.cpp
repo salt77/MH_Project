@@ -120,63 +120,42 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_chain_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_foot.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_foot_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_hand.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_hand_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_head.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_head_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_head_fur.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_head_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_lower_body.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_lower_body_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_upper_body.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"pc_male_plate_upper_body_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"pc_male_plate_upper_body02.tga"))
 			{
@@ -184,27 +163,18 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 				lstrcpy(szFileName, L"pc_male_plate_upper_body02_normal.tga");
 				lstrcat(szFullPath, szFileName);
 
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
-
 			}
 			else if (!lstrcmp(szFileName, L"dualsword_vanquisher.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"dualsword_vanquisher_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"sticky_bomb.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"sticky_bomb_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 
 			// Ahglan Normal Texture
@@ -213,82 +183,102 @@ STDMETHODIMP CHierachyLoader::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDAT
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"golem_ahglan_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"golem_ahglan_inner.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"golem_ahglan_inner_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"golem_ahglan_ore.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"golem_ahglan_ore_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"golem_ahglan_Chest.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"golem_ahglan_Chest_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"golem_ahglan_Head.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"golem_ahglan_Head_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"golem_ahglan_RHand.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"golem_ahglan_RHand_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
+			// Cloyan 
 			else if (!lstrcmp(szFileName, L"mankind_cloyan.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"mankind_cloyan_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"mankind_cloyan_hair.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"mankind_cloyan_hair_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
 			else if (!lstrcmp(szFileName, L"mankind_cloyan_mask.tga"))
 			{
 				lstrcpy(szFullPath, m_pPath.c_str());
 				lstrcpy(szFileName, L"mankind_cloyan_mask_normal.tga");
 				lstrcat(szFullPath, szFileName);
-
-				if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
-					return E_FAIL;
 			}
+			// Enemies
+			else if (!lstrcmp(szFileName, L"attackdog_small.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"attackdog_small_normal.tga");
+				lstrcat(szFullPath, szFileName);
+			}
+			else if (!lstrcmp(szFileName, L"mankind_soldier.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"mankind_soldier_normal.tga");
+				lstrcat(szFullPath, szFileName);
+			}
+			else if (!lstrcmp(szFileName, L"mankind_soldier_cloth.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"mankind_soldier_cloth_normal.tga");
+				lstrcat(szFullPath, szFileName);
+			}
+			else if (!lstrcmp(szFileName, L"longsword_broad_npc.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"longsword_broad_npc_normal.tga");
+				lstrcat(szFullPath, szFileName);
+			}
+			else if (!lstrcmp(szFileName, L"prop_knight.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"prop_knight_normal.tga");
+				lstrcat(szFullPath, szFileName);
+			}
+			else if (!lstrcmp(szFileName, L"prop_knight_cloth.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"prop_knight_cloth_normal.tga");
+				lstrcat(szFullPath, szFileName);
+			}
+			else if (!lstrcmp(szFileName, L"axe_mankind_knight.tga"))
+			{
+				lstrcpy(szFullPath, m_pPath.c_str());
+				lstrcpy(szFileName, L"axe_mankind_knight_normal.tga");
+				lstrcat(szFullPath, szFileName);
+			}
+
+			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &pDerivedMeshContainer->ppNormalTexture[i])))
+				return E_FAIL;
 		}
 	}
 	// 재질 정보가 없는 경우

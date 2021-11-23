@@ -196,9 +196,6 @@
     <Filter Include="02.GameObject\06.Enemy\02.Mankind\01.Soldier">
       <UniqueIdentifier>{5b211554-4e25-4dae-abd0-6b77dcb2bff5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\06.Enemy\02.Mankind\02.Knight">
-      <UniqueIdentifier>{f202b93f-f1ac-464e-992f-84960a315565}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\08.Dummy\01.Spawn_Info">
       <UniqueIdentifier>{1aa2eff7-b82d-4e3d-85a4-87c8ccf6a05e}</UniqueIdentifier>
     </Filter>
@@ -219,6 +216,9 @@
     </Filter>
     <Filter Include="02.GameObject\09.UI\00.PlayerUI\04.Slot">
       <UniqueIdentifier>{40db719d-c9b3-4d0b-b654-bab9209858a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Enemy\02.Mankind\02.Knight">
+      <UniqueIdentifier>{f202b93f-f1ac-464e-992f-84960a315565}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -387,6 +387,9 @@
     <ClInclude Include="..\Codes\Player_SlotUI.h">
       <Filter>02.GameObject\09.UI\00.PlayerUI\04.Slot</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Cloyan.h">
+      <Filter>02.GameObject\06.Enemy\01.Cloyan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -544,6 +547,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Player_SlotUI.cpp">
       <Filter>02.GameObject\09.UI\00.PlayerUI\04.Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Cloyan.cpp">
+      <Filter>02.GameObject\06.Enemy\01.Cloyan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

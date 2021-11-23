@@ -6,13 +6,12 @@
 
 CMainApp::CMainApp(void)
 {
-
 }
 
 CMainApp::~CMainApp(void)
 {
-
 }
+
 
 HRESULT CMainApp::Ready_MainApp(void)
 {

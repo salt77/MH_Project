@@ -57,24 +57,26 @@ _int CTerrain::Update_Object(const _float& fTimeDelta)
 void CTerrain::Render_Object(void)
 {
 	//	m_pBufferCom->Copy_Indices(m_pIndex, m_dwTriCnt);
+	if (SCENE_STAGE == Engine::Get_SceneID())
+	{
+		LPD3DXEFFECT	 pEffect = m_pShaderCom->Get_EffectHandle();
+		pEffect->AddRef();
 
-	LPD3DXEFFECT	 pEffect = m_pShaderCom->Get_EffectHandle();
-	pEffect->AddRef();
+		FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
 
-	FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
+		_uint iMaxPass = 0;
 
-	_uint iMaxPass = 0;
+		pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
+												// 2인자 : 시작하는 방식을 묻는 FLAG
+		pEffect->BeginPass(0);
 
-	pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
-											// 2인자 : 시작하는 방식을 묻는 FLAG
-	pEffect->BeginPass(0);
+		m_pBufferCom->Render_Buffer();
 
-	m_pBufferCom->Render_Buffer();
+		pEffect->EndPass();
+		pEffect->End();
 
-	pEffect->EndPass();
-	pEffect->End();
-
-	Safe_Release(pEffect);
+		Safe_Release(pEffect);
+	}
 }
 
 CTerrain* CTerrain::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iGrass)

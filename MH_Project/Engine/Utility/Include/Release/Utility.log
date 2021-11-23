@@ -1,8 +1,8 @@
-﻿빌드 시작: 2021-11-22 오전 9:24:56
+﻿빌드 시작: 2021-11-23 오전 9:24:45
      1>2 노드의 "C:\Users\salt7\OneDrive\Desktop\MH_Project\MH_Project\Engine\Utility\Include\Utility.vcxproj" 프로젝트(Build 대상)입니다.
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I../Codes /I../../Headers /I../../../Base /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _WINDOWS /D _USRDLL /D UTILITY_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D ENGINE_EXPORTS /Gm- /EHsc /MDd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Release\\" /Fd"Release\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt ..\Codes\Trail.cpp
-         Trail.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I../Codes /I../../Headers /I../../../Base /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _WINDOWS /D _USRDLL /D UTILITY_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D ENGINE_EXPORTS /Gm- /EHsc /MDd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Release\\" /Fd"Release\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt ..\Codes\HierachyLoader.cpp
+         HierachyLoader.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"../Bin\Utility.dll" /INCREMENTAL /NOLOGO /LIBPATH:../../../Reference/Library d3d9.lib d3dx9.lib dxguid.lib System.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"../Bin\Utility.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG:incremental /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"../Bin\Utility.lib" /MACHINE:X86 /SAFESEH /DLL Release\AniCtrl.obj
          Release\BoxCollider.obj
@@ -36,16 +36,15 @@
          Release\TerrainTex.obj
          Release\Texture.obj
          Release\Trail.obj
-         Release\TrailBuffer.obj
          Release\Transform.obj
          Release\TriCol.obj
          Release\VIBuffer.obj
      1>LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무시됩니다.
             ../Bin\Utility.lib 라이브러리 및 ../Bin\Utility.exp 개체를 생성하고 있습니다.
          코드를 생성하고 있습니다.
-         3 of 3258 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+         0 of 3247 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
            0 functions were new in current compilation
-           20 functions had inline decision re-evaluated but remain unchanged
+           0 functions had inline decision re-evaluated but remain unchanged
          코드를 생성했습니다.
          Utility.vcxproj -> C:\Users\salt7\OneDrive\Desktop\MH_Project\MH_Project\Engine\Utility\Include\../Bin\Utility.dll
        PostBuildEvent:
@@ -103,8 +102,9 @@
          .\Engine\Utility\Codes\Shader_Shade.fx
          .\Engine\Utility\Codes\Shader_StageMesh.fx
          .\Engine\Utility\Codes\Shader_Terrain.fx
+         .\Engine\Utility\Codes\Shader_Trail.fx
          .\Engine\Utility\Codes\Shader_UI.fx
-                15개 파일이 복사되었습니다.
+                16개 파일이 복사되었습니다.
                  1개 파일이 복사되었습니다.
                  1개 파일이 복사되었습니다.
                  1개 파일이 복사되었습니다.
@@ -125,4 +125,4 @@
 
 빌드했습니다.
 
-경과 시간: 00:00:04.37
+경과 시간: 00:00:01.84

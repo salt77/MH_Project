@@ -33,7 +33,6 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 		m_pAhglan = dynamic_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"));
 		NULL_CHECK_RETURN(m_pAhglan, E_FAIL);
 
-		//m_pStickyBomb = dynamic_cast<CStickyBomb*>(Engine::Get_GameObject(L"Gam"));
 		break;
 	}
 
@@ -45,7 +44,7 @@ _uint CCollisionMgr::Update_CollisionMgr()
 	Update_MultipleCollision();
 
 	Collision_PlayerAttack();
-	//Collision_MonsterAttack();
+	Collision_MonsterAttack();
 
 	return 0;
 }
