@@ -148,6 +148,7 @@ HRESULT CStageMesh_1::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
 
 	pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
+	pEffect->SetFloat("g_fPower", tMtrl.Power);
 
 	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
 	pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);

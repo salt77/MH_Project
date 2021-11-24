@@ -16,6 +16,7 @@ CStaticMesh::CStaticMesh(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_pVtxPos(nullptr)
 	, m_dwVtxCnt(0)
 {
+	ZeroMemory(&m_tPNTBT, sizeof(tagVertexPNTBT));
 }
 
 CStaticMesh::CStaticMesh(const CStaticMesh & rhs)
@@ -29,6 +30,7 @@ CStaticMesh::CStaticMesh(const CStaticMesh & rhs)
 	, m_pVtxPos(rhs.m_pVtxPos)
 	, m_dwStride(rhs.m_dwStride)
 	, m_dwVtxCnt(rhs.m_dwVtxCnt)
+	, m_tPNTBT(rhs.m_tPNTBT)
 {
 	m_ppTexture = new LPDIRECT3DTEXTURE9[rhs.m_dwSubsetCnt];
 	m_ppNormalTexture = new LPDIRECT3DTEXTURE9[rhs.m_dwSubsetCnt];
@@ -99,7 +101,8 @@ HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileNa
 		D3DDECL_END()
 	};
 
-	//m_pGraphicDev->CreateVertexDeclaration(vertexDecl, &m_tPNTBT.Decl);
+	m_pGraphicDev->CreateVertexDeclaration(vertexDecl, &m_tPNTBT.Decl);
+	m_pGraphicDev->SetVertexDeclaration(m_tPNTBT.Decl);
 
 	// 메쉬 정점 정보중 노말 값이 없는 경우
 	if (!(dwFVF & D3DFVF_NORMAL))
@@ -111,16 +114,16 @@ HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileNa
 	}
 	else
 	{
-		m_pOriMesh->CloneMeshFVF(m_pOriMesh->GetOptions(), dwFVF, m_pGraphicDev, &m_pMesh);
-		//m_pOriMesh->CloneMesh(m_pOriMesh->GetOptions(), vertexDecl, m_pGraphicDev, &m_pMesh);
+		//m_pOriMesh->CloneMeshFVF(m_pOriMesh->GetOptions(), dwFVF, m_pGraphicDev, &m_pMesh);
+		m_pOriMesh->CloneMesh(m_pOriMesh->GetOptions(), vertexDecl, m_pGraphicDev, &m_pMesh);
 
-		//D3DXComputeTangentFrameEx(m_pMesh,
-		//						  D3DDECLUSAGE_TEXCOORD, 0,
-		//						  D3DDECLUSAGE_BINORMAL, 0,
-		//						  D3DDECLUSAGE_TANGENT, 0,
-		//						  D3DDECLUSAGE_NORMAL, 0,
-		//						  D3DXTANGENT_WRAP_UV | D3DXTANGENT_ORTHOGONALIZE_FROM_V | D3DXTANGENT_CALCULATE_NORMALS | D3DXTANGENT_GENERATE_IN_PLACE,
-		//						  (_ulong*)m_pAdjacency->GetBufferPointer(), 0.01f, 0.01f, 0.01f, NULL, NULL);
+		D3DXComputeTangentFrameEx(m_pMesh,
+								  D3DDECLUSAGE_TEXCOORD, 0,
+								  D3DDECLUSAGE_BINORMAL, 0,
+								  D3DDECLUSAGE_TANGENT, 0,
+								  D3DDECLUSAGE_NORMAL, 0,
+								  D3DXTANGENT_WRAP_UV | D3DXTANGENT_ORTHOGONALIZE_FROM_V | D3DXTANGENT_CALCULATE_NORMALS | D3DXTANGENT_GENERATE_IN_PLACE,
+								  (_ulong*)m_pAdjacency->GetBufferPointer(), 0.01f, 0.01f, 0.01f, NULL, NULL);
 	}
 
 	m_dwVtxCnt = m_pMesh->GetNumVertices(); // 메쉬가 지닌 정점의 개수를 반환
@@ -457,6 +460,8 @@ void CStaticMesh::Render_Meshes()
 
 void CStaticMesh::Render_Meshes(LPD3DXEFFECT & pEffect)
 {
+	m_pGraphicDev->SetVertexDeclaration(m_tPNTBT.Decl);
+
 	for (_ulong i = 0; i < m_dwSubsetCnt; ++i)
 	{
 		_bool	bAlpha = false;
@@ -495,6 +500,8 @@ CComponent * CStaticMesh::Clone(void)
 
 void CStaticMesh::Free()
 {
+	Safe_Release(m_tPNTBT.Decl);
+
 	for (_uint i = 0; i < m_dwSubsetCnt; ++i)
 		Safe_Release(m_ppTexture[i]);
 	for (_uint i = 0; i < m_dwSubsetCnt; ++i)

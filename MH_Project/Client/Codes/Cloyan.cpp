@@ -135,25 +135,25 @@ void CCloyan::Set_Damage(_int iDamage)
 
 		if (1000 <= iDamage)
 		{
-			if (SOLSTATE_DOWN_BEGIN != m_eCurState &&
-				SOLSTATE_DOWN_IDLE != m_eCurState && 
-				SOLSTATE_DOWN_END != m_eCurState)
+			if (CLOYAN_DOWN_BEGIN != m_eCurState &&
+				CLOYAN_DOWN_IDLE != m_eCurState && 
+				CLOYAN_DOWN_END != m_eCurState)
 			{
-				m_iAniIndex = SOLSTATE_DOWN_BEGIN;
+				m_iAniIndex = CLOYAN_DOWN_BEGIN;
 			}
 		}
-		else if (SOLSTATE_DOWN_BEGIN != m_eCurState &&
-				 SOLSTATE_DOWN_IDLE != m_eCurState)
+		else if (CLOYAN_DOWN_BEGIN != m_eCurState &&
+				 CLOYAN_DOWN_IDLE != m_eCurState)
 		{
 			_uint iRandom = rand() % 2;
 
 			if (0 == iRandom)
 			{
-				m_iAniIndex = SOLSTATE_DAMAGED;
+				m_iAniIndex = CLOYAN_DAMAGED;
 			}
 			else
 			{
-				m_iAniIndex = SOLSTATE_DAMAGED2;
+				m_iAniIndex = CLOYAN_DAMAGED2;
 			}
 		}
 	}
@@ -161,7 +161,7 @@ void CCloyan::Set_Damage(_int iDamage)
 	{
 		m_tInfo.iHp = 0;
 
-		m_iAniIndex = SOLSTATE_DYING;
+		m_iAniIndex = CLOYAN_DYING;
 	}
 }
 
@@ -177,7 +177,7 @@ void CCloyan::Set_Enable(_vec3 vPos, _vec3 vRotate)
 
 	m_tInfo.iHp = m_tInfo.iMaxHp;
 
-	m_iAniIndex = SOLSTATE_SPAWN;
+	m_iAniIndex = CLOYAN_SPAWN;
 
 	Animation_Control();
 }
@@ -263,7 +263,7 @@ void CCloyan::Movement()
 	{
 		if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 		{
-			m_iAniIndex = SOLSTATE_IDLE;
+			m_iAniIndex = CLOYAN_IDLE;
 		}
 		else
 		{
@@ -294,26 +294,26 @@ void CCloyan::Movement()
 				{
 					if (m_bTargetIsRight)
 					{
-						m_iAniIndex = SOLSTATE_TURNRIGHT;
+						m_iAniIndex = CLOYAN_TURNRIGHT;
 					}
 					else
 					{
-						m_iAniIndex = SOLSTATE_TURNLEFT;
+						m_iAniIndex = CLOYAN_TURNLEFT;
 					}
 				}
 				else if (DIS_FACETOFACE >= m_fDistance)
 				{
-					m_iAniIndex = SOLSTATE_ATTACK;
+					m_iAniIndex = CLOYAN_ATTACK;
 				}
 				else
 				{
 					if (DIS_SHORT < m_fDistance)
 					{
-						m_iAniIndex = SOLSTATE_IDLE;
+						m_iAniIndex = CLOYAN_IDLE;
 					}
 					else if (DIS_FACETOFACE < m_fDistance)
 					{
-						m_iAniIndex = SOLSTATE_RUN;
+						m_iAniIndex = CLOYAN_RUN;
 					}
 				}
 			}
@@ -366,7 +366,7 @@ void CCloyan::Animation_Control()
 	//m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 
 	// 상태 변경 시 한번만 실행
-	m_eCurState = (SOL_STATE)m_iAniIndex;
+	m_eCurState = (CLOYAN_STATE)m_iAniIndex;
 
 	if (m_eCurState != m_ePreState)
 	{
@@ -384,50 +384,50 @@ void CCloyan::Animation_Control()
 
 		switch (m_eCurState)
 		{
-		case SOLSTATE_RUN:
+		case CLOYAN_RUN:
 			m_bCanAction = true;
 
 			m_pMeshCom->Set_TrackSpeed(1.8f);
 			break;
 
-		case SOLSTATE_IDLE:
+		case CLOYAN_IDLE:
 			m_bCanAction = true;
 			break;
 
-		case SOLSTATE_SPAWN:
+		case CLOYAN_SPAWN:
 			m_bCanAction = false;
 			m_lfAniEnd = 2.5f;
 			break;
 
-		case SOLSTATE_ATTACK:
+		case CLOYAN_ATTACK:
 			m_bCanAction = false;
 
 			m_lfAniEnd = 2.5f;
 			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.4f, 3.5f, (_float)m_lfAniEnd * 0.5f);
 			break;
 
-		case SOLSTATE_DAMAGED:
+		case CLOYAN_DAMAGED:
 			m_bCanAction = false;
 			m_lfAniEnd = 0.85f;
 			break;
 
-		case SOLSTATE_DAMAGED2:
+		case CLOYAN_DAMAGED2:
 			m_bCanAction = false;
 			m_lfAniEnd = 0.85f;
 			break;
 
-		case SOLSTATE_DOWN_BEGIN:
+		case CLOYAN_DOWN_BEGIN:
 			m_bCanAction = false;
 			m_lfAniEnd = 1.f;
 			break;
 
-		case SOLSTATE_DOWN_IDLE:
+		case CLOYAN_DOWN_IDLE:
 			ENEMY_SKILL_MOVE_END;
 			m_bCanAction = false;
 			m_lfAniEnd = 2.f;
 			break;
 
-		case SOLSTATE_DOWN_END:
+		case CLOYAN_DOWN_END:
 			ENEMY_SKILL_MOVE_END;
 			m_bCanAction = false;
 
@@ -435,7 +435,7 @@ void CCloyan::Animation_Control()
 			m_lfAniEnd = 3.1f;
 			break;
 
-		case SOLSTATE_DYING:
+		case CLOYAN_DYING:
 			m_bCanAction = false;
 
 			m_pMeshCom->Set_TrackSpeed(1.5f);
@@ -452,7 +452,7 @@ void CCloyan::Animation_Control()
 
 	switch (m_eCurState)
 	{
-	case SOLSTATE_RUN:
+	case CLOYAN_RUN:
 		m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, D3DXVec3Normalize(&vDir, &vDir), m_fSpeed, m_fTimeDelta));
 
 		if (10.f <= m_fAngle)
@@ -470,34 +470,34 @@ void CCloyan::Animation_Control()
 		if (DIS_FACETOFACE >= m_fDistance)
 		{
 			// 강제로 다음 행동이 ATK을 수행하게 한다. 
-			m_iAniIndex = SOLSTATE_ATTACK;
+			m_iAniIndex = CLOYAN_ATTACK;
 		}
 		break;
 
-	case SOLSTATE_TURNRIGHT:
+	case CLOYAN_TURNRIGHT:
 		if (10.f <= m_fAngle)
 		{
 			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * m_fTimeDelta));
 		}
 		else
 		{
-			m_iAniIndex = SOLSTATE_RUN;
+			m_iAniIndex = CLOYAN_RUN;
 			Animation_Control();
 		}
 		break;
 
-	case SOLSTATE_TURNLEFT:
+	case CLOYAN_TURNLEFT:
 		if (10.f <= m_fAngle)
 		{
 			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * -m_fTimeDelta));
 		}
 		else
 		{
-			m_iAniIndex = SOLSTATE_RUN;
+			m_iAniIndex = CLOYAN_RUN;
 			Animation_Control();
 		}
 
-	case SOLSTATE_IDLE:
+	case CLOYAN_IDLE:
 		//if (DIS_FACETOFACE > m_fDistance &&
 		//	0.f < m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 		//{
@@ -506,7 +506,7 @@ void CCloyan::Animation_Control()
 		//}
 		break;
 
-	case SOLSTATE_ATTACK:
+	case CLOYAN_ATTACK:
 		if (!m_bSound)
 		{
 			m_bSound = true;
@@ -519,8 +519,8 @@ void CCloyan::Animation_Control()
 	{
 		m_bCanAction = true;
 
-		if (SOLSTATE_RUN == m_iAniIndex ||
-			SOLSTATE_IDLE == m_iAniIndex)
+		if (CLOYAN_RUN == m_iAniIndex ||
+			CLOYAN_IDLE == m_iAniIndex)
 		{
 			m_bAnimation = true;
 		}
@@ -529,35 +529,35 @@ void CCloyan::Animation_Control()
 			m_bAnimation = false;
 		}
 
-		if (SOLSTATE_DYING == m_eCurState)
+		if (CLOYAN_DYING == m_eCurState)
 		{
 			m_pTransformCom->Set_Pos(&POOLING_POS);
 			m_pTransformCom->Update_Component(m_fTimeDelta);
 		}
-		else if (SOLSTATE_DOWN_BEGIN == m_eCurState)
+		else if (CLOYAN_DOWN_BEGIN == m_eCurState)
 		{
-			m_iAniIndex = SOLSTATE_DOWN_IDLE;
+			m_iAniIndex = CLOYAN_DOWN_IDLE;
 
 			Animation_Control();
 		}
-		else if (SOLSTATE_DOWN_IDLE == m_eCurState)
+		else if (CLOYAN_DOWN_IDLE == m_eCurState)
 		{
-			m_iAniIndex = SOLSTATE_DOWN_END;
+			m_iAniIndex = CLOYAN_DOWN_END;
 
 			Animation_Control();
 		}
 		else if (0 >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 		{
-			m_iAniIndex = SOLSTATE_IDLE;
+			m_iAniIndex = CLOYAN_IDLE;
 		}
-		else if (SOLSTATE_IDLE != m_eCurState &&
-				 SOLSTATE_RUN != m_eCurState)
+		else if (CLOYAN_IDLE != m_eCurState &&
+				 CLOYAN_RUN != m_eCurState)
 		{
 			//RotateLookVector();
 
 			m_fRand = Engine::Random(0.f, 100.f);
 
-			m_iAniIndex = SOLSTATE_IDLE;
+			m_iAniIndex = CLOYAN_IDLE;
 			m_pMeshCom->Set_TrackSpeed(2.f);
 
 			Animation_Control();
@@ -573,7 +573,7 @@ void CCloyan::Collision_Control()
 	// HitBox
 	switch (m_eCurState)
 	{
-	case CCloyan::SOLSTATE_ATTACK:
+	case CCloyan::CLOYAN_ATTACK:
 		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
 		{
 			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.4f, m_lfAniEnd * 0.55f);
