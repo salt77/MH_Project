@@ -6,6 +6,8 @@
 #include "CollisionMgr.h"
 #include "Trail_Sword.h"
 #include "SlashPoint.h"
+#include "CriticalEfx.h"
+#include "RadialBlur.h"
 
 #include "Export_Function.h"
 
@@ -29,6 +31,7 @@ HRESULT CStage::Ready_Scene(void)
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Effect(L"Effect"), E_FAIL);
 
 	return S_OK;
 }
@@ -237,6 +240,14 @@ HRESULT CStage::Ready_Layer_Effect(const wstring pLayerTag)
 		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
 	}
 
+	pGameObject = CCriticalEfx::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Efx_Critical", pGameObject), E_FAIL);
+
+	pGameObject = CRadialBlur::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Efx_RadiulBlur", pGameObject), E_FAIL);
+
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
 	return S_OK;
@@ -256,7 +267,7 @@ HRESULT CStage::Ready_LightInfo(void)
 	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Ambient = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f);
-	tLightInfo.Direction = _vec3(-0.5f, -1.f, 0.5f);
+	tLightInfo.Direction = _vec3(-1.f, -1.f, -1.f);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 

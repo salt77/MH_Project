@@ -33,7 +33,7 @@ public:
 		KNIGHT_END
 	};
 
-public:
+private:
 	explicit CKnight(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CKnight();
 

@@ -64,6 +64,8 @@ VS_OUT			VS_MAIN(VS_IN In)
 	//matrix	mat = { float4(g_fTangent, 0.f), float4(g_fBinormal, 0.f), float4(g_fNormal, 0.f), { 0, 0, 0, 1 } };
 	//Out.vTranspose = transpose(mat);
 
+	Out.vProjPos = Out.vPosition;
+
 	return Out;
 }
 

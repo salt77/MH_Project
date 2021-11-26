@@ -14,7 +14,7 @@ END
 
 class CDamageFont : public CGameObject
 {
-public:
+private:
 	explicit CDamageFont(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CDamageFont();
 

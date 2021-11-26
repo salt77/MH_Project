@@ -117,7 +117,7 @@ void CTrail::Management_Point()
 
 	if (0.001f <= m_fInTime)
 	{
-		m_dwTriCnt = m_dwVtxCnt * 0.5f;
+		m_dwTriCnt = m_dwVtxCnt >> 1;
 
 		_vec3	vPoint[2];
 		vPoint[0] = _vec3(0.f, 0.f, 0.f);

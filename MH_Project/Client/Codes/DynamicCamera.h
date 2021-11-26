@@ -52,7 +52,8 @@ public:
 	void		Set_CameraMode(MODE eMode) { m_eCurMode = eMode; if (MODE_AHGLAN_START == eMode)	m_dwStartTime = GetTickCount(); }
 	void		Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwEndTime = 1000, _float fWaveInterpol = 0.5f);
 	void		Set_HighlightSkillShot(_float fDistance, _ulong dwHighlightTime) 
-	{ 
+	{
+		m_bHighlightSkillShot = true;
 		m_fHighlightDistance = fDistance;
 		m_dwHighlightStart = GetTickCount();
 		m_dwHighlightDelay = dwHighlightTime;
@@ -81,6 +82,7 @@ private:
 	_bool		m_bLongShake = false;
 	_bool		m_bSoundGolemEntry = false;
 	_bool		m_bCollisionCam = false;
+	_bool		m_bHighlightSkillShot = false;
 
 	_ulong		m_dwHighlightStart = GetTickCount();
 	_ulong		m_dwHighlightDelay = 0;
@@ -95,10 +97,10 @@ private:
 	_float		m_fShakePower = 0.025f;
 	_float		m_fSpeed = 20.f;
 	_float		m_fCamAngle = 0.f;
-	_float		m_fDistanceFromTarget = 2.15f;
-	_float		m_fOriginDistanceFromTarget = 2.15f;
-	_float		m_fHighlightDistance = 2.15f;
-	_float		m_fInterpolY = 0.75f;
+	_float		m_fDistanceFromTarget = 1.95f;
+	_float		m_fOriginDistanceFromTarget = 1.95f;
+	_float		m_fHighlightDistance = 1.95f;
+	_float		m_fInterpolY = 0.65f;
 
 	// Ahglan Cutscene
 	_float		m_fRiseUp = 0.05f;

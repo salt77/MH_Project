@@ -1,128 +1,116 @@
-﻿빌드 시작: 2021-11-23 오전 9:24:45
-     1>2 노드의 "C:\Users\salt7\OneDrive\Desktop\MH_Project\MH_Project\Engine\Utility\Include\Utility.vcxproj" 프로젝트(Build 대상)입니다.
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I../Codes /I../../Headers /I../../../Base /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _WINDOWS /D _USRDLL /D UTILITY_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D ENGINE_EXPORTS /Gm- /EHsc /MDd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Release\\" /Fd"Release\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt ..\Codes\HierachyLoader.cpp
-         HierachyLoader.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"../Bin\Utility.dll" /INCREMENTAL /NOLOGO /LIBPATH:../../../Reference/Library d3d9.lib d3dx9.lib dxguid.lib System.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"../Bin\Utility.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG:incremental /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"../Bin\Utility.lib" /MACHINE:X86 /SAFESEH /DLL Release\AniCtrl.obj
-         Release\BoxCollider.obj
-         Release\Calculator.obj
-         Release\Camera.obj
-         Release\Cell.obj
-         Release\Collider.obj
-         Release\Component.obj
-         Release\CubeTex.obj
-         Release\DynamicMesh.obj
-         Release\Frustum.obj
-         Release\GameObject.obj
-         Release\HierachyLoader.obj
-         Release\Light.obj
-         Release\LightMgr.obj
-         Release\Line.obj
-         Release\MFC_ObjectManager.obj
-         Release\Layer.obj
-         Release\Management.obj
-         Release\Navimesh.obj
-         Release\Optimization.obj
-         Release\ProtoMgr.obj
-         Release\QuadTree.obj
-         Release\RcTex.obj
-         Release\Renderer.obj
-         Release\RenderTarget.obj
-         Release\RenderTargetMgr.obj
-         Release\Scene.obj
-         Release\Shader.obj
-         Release\StaticMesh.obj
-         Release\TerrainTex.obj
-         Release\Texture.obj
-         Release\Trail.obj
-         Release\Transform.obj
-         Release\TriCol.obj
-         Release\VIBuffer.obj
-     1>LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무시됩니다.
-            ../Bin\Utility.lib 라이브러리 및 ../Bin\Utility.exp 개체를 생성하고 있습니다.
-         코드를 생성하고 있습니다.
-         0 of 3247 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-           0 functions were new in current compilation
-           0 functions had inline decision re-evaluated but remain unchanged
-         코드를 생성했습니다.
-         Utility.vcxproj -> C:\Users\salt7\OneDrive\Desktop\MH_Project\MH_Project\Engine\Utility\Include\../Bin\Utility.dll
-       PostBuildEvent:
-         cd /d C:\Users\salt7\OneDrive\Desktop\MH_Project\MH_Project\
-         call CopyUtility.bat
-         :VCEnd
-         .\Engine\Utility\Codes\AniCtrl.h
-         .\Engine\Utility\Codes\BoxCollider.h
-         .\Engine\Utility\Codes\Calculator.h
-         .\Engine\Utility\Codes\Camera.h
-         .\Engine\Utility\Codes\Cell.h
-         .\Engine\Utility\Codes\Collider.h
-         .\Engine\Utility\Codes\Component.h
-         .\Engine\Utility\Codes\CubeTex.h
-         .\Engine\Utility\Codes\DynamicMesh.h
-         .\Engine\Utility\Codes\Frustum.h
-         .\Engine\Utility\Codes\GameObject.h
-         .\Engine\Utility\Codes\HierachyLoader.h
-         .\Engine\Utility\Codes\Layer.h
-         .\Engine\Utility\Codes\Light.h
-         .\Engine\Utility\Codes\LightMgr.h
-         .\Engine\Utility\Codes\Line.h
-         .\Engine\Utility\Codes\Management.h
-         .\Engine\Utility\Codes\MFC_ObjectManager.h
-         .\Engine\Utility\Codes\Navimesh.h
-         .\Engine\Utility\Codes\Optimization.h
-         .\Engine\Utility\Codes\ProtoMgr.h
-         .\Engine\Utility\Codes\QuadTree.h
-         .\Engine\Utility\Codes\RcTex.h
-         .\Engine\Utility\Codes\Renderer.h
-         .\Engine\Utility\Codes\RenderTarget.h
-         .\Engine\Utility\Codes\RenderTargetMgr.h
-         .\Engine\Utility\Codes\Scene.h
-         .\Engine\Utility\Codes\Shader.h
-         .\Engine\Utility\Codes\StaticMesh.h
-         .\Engine\Utility\Codes\TerrainTex.h
-         .\Engine\Utility\Codes\Texture.h
-         .\Engine\Utility\Codes\Trail.h
-         .\Engine\Utility\Codes\TrailBuffer.h
-         .\Engine\Utility\Codes\Transform.h
-         .\Engine\Utility\Codes\TriCol.h
-         .\Engine\Utility\Codes\VIBuffer.h
-                36개 파일이 복사되었습니다.
-         .\Engine\Utility\Codes\Shader_Ahglan.fx
-         .\Engine\Utility\Codes\Shader_Blend.fx
-         .\Engine\Utility\Codes\Shader_Boss_Hpbar.fx
-         .\Engine\Utility\Codes\Shader_DamageFont.fx
-         .\Engine\Utility\Codes\Shader_FadeInOut.fx
-         .\Engine\Utility\Codes\Shader_Loading_Progress.fx
-         .\Engine\Utility\Codes\Shader_Mesh.fx
-         .\Engine\Utility\Codes\Shader_Normal.fx
-         .\Engine\Utility\Codes\Shader_Player.fx
-         .\Engine\Utility\Codes\Shader_Player_Hpbar.fx
-         .\Engine\Utility\Codes\Shader_Sample.fx
-         .\Engine\Utility\Codes\Shader_Shade.fx
-         .\Engine\Utility\Codes\Shader_StageMesh.fx
-         .\Engine\Utility\Codes\Shader_Terrain.fx
-         .\Engine\Utility\Codes\Shader_Trail.fx
-         .\Engine\Utility\Codes\Shader_UI.fx
-                16개 파일이 복사되었습니다.
-                 1개 파일이 복사되었습니다.
-                 1개 파일이 복사되었습니다.
-                 1개 파일이 복사되었습니다.
-         .\Engine\Headers\Engine_Define.h
-         .\Engine\Headers\Engine_Enum.h
-         .\Engine\Headers\Engine_Function.h
-         .\Engine\Headers\Engine_Macro.h
-         .\Engine\Headers\Engine_Struct.h
-         .\Engine\Headers\Engine_Typedef.h
-         .\Engine\Headers\Export_Function.h
-         .\Engine\Headers\Export_System.h
-         .\Engine\Headers\Export_Utility.h
-                 9개 파일이 복사되었습니다.
-         .\Engine\Headers\Export_System.inl
-         .\Engine\Headers\Export_Utility.inl
-                 2개 파일이 복사되었습니다.
-     1>"C:\Users\salt7\OneDrive\Desktop\MH_Project\MH_Project\Engine\Utility\Include\Utility.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
-
-빌드했습니다.
-
-경과 시간: 00:00:01.84
+﻿  AniCtrl.cpp
+  BoxCollider.cpp
+  Calculator.cpp
+  Camera.cpp
+  Cell.cpp
+  Collider.cpp
+  Component.cpp
+  CubeTex.cpp
+  DynamicMesh.cpp
+  Frustum.cpp
+  GameObject.cpp
+  HierachyLoader.cpp
+  Layer.cpp
+  Light.cpp
+  LightMgr.cpp
+  Line.cpp
+  MFC_ObjectManager.cpp
+  Management.cpp
+  Navimesh.cpp
+  Optimization.cpp
+  컴파일하고 있습니다...
+  ProtoMgr.cpp
+  QuadTree.cpp
+  RcTex.cpp
+  RenderTarget.cpp
+  RenderTargetMgr.cpp
+  Renderer.cpp
+  Scene.cpp
+  Shader.cpp
+  StaticMesh.cpp
+  TerrainTex.cpp
+  Texture.cpp
+  Trail.cpp
+  Transform.cpp
+  TriCol.cpp
+  VIBuffer.cpp
+LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무시됩니다.
+     ../Bin\Utility.lib 라이브러리 및 ../Bin\Utility.exp 개체를 생성하고 있습니다.
+  코드를 생성하고 있습니다.
+c:\users\user\desktop\mh_project\mh_project\engine\utility\codes\dynamicmesh.h(19): warning C4172: 지역 변수 또는 임시의 주소를 반환하고 있습니다.
+  4 of 3181 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+    3 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  Utility.vcxproj -> C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Include\../Bin\Utility.dll
+  Utility.vcxproj -> ../Bin\Utility.pdb (Full PDB)
+  .\Engine\Utility\Codes\AniCtrl.h
+  .\Engine\Utility\Codes\BoxCollider.h
+  .\Engine\Utility\Codes\Calculator.h
+  .\Engine\Utility\Codes\Camera.h
+  .\Engine\Utility\Codes\Cell.h
+  .\Engine\Utility\Codes\Collider.h
+  .\Engine\Utility\Codes\Component.h
+  .\Engine\Utility\Codes\CubeTex.h
+  .\Engine\Utility\Codes\DynamicMesh.h
+  .\Engine\Utility\Codes\Frustum.h
+  .\Engine\Utility\Codes\GameObject.h
+  .\Engine\Utility\Codes\HierachyLoader.h
+  .\Engine\Utility\Codes\Layer.h
+  .\Engine\Utility\Codes\Light.h
+  .\Engine\Utility\Codes\LightMgr.h
+  .\Engine\Utility\Codes\Line.h
+  .\Engine\Utility\Codes\Management.h
+  .\Engine\Utility\Codes\MFC_ObjectManager.h
+  .\Engine\Utility\Codes\Navimesh.h
+  .\Engine\Utility\Codes\Optimization.h
+  .\Engine\Utility\Codes\ProtoMgr.h
+  .\Engine\Utility\Codes\QuadTree.h
+  .\Engine\Utility\Codes\RcTex.h
+  .\Engine\Utility\Codes\Renderer.h
+  .\Engine\Utility\Codes\RenderTarget.h
+  .\Engine\Utility\Codes\RenderTargetMgr.h
+  .\Engine\Utility\Codes\Scene.h
+  .\Engine\Utility\Codes\Shader.h
+  .\Engine\Utility\Codes\StaticMesh.h
+  .\Engine\Utility\Codes\TerrainTex.h
+  .\Engine\Utility\Codes\Texture.h
+  .\Engine\Utility\Codes\Trail.h
+  .\Engine\Utility\Codes\TrailBuffer.h
+  .\Engine\Utility\Codes\Transform.h
+  .\Engine\Utility\Codes\TriCol.h
+  .\Engine\Utility\Codes\VIBuffer.h
+         36개 파일이 복사되었습니다.
+  .\Engine\Utility\Codes\Shader_Ahglan.fx
+  .\Engine\Utility\Codes\Shader_Blend.fx
+  .\Engine\Utility\Codes\Shader_Boss_Hpbar.fx
+  .\Engine\Utility\Codes\Shader_DamageFont.fx
+  .\Engine\Utility\Codes\Shader_FadeInOut.fx
+  .\Engine\Utility\Codes\Shader_Loading_Progress.fx
+  .\Engine\Utility\Codes\Shader_Mesh.fx
+  .\Engine\Utility\Codes\Shader_Normal.fx
+  .\Engine\Utility\Codes\Shader_Player.fx
+  .\Engine\Utility\Codes\Shader_Player_Hpbar.fx
+  .\Engine\Utility\Codes\Shader_Sample.fx
+  .\Engine\Utility\Codes\Shader_Shade.fx
+  .\Engine\Utility\Codes\Shader_StageMesh.fx
+  .\Engine\Utility\Codes\Shader_Terrain.fx
+  .\Engine\Utility\Codes\Shader_Trail.fx
+  .\Engine\Utility\Codes\Shader_UI.fx
+         16개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+  .\Engine\Headers\Engine_Define.h
+  .\Engine\Headers\Engine_Enum.h
+  .\Engine\Headers\Engine_Function.h
+  .\Engine\Headers\Engine_Macro.h
+  .\Engine\Headers\Engine_Struct.h
+  .\Engine\Headers\Engine_Typedef.h
+  .\Engine\Headers\Export_Function.h
+  .\Engine\Headers\Export_System.h
+  .\Engine\Headers\Export_Utility.h
+          9개 파일이 복사되었습니다.
+  .\Engine\Headers\Export_System.inl
+  .\Engine\Headers\Export_Utility.inl
+          2개 파일이 복사되었습니다.

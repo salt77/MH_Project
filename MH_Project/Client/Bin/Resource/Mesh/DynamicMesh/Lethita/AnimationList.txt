@@ -1,3 +1,6 @@
+40. 	No.2 
+39.	No.1 
+
 38.	Tired_Begin
 37.	Tired_During
 36. 	Tired_End

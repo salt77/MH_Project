@@ -30,7 +30,7 @@ public:
 		SOLSTATE_END
 	};
 
-public:
+private:
 	explicit CSoldier(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CSoldier();
 

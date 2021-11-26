@@ -1,39 +1,44 @@
-﻿빌드 시작: 2021-11-22 오전 9:24:37
-     1>2 노드의 "C:\Users\salt7\OneDrive\Desktop\MH_Project\MH_Project\Engine\System\Include\System.vcxproj" 프로젝트(Build 대상)입니다.
-     1>Link:
-         System.vcxproj -> C:\Users\salt7\OneDrive\Desktop\MH_Project\MH_Project\Engine\System\Include\../Bin\System.dll
-       PostBuildEvent:
-         cd /d C:\Users\salt7\OneDrive\Desktop\MH_Project\MH_Project\
-         call CopySystem.bat
-         :VCEnd
-         .\Engine\System\Codes\Font.h
-         .\Engine\System\Codes\FontMgr.h
-         .\Engine\System\Codes\Frame.h
-         .\Engine\System\Codes\FrameMgr.h
-         .\Engine\System\Codes\GraphicDev.h
-         .\Engine\System\Codes\InputDev.h
-         .\Engine\System\Codes\KeyMgr.h
-         .\Engine\System\Codes\Timer.h
-         .\Engine\System\Codes\TimerMgr.h
-                 9개 파일이 복사되었습니다.
-                 1개 파일이 복사되었습니다.
-                 1개 파일이 복사되었습니다.
-                 1개 파일이 복사되었습니다.
-         .\Engine\Headers\Engine_Define.h
-         .\Engine\Headers\Engine_Enum.h
-         .\Engine\Headers\Engine_Function.h
-         .\Engine\Headers\Engine_Macro.h
-         .\Engine\Headers\Engine_Struct.h
-         .\Engine\Headers\Engine_Typedef.h
-         .\Engine\Headers\Export_Function.h
-         .\Engine\Headers\Export_System.h
-         .\Engine\Headers\Export_Utility.h
-                 9개 파일이 복사되었습니다.
-         .\Engine\Headers\Export_System.inl
-         .\Engine\Headers\Export_Utility.inl
-                 2개 파일이 복사되었습니다.
-     1>"C:\Users\salt7\OneDrive\Desktop\MH_Project\MH_Project\Engine\System\Include\System.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
-
-빌드했습니다.
-
-경과 시간: 00:00:00.31
+﻿  Font.cpp
+  FontMgr.cpp
+  Frame.cpp
+  FrameMgr.cpp
+  GraphicDev.cpp
+  InputDev.cpp
+  KeyMgr.cpp
+  Timer.cpp
+  TimerMgr.cpp
+LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무시됩니다.
+     ../Bin\System.lib 라이브러리 및 ../Bin\System.exp 개체를 생성하고 있습니다.
+  코드를 생성하고 있습니다.
+  0 of 743 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  System.vcxproj -> C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\System\Include\../Bin\System.dll
+  System.vcxproj -> ../Bin\System.pdb (Full PDB)
+  .\Engine\System\Codes\Font.h
+  .\Engine\System\Codes\FontMgr.h
+  .\Engine\System\Codes\Frame.h
+  .\Engine\System\Codes\FrameMgr.h
+  .\Engine\System\Codes\GraphicDev.h
+  .\Engine\System\Codes\InputDev.h
+  .\Engine\System\Codes\KeyMgr.h
+  .\Engine\System\Codes\Timer.h
+  .\Engine\System\Codes\TimerMgr.h
+          9개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+  .\Engine\Headers\Engine_Define.h
+  .\Engine\Headers\Engine_Enum.h
+  .\Engine\Headers\Engine_Function.h
+  .\Engine\Headers\Engine_Macro.h
+  .\Engine\Headers\Engine_Struct.h
+  .\Engine\Headers\Engine_Typedef.h
+  .\Engine\Headers\Export_Function.h
+  .\Engine\Headers\Export_System.h
+  .\Engine\Headers\Export_Utility.h
+          9개 파일이 복사되었습니다.
+  .\Engine\Headers\Export_System.inl
+  .\Engine\Headers\Export_Utility.inl
+          2개 파일이 복사되었습니다.

@@ -126,6 +126,24 @@ HRESULT CBoss_NamingScene::Add_Component(void)
 		break;
 
 	case Engine::BOSS_CLOYAN:
+		if (NAMING_BACKGROUND == m_eNamingId)
+		{
+			pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Boss_NamingSceneUI"));
+			NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+			m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+		}
+		else if (NAMING_BOSSNAME == m_eNamingId)
+		{
+			pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Cloyan_FontUI"));
+			NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+			m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+		}
+		else if (NAMING_STAGENAME == m_eNamingId)
+		{
+			pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Cloyan_Bottom_FontUI2"));
+			NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+			m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+		}
 		break;
 	}
 

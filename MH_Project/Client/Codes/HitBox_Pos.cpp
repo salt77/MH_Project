@@ -13,12 +13,12 @@ CHitBox_Pos::CHitBox_Pos(const CHitBox_Pos& rhs)
 {
 }
 
-CHitBox_Pos::~CHitBox_Pos(void)
+CHitBox_Pos::~CHitBox_Pos()
 {
 }
 
 
-HRESULT CHitBox_Pos::Ready_Object(void)
+HRESULT CHitBox_Pos::Ready_Object()
 {
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -32,6 +32,8 @@ HRESULT CHitBox_Pos::Ready_Object(void)
 
 HRESULT CHitBox_Pos::LateReady_Object()
 {
+	FAILED_CHECK_RETURN(CGameObject::LateReady_Object(), E_FAIL);
+
 	CTransform*	pPlayerTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
 
 	if (pPlayerTrans)
@@ -59,7 +61,7 @@ _int CHitBox_Pos::Update_Object(const _float& fTimeDelta)
 		_vec3	vMyPos = *pPlayerTrans->Get_Info(INFO_POS);
 		
 		vMyPos.y += 0.6f;
-		vMyPos += vDir * 10.f;
+		vMyPos += vDir * 35.f;
 		m_pTransformCom->Set_Pos(&vMyPos);
 	}
 
@@ -78,7 +80,7 @@ _int CHitBox_Pos::LateUpdate_Object(const _float & fTimeDelta)
 
 		for (; iter != m_mapColliderCom.end(); ++iter)
 		{
-			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+			iter->second->LateUpdate_Collider(m_pTransformCom->Get_WorldMatrix());
 		}
 	}
 	if (!m_mapBoxColliderCom.empty())
@@ -87,14 +89,14 @@ _int CHitBox_Pos::LateUpdate_Object(const _float & fTimeDelta)
 
 		for (; iter != m_mapBoxColliderCom.end(); ++iter)
 		{
-			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
+			iter->second->LateUpdate_Collider(m_pTransformCom->Get_WorldMatrix());
 		}
 	}
 
 	return iExit;
 }
 
-void CHitBox_Pos::Render_Object(void)
+void CHitBox_Pos::Render_Object()
 {
 }
 
@@ -113,7 +115,7 @@ void CHitBox_Pos::Free(void)
 	CGameObject::Free();
 }
 
-HRESULT CHitBox_Pos::Add_Component(void)
+HRESULT CHitBox_Pos::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
 	

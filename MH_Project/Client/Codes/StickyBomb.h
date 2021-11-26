@@ -25,7 +25,7 @@ private:
 private:
 	explicit CStickyBomb(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CStickyBomb(const CStickyBomb& rhs);
-	virtual ~CStickyBomb(void);
+	virtual ~CStickyBomb();
 
 public:
 	virtual HRESULT Ready_Object(void) override;

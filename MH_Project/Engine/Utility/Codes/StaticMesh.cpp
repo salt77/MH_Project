@@ -94,15 +94,15 @@ HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileNa
 	const D3DVERTEXELEMENT9	vertexDecl[] =
 	{
 		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-		{ 0, 12, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
-		{ 0, 24, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
 		{ 0, 32, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
-		{ 0, 44, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 },
+		//{ 0, 44, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 },
 		D3DDECL_END()
 	};
 
-	m_pGraphicDev->CreateVertexDeclaration(vertexDecl, &m_tPNTBT.Decl);
-	m_pGraphicDev->SetVertexDeclaration(m_tPNTBT.Decl);
+	//m_pGraphicDev->CreateVertexDeclaration(vertexDecl, &m_tPNTBT.Decl);
+	//m_pGraphicDev->SetVertexDeclaration(m_tPNTBT.Decl);
 
 	// 메쉬 정점 정보중 노말 값이 없는 경우
 	if (!(dwFVF & D3DFVF_NORMAL))
@@ -117,14 +117,26 @@ HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileNa
 		//m_pOriMesh->CloneMeshFVF(m_pOriMesh->GetOptions(), dwFVF, m_pGraphicDev, &m_pMesh);
 		m_pOriMesh->CloneMesh(m_pOriMesh->GetOptions(), vertexDecl, m_pGraphicDev, &m_pMesh);
 
-		D3DXComputeTangentFrameEx(m_pMesh,
-								  D3DDECLUSAGE_TEXCOORD, 0,
-								  D3DDECLUSAGE_BINORMAL, 0,
-								  D3DDECLUSAGE_TANGENT, 0,
-								  D3DDECLUSAGE_NORMAL, 0,
-								  D3DXTANGENT_WRAP_UV | D3DXTANGENT_ORTHOGONALIZE_FROM_V | D3DXTANGENT_CALCULATE_NORMALS | D3DXTANGENT_GENERATE_IN_PLACE,
-								  (_ulong*)m_pAdjacency->GetBufferPointer(), 0.01f, 0.01f, 0.01f, NULL, NULL);
+		D3DXComputeNormals(m_pMesh, (_ulong*)m_pAdjacency->GetBufferPointer());
+		D3DXComputeTangent(m_pMesh, 0, 0, 0, 0, (_ulong*)m_pAdjacency->GetBufferPointer());
+		//D3DXComputeTangentFrame()
+		//D3DXComputeTangentFrameEx(m_pMesh,
+		//						  D3DDECLUSAGE_TEXCOORD, 0,
+		//						  D3DDECLUSAGE_BINORMAL, 0,
+		//						  D3DDECLUSAGE_TANGENT, 0,
+		//						  D3DDECLUSAGE_NORMAL, 0,
+		//						  D3DXTANGENT_WRAP_UV | D3DXTANGENT_ORTHOGONALIZE_FROM_V | D3DXTANGENT_CALCULATE_NORMALS | D3DXTANGENT_GENERATE_IN_PLACE,
+		//						  (_ulong*)m_pAdjacency->GetBufferPointer(), 0.01f, 0.01f, 0.01f, NULL, NULL);
 	}
+
+	//D3DXWELDEPSILONS we;
+	//ZeroMemory(&we, sizeof(D3DXWELDEPSILONS));
+	//we.Position = 0.0001f;
+	//we.Texcoord[0] = 0.0001f;
+
+	//D3DXWeldVertices(m_pMesh, D3DXWELDEPSILONS_WELDPARTIALMATCHES, &we, (_ulong*)m_pAdjacency->GetBufferPointer(), nullptr, nullptr, nullptr);
+
+	//delete[] (_ulong*)m_pAdjacency->GetBufferPointer();
 
 	m_dwVtxCnt = m_pMesh->GetNumVertices(); // 메쉬가 지닌 정점의 개수를 반환
 	m_pVtxPos = new _vec3[m_dwVtxCnt];
@@ -460,7 +472,7 @@ void CStaticMesh::Render_Meshes()
 
 void CStaticMesh::Render_Meshes(LPD3DXEFFECT & pEffect)
 {
-	m_pGraphicDev->SetVertexDeclaration(m_tPNTBT.Decl);
+	//m_pGraphicDev->SetVertexDeclaration(m_tPNTBT.Decl);
 
 	for (_ulong i = 0; i < m_dwSubsetCnt; ++i)
 	{
@@ -500,7 +512,7 @@ CComponent * CStaticMesh::Clone(void)
 
 void CStaticMesh::Free()
 {
-	Safe_Release(m_tPNTBT.Decl);
+	//Safe_Release(m_tPNTBT.Decl);
 
 	for (_uint i = 0; i < m_dwSubsetCnt; ++i)
 		Safe_Release(m_ppTexture[i]);

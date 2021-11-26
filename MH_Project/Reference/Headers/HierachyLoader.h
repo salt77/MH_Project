@@ -33,7 +33,7 @@ public:
 
 	STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree);
 	STDMETHOD(DestroyMeshContainer)(THIS_ LPD3DXMESHCONTAINER pMeshContainerToFree);
-
+	
 private:
 	void		Allocate_Name(char** ppName, const char* pFrameName);
 

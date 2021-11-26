@@ -113,31 +113,31 @@ _int CAhglan::LateUpdate_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::LateUpdate_Object(fTimeDelta);
 
-	//if (!m_mapColliderCom.empty())
-	//{
-	//	map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+	if (!m_mapColliderCom.empty())
+	{
+		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
 
-	//	for (; iter != m_mapColliderCom.end(); ++iter)
-	//	{
-	//		iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
-	//	}
-	//}
-	//if (!m_mapBoxColliderCom.empty())
-	//{
-	//	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+		for (; iter != m_mapColliderCom.end(); ++iter)
+		{
+			iter->second->LateUpdate_Collider(m_pTransformCom->Get_WorldMatrix());
+		}
+	}
+	if (!m_mapBoxColliderCom.empty())
+	{
+		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
 
-	//	for (; iter != m_mapBoxColliderCom.end(); ++iter)
-	//	{
-	//		iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
-	//	}
-	//}
+		for (; iter != m_mapBoxColliderCom.end(); ++iter)
+		{
+			iter->second->LateUpdate_Collider(m_pTransformCom->Get_WorldMatrix());
+		}
+	}
 
 	return iExit;
 }
 
 void CAhglan::Render_Object(void)
 {
-	if (!m_mapColliderCom.empty())
+	/*if (!m_mapColliderCom.empty())
 	{
 		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
 
@@ -154,7 +154,7 @@ void CAhglan::Render_Object(void)
 		{
 			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 		}
-	}
+	}*/
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 

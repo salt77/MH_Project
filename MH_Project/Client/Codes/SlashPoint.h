@@ -5,7 +5,7 @@
 
 class CSlashPoint : public CEffect
 {
-public:
+private:
 	explicit CSlashPoint(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CSlashPoint(const CSlashPoint& rhs);
 	virtual ~CSlashPoint();
@@ -29,9 +29,6 @@ private:
 	void			Scale_Interpolation(const _float& fTimeDelta);
 
 private:
-	_ulong				m_dwEffectStart = GetTickCount();
-	_ulong				m_dwEffectTime = 300;
-
 	_float				m_fScaleYInterpol = 15.f;
 	_float				m_fScaleXInterpol = 15.f;
 

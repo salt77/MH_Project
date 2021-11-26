@@ -19,6 +19,7 @@ END
 class CDynamicCamera;
 class CAhglan;
 class CTrail_Sword;
+class CRadialBlur;
 class CPlayer_Hpbar_ValueUI;
 class CPlayer_Hpbar_LerpUI;
 class CPlayer_Steminabar_ValueUI;
@@ -36,7 +37,7 @@ public:
 	virtual HRESULT	LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
-	virtual void	Render_Object(void) override;
+	virtual void	Render_Object() override;
 
 public:
 	const PL_INFO&	Get_TagPlayerInfo() { return m_tPlayerInfo; }
@@ -61,7 +62,7 @@ public:
 
 private:
 	// 기본 함수들
-	HRESULT			Add_Component(void);
+	HRESULT			Add_Component();
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Key_Input(const _float& fTimeDelta);
 	void			SecondaryMode_MouseMove();
@@ -87,7 +88,7 @@ private:
 	void			Make_TrailEffect(const _float& fDeltaTime);
 
 public:
-	void			Compute_Critical();
+	void			Compute_Critical(const _matrix* matWorld);
 	void			Add_Buff(BUFF_ID eID, _ulong dwBuffDuration);
 	HRESULT			Add_NaviMesh();
 
@@ -102,8 +103,9 @@ private:
 	_uint			m_iAniIndex = (_uint)STATE_IDLE;
 	_uint			m_iSecondaryCount = 0;
 	_uint			m_iDashCount = 0;
+	_uint			m_iFuryNo7Count = 0;
 
-	_float			m_fSpeed = 3.f;
+	_float			m_fSpeed = 6.f;//3.f;
 	_float			m_fSkillMoveSpeed = 0.f;
 	_float			m_fAniTime = 0.f;
 	_float			m_fSkillMoveStartTime = 0.f;
@@ -161,6 +163,7 @@ private:
 	CLayer*			m_pOtherLayer = nullptr;
 	CTrail_Sword*	m_pTrailSwordL = nullptr;
 	CTrail_Sword*	m_pTrailSwordR = nullptr;
+	CRadialBlur*	m_pRadialBlur = nullptr;
 	CPlayer_Hpbar_ValueUI*	m_pHpbarValueUI = nullptr;
 	CPlayer_Hpbar_LerpUI*	m_pHpbarLerpUI = nullptr;
 	CPlayer_Steminabar_ValueUI*	m_pSteminabarValueUI = nullptr;
@@ -176,6 +179,7 @@ private:
 	_bool		m_bAtkSound[3] = { false, false, false };
 	_bool		m_bLethitaSound[3] = { false, false, false };
 	_bool		m_bSkillSound[3] = { false, false, false };
+	_uint		m_iFuryNo7Sound = 0;
 };
 
 #define SKILL_MOVE_BYANI(StartTime, Speed, EndTime)		m_bSkillMove = TRUE; m_fSkillMoveStartTime = StartTime;	m_fSkillMoveEndTime = EndTime;	m_fSkillMoveSpeed = Speed;

@@ -99,6 +99,11 @@ inline void Delete_Layer(const wstring wstrLayerTag, const wstring wstrObjTag)
 	CManagement::GetInstance()->Delete_Layer(wstrLayerTag, wstrObjTag);
 }
 
+inline void Delete_AllInLayer(const wstring wstrLayerTag)
+{
+	CManagement::GetInstance()->Delete_AllInLayer(wstrLayerTag);
+}
+
 HRESULT		Ready_Prototype(const wstring pProtoTag, CComponent* pInstance)
 {
 	return CProtoMgr::GetInstance()->Ready_Prototype(pProtoTag, pInstance);

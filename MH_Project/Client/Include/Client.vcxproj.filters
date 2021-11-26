@@ -220,6 +220,24 @@
     <Filter Include="02.GameObject\06.Enemy\02.Mankind\02.Knight">
       <UniqueIdentifier>{f202b93f-f1ac-464e-992f-84960a315565}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\08.Dummy\01.Spawn_Info\03.Cloyan_Info">
+      <UniqueIdentifier>{8ae146b4-cf6f-46dd-b55c-e4bf3de1acbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\12.Effect\01.Critical">
+      <UniqueIdentifier>{4f4b059c-27b0-4889-90d0-538410679444}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\12.Effect\02.RadialBlur">
+      <UniqueIdentifier>{3b7b6128-a683-4356-83d5-df50085bb261}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\13.Trap">
+      <UniqueIdentifier>{8311e173-ba82-44f9-970a-1603a59c7938}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\14.Balista">
+      <UniqueIdentifier>{29868ef0-0b0f-4d19-8de8-8bae979d451a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Dummy\02.Wall_Collision">
+      <UniqueIdentifier>{6a693bca-6d36-4839-8732-72495a2993c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -390,6 +408,24 @@
     <ClInclude Include="..\Codes\Cloyan.h">
       <Filter>02.GameObject\06.Enemy\01.Cloyan</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Cloyan_Info.h">
+      <Filter>02.GameObject\08.Dummy\01.Spawn_Info\03.Cloyan_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\CriticalEfx.h">
+      <Filter>02.GameObject\12.Effect\01.Critical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\RadialBlur.h">
+      <Filter>02.GameObject\12.Effect\02.RadialBlur</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Trap.h">
+      <Filter>02.GameObject\13.Trap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Balista.h">
+      <Filter>02.GameObject\14.Balista</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Wall_Collision.h">
+      <Filter>02.GameObject\08.Dummy\02.Wall_Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -550,6 +586,24 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Cloyan.cpp">
       <Filter>02.GameObject\06.Enemy\01.Cloyan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Cloyan_Info.cpp">
+      <Filter>02.GameObject\08.Dummy\01.Spawn_Info\03.Cloyan_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\CriticalEfx.cpp">
+      <Filter>02.GameObject\12.Effect\01.Critical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\RadialBlur.cpp">
+      <Filter>02.GameObject\12.Effect\02.RadialBlur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Trap.cpp">
+      <Filter>02.GameObject\13.Trap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Balista.cpp">
+      <Filter>02.GameObject\14.Balista</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Wall_Collision.cpp">
+      <Filter>02.GameObject\08.Dummy\02.Wall_Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

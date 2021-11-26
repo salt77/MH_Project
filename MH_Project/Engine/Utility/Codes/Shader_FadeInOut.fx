@@ -66,6 +66,9 @@ technique Default_Technique
 {
 	pass Default
 	{
+		zenable = true;
+		zwriteenable = false;
+
 		AlphaBlendenable = true;
 		srcblend = srcalpha;
 		destblend = invsrcalpha;

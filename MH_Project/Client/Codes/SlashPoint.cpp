@@ -25,7 +25,8 @@ HRESULT CSlashPoint::Ready_Object()
 	m_vPos = POOLING_POS;
 
 	m_pTransformCom->Set_Pos(&m_vPos);
-	m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.5f);
+	m_pTransformCom->Set_Scale(1.75f, 1.75f, 1.75f);
+	// Radian이 아닌 Degree로 회전(약간 어긋나보이게끔)
 	m_pTransformCom->Rotation(ROT_Z, 90.f);
 
 	m_vOriginScale = *m_pTransformCom->Get_ScaleInfo();
@@ -53,14 +54,19 @@ _int CSlashPoint::Update_Object(const _float & fTimeDelta)
 
 		D3DXMatrixIdentity(&matBill);
 
-		matBill._11 = matView._11;
-		matBill._13 = matView._13;
-		matBill._31 = matView._31;
-		matBill._33 = matView._33;
-
+		//matBill._11 = matView._11;
+		//matBill._12 = matView._12;
+		//matBill._21 = matView._21;
 		//matBill._22 = matView._22;
-		//matBill._23 = matView._23;
-		//matBill._32 = matView._32;
+
+		//matBill._11 = matView._11;
+		//matBill._13 = matView._13;
+		//matBill._31 = matView._31;
+		//matBill._33 = matView._33;
+
+		matBill._22 = matView._22;
+		matBill._23 = matView._23;
+		matBill._32 = matView._32;
 
 		D3DXMatrixInverse(&matBill, NULL, &matBill);
 
@@ -162,6 +168,8 @@ HRESULT CSlashPoint::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
+	pEffect->SetFloat("g_fAlphaValue", 1.f);
+
 	m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture");
 
 	return S_OK;
@@ -169,8 +177,6 @@ HRESULT CSlashPoint::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 
 void CSlashPoint::Set_EnableSlashPoint(_vec3 vPos, _bool bIsSmash)
 {
-	m_dwEffectStart = GetTickCount();
-
 	m_vScale = m_vOriginScale;
 	m_vPos = vPos;
 
@@ -187,7 +193,7 @@ void CSlashPoint::Set_EnableSlashPoint(_vec3 vPos, _bool bIsSmash)
 		vScale = m_vOriginScale * 1.5f;
 	}
 
-	_float	fRand = Engine::Random(0.5f, 1.5f);
+	_float	fRand = Engine::Random(1.f, 1.5f);
 	m_pTransformCom->Set_Scale(vScale.x * fRand, vScale.y * fRand, vScale.z * fRand);
 }
 
@@ -195,7 +201,7 @@ void CSlashPoint::Position_Interpolation(const _float & fTimeDelta)
 {
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
-		if (m_dwEffectStart + m_dwEffectTime < GetTickCount())
+		if (0.35f >= m_vScale.x)
 		{
 			m_pTransformCom->Set_Pos(&POOLING_POS);
 		}
@@ -206,9 +212,9 @@ void CSlashPoint::Scale_Interpolation(const _float & fTimeDelta)
 {
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
-		if (0.f < m_vScale.x)
+		if (0.35f < m_vScale.x)
 			m_vScale.x -= m_fScaleXInterpol * fTimeDelta;
-		if (0.f < m_vScale.y)
+		if (0.35f < m_vScale.y)
 			m_vScale.y -= m_fScaleYInterpol * fTimeDelta;
 
 		m_pTransformCom->Set_Scale(m_vScale.x, m_vScale.y, m_vScale.z);

@@ -61,6 +61,8 @@ VS_OUT			VS_MAIN(VS_IN In)
 	Out.vTangent = normalize(mul(In.vTangent.xyz, (float3x3)g_matWorld));
 	Out.vBiNormal = normalize(mul(In.vBiNormal.xyz, (float3x3)g_matWorld));
 
+	Out.vProjPos = Out.vPosition;
+
 	//matrix	mat = { float4(g_fTangent, 0.f), float4(g_fBinormal, 0.f), float4(g_fNormal, 0.f), { 0, 0, 0, 1 } };
 	//Out.vTranspose = transpose(mat);
 
@@ -82,6 +84,7 @@ struct PS_OUT
 {
 	vector			vColor : COLOR0;
 	vector			vNormal : COLOR1;
+	vector			vDepth : COLOR2;
 };
 
 PS_OUT		PS_MAIN(PS_IN In)
@@ -102,55 +105,19 @@ PS_OUT		PS_MAIN(PS_IN In)
 
 	float3	TempLightDir = g_vLightDir.xyz;
 
-	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.55f;
+	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.35f;
 	//bright = max(0.f, bright);
 	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
-	//Out.vColor.r = Out.vColor.r * bright;
-	//Out.vColor.g = Out.vColor.g * bright;
-	//Out.vColor.b = Out.vColor.b * bright;
 	Out.vColor.rgb = bright * Out.vColor.xyz;
+	Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w * 0.03f, 0.f, 0.f);
 
 	return Out;
 }
-
-PS_OUT		PS_ALPHATEST(PS_IN In)
-{
-	PS_OUT		Out = (PS_OUT)0;
-
-	Out.vColor = tex2D(BaseSampler, In.vTexUV);
-	Out.vNormal = tex2D(NormalSampler, In.vTexUV);
-	float4 tempNormal = Out.vNormal;
-	float4 normalVec = 2 * tempNormal - 1.f;
-	normalVec = normalize(normalVec);
-
-	float3x3 TBN = float3x3(normalize(In.vTangent), normalize(In.vBiNormal), normalize(In.vNormal));
-	TBN = transpose(TBN);
-	float3	worldNormal = mul(TBN, normalVec);
-
-
-	float3	TempLightDir = g_vLightDir.xyz;
-
-	float3 bright = saturate(dot(-TempLightDir, worldNormal));
-	//bright = max(0.f, bright);
-	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-
-	Out.vColor = ((Out.vColor.xyz * bright), 1.f);
-
-	return Out;
-}
-
-
 
 technique Default_Device
 {
 	pass
-	{
-		vertexshader = compile vs_3_0 VS_MAIN();
-		pixelshader = compile ps_3_0 PS_MAIN();
-	}
-
-	pass AlphaTest
 	{
 		alphatestenable = true;
 		alphafunc = greater;
@@ -158,6 +125,6 @@ technique Default_Device
 		cullmode = none;
 
 		vertexshader = compile vs_3_0 VS_MAIN();
-		pixelshader = compile ps_3_0 PS_ALPHATEST();
+		pixelshader = compile ps_3_0 PS_MAIN();
 	}
 };

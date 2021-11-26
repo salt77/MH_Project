@@ -11,7 +11,7 @@ class ENGINE_DLL CStaticMesh : public CComponent
 		D3DXVECTOR3 pos;
 		D3DXVECTOR3 normal;
 		D3DXVECTOR2 tex0;
-		D3DXVECTOR3 binormal;
+		//D3DXVECTOR3 binormal;
 		D3DXVECTOR3 tangent;
 		IDirect3DVertexDeclaration9* Decl;
 	};

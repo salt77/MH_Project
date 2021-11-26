@@ -6,12 +6,20 @@
 #include "Dog.h"
 #include "Soldier.h"
 #include "Knight.h"
+#include "Cloyan.h"
 #include "Dog_Info.h"
 #include "Soldier_Info.h"
 #include "Knight_Info.h"
+#include "Cloyan_Info.h"
 
 #include "Trail_Sword.h"
 #include "SlashPoint.h"
+#include "CriticalEfx.h"
+#include "RadialBlur.h"
+
+#include "Trap.h"
+#include "Balista.h"
+#include "Wall_Collision.h"
 
 #include "Export_Function.h"
 
@@ -26,7 +34,7 @@ CStage_1::~CStage_1(void)
 }
 
 
-HRESULT CStage_1::Ready_Scene(void)
+HRESULT CStage_1::Ready_Scene()
 {
 	FAILED_CHECK_RETURN(CScene::Ready_Scene(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(), E_FAIL);
@@ -51,9 +59,10 @@ HRESULT CStage_1::LateReady_Scene()
 	FAILED_CHECK_RETURN(Load_NaviMesh(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
 
 	m_mapLayer.emplace(L"GameLogic_Spawn", m_pSpawnLayer);
 	m_mapLayer.emplace(L"Enemies", m_pEnemyLayer);
@@ -81,7 +90,7 @@ _int CStage_1::LateUpdate_Scene(const _float & fTimeDelta)
 	return iExit;
 }
 
-void CStage_1::Render_Scene(void)
+void CStage_1::Render_Scene()
 {
 	// DEBUG 용
 	m_dwRenderCnt++;
@@ -159,17 +168,25 @@ HRESULT CStage_1::Ready_Layer_GameLogic(const wstring pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Sword_Trail2", pGameObject), E_FAIL);
 
-	//pGameObject = CDog::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dog", pGameObject), E_FAIL);
+	// Trap
+	pGameObject = CTrap::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Trap", pGameObject), E_FAIL);
 
-	//pGameObject = CSoldier::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Soldier", pGameObject), E_FAIL);
+	// Balista
+	for (_uint i = 0; i < BALISTA_COUNT; ++i)
+	{
+		wstring	wstrName = L"Balista_";
+		wstrName += to_wstring(i);
 
-	//pGameObject = CKnight::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Knight", pGameObject), E_FAIL);
+		pGameObject = CBalista::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+	}
+
+	pGameObject = CWall_Collision::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall_Collision", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
@@ -242,6 +259,14 @@ HRESULT CStage_1::Ready_Layer_Effect(const wstring pLayerTag)
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
 	}
+
+	pGameObject = CCriticalEfx::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Efx_Critical", pGameObject), E_FAIL);
+
+	pGameObject = CRadialBlur::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Efx_RadiulBlur", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
@@ -495,6 +520,57 @@ HRESULT CStage_1::Load_KnightInfo()
 
 		dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&POOLING_POS);
 	}
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CStage_1::Load_CloyanInfo()
+{
+	HANDLE hFile = CreateFile(L"../../Data/Cloyan_Obj.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+	NULL_CHECK_RETURN(m_pSpawnLayer, E_FAIL);
+
+	DWORD dwbyte = 0;
+
+	_uint iObjType = -1;
+	_uint iObjCount = -1;
+	_uint iTargetCount = -1;
+
+	_vec3	vPos, vScale, vRotate;
+
+	ReadFile(hFile, &iObjType, sizeof(_uint), &dwbyte, nullptr);
+	ReadFile(hFile, &iObjCount, sizeof(_uint), &dwbyte, nullptr);
+	//ReadFile(hFile, &iTargetCount, sizeof(_uint), &dwbyte, nullptr);
+
+	if (0 == dwbyte)
+		return E_FAIL;
+
+	ReadFile(hFile, &vPos, sizeof(_vec3), &dwbyte, nullptr);
+	ReadFile(hFile, &vScale, sizeof(_vec3), &dwbyte, nullptr);
+	ReadFile(hFile, &vRotate, sizeof(_vec3), &dwbyte, nullptr);
+
+	CGameObject*	pGameObject = nullptr;
+
+	pGameObject = CCloyan_Info::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pSpawnLayer->Add_GameObject(L"Cloyan_Info", pGameObject), E_FAIL);
+
+	dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&vPos);
+	dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_X, vRotate.x);
+	dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Y, vRotate.y);
+	dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->RotationFromOriginAngle(ROT_Z, vRotate.z);
+
+	// Pooling할 객체 생성 
+	NULL_CHECK_RETURN(m_pEnemyLayer, E_FAIL);
+
+	pGameObject = nullptr;
+	pGameObject = CCloyan::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pEnemyLayer->Add_GameObject(L"Cloyan", pGameObject), E_FAIL);
+
+	dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&POOLING_POS);
 
 	CloseHandle(hFile);
 

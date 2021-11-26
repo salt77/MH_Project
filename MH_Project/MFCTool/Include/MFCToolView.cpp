@@ -376,7 +376,7 @@ HRESULT CMFCToolView::Add_Prototype()
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Cloyan", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Mankind/Cloyan/", L"Cloyan.X"));
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Dog", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Mankind/Dog/", L"Dog.X"));
 	Engine::Ready_Prototype(L"Proto_DynamicMesh_Soldier", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Mankind/Soldier/", L"Soldier.X"));
-	Engine::Ready_Prototype(L"Proto_DynamicMesh_Knight", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Mankind/Knight/", L"Knight.X"));
+	//Engine::Ready_Prototype(L"Proto_DynamicMesh_Knight", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Mankind/Knight/", L"Knight.X"));
 
 	//Engine::Ready_Prototype(L"Proto_StaticMesh_Player", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Lethita/", L"Lethita.X"));
 
@@ -685,8 +685,8 @@ HRESULT CMFCToolView::Add_Collider(_float fRadius, wstring cstrName, COLLIDERTYP
 	// Collider는 프로토타입 생성 안 함
 	//Engine::Ready_Prototype(L"Proto_Collider", CCollider::Create(m_pGraphicDev, fRadius));
 
-	CTransform*	pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
-	CTransform*	pAhglanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
+	CTransform*	pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Player", L"Com_Transform", ID_DYNAMIC));
+	CTransform*	pAhglanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Ahglan", L"Com_Transform", ID_DYNAMIC));
 	CTransform*	pCloyanTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Cloyan", L"Com_Transform", ID_DYNAMIC));
 	CTransform*	pDogTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Dog_0", L"Com_Transform", ID_DYNAMIC));
 	CTransform*	pSoldierTrans = dynamic_cast<CTransform*>(Engine::Get_MFCComponent(L"GameLogic", L"MFC_Soldier_0", L"Com_Transform", ID_DYNAMIC));

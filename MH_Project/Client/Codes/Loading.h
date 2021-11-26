@@ -27,6 +27,8 @@ public:
 
 	_uint		Loading_ForStage();
 	_uint		Loading_ForStage_1();
+	_uint		Loading_ForBufferAll();
+	_uint		Loading_ForTextureAll();
 
 private:
 	HANDLE				m_hThread;

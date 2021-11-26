@@ -22,6 +22,7 @@ public:
 public:
 	void			Set_TrackSpeed(_float fSpeed) { m_pAniCtrl->Set_TrackSpeed(fSpeed); }
 	void			Set_AnimationIndex(const _uint& iIndex);
+	void			Set_ResetAniTime() { m_pAniCtrl->Set_ResetAniTime(); }
 
 public:
 	void			Play_Animation(const _float& fTimeDelta);

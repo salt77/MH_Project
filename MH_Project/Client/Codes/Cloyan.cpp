@@ -3,6 +3,13 @@
 
 #include "Player.h"
 #include "Trail_Sword.h"
+#include "Boss_Hpbar_BackUI.h"
+#include "Boss_Hpbar_GreenUI.h"
+#include "Boss_Hpbar_YellowUI.h"
+#include "Boss_Hpbar_RedUI.h"
+#include "Boss_NamingScene.h"
+#include "Boss_Hpbar_FontUI.h"
+#include "Ahglan_FontName.h"
 
 #include "Export_Function.h"
 #include "Export_Utility.h"
@@ -24,14 +31,16 @@ HRESULT CCloyan::Ready_Object(void)
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	m_pTransformCom->Set_Scale(SCALE_MANKIND, SCALE_MANKIND, SCALE_MANKIND);
+	m_pTransformCom->Set_Scale(SCALE_MANKIND * 1.75f, SCALE_MANKIND * 1.75f, SCALE_MANKIND * 1.75f);
 
 	m_pTransformCom->Update_Component(0.f);
 
-	m_tInfo.iHp = 20000;
+	m_tInfo.iHp = 250000;
 	m_tInfo.iMaxHp = m_tInfo.iHp;
+	m_iLineHp = _int(m_tInfo.iMaxHp * 0.1f);
+	m_iMaxLineHp = m_iLineHp;
 
-	m_bBoss = false;
+	m_bBoss = true;
 
 	return S_OK;
 }
@@ -42,6 +51,9 @@ HRESULT CCloyan::LateReady_Object()
 
 	Load_ColInfo();
 	Add_NaviMesh();
+
+	m_pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+	m_pUILayer = CLayer::Create();
 
 	return S_OK;
 }
@@ -55,12 +67,28 @@ _int CCloyan::Update_Object(const _float & fTimeDelta)
 
 	m_fTimeDelta = fTimeDelta;
 
+	if (Key_Down('G'))
+	{
+		Set_Damage(15000);
+	}
+	else if (Engine::Key_Down('C'))
+	{
+		m_pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
+		m_pTransformCom->Set_Pos(m_pPlayerTrans->Get_Info(INFO_POS));
+		m_iAniIndex = CLOYAN_SPAWN;
+		Animation_Control();
+	}
+
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
+		m_pNaviMeshCom->Set_CellIndex(Compute_InCell());
 		Movement();
 		Animation_Control();
 		Collision_Control();
+		Update_UI();
+		Update_State();
 		MoveOn_Skill();
+		RotationOn_Skill();
 
 		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
@@ -73,8 +101,6 @@ _int CCloyan::Update_Object(const _float & fTimeDelta)
 _int CCloyan::LateUpdate_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::LateUpdate_Object(fTimeDelta);
-
-	m_pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
 
 	if (!m_mapColliderCom.empty())
 	{
@@ -100,6 +126,28 @@ _int CCloyan::LateUpdate_Object(const _float & fTimeDelta)
 
 void CCloyan::Render_Object(void)
 {
+	Render_Font(L"Font_Nanumgothic_Bold", to_wstring(m_iAniIndex), &_vec2(SCREEN_CENTER_X, LOADINGBAR_Y - 60.f), D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	/*if (!m_mapColliderCom.empty())
+	{
+		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+
+		for (; iter != m_mapColliderCom.end(); ++iter)
+		{
+			if (iter->second->Get_CanCollision())
+				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+		}
+	}
+	if (!m_mapBoxColliderCom.empty())
+	{
+		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+
+		for (; iter != m_mapBoxColliderCom.end(); ++iter)
+		{
+			if (iter->second->Get_CanCollision())
+				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+		}
+	}*/
+
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
 		if (m_bAnimation)
@@ -127,44 +175,6 @@ void CCloyan::Render_Object(void)
 	}
 }
 
-void CCloyan::Set_Damage(_int iDamage)
-{
-	if (iDamage <= m_tInfo.iHp)
-	{
-		m_tInfo.iHp -= iDamage;
-
-		if (1000 <= iDamage)
-		{
-			if (CLOYAN_DOWN_BEGIN != m_eCurState &&
-				CLOYAN_DOWN_IDLE != m_eCurState && 
-				CLOYAN_DOWN_END != m_eCurState)
-			{
-				m_iAniIndex = CLOYAN_DOWN_BEGIN;
-			}
-		}
-		else if (CLOYAN_DOWN_BEGIN != m_eCurState &&
-				 CLOYAN_DOWN_IDLE != m_eCurState)
-		{
-			_uint iRandom = rand() % 2;
-
-			if (0 == iRandom)
-			{
-				m_iAniIndex = CLOYAN_DAMAGED;
-			}
-			else
-			{
-				m_iAniIndex = CLOYAN_DAMAGED2;
-			}
-		}
-	}
-	else
-	{
-		m_tInfo.iHp = 0;
-
-		m_iAniIndex = CLOYAN_DYING;
-	}
-}
-
 void CCloyan::Set_Enable(_vec3 vPos, _vec3 vRotate)
 {
 	m_pTransformCom->Set_Pos(&vPos);
@@ -173,7 +183,7 @@ void CCloyan::Set_Enable(_vec3 vPos, _vec3 vRotate)
 	m_pTransformCom->RotationFromOriginAngle(ROT_Z, vRotate.z);
 
 	m_pNaviMeshCom->Set_CellIndex(Compute_InCell());
-	m_pTransformCom->Rotation(ROT_Y, -90.f);
+	//m_pTransformCom->Rotation(ROT_Y, -90.f);
 
 	m_tInfo.iHp = m_tInfo.iMaxHp;
 
@@ -187,7 +197,7 @@ HRESULT CCloyan::Add_Component(void)
 	CComponent*		pComponent = nullptr;
 
 	// Mesh
-	pComponent = m_pMeshCom = dynamic_cast<CDynamicMesh*>(Engine::Clone_Prototype(L"Proto_Mesh_Soldier"));
+	pComponent = m_pMeshCom = dynamic_cast<CDynamicMesh*>(Engine::Clone_Prototype(L"Proto_Mesh_Cloyan"));
 	NULL_CHECK_RETURN(m_pMeshCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Mesh", pComponent);
 
@@ -303,18 +313,30 @@ void CCloyan::Movement()
 				}
 				else if (DIS_FACETOFACE >= m_fDistance)
 				{
-					m_iAniIndex = CLOYAN_ATTACK;
+					if (m_dwSlipDashCoolDown + m_dwSlipDashDelay < GetTickCount())
+					{
+						m_iAniIndex = CLOYAN_SLIPDASH;
+					}
+					else if (20.f >= m_fRand)
+					{
+						m_iAniIndex = CLOYAN_ATTACK;
+					}
+					else if (45.f >= m_fRand)
+					{
+						m_iAniIndex = CLOYAN_SLASHPIERCE;
+					}
+					else if (75.f >= m_fRand)
+					{
+						m_iAniIndex = CLOYAN_STEPPIERCE;
+					}
+					else
+					{
+						m_iAniIndex = CLOYAN_TWINBOLT;
+					}
 				}
 				else
 				{
-					if (DIS_SHORT < m_fDistance)
-					{
-						m_iAniIndex = CLOYAN_IDLE;
-					}
-					else if (DIS_FACETOFACE < m_fDistance)
-					{
-						m_iAniIndex = CLOYAN_RUN;
-					}
+					m_iAniIndex = CLOYAN_RUN;
 				}
 			}
 		}
@@ -323,7 +345,8 @@ void CCloyan::Movement()
 
 void CCloyan::MoveOn_Skill()
 {
-	if (m_bSkillMove)
+	if (m_bSkillMove && 
+		CLOYAN_DYING != m_iAniIndex)
 	{
 		if (m_fSkillMoveStartTime <= m_fAniTime &&
 			m_fSkillMoveEndTime >= m_fAniTime)
@@ -333,6 +356,32 @@ void CCloyan::MoveOn_Skill()
 		else if (m_fSkillMoveEndTime < m_fAniTime)
 		{
 			m_bSkillMove = false;
+		}
+	}
+}
+
+void CCloyan::RotationOn_Skill()
+{
+	if (m_bSkillRotation)
+	{
+		if (m_fSkillRotStartTime <= m_fAniTime &&
+			m_fSkillRotEndTime >= m_fAniTime)
+		{
+			if (10.f <= m_fAngle)
+			{
+				if (m_bTargetIsRight)
+				{
+					m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(m_fSkillRotSpeed * m_fTimeDelta));
+				}
+				else
+				{
+					m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-m_fSkillRotSpeed * m_fTimeDelta));
+				}
+			}
+		}
+		else if (m_fSkillRotEndTime < m_fAniTime)
+		{
+			m_bSkillRotation = false;
 		}
 	}
 }
@@ -384,62 +433,155 @@ void CCloyan::Animation_Control()
 
 		switch (m_eCurState)
 		{
-		case CLOYAN_RUN:
-			m_bCanAction = true;
-
-			m_pMeshCom->Set_TrackSpeed(1.8f);
-			break;
-
-		case CLOYAN_IDLE:
-			m_bCanAction = true;
-			break;
-
-		case CLOYAN_SPAWN:
+		case CCloyan::CLOYAN_ATTACK:
 			m_bCanAction = false;
-			m_lfAniEnd = 2.5f;
-			break;
-
-		case CLOYAN_ATTACK:
-			m_bCanAction = false;
-
-			m_lfAniEnd = 2.5f;
+			m_lfAniEnd = 2.6f;
+			m_eCurAction = CL_ATK;
 			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.4f, 3.5f, (_float)m_lfAniEnd * 0.5f);
+			ENEMY_SKILL_ROTATION((float)m_lfAniEnd * 0.1f, 180.f, (float)m_lfAniEnd * 0.5f);
+			m_pMeshCom->Set_TrackSpeed(2.1f);
 			break;
 
-		case CLOYAN_DAMAGED:
+		case CCloyan::CLOYAN_DAMAGEFROMBACK:
 			m_bCanAction = false;
 			m_lfAniEnd = 0.85f;
+			m_eCurAction = CL_DAMAGED;
 			break;
 
-		case CLOYAN_DAMAGED2:
+		case CCloyan::CLOYAN_DAMAGEFROMFRONT:
 			m_bCanAction = false;
 			m_lfAniEnd = 0.85f;
+			m_eCurAction = CL_DAMAGED;
 			break;
 
-		case CLOYAN_DOWN_BEGIN:
+		case CCloyan::CLOYAN_DYING:
 			m_bCanAction = false;
-			m_lfAniEnd = 1.f;
-			break;
-
-		case CLOYAN_DOWN_IDLE:
-			ENEMY_SKILL_MOVE_END;
-			m_bCanAction = false;
-			m_lfAniEnd = 2.f;
-			break;
-
-		case CLOYAN_DOWN_END:
-			ENEMY_SKILL_MOVE_END;
-			m_bCanAction = false;
-
-			m_pMeshCom->Set_TrackSpeed(3.f);
-			m_lfAniEnd = 3.1f;
-			break;
-
-		case CLOYAN_DYING:
-			m_bCanAction = false;
-
 			m_pMeshCom->Set_TrackSpeed(1.5f);
 			m_lfAniEnd = 0.7f;
+			m_eCurAction = CL_DEAD;
+			break;
+
+		case CCloyan::CLOYAN_IDLE:
+			m_bCanAction = true;
+			m_eCurAction = CL_IDLE;
+			break;
+
+		case CCloyan::CLOYAN_LOW_HEALTH:
+			m_eCurAction = CL_DAMAGED;
+			break;
+
+		case CCloyan::CLOYAN_RUN:
+			m_bCanAction = true;
+			m_pMeshCom->Set_TrackSpeed(1.9f);
+			break;
+
+		case CCloyan::CLOYAN_SLASHPIERCE:
+			m_bCanAction = false;
+			m_lfAniEnd = 2.8f;
+			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.6f, 5.f, (_float)m_lfAniEnd * 0.65f);
+			ENEMY_SKILL_ROTATION((float)m_lfAniEnd * 0.1f, 180.f, (float)m_lfAniEnd * 0.6f);
+			m_eCurAction = CL_ATK;
+			m_pMeshCom->Set_TrackSpeed(2.2f);
+			break;
+
+		case CCloyan::CLOYAN_SLIPDASH:
+			m_bCanAction = false;
+			m_lfAniEnd = 1.f;
+			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.1f, -8.f, (_float)m_lfAniEnd * 0.3f);
+			m_pMeshCom->Set_TrackSpeed(1.9f);
+			break;
+
+		case CCloyan::CLOYAN_SPAWN:
+			m_bCanAction = false;
+			m_lfAniEnd = 2.5f;
+			m_eCurAction = CL_SPAWN;
+
+			pGameObject = CBoss_Hpbar_BackUI::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, BOSS_HPBAR_SCALE_X, BOSS_HPBAR_SCALE_Y);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"0.Boss_Hpbar_BackUI", pGameObject), );
+
+			pGameObject = CBoss_Hpbar_RedUI::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, BOSS_HPBAR_SCALE_X, BOSS_HPBAR_SCALE_Y, 2);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"1.Boss_Hpbar_RedUI", pGameObject), );
+
+			pGameObject = CBoss_Hpbar_YellowUI::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, BOSS_HPBAR_SCALE_X, BOSS_HPBAR_SCALE_Y, 1);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"2.Boss_Hpbar_YellowUI", pGameObject), );
+
+			pGameObject = CBoss_Hpbar_GreenUI::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, BOSS_HPBAR_SCALE_X, BOSS_HPBAR_SCALE_Y, 0);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"3.Boss_Hpbar_GreenUI", pGameObject), );
+
+			// Font Image
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, WINCX * 0.72f, BOSS_HPBAR_Y, 23.f, 23.f, true, false);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"4.Boss_Hpbar_FontXUI", pGameObject), );
+
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, WINCX * 0.735f, BOSS_HPBAR_Y, 30.f, 30.f, false, false);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"5.Boss_Hpbar_FontNumUI", pGameObject), );
+
+			pGameObject = CBoss_Hpbar_FontUI::Create(m_pGraphicDev, WINCX * 0.745f, BOSS_HPBAR_Y, 30.f, 30.f, false, true);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"6.Boss_Hpbar_FontNumTenUI", pGameObject), );
+
+			pGameObject = CAhglan_FontName::Create(m_pGraphicDev, SCREEN_CENTER_X, BOSS_HPBAR_Y, 100.f, 50.f, BOSS_CLOYAN);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"7.Ahglan_FontName", pGameObject), );
+
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 185.f, 1500.f, 550.f, NAMING_BACKGROUND, BOSS_CLOYAN);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"9.Cloyan_NamingScene_Back", pGameObject), );
+
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X + 5.f, WINCY - 130.f, 210.f, 95.f, NAMING_BOSSNAME, BOSS_CLOYAN);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"10.Cloyan_NamingScene_BossName", pGameObject), );
+
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 75.f, 153.f, 80.f, NAMING_STAGENAME, BOSS_CLOYAN);
+			NULL_CHECK_RETURN(pGameObject, );
+			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"11.Cloyan_NamingScene_StageName", pGameObject), );
+
+			Engine::Emplace_Layer(L"Boss_UI", m_pUILayer);
+
+			m_pGreenHpbar = dynamic_cast<CBoss_Hpbar_GreenUI*>(Engine::Get_GameObject(L"Boss_UI", L"3.Boss_Hpbar_GreenUI"));
+			m_pYellowHpbar = dynamic_cast<CBoss_Hpbar_YellowUI*>(Engine::Get_GameObject(L"Boss_UI", L"2.Boss_Hpbar_YellowUI"));
+			m_pRedHpbar = dynamic_cast<CBoss_Hpbar_RedUI*>(Engine::Get_GameObject(L"Boss_UI", L"1.Boss_Hpbar_RedUI"));
+			m_pFontHpbar = dynamic_cast<CBoss_Hpbar_FontUI*>(Engine::Get_GameObject(L"Boss_UI", L"5.Boss_Hpbar_FontNumUI"));
+			m_pFontHpbarTen = dynamic_cast<CBoss_Hpbar_FontUI*>(Engine::Get_GameObject(L"Boss_UI", L"6.Boss_Hpbar_FontNumTenUI"));
+
+			SoundMgrBGM(L"bgm_ep8_mankind.wav", CSoundMgr::BGM);
+			break;
+
+		case CCloyan::CLOYAN_STEPBACK:
+			break;
+
+		case CCloyan::CLOYAN_STEPFRONT:
+			break;
+
+		case CCloyan::CLOYAN_STEPPIERCE:
+			m_bCanAction = false;
+			m_lfAniEnd = 3.5f;
+			m_eCurAction = CL_ATK;
+			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.73f, 17.5f, (_float)m_lfAniEnd * 0.77f);
+			ENEMY_SKILL_ROTATION((float)m_lfAniEnd * 0.1f, 180.f, (float)m_lfAniEnd * 0.75f);
+			m_pMeshCom->Set_TrackSpeed(2.2f);
+			break;
+
+		case CCloyan::CLOYAN_TWINBOLT:
+			m_bCanAction = false;
+			m_lfAniEnd = 2.8f;
+			m_eCurAction = CL_ATK;
+			m_pMeshCom->Set_TrackSpeed(2.1f);
+			break;
+
+		case CCloyan::CLOYAN_TURNLEFT:
+			m_bCanAction = false;
+			m_lfAniEnd = 1.5f;
+			break;
+
+		case CCloyan::CLOYAN_TURNRIGHT:
+			m_bCanAction = false;
+			m_lfAniEnd = 1.5f;
 			break;
 		}
 
@@ -449,11 +591,30 @@ void CCloyan::Animation_Control()
 
 	// 상태 변경 시 매 프레임 실행
 	_vec3	vDir = -*m_pTransformCom->Get_Info(INFO_RIGHT);
+	_vec3	vRightDir = *m_pTransformCom->Get_Info(INFO_LOOK);
 
 	switch (m_eCurState)
 	{
-	case CLOYAN_RUN:
-		m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, D3DXVec3Normalize(&vDir, &vDir), m_fSpeed, m_fTimeDelta));
+	case CCloyan::CLOYAN_ATTACK:
+		break;
+
+	case CCloyan::CLOYAN_DAMAGEFROMBACK:
+		break;
+
+	case CCloyan::CLOYAN_DAMAGEFROMFRONT:
+		break;
+
+	case CCloyan::CLOYAN_DYING:
+		break;
+
+	case CCloyan::CLOYAN_IDLE:
+		break;
+
+	case CCloyan::CLOYAN_LOW_HEALTH:
+		break;
+
+	case CCloyan::CLOYAN_RUN:
+		m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, D3DXVec3Normalize(&vDir, &vDir), m_fSpeed, m_fTimeDelta, true));
 
 		if (10.f <= m_fAngle)
 		{
@@ -467,26 +628,45 @@ void CCloyan::Animation_Control()
 			}
 		}
 
-		if (DIS_FACETOFACE >= m_fDistance)
-		{
-			// 강제로 다음 행동이 ATK을 수행하게 한다. 
-			m_iAniIndex = CLOYAN_ATTACK;
-		}
+		//if (DIS_FACETOFACE >= m_fDistance)
+		//{
+		//	// 강제로 다음 행동이 ATK을 수행하게 한다. 
+		//	Animation_Control();
+		//}
 		break;
 
-	case CLOYAN_TURNRIGHT:
+	case CCloyan::CLOYAN_SLASHPIERCE:
+		break;
+
+	case CCloyan::CLOYAN_SLIPDASH:
+		break;
+
+	case CCloyan::CLOYAN_SPAWN:
+		break;
+
+	case CCloyan::CLOYAN_STEPBACK:
+		m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, D3DXVec3Normalize(&vDir, &vDir), -m_fStepSpeed, m_fTimeDelta, true));
+
 		if (10.f <= m_fAngle)
 		{
-			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * m_fTimeDelta));
-		}
-		else
-		{
-			m_iAniIndex = CLOYAN_RUN;
-			Animation_Control();
+			if (m_bTargetIsRight)
+			{
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * m_fTimeDelta));
+			}
+			else
+			{
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * -m_fTimeDelta));
+			}
 		}
 		break;
 
-	case CLOYAN_TURNLEFT:
+	case CCloyan::CLOYAN_STEPPIERCE:
+		break;
+
+	case CCloyan::CLOYAN_TWINBOLT:
+		break;
+
+	case CCloyan::CLOYAN_TURNLEFT:
 		if (10.f <= m_fAngle)
 		{
 			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * -m_fTimeDelta));
@@ -496,21 +676,17 @@ void CCloyan::Animation_Control()
 			m_iAniIndex = CLOYAN_RUN;
 			Animation_Control();
 		}
-
-	case CLOYAN_IDLE:
-		//if (DIS_FACETOFACE > m_fDistance &&
-		//	0.f < m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
-		//{
-		//	// 강제로 다음 행동이 ATK을 수행하게 한다. 
-		//	m_eSolAction = SOL_ATK;
-		//}
 		break;
 
-	case CLOYAN_ATTACK:
-		if (!m_bSound)
+	case CCloyan::CLOYAN_TURNRIGHT:
+		if (10.f <= m_fAngle)
 		{
-			m_bSound = true;
-			//SoundMgr(L"step_lv6.wav", CSoundMgr::MONSTER3);
+			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f * m_fTimeDelta));
+		}
+		else
+		{
+			m_iAniIndex = CLOYAN_RUN;
+			Animation_Control();
 		}
 		break;
 	}
@@ -531,18 +707,13 @@ void CCloyan::Animation_Control()
 
 		if (CLOYAN_DYING == m_eCurState)
 		{
-			m_pTransformCom->Set_Pos(&POOLING_POS);
-			m_pTransformCom->Update_Component(m_fTimeDelta);
+			m_bDead = true;
 		}
-		else if (CLOYAN_DOWN_BEGIN == m_eCurState)
+		else if (CLOYAN_SLIPDASH == m_eCurState)
 		{
-			m_iAniIndex = CLOYAN_DOWN_IDLE;
-
-			Animation_Control();
-		}
-		else if (CLOYAN_DOWN_IDLE == m_eCurState)
-		{
-			m_iAniIndex = CLOYAN_DOWN_END;
+			m_iAniIndex = CLOYAN_STEPPIERCE;
+			m_dwSlipDashCoolDown = GetTickCount();
+			m_dwSlipDashDelay = (_ulong)Engine::Random(10000.f, 20000.f);
 
 			Animation_Control();
 		}
@@ -553,10 +724,9 @@ void CCloyan::Animation_Control()
 		else if (CLOYAN_IDLE != m_eCurState &&
 				 CLOYAN_RUN != m_eCurState)
 		{
-			//RotateLookVector();
-
 			m_fRand = Engine::Random(0.f, 100.f);
 
+			m_eCurAction = CL_IDLE;
 			m_iAniIndex = CLOYAN_IDLE;
 			m_pMeshCom->Set_TrackSpeed(2.f);
 
@@ -571,21 +741,30 @@ void CCloyan::Collision_Control()
 	map<const wstring, CCollider*>::iterator	iter_Hit = m_mapColliderCom.begin();
 
 	// HitBox
-	switch (m_eCurState)
+	for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
 	{
-	case CCloyan::CLOYAN_ATTACK:
-		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
+		switch (m_eCurState)
 		{
+		case CCloyan::CLOYAN_ATTACK:
 			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.4f, m_lfAniEnd * 0.55f);
-		}
-		break;
+			break;
 
-	default:
-		for (; iter_Hit != m_mapColliderCom.end(); ++iter_Hit)
-		{
+		case CCloyan::CLOYAN_SLASHPIERCE:
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.2f, m_lfAniEnd * 0.8f);
+			break;
+
+		case CCloyan::CLOYAN_STEPPIERCE:
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.7f, m_lfAniEnd * 0.8f);
+			break;
+
+		case CCloyan::CLOYAN_TWINBOLT:
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.4f, m_lfAniEnd * 0.55f);
+			break;
+
+		default:
 			iter_Hit->second->Set_CanCollision(false);
+			break;
 		}
-		break;
 	}
 }
 
@@ -642,6 +821,51 @@ const _ulong & CCloyan::Compute_InCell()
 	return 0;
 }
 
+void CCloyan::Update_UI()
+{
+	if (m_pGreenHpbar)
+	{
+		m_pGreenHpbar->Set_ValueRatio((_float)m_tInfo.iHp);
+		m_pGreenHpbar->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
+		m_pGreenHpbar->Set_LineHpRatio((_float)m_iLineHp);
+		m_pGreenHpbar->Set_MaxLineHpRatio((_float)m_iMaxLineHp);
+	}
+	if (m_pYellowHpbar)
+	{
+		m_pYellowHpbar->Set_ValueRatio((_float)m_tInfo.iHp);
+		m_pYellowHpbar->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
+		m_pYellowHpbar->Set_LineHpRatio((_float)m_iLineHp);
+		m_pYellowHpbar->Set_MaxLineHpRatio((_float)m_iMaxLineHp);
+	}
+	if (m_pRedHpbar)
+	{
+		m_pRedHpbar->Set_ValueRatio((_float)m_tInfo.iHp);
+		m_pRedHpbar->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
+		m_pRedHpbar->Set_LineHpRatio((_float)m_iLineHp);
+		m_pRedHpbar->Set_MaxLineHpRatio((_float)m_iMaxLineHp);
+	}
+	if (m_pFontHpbar)
+	{
+		m_pFontHpbar->Set_ValueRatio((_float)m_tInfo.iHp);
+		m_pFontHpbar->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
+	}
+	if (m_pFontHpbarTen)
+	{
+		m_pFontHpbarTen->Set_ValueRatio((_float)m_tInfo.iHp);
+		m_pFontHpbarTen->Set_MaxValueRatio((_float)m_tInfo.iMaxHp);
+	}
+}
+
+void CCloyan::Update_State()
+{
+	if (0 >= m_tInfo.iHp)
+	{
+		m_iAniIndex = CLOYAN_DYING;
+
+		Animation_Control();
+	}
+}
+
 HRESULT CCloyan::Add_NaviMesh()
 {
 	CComponent*		pComponent = nullptr;
@@ -655,7 +879,7 @@ HRESULT CCloyan::Add_NaviMesh()
 
 HRESULT CCloyan::Load_ColInfo()
 {
-	HANDLE hFile = CreateFile(L"../../Data/Soldier_Col.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	HANDLE hFile = CreateFile(L"../../Data/Cloyan_Col.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
@@ -788,5 +1012,8 @@ CCloyan * CCloyan::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CCloyan::Free(void)
 {
+	Engine::Delete_AllInLayer(L"Boss_UI");
+	Safe_Release(m_pUILayer);
+
 	CGameObject::Free();
 }

@@ -496,6 +496,7 @@ void CSoldier::Animation_Control()
 			m_iAniIndex = SOLSTATE_RUN;
 			Animation_Control();
 		}
+		break;
 
 	case SOLSTATE_IDLE:
 		//if (DIS_FACETOFACE > m_fDistance &&

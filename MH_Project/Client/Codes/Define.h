@@ -107,6 +107,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define SCALE_AHGLAN	0.07f
 #define SCALE_NORMAL	0.01f
 #define SCALE_MANKIND	0.012f
+#define SCALE_BALISTA	0.03f
 
 #define CAMSHAKE_POWER	0.025f
 
@@ -122,7 +123,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define PLAYER_SMASH4POWER	6500
 #define PLAYER_SMASHPOWER2	9000
 
-#define PLAYER_SP_FEVER		75
+#define PLAYER_SP_FEVER		100
+#define PLAYER_SP_FURY_NO7	750
 
 #define FADEOUTSPEED		0.0005f
 #define PROGRESSBARSPEED	0.05f
@@ -140,6 +142,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define BOSS_HPBAR_SCALE_Y	35.f
 
 #define POOLING_POS			_vec3(0.f, -999.f, 0.f)
+#define	WALL_COLLIDER_POS	_vec3(71.55f, 2.6f, 7.89f)
 
 #define DAMAGEFONT_COUNT	40
 #define DAMAGEFONT_SKILL_COUNT	40
@@ -148,6 +151,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define DOG_COUNT		6
 #define SOLDIER_COUNT	6
 #define KNIGHT_COUNT	4
+
+#define	BALISTA_COUNT	8
 
 #define SLASHPOINT_COUNT	8
 

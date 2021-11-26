@@ -13,18 +13,15 @@ private:
 	virtual ~CLight(void);
 
 public:
-	const D3DLIGHT9*			Get_Light() { return &m_tLightInfo; }
-	const _float&				Get_LightPower() { return m_fLightPower; }
+	const D3DLIGHT9*			Get_Light(void) { return &m_tLightInfo; }
 
 public:
-	HRESULT			Ready_Light(const D3DLIGHT9* pLightInfo, const _uint& iIndex, const _float& fLightPower = 10.f);
+	HRESULT			Ready_Light(const D3DLIGHT9* pLightInfo, const _uint& iIndex);
 	void			Render_Light(LPD3DXEFFECT& pEffect);
 
 private:
 	LPDIRECT3DDEVICE9			m_pGraphicDev;
 	D3DLIGHT9					m_tLightInfo;
-
-	_float						m_fLightPower = 10.f;
 
 	_uint						m_iIndex = 0;
 

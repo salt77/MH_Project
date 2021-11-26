@@ -68,6 +68,22 @@ void CScene::Delete_Layer(const wstring wstrLayerTag, const wstring wstrObjTag)
 	}
 }
 
+void CScene::Delete_AllInLayer(const wstring wstrLayerTag)
+{
+	map<const wstring, CLayer*>::iterator	iter = m_mapLayer.begin();
+
+	for (; iter != m_mapLayer.end(); ++iter)
+	{
+		if (wstrLayerTag == iter->first)
+		{
+			Safe_Release(iter->second);
+			m_mapLayer.erase(iter->first);
+
+			break;
+		}
+	}
+}
+
 
 void Engine::CScene::Free(void)
 {

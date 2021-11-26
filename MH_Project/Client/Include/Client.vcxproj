@@ -158,6 +158,7 @@
     <ClInclude Include="..\Codes\Ahglan.h" />
     <ClInclude Include="..\Codes\Ahglan_FontName.h" />
     <ClInclude Include="..\Codes\Ahglan_StageUI.h" />
+    <ClInclude Include="..\Codes\Balista.h" />
     <ClInclude Include="..\Codes\Boss_Hpbar_BackUI.h" />
     <ClInclude Include="..\Codes\Boss_Hpbar_FontUI.h" />
     <ClInclude Include="..\Codes\Boss_Hpbar_GreenUI.h" />
@@ -166,7 +167,9 @@
     <ClInclude Include="..\Codes\BackGround.h" />
     <ClInclude Include="..\Codes\Boss_NamingScene.h" />
     <ClInclude Include="..\Codes\Cloyan.h" />
+    <ClInclude Include="..\Codes\Cloyan_Info.h" />
     <ClInclude Include="..\Codes\CollisionMgr.h" />
+    <ClInclude Include="..\Codes\CriticalEfx.h" />
     <ClInclude Include="..\Codes\DamageFont.h" />
     <ClInclude Include="..\Codes\Dog.h" />
     <ClInclude Include="..\Codes\Dog_Info.h" />
@@ -193,6 +196,7 @@
     <ClInclude Include="..\Codes\Player_Hpbar_LerpUI.h" />
     <ClInclude Include="..\Codes\Player_Hpbar_ValueUI.h" />
     <ClInclude Include="..\Codes\Player_Steminabar_ValueUI.h" />
+    <ClInclude Include="..\Codes\RadialBlur.h" />
     <ClInclude Include="..\Codes\SkyBox.h" />
     <ClInclude Include="..\Codes\SlashPoint.h" />
     <ClInclude Include="..\Codes\Soldier.h" />
@@ -206,7 +210,9 @@
     <ClInclude Include="..\Codes\StickyBomb.h" />
     <ClInclude Include="..\Codes\Terrain.h" />
     <ClInclude Include="..\Codes\Trail_Sword.h" />
+    <ClInclude Include="..\Codes\Trap.h" />
     <ClInclude Include="..\Codes\UI.h" />
+    <ClInclude Include="..\Codes\Wall_Collision.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -216,6 +222,7 @@
     <ClCompile Include="..\Codes\Ahglan.cpp" />
     <ClCompile Include="..\Codes\Ahglan_FontName.cpp" />
     <ClCompile Include="..\Codes\Ahglan_StageUI.cpp" />
+    <ClCompile Include="..\Codes\Balista.cpp" />
     <ClCompile Include="..\Codes\Boss_Hpbar_BackUI.cpp" />
     <ClCompile Include="..\Codes\Boss_Hpbar_FontUI.cpp" />
     <ClCompile Include="..\Codes\Boss_Hpbar_GreenUI.cpp" />
@@ -224,7 +231,9 @@
     <ClCompile Include="..\Codes\BackGround.cpp" />
     <ClCompile Include="..\Codes\Boss_NamingScene.cpp" />
     <ClCompile Include="..\Codes\Cloyan.cpp" />
+    <ClCompile Include="..\Codes\Cloyan_Info.cpp" />
     <ClCompile Include="..\Codes\CollisionMgr.cpp" />
+    <ClCompile Include="..\Codes\CriticalEfx.cpp" />
     <ClCompile Include="..\Codes\DamageFont.cpp" />
     <ClCompile Include="..\Codes\Dog.cpp" />
     <ClCompile Include="..\Codes\Dog_Info.cpp" />
@@ -250,6 +259,7 @@
     <ClCompile Include="..\Codes\Player_Hpbar_LerpUI.cpp" />
     <ClCompile Include="..\Codes\Player_Hpbar_ValueUI.cpp" />
     <ClCompile Include="..\Codes\Player_Steminabar_ValueUI.cpp" />
+    <ClCompile Include="..\Codes\RadialBlur.cpp" />
     <ClCompile Include="..\Codes\SkyBox.cpp" />
     <ClCompile Include="..\Codes\SlashPoint.cpp" />
     <ClCompile Include="..\Codes\Soldier.cpp" />
@@ -263,7 +273,9 @@
     <ClCompile Include="..\Codes\StickyBomb.cpp" />
     <ClCompile Include="..\Codes\Terrain.cpp" />
     <ClCompile Include="..\Codes\Trail_Sword.cpp" />
+    <ClCompile Include="..\Codes\Trap.cpp" />
     <ClCompile Include="..\Codes\UI.cpp" />
+    <ClCompile Include="..\Codes\Wall_Collision.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -155,6 +155,14 @@ void CManagement::Delete_Layer(const wstring wstrLayerTag, const wstring wstrObj
 	m_pScene->Delete_Layer(wstrLayerTag, wstrObjTag);
 }
 
+void CManagement::Delete_AllInLayer(const wstring wstrLayerTag)
+{
+	if (!m_pScene)
+		return;
+
+	m_pScene->Delete_AllInLayer(wstrLayerTag);
+}
+
 Engine::_int Engine::CManagement::Update_Scene(const _float& fTimeDelta)
 {
 	if (nullptr == m_pScene)

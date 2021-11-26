@@ -129,30 +129,35 @@ HRESULT CStageMesh_1::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
-	D3DMATERIAL9		tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+	//D3DMATERIAL9		tMtrl;
+	//ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
 
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 10.f;
+	//tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	//tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	//tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	//tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	//tMtrl.Power = 10.f;
 
-	pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
-	pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
-	pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
+	//pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
+	//pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
+	//pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
 
-	pEffect->SetFloat("g_fPower", tMtrl.Power);
+	//pEffect->SetFloat("g_fPower", tMtrl.Power);
 
 	const D3DLIGHT9*		pLightInfo = Get_Light();
 	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
 
 	pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
-	pEffect->SetFloat("g_fPower", tMtrl.Power);
 
-	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
-	pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
-	pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
+	//_vec3	vLocalLightDir = pLightInfo->Direction;
+	//_matrix	matStageWorld = *m_pTransformCom->Get_WorldMatrix();
+	//D3DXMatrixInverse(&matStageWorld, nullptr, &matStageWorld);
+	//D3DXVec3TransformNormal(&vLocalLightDir, &vLocalLightDir, &matStageWorld);
+	//pEffect->SetVector("g_vLocalLightDir", &_vec4(vLocalLightDir, 0.f));
+
+	//pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
+	//pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
+	//pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
 
 	D3DXMatrixInverse(&matView, NULL, &matView);
 	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);

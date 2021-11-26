@@ -173,7 +173,7 @@ void CDynamicCamera::Highlight_SkillShot()
 	{
 		if (m_fHighlightDistance < m_fDistanceFromTarget)
 		{
-			m_fDistanceFromTarget -= (m_fDistanceFromTarget - m_fHighlightDistance) * 0.1f;
+			m_fDistanceFromTarget -= (m_fDistanceFromTarget - m_fHighlightDistance) * 0.25f;
 		}
 	}
 	else
@@ -182,10 +182,11 @@ void CDynamicCamera::Highlight_SkillShot()
 		{
 			if (m_fOriginDistanceFromTarget > m_fDistanceFromTarget)
 			{
-				m_fDistanceFromTarget += (m_fOriginDistanceFromTarget - m_fDistanceFromTarget) * 0.1f;
+				m_fDistanceFromTarget += (m_fOriginDistanceFromTarget - m_fDistanceFromTarget) * 0.25f;
 			}
 			else
 			{
+				m_bHighlightSkillShot = false;
 				m_fDistanceFromTarget = m_fOriginDistanceFromTarget;
 			}
 		}
@@ -691,12 +692,16 @@ void CDynamicCamera::Collision_StageMesh()
 			fDistance < fCamToPlayerDistance)
 		{
 			m_bCollisionCam = true;
-			m_fDistanceFromTarget = m_fOriginDistanceFromTarget - fDistance;
+			m_fDistanceFromTarget = m_fOriginDistanceFromTarget - fDistance * 1.1f;
 		}
 		else
 		{
 			m_bCollisionCam = false;
-			m_fDistanceFromTarget = m_fOriginDistanceFromTarget;
+
+			if (!m_bHighlightSkillShot)
+			{
+				m_fDistanceFromTarget = m_fOriginDistanceFromTarget;
+			}
 		}
 	}
 }

@@ -17,14 +17,14 @@ private:
 	virtual ~CHitBox_Pos(void);
 
 public:
-	virtual HRESULT Ready_Object(void) override;
+	virtual HRESULT Ready_Object() override;
 	virtual HRESULT	LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
-	virtual void	Render_Object(void) override;
+	virtual void	Render_Object() override;
 
 private:
-	HRESULT			Add_Component(void);
+	HRESULT			Add_Component();
 
 private:
 	CTransform*		m_pTransformCom = nullptr;

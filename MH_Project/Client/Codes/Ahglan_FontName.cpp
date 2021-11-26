@@ -13,8 +13,10 @@ CAhglan_FontName::~CAhglan_FontName(void)
 }
 
 
-HRESULT CAhglan_FontName::Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY)
+HRESULT CAhglan_FontName::Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY, BOSS_ID eBossType)
 {
+	m_eBossId = eBossType;
+
 	FAILED_CHECK_RETURN(CUI::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
@@ -67,11 +69,11 @@ void CAhglan_FontName::Render_Object(void)
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matOldProj);
 }
 
-CAhglan_FontName* CAhglan_FontName::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY)
+CAhglan_FontName* CAhglan_FontName::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY, BOSS_ID eBossType)
 {
 	CAhglan_FontName*	pInstance = new CAhglan_FontName(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Object(fX, fY, fSizeX, fSizeY)))
+	if (FAILED(pInstance->Ready_Object(fX, fY, fSizeX, fSizeY, eBossType)))
 		Safe_Release(pInstance);
 
 	return pInstance;
@@ -92,9 +94,18 @@ HRESULT CAhglan_FontName::Add_Component(void)
 	m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
 
 	// texture
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Ahglan_FontUI"));
-	NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	if (BOSS_AHGLAN == m_eBossId)
+	{
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Ahglan_FontUI"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	}
+	else if (BOSS_CLOYAN == m_eBossId)
+	{
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Cloyan_FontUI"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	}
 
 	// Renderer
 	pComponent = m_pRendererCom = Engine::Get_Renderer();

@@ -6,6 +6,8 @@
 #include "Ahglan.h"
 #include "StickyBomb.h"
 #include "Trail_Sword.h"
+#include "CriticalEfx.h"
+#include "RadialBlur.h"
 
 #include "Player_Hpbar_BackUI.h"
 #include "Player_Hpbar_ValueUI.h"
@@ -99,7 +101,7 @@ HRESULT CPlayer::LateReady_Object()
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Spbar_ValueUI", pGameObject), E_FAIL);
 
 	// Slot
-	pGameObject = CPlayer_SlotUI::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 80.f, 560.f, 80.f);
+	pGameObject = CPlayer_SlotUI::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, 550.f, 70.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_SlotUI", pGameObject), E_FAIL);
 
@@ -113,6 +115,8 @@ HRESULT CPlayer::LateReady_Object()
 
 	m_pTrailSwordL = dynamic_cast<CTrail_Sword*>(Engine::Get_GameObject(L"GameLogic", L"Player_Sword_Trail"));
 	m_pTrailSwordR = dynamic_cast<CTrail_Sword*>(Engine::Get_GameObject(L"GameLogic", L"Player_Sword_Trail2"));
+
+	m_pRadialBlur = dynamic_cast<CRadialBlur*>(Engine::Get_GameObject(L"Effect", L"Efx_RadiulBlur"));
 
 	m_pHpbarValueUI = dynamic_cast<CPlayer_Hpbar_ValueUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Hpbar_ValueUI"));
 	m_pHpbarLerpUI = dynamic_cast<CPlayer_Hpbar_LerpUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Hpbar_LerpUI"));
@@ -134,7 +138,7 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	// Debug 용
 	if (Key_Down('J'))
 	{
-		m_tPlayerInfo.iSkillPoint += 250;
+		m_tPlayerInfo.iSkillPoint += 1000;
 	}
 
 	m_pMainCam = static_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
@@ -208,7 +212,7 @@ _int CPlayer::LateUpdate_Object(const _float & fTimeDelta)
 	return iExit;
 }
 
-void CPlayer::Render_Object(void)
+void CPlayer::Render_Object()
 {
 	//if (!m_mapColliderCom.empty())
 	//{
@@ -284,12 +288,12 @@ void CPlayer::Set_SpPoint(_bool bIsSmash)
 	else
 	{
 		if (m_tPlayerInfo.iSkillPoint + (rand() % 5 + 1) < m_tPlayerInfo.iMaxSkillPoint)
-		{																				
-			m_tPlayerInfo.iSkillPoint += rand() % 5 + 1;								
-		}																				
-		else																			
-		{																				
-			m_tPlayerInfo.iSkillPoint = m_tPlayerInfo.iMaxSkillPoint;					
+		{
+			m_tPlayerInfo.iSkillPoint += rand() % 5 + 1;
+		}
+		else
+		{
+			m_tPlayerInfo.iSkillPoint = m_tPlayerInfo.iMaxSkillPoint;
 		}
 	}
 }
@@ -562,7 +566,20 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	// 스킬 액션(sp스킬, 보조무기 액션)
 	if (PL_SKILL >= m_eCurAction)
 	{
-		if (Key_Down('Z'))
+		if (Key_Down('4'))
+		{
+			if (m_bCanAction)
+			{
+				if (PLAYER_SP_FURY_NO7 <= m_tPlayerInfo.iSkillPoint)
+				{
+					m_eCurAction = PL_SKILL;
+					m_iAniIndex = STATE_FURY_NO1;
+
+					m_tPlayerInfo.iSkillPoint -= PLAYER_SP_FURY_NO7;
+				}
+			}
+		}
+		else if (Key_Down('Z'))
 		{
 			if (m_bCanAction)
 			{
@@ -575,7 +592,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				}
 			}
 		}
-
 		else if (Key_Down('F'))
 		{
 			if (SCENE_STAGE == Engine::Get_SceneID())
@@ -852,12 +868,19 @@ void CPlayer::Compute_Buff()
 	}
 }
 
-void CPlayer::Compute_Critical()
+void CPlayer::Compute_Critical(const _matrix* matWorld)
 {
 	if (m_fCriticalPotential >= Engine::Random(0.f, 10.f))
 	{
 		Add_Buff(BUFF_CRITICAL, 1500);
 
+		CCriticalEfx*	pEfx = static_cast<CCriticalEfx*>(Engine::Get_GameObject(L"Effect", L"Efx_Critical"));
+		if (pEfx)
+		{
+			_vec3 vPos;
+			memcpy(&vPos, &matWorld->_41, sizeof(_vec3));
+			pEfx->Set_EnableCriticalEfx(vPos);
+		}
 		SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
 	}
 }
@@ -899,7 +922,35 @@ void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVecto
 
 	_float	fAngle = D3DXToDegree(acos(D3DXVec3Dot(&TargetLookVector, &-vPlayerRight)));
 
-	if (fAngle > 10.f)
+	if (5.f <= fAngle)
+	{
+		if (90.f <= fAngle)
+		{
+			if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
+			{
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(fAngle * fTimeDelta * 10.f));
+			}
+			else if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
+			{
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(fAngle * -fTimeDelta * 10.f));
+			}
+		}
+		else
+		{
+			if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
+			{
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(fAngle * fTimeDelta * 25.f));
+			}
+			else if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) < 0.f)
+			{
+				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(fAngle * -fTimeDelta * 25.f));
+			}
+		}
+	}
+
+	// 이전에 쓰던 회전 방식(큰 회전 때는 괜찮은데 작은 회전 때는 뚝뚝 끊기는 느낌이 남)
+	// 그래서 윗 방식대로 회전각 비율에 따라서 회전 속도를 조정하되, 어느정도 보정만 해주는 방향으로 변경. 
+	/*if (fAngle > 10.f)
 	{
 		if (D3DXVec3Dot(&vUp, D3DXVec3Cross(&vTemp, &TargetLookVector, &vPlayerRight)) > 0.f)
 		{
@@ -920,7 +971,7 @@ void CPlayer::Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVecto
 		{
 			m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(45.f * -fTimeDelta));
 		}
-	}
+	}*/
 }
 
 void CPlayer::Rotate_PlayerLook(_vec3 & TargetLookVector)
@@ -943,29 +994,6 @@ void CPlayer::Rotate_PlayerLook(_vec3 & TargetLookVector)
 		}
 	}
 }
-
-//void CPlayer::MoveOn_Skill(const _float& fTimeDelta)
-//{
-//	if (m_bSkillMove)
-//	{
-//		if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
-//		{
-//			m_dwSkillMoveReady = GetTickCount();
-//			m_dwSkillMoveReadyTime = INFINITY_INT;
-//			m_dwSkillMoveStart = GetTickCount();
-//		}
-//
-//		if (m_dwSkillMoveStart + m_dwSkillMoveTime >= GetTickCount())
-//		{
-//			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
-//			m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT), m_fSkillMoveSpeed, fTimeDelta);
-//		}
-//		else if (m_dwSkillMoveReady + m_dwSkillMoveReadyTime < GetTickCount())
-//		{
-//			m_bSkillMove = false;
-//		}
-//	}
-//}
 
 void CPlayer::MoveOn_Skill(const _float & fTimeDelta)
 {
@@ -1333,7 +1361,7 @@ void CPlayer::Animation_Control()
 		m_pMeshCom->Set_TrackSpeed(1.8f);
 	}
 	else if (STATE_RUN == m_eCurState ||
-			 STATE_SPRINT == m_eCurState)
+		STATE_SPRINT == m_eCurState)
 	{
 		m_pMeshCom->Set_TrackSpeed(2.f);
 	}
@@ -1376,6 +1404,24 @@ void CPlayer::Animation_Control()
 		_uint	iRandSound = 0;
 		switch (m_eCurState)
 		{
+		case STATE_FURY_NO2:
+			SKILL_MOVE_BYANI(0.1f, 3250.f, 0.2f);
+			++m_iFuryNo7Count;
+			m_lfAniEnd = 0.6f;
+
+			Rotate_PlayerLook(m_vDir);
+			break;
+
+		case STATE_FURY_NO1:
+			SKILL_MOVE_BYANI(0.1f, 3250.f, 0.2f);
+			++m_iFuryNo7Count;
+			m_lfAniEnd = 0.6f;
+			if (7 == m_iFuryNo7Count)
+				m_lfAniEnd = 1.6f;
+
+			Rotate_PlayerLook(m_vDir);
+			break;
+
 		case STATE_TIRED_BEGIN:
 			m_lfAniEnd *= 0.35f;
 			break;
@@ -1423,7 +1469,7 @@ void CPlayer::Animation_Control()
 
 		case STATE_SP_FEVER:
 			SKILL_MOVE_BYANI(0.6f, 2500.f, 0.73f);
-			m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
+			m_pMainCam->Set_HighlightSkillShot(1.3f, 500);
 
 			m_lfAniEnd *= 2.f;
 			break;
@@ -1503,7 +1549,7 @@ void CPlayer::Animation_Control()
 		case STATE_DOUBLE_CRECSENT:
 			SKILL_MOVE_BYANI(0.135f, 300.f, 0.5f);
 
-			m_pMainCam->Set_HighlightSkillShot(1.95f, 750);
+			m_pMainCam->Set_HighlightSkillShot(1.7f, 700);
 			Set_PlayerStemina(-20.f);
 
 			m_eNextAtk = STATE_ATK1;
@@ -1512,7 +1558,7 @@ void CPlayer::Animation_Control()
 		case STATE_DASHATK:
 			SKILL_MOVE_BYANI(0.01f, 1100.f, 0.15f);
 
-			m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
+			m_pMainCam->Set_HighlightSkillShot(1.6f, 700);
 			Set_PlayerStemina(-10.f);
 
 			m_eNextAtk = STATE_ATK1;
@@ -1581,8 +1627,7 @@ void CPlayer::Animation_Control()
 			Set_PlayerStemina(-25.f);
 
 			m_eNextAtk = STATE_ATK1;
-			//m_eNextSmash = STATE_DASHATK;		// 4타 스매쉬 추가타 구현 전까지는 잠깐 대쉬어택으로 대체함. 
-			//m_eNextSmash = STATE_SMASH4_B;
+			SetNextSmash(STATE_SMASH4_B, 750);
 			break;
 
 		case STATE_SMASH2_B:
@@ -1682,7 +1727,7 @@ void CPlayer::Animation_Control()
 		if (Engine::STATE_IDLE == m_eCurState ||
 			Engine::STATE_RUN == m_eCurState ||
 			Engine::STATE_SPRINT == m_eCurState ||
-			Engine::STATE_THROW_DURING == m_eCurState || 
+			Engine::STATE_THROW_DURING == m_eCurState ||
 			Engine::STATE_TIRED_DURING == m_eCurState)
 		{
 			m_bAnimation = true;
@@ -1733,6 +1778,29 @@ void CPlayer::Animation_Control()
 				m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_NORMAL);
 				Rotate_PlayerLook(+*m_pTransformCom->Get_Info(INFO_LOOK));
 			}
+			else if (STATE_FURY_NO1 == m_eCurState || 
+					 STATE_FURY_NO2 == m_eCurState)
+			{
+				if (7 > m_iFuryNo7Count)
+				{
+					if (STATE_FURY_NO1 == m_eCurState)
+					{
+						m_iAniIndex = STATE_FURY_NO2;
+						Animation_Control();
+					}
+					else
+					{
+						m_iAniIndex = STATE_FURY_NO1;
+						Animation_Control();
+					}
+
+					break;
+				}
+				else
+				{
+					m_iFuryNo7Count = 0;
+				}
+			}
 
 			m_iDashCount = 0;
 
@@ -1758,6 +1826,8 @@ void CPlayer::Collision_Control()
 		{
 			if (STATE_DASH_N == m_iAniIndex ||
 				STATE_DASH_S == m_iAniIndex ||
+				STATE_FURY_NO1 == m_iAniIndex || 
+				STATE_FURY_NO2 == m_iAniIndex || 
 				STATE_DAMAGE_RESIST == m_iAniIndex ||
 				STATE_DAMAGEFROM_BACK == m_iAniIndex ||
 				STATE_DAMAGEFROM_FRONT == m_iAniIndex ||
@@ -1796,6 +1866,35 @@ void CPlayer::Collision_Control()
 		_uint iRandSound = 0;
 		switch (m_iAniIndex)
 		{
+		case STATE_SMASH4_B:
+			HITBOX_CONTROLL(0.8f, 0.9f, TRUE);
+			if (!m_bLethitaSound[1] &&
+				m_fAniTime >= 0.33f)
+			{
+				m_bLethitaSound[1] = true;
+				SoundMgrLowerVol(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT, 0.15f);
+			}
+			else if (!m_bAtkSound[1] &&
+				m_fAniTime >= 0.45f)
+			{
+				m_bAtkSound[1] = true;
+				SoundMgrLowerVol(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT2, 0.15f);
+			}
+
+			if (!m_bAtkSound[0] &&
+				m_fAniTime >= 0.85f)
+			{
+				m_bAtkSound[0] = true;
+				_vec3 vPos = *m_pTransformCom->Get_Info(INFO_POS);
+				vPos.y += 0.1f;
+				m_pRadialBlur->Set_EnableRadialBlur(vPos);
+
+				SoundPlayerStrongAtk;
+				SoundMgrLowerVol(L"hit_common_ground_hit.wav", CSoundMgr::PLAYER_EFFECT3, 0.15f);
+			}
+			m_pMainCam->Set_HighlightSkillShot(1.3f, 350);
+			break;
+
 		case STATE_SP_FEVER:
 			HITBOX_CONTROLL(0.6f, 0.75f, TRUE);
 			if (!m_bAtkSound[0] &&
@@ -1826,10 +1925,74 @@ void CPlayer::Collision_Control()
 			}
 			break;
 
+		case STATE_FURY_NO1:
+			for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			{
+				if (L"Hit_LHandLongLong" == iter->first ||
+					L"Hit_RHandLongLong" == iter->first)
+				{
+					if (0.1f <= m_fAniTime &&
+						0.5f >= m_fAniTime)
+					{
+						iter->second->Set_CanCollision(true);
+					}
+					else
+					{
+						iter->second->Set_CanCollision(false);
+					}
+				}
+				else
+				{
+					iter->second->Set_CanCollision(false);
+				}
+			}
+			//HITBOX_CONTROLL(0.4f, 0.6f, TRUE);
+			if (!m_bSkillSound[0] &&
+				m_fAniTime >= 0.1f)
+			{
+				m_bSkillSound[0] = true;
+				SoundMgr(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT2);
+
+				//m_pMainCam->Set_HighlightSkillShot(1.65f, 750);
+			}
+			break;
+
+		case STATE_FURY_NO2:
+			for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			{
+				if (L"Hit_LHandLongLong" == iter->first ||
+					L"Hit_RHandLongLong" == iter->first)
+				{
+					if (0.1f <= m_fAniTime &&
+						0.5f >= m_fAniTime)
+					{
+						iter->second->Set_CanCollision(true);
+					}
+					else
+					{
+						iter->second->Set_CanCollision(false);
+					}
+				}
+				else
+				{
+					iter->second->Set_CanCollision(false);
+				}
+			}
+			//HITBOX_CONTROLL(0.4f, 0.6f, TRUE);
+			if (!m_bSkillSound[1] &&
+				m_fAniTime >= 0.1f)
+			{
+				m_bSkillSound[1] = true;
+				SoundMgr(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT2);
+
+				//m_pMainCam->Set_HighlightSkillShot(1.65f, 750);
+			}
+			break;
+
 		case STATE_FURY2:
 			for (; iter != m_mapBoxColliderCom.end(); ++iter)
 			{
-				if (L"Hit_LHandLongLong" == iter->first || 
+				if (L"Hit_LHandLongLong" == iter->first ||
 					L"Hit_RHandLongLong" == iter->first)
 				{
 					if (0.37f <= m_fAniTime &&
@@ -1852,10 +2015,10 @@ void CPlayer::Collision_Control()
 				m_fAniTime >= 0.37f)
 			{
 				m_bSkillSound[0] = true;
-				SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT3, 0.23f);
-
-				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
+				SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT3, 0.18f);
 			}
+
+			m_pMainCam->Set_HighlightSkillShot(1.35f, 50);
 			break;
 
 		case STATE_FURY:
@@ -1884,10 +2047,10 @@ void CPlayer::Collision_Control()
 				m_fAniTime >= 0.37f)
 			{
 				m_bSkillSound[0] = true;
-				SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT2, 0.25f);
-
-				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
+				SoundMgrLowerVol(L"Hit_Flesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT2, 0.15f);
 			}
+
+			m_pMainCam->Set_HighlightSkillShot(1.35f, 50);
 			break;
 
 		case STATE_SMASH3:
@@ -1899,7 +2062,7 @@ void CPlayer::Collision_Control()
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
 
-				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
+				m_pMainCam->Set_HighlightSkillShot(1.65f, 750);
 			}
 			else if (!m_bAtkSound[1] &&
 				m_fAniTime >= 0.45f)
@@ -1938,7 +2101,7 @@ void CPlayer::Collision_Control()
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
 
-				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
+				m_pMainCam->Set_HighlightSkillShot(1.65f, 750);
 			}
 			break;
 
@@ -1969,7 +2132,7 @@ void CPlayer::Collision_Control()
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Hit_HardFlesh_StrongSlash.wav", CSoundMgr::PLAYER_EFFECT);
 
-				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
+				m_pMainCam->Set_HighlightSkillShot(1.65f, 750);
 			}
 			break;
 
@@ -1982,7 +2145,7 @@ void CPlayer::Collision_Control()
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_Metal.wav", CSoundMgr::PLAYER_EFFECT);
 
-				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
+				m_pMainCam->Set_HighlightSkillShot(1.65f, 750);
 			}
 			break;
 
@@ -1995,7 +2158,7 @@ void CPlayer::Collision_Control()
 				SoundPlayerStrongAtk;
 				SoundMgr(L"Swing_MetalStrong.wav", CSoundMgr::PLAYER_EFFECT);
 
-				m_pMainCam->Set_HighlightSkillShot(1.85f, 750);
+				m_pMainCam->Set_HighlightSkillShot(1.65f, 750);
 			}
 			break;
 

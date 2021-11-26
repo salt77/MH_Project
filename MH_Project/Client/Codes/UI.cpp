@@ -24,6 +24,9 @@ _int CUI::Update_Object(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
 
+	if (m_bDead)
+		return OBJ_DEAD;
+
 	return iExit;
 }
 

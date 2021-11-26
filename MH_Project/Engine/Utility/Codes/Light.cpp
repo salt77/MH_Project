@@ -13,7 +13,7 @@ Engine::CLight::~CLight(void)
 }
 
 
-HRESULT Engine::CLight::Ready_Light(const D3DLIGHT9* pLightInfo, const _uint& iIndex, const _float& fLightPower)
+HRESULT Engine::CLight::Ready_Light(const D3DLIGHT9* pLightInfo, const _uint& iIndex)
 {
 	m_iIndex = iIndex;
 
@@ -71,11 +71,6 @@ HRESULT Engine::CLight::Ready_Light(const D3DLIGHT9* pLightInfo, const _uint& iI
 
 	m_pIB->Unlock();
 
-	////////
-
-	m_fLightPower = fLightPower;
-
-	////////
 
 	/*m_pGraphicDev->SetLight(iIndex, pLightInfo);
 	m_pGraphicDev->LightEnable(iIndex, TRUE);*/
@@ -89,9 +84,6 @@ void CLight::Render_Light(LPD3DXEFFECT & pEffect)
 
 	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&m_tLightInfo.Diffuse);
 	pEffect->SetVector("g_vLightAmbient", (_vec4*)&m_tLightInfo.Ambient);
-	//pEffect->SetVector("g_vLightSpecular", (_vec4*)&m_tLightInfo.Specular);
-
-	pEffect->SetFloat("g_fPower", m_fLightPower);
 
 	_matrix	matView, matProj;
 

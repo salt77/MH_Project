@@ -8,6 +8,7 @@ USING(Engine)
 class CPlayer;
 class CAhglan;
 class CStickyBomb;
+class CWall_Collision;
 
 class CCollisionMgr : public CBase
 {
@@ -35,6 +36,7 @@ public:
 private:
 	void			Collision_PlayerAttack();
 	void			Collision_MonsterAttack();
+	void			Collision_Balista_Stage_1();
 
 	void			Update_MultipleCollision();
 	
@@ -58,6 +60,7 @@ private:
 	CPlayer*		m_pPlayer = nullptr;
 	CAhglan*		m_pAhglan = nullptr;
 	CStickyBomb*	m_pStickyBomb = nullptr;
+	CWall_Collision*	m_pWall = nullptr;
 
 	PL_STATE		m_ePlayerCurState = STATE_END;
 	PL_STATE		m_ePlayerPreState = STATE_END;

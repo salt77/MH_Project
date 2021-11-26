@@ -51,7 +51,7 @@ public:
 		A_STATE_END
 	};
 
-public:
+private:
 	explicit CAhglan(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CAhglan();
 

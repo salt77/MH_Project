@@ -35,7 +35,7 @@ public:
 		DOGSTATE_END
 	};
 
-public:
+private:
 	explicit CDog(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CDog();
 

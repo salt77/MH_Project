@@ -7,7 +7,7 @@
 
 CStickyBomb::CStickyBomb(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
-	, m_fSpeed(12.f)
+	, m_fSpeed(15.f)
 	, m_fFallSpeed(5.f)
 	, m_fTime(0.f)
 {
@@ -15,7 +15,7 @@ CStickyBomb::CStickyBomb(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CStickyBomb::CStickyBomb(const CStickyBomb& rhs)
 	: CGameObject(rhs)
-	, m_fSpeed(12.f)
+	, m_fSpeed(15.f)
 	, m_fFallSpeed(5.f)
 	, m_fTime(0.f)
 {
@@ -38,6 +38,8 @@ HRESULT CStickyBomb::Ready_Object(void)
 
 HRESULT CStickyBomb::LateReady_Object()
 {
+	FAILED_CHECK_RETURN(CGameObject::LateReady_Object(), E_FAIL);
+
 	CTransform*		pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
 	CDynamicCamera*	pCamera = dynamic_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
 
@@ -100,24 +102,6 @@ _int CStickyBomb::LateUpdate_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::LateUpdate_Object(fTimeDelta);
 
-	//if (!m_mapBoxColliderCom.empty())
-	//{
-	//	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
-
-	//	for (; iter != m_mapBoxColliderCom.end(); ++iter)
-	//	{
-	//		if (iter->second->Get_CanCollision())
-	//		{
-	//			iter->second->Set_ColliderMatrix(m_pTransformCom->Get_WorldMatrix());
-	//		}
-	//	}
-	//}
-
-	return iExit;
-}
-
-void CStickyBomb::Render_Object(void)
-{
 	if (!m_mapBoxColliderCom.empty())
 	{
 		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
@@ -126,10 +110,28 @@ void CStickyBomb::Render_Object(void)
 		{
 			if (iter->second->Get_CanCollision())
 			{
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+				iter->second->LateUpdate_Collider(m_pTransformCom->Get_WorldMatrix());
 			}
 		}
 	}
+
+	return iExit;
+}
+
+void CStickyBomb::Render_Object(void)
+{
+	//if (!m_mapBoxColliderCom.empty())
+	//{
+	//	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+
+	//	for (; iter != m_mapBoxColliderCom.end(); ++iter)
+	//	{
+	//		if (iter->second->Get_CanCollision())
+	//		{
+	//			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	//		}
+	//	}
+	//}
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
@@ -213,33 +215,6 @@ HRESULT CStickyBomb::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
-	D3DMATERIAL9		tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 10.f;
-
-	pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
-	pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
-	pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
-
-	pEffect->SetFloat("g_fPower", tMtrl.Power);
-
-	const D3DLIGHT9*		pLightInfo = Get_Light();
-	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
-
-	pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
-
-	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
-	pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
-	pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
-
-	D3DXMatrixInverse(&matView, NULL, &matView);
-	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
-
 	return S_OK;
 }
 
@@ -248,7 +223,7 @@ HRESULT CStickyBomb::Ready_Collider()
 	//D3DXComputeBoundingBox(m_pTransformCom->Get_Info(INFO_POS), 8, sizeof(_vec3), &m_vMin, &m_vMax);
 
 	//Add_Collider(m_vMin.x, m_vMin.y, m_vMin.z, m_vMax.x, m_vMax.y, m_vMax.z, L"Collider_StickyBomb", COLTYPE_BOX_HIT);
-	Add_Collider(-5.f, -5.f, -5.f, 5.f, 5.f, 5.f, L"Collider_StickyBomb", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_HIT);
+	FAILED_CHECK_RETURN(Add_Collider(-5.f, -5.f, -5.f, 5.f, 5.f, 5.f, L"Collider_StickyBomb", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_HIT), E_FAIL);
 
 	return S_OK;
 }

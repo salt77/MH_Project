@@ -12,3 +12,5 @@
 11. Step_Front 
 12. Step_Pierce 
 13. Twin_Bolt 
+14. TurnLeft 
+15. TurnRight 

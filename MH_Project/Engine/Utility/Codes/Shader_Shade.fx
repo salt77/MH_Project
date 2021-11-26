@@ -17,13 +17,12 @@ vector		g_vLightDir;
 
 vector		g_vLightDiffuse;
 vector		g_vLightAmbient;
-vector		g_vLightSpecular;
 
 vector		g_vMtrlDiffuse = (vector)1.f;
 vector		g_vMtrlAmbient = (vector)1.f;
 
 vector		g_vCamPos;
-float		g_fPower = 10.f;
+float		g_fPower = 50.f;
 
 matrix		g_matInvProj;
 matrix		g_matInvView;
