@@ -94,6 +94,7 @@ Engine::_uint CLoading::Loading_ForStage()
 	lstrcpy(m_szLoading, L"Loading Object..");
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Ahglan", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Ahglan/", L"Ahglan.X")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_StickyBomb", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Prop/Fragment/", L"Fragment.X")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Balista", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Prop/Balista/", L"Balista.X")), E_FAIL);
 
 	lstrcpy(m_szLoading, L"Loading Complete!");
 
@@ -137,6 +138,7 @@ _uint CLoading::Loading_ForStage_1()
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Trap", CDynamicMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/DynamicMesh/Trap/", L"Trap.X")), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Balista", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Prop/Balista/", L"Balista.X")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Mesh_Box", CStaticMesh::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/StaticMesh/Prop/Box/", L"Box.X")), E_FAIL);
 
 	lstrcpy(m_szLoading, L"Loading Complete!");
 

@@ -28,14 +28,14 @@ private:
 	virtual ~CTrap();
 
 public:
-	virtual HRESULT Ready_Object(void) override;
+	virtual HRESULT Ready_Object() override;
 	virtual HRESULT LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
-	virtual void	Render_Object(void) override;
+	virtual void	Render_Object() override;
 
 private:
-	HRESULT			Add_Component(void);
+	HRESULT			Add_Component();
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 private:
@@ -57,7 +57,6 @@ private:
 
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
-	CCalculator*	m_pCalculatorCom = nullptr;
 	CDynamicMesh*	m_pMeshCom = nullptr;
 	CShader*		m_pShaderCom = nullptr;
 

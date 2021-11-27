@@ -94,8 +94,8 @@ HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileNa
 	const D3DVERTEXELEMENT9	vertexDecl[] =
 	{
 		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
-		{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 20, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
 		{ 0, 32, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
 		//{ 0, 44, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 },
 		D3DDECL_END()
@@ -190,6 +190,7 @@ HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileNa
 		if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppTexture[i])))
 			return E_FAIL;
 
+#pragma region Normal_Texture
 		// Stage_1 Normal Texture
 		if (!lstrcmp(szFileName, L"Map_material_0.tga"))
 		{
@@ -449,6 +450,8 @@ HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileNa
 			lstrcpy(szFileName, L"sticky_bomb_normal.tga");
 			lstrcat(szFullPath, szFileName);
 		}
+
+#pragma endregion
 
 		if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFullPath, &m_ppNormalTexture[i])))
 			return E_FAIL;

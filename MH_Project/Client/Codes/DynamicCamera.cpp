@@ -4,6 +4,7 @@
 #include "Ahglan.h"
 #include "Stage.h"
 #include "Stage_1.h"
+#include "Balista.h"
 
 #include "Export_Function.h"
 
@@ -50,16 +51,24 @@ HRESULT CDynamicCamera::LateReady_Object()
 
 	m_pFadeInOut = dynamic_cast<CFadeInOut*>(Engine::Get_GameObject(L"UI", L"FadeInOut_UI"));
 
-	switch (Engine::Get_SceneID())	
+	switch (Engine::Get_SceneID())
 	{
 	case SCENE_STAGE:
 		m_pStage = dynamic_cast<CStageMesh*>(Engine::Get_GameObject(L"GameLogic", L"StageMesh"));
 		m_pStageMesh = dynamic_cast<CStageMesh*>(Engine::Get_GameObject(L"GameLogic", L"StageMesh"))->Get_MeshInfo();
+
+		m_fDistanceFromTarget = 2.25f;
+		m_fOriginDistanceFromTarget = 2.25f;
+		m_fHighlightDistance = 2.25f;
 		break;
 
 	case SCENE_STAGE_1:
 		m_pStage_1 = dynamic_cast<CStageMesh_1*>(Engine::Get_GameObject(L"GameLogic", L"StageMesh"));
 		m_pStageMesh = dynamic_cast<CStageMesh_1*>(Engine::Get_GameObject(L"GameLogic", L"StageMesh"))->Get_MeshInfo();
+
+		m_fDistanceFromTarget = 1.95f;
+		m_fOriginDistanceFromTarget = 1.95f;
+		m_fHighlightDistance = 1.95f;
 		break;
 	}
 
@@ -127,6 +136,20 @@ _vec3 CDynamicCamera::Get_CamDirVector(DIR eDir)
 	return _vec3();
 }
 
+void CDynamicCamera::Set_CameraMode(MODE eMode)
+{
+	m_eCurMode = eMode;
+
+	if (MODE_AHGLAN_START == eMode)
+	{
+		m_dwStartTime = GetTickCount();
+	}
+	else if (MODE_BALISTA_HIGHLIGHT == eMode)
+	{
+		m_dwBalistaStart = GetTickCount();
+	}
+}
+
 void CDynamicCamera::Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwEndTime, _float fWaveInterpol)
 {
 	if (!bShakeType)
@@ -182,7 +205,7 @@ void CDynamicCamera::Highlight_SkillShot()
 		{
 			if (m_fOriginDistanceFromTarget > m_fDistanceFromTarget)
 			{
-				m_fDistanceFromTarget += (m_fOriginDistanceFromTarget - m_fDistanceFromTarget) * 0.25f;
+				m_fDistanceFromTarget += (m_fOriginDistanceFromTarget - m_fDistanceFromTarget) * 0.15f;
 			}
 			else
 			{
@@ -207,7 +230,7 @@ void CDynamicCamera::Camera_Shake(const _float& fTimeDelta)
 		m_vShakeInterpol.z = sin(m_fShakeWaveX * 10.f) * powf(0.5f, m_fShakeWaveX) * m_fShakePower;
 	}
 	else if (m_bLongShake &&
-			 m_dwShakeTime + m_dwShakeDelay >= GetTickCount())
+		m_dwShakeTime + m_dwShakeDelay >= GetTickCount())
 	{
 		m_fFXProgress += WaveFxProgressive * fTimeDelta;
 		m_fShakeWaveX += m_fFXProgress;
@@ -218,7 +241,7 @@ void CDynamicCamera::Camera_Shake(const _float& fTimeDelta)
 		m_vShakeInterpol.z = sin(m_fShakeWaveX * m_fLongWaveInterpol) * powf(0.9f, m_fShakeWaveX * 0.02f) * m_fShakePower;
 	}
 	else if (m_bShake &&
-			 m_dwShakeTime + m_dwShakeDelay < GetTickCount())
+		m_dwShakeTime + m_dwShakeDelay < GetTickCount())
 	{
 		m_bShake = false;
 		m_bLongShake = false;
@@ -405,6 +428,29 @@ void CDynamicCamera::At_Update(const _float& fTimeDelta)
 		m_vAt = vAtTarget + m_vShakeInterpol - m_vPreShakeInterpol;
 		m_vPreShakeInterpol = m_vShakeInterpol;
 	}
+	else if (MODE_BALISTA_HIGHLIGHT == m_eCurMode)
+	{
+		if (SCENE_STAGE == Engine::Get_SceneID())
+		{
+			if (m_dwBalistaStart + m_dwBalistaDelay >= GetTickCount())
+			{
+				map<const wstring, CGameObject*>	mapObject = Engine::Get_MapObject(L"Balista");
+				map<const wstring, CGameObject*>::iterator		iter_Balista = mapObject.begin();
+
+				CBalista*	pBalista = static_cast<CBalista*>(iter_Balista->second);
+				CTransform*	pBaliTrans = static_cast<CTransform*>(pBalista->Get_Component(L"Com_Transform", ID_DYNAMIC));
+
+				if (POOLING_POS != *pBaliTrans->Get_Info(INFO_POS))
+				{
+					m_vAt = *pBaliTrans->Get_Info(INFO_POS);
+				}
+			}
+			else
+			{
+				m_eCurMode = MODE_NORMAL;
+			}
+		}
+	}
 }
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
@@ -475,6 +521,7 @@ void CDynamicCamera::Mouse_Move(void)
 
 			m_vEye = m_vAt + vDirToCam * m_fDistanceFromTarget;
 			m_vVirtualEye = m_vAt + vDirToCam * m_fOriginDistanceFromTarget;
+			m_vOriginEye = m_vEye;
 		}
 	}
 	else if (MODE_SECONDARY == m_eCurMode)
@@ -513,7 +560,7 @@ void CDynamicCamera::Mouse_Move(void)
 		}
 	}
 
-	Collision_StageMesh();
+	//Collision_StageMesh();
 }
 
 void CDynamicCamera::Mouse_Fix(void)
@@ -645,6 +692,32 @@ void CDynamicCamera::CutScene_Eye(const _float& fTimeDelta)
 			}
 		}
 	}
+	/*else if (MODE_BALISTA_HIGHLIGHT == m_eCurMode)
+	{
+		if (SCENE_STAGE == Engine::Get_SceneID())
+		{
+			if (m_dwBalistaStart + m_dwBalistaDelay >= GetTickCount())
+			{
+				map<const wstring, CGameObject*>	mapObject = Engine::Get_MapObject(L"Balista");
+				map<const wstring, CGameObject*>::iterator		iter_Balista = mapObject.begin();
+
+				CBalista*	pBalista = static_cast<CBalista*>(iter_Balista->second);
+				CTransform*	pBaliTrans = static_cast<CTransform*>(pBalista->Get_Component(L"Com_Transform", ID_DYNAMIC));
+
+				if (POOLING_POS != *pBaliTrans->Get_Info(INFO_POS))
+				{
+					_vec3	vDir = *pBaliTrans->Get_Info(INFO_POS) - m_vEye;
+					D3DXVec3Normalize(&vDir, &vDir);
+
+					m_vEye = m_vOriginEye + vDir * 30.f;
+				}
+			}
+			else
+			{
+				m_eCurMode = MODE_NORMAL;
+			}
+		}
+	}*/
 }
 
 void CDynamicCamera::Collision_StageMesh()

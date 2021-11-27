@@ -8,6 +8,7 @@
 #include "SlashPoint.h"
 #include "CriticalEfx.h"
 #include "RadialBlur.h"
+#include "Balista.h"
 
 #include "Export_Function.h"
 
@@ -32,6 +33,7 @@ HRESULT CStage::Ready_Scene(void)
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Effect(L"Effect"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Balista(L"Balista"), E_FAIL);
 
 	return S_OK;
 }
@@ -247,6 +249,29 @@ HRESULT CStage::Ready_Layer_Effect(const wstring pLayerTag)
 	pGameObject = CRadialBlur::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Efx_RadiulBlur", pGameObject), E_FAIL);
+
+	m_mapLayer.emplace(pLayerTag, pLayer);
+
+	return S_OK;
+}
+
+HRESULT CStage::Ready_Layer_Balista(const wstring pLayerTag)
+{
+	CLayer*	pLayer = CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	CGameObject*	pGameObject = nullptr;
+
+	// Balista
+	for (_uint i = 0; i < STAGE_BALISTA_COUNT; ++i)
+	{
+		wstring	wstrName = L"Balista_";
+		wstrName += to_wstring(i);
+
+		pGameObject = CBalista::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+	}
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 

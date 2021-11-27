@@ -111,8 +111,6 @@ PS_OUT		PS_MAIN(PS_IN In)
 
 	Out.vColor.rgb = bright * Out.vColor.rgb;
 	//Out.vNormal = vector(worldNormal, 1.f);
-	//Out.vNormal.rgb = bright * worldNormal;
-
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w,
 						In.vProjPos.w * 0.03f,
 						0.f,

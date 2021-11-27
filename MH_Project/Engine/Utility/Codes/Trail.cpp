@@ -135,11 +135,11 @@ void CTrail::Management_Point()
 
 			if (i % 2)
 			{
-				pVertex[i].vTexUV = _vec2(i / _float(m_dwVtxCnt - 2.f), 1.f);
+				pVertex[i].vTexUV = _vec2(i / _float(m_dwVtxCnt), 1.f);
 			}
 			else
 			{
-				pVertex[i].vTexUV = _vec2(i / _float(m_dwVtxCnt - 2.f), 0.f);
+				pVertex[i].vTexUV = _vec2(i / _float(m_dwVtxCnt * 0.5f), 0.f);
 			}
 
 			++i;

@@ -62,6 +62,9 @@ public:
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 	virtual void	Render_Object(void) override;
 
+public:
+	virtual	void	Set_Damage(_int iDamage) override;
+
 private:
 	// 기본 함수들
 	HRESULT			Add_Component(void);

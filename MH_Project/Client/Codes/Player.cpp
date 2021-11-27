@@ -5,6 +5,7 @@
 #include "DynamicCamera.h"
 #include "Ahglan.h"
 #include "StickyBomb.h"
+#include "Balista.h"
 #include "Trail_Sword.h"
 #include "CriticalEfx.h"
 #include "RadialBlur.h"
@@ -140,6 +141,16 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	{
 		m_tPlayerInfo.iSkillPoint += 1000;
 	}
+	if (Key_Down('B'))
+	{
+		m_bBalistaFire = true;
+		m_iBalistaFireCount = 0;
+
+		m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_BALISTA_HIGHLIGHT);
+	}
+
+	_vec3 vPos;
+	vPos = *m_pTransformCom->Get_Info(INFO_POS);
 
 	m_pMainCam = static_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
 
@@ -158,6 +169,7 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	FootStepSound();
 	MoveOn_Skill(fTimeDelta);
 	Make_TrailEffect(fTimeDelta);
+	SupportFire_Balista();
 
 	/*_int iExit = CGameObject::Update_Object(fTimeDelta);*/
 	StopMotion();
@@ -707,7 +719,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		{
 			m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
 			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed * 1.35f, fTimeDelta, true));
-			//m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
+			//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
 			m_pMainCam->Sync_PlayerPos(vMoveDir);
 
 			m_iAniIndex = STATE_SPRINT;
@@ -716,7 +728,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		{
 			m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
 			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta, true));
-			//m_pMainCam->Sync_PlayerPos(vMoveDir, m_fSpeed, fTimeDelta);
+			//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed, fTimeDelta);
 			m_pMainCam->Sync_PlayerPos(vMoveDir);
 
 			m_iAniIndex = STATE_RUN;
@@ -1305,21 +1317,23 @@ void CPlayer::Make_TrailEffect(const _float& fDeltaTime)
 		}
 		else
 		{
-			if (L"Trail_LHand" == iter->first)
+			// Trail용 충돌체를 따로 만들었지만 UV값 변경해주고 나니까 이게 더 어울림..
+			if (L"Hit_LHand" == iter->first)
 			{
 				// 축을 맞춰주기 위해서 반대로 매개변수를 줬다. 
 				m_pTrailSwordL->Set_InfoForTrail(fDeltaTime, iter->second->Get_Max(), iter->second->Get_Min(), iter->second->Get_ColliderWorld());
 			}
-			else if (L"Trail_RHand" == iter->first)
+			else if (L"Hit_RHand" == iter->first)
 			{
 				m_pTrailSwordR->Set_InfoForTrail(fDeltaTime, iter->second->Get_Min(), iter->second->Get_Max(), iter->second->Get_ColliderWorld());
 			}
 		}
 	}
 
-	if (PL_ATK == m_eCurAction ||
+	if ((PL_ATK == m_eCurAction ||
 		PL_SMASH == m_eCurAction ||
-		PL_SKILL == m_eCurAction)
+		PL_SKILL == m_eCurAction) &&
+		WEAPON_MODE::WEAPON_SECONDARY != m_eCurWeaponMode)
 	{
 		m_pTrailSwordL->Set_Render(true);
 		m_pTrailSwordR->Set_Render(true);
@@ -1328,6 +1342,47 @@ void CPlayer::Make_TrailEffect(const _float& fDeltaTime)
 	{
 		m_pTrailSwordL->Set_Render(false);
 		m_pTrailSwordR->Set_Render(false);
+	}
+}
+
+void CPlayer::SupportFire_Balista()
+{
+	if (m_bBalistaFire)
+	{
+		if (STAGE_BALISTA_COUNT <= m_iBalistaFireCount)
+		{
+			m_bBalistaFire = false;
+			m_iBalistaFireCount = 0;
+		}
+
+		if (m_dwBalistaFire + m_dwBalistaDelay < GetTickCount())
+		{
+			map<const wstring, CGameObject*>	mapBalistaObject = Engine::Get_MapObject(L"Balista");
+			map<const wstring, CGameObject*>::iterator		iter_Balista = mapBalistaObject.begin();
+
+			for (; iter_Balista != mapBalistaObject.end(); ++iter_Balista)
+			{
+				CBalista*	pBalista = static_cast<CBalista*>(iter_Balista->second);
+				CTransform*	pBaliTrans = static_cast<CTransform*>(pBalista->Get_Component(L"Com_Transform", ID_DYNAMIC));
+
+				if (POOLING_POS == *pBaliTrans->Get_Info(INFO_POS))
+				{
+					m_dwBalistaFire = GetTickCount();
+					++m_iBalistaFireCount;
+					m_dwBalistaDelay = Engine::Random(50.f, 300.f);
+
+					_float	fRand = Engine::Random(-10.f, 10.f);
+
+					_vec3	vDir = *D3DXVec3Normalize(&(STAGE_BALISTA_TARGET - STAGE_BALISTA_POS), &(STAGE_BALISTA_TARGET - STAGE_BALISTA_POS));
+					_vec3	vPos = STAGE_BALISTA_POS;
+					vPos = _vec3(vPos.x + Engine::Random(-20.f, 5.f), vPos.y, vPos.z + Engine::Random(-30.f, 10.f));
+
+					pBalista->Set_EnableBalista(vPos, vDir);
+
+					break;
+				}
+			}
+		}
 	}
 }
 
@@ -1778,8 +1833,8 @@ void CPlayer::Animation_Control()
 				m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_NORMAL);
 				Rotate_PlayerLook(+*m_pTransformCom->Get_Info(INFO_LOOK));
 			}
-			else if (STATE_FURY_NO1 == m_eCurState || 
-					 STATE_FURY_NO2 == m_eCurState)
+			else if (STATE_FURY_NO1 == m_eCurState ||
+				STATE_FURY_NO2 == m_eCurState)
 			{
 				if (7 > m_iFuryNo7Count)
 				{
@@ -1826,8 +1881,8 @@ void CPlayer::Collision_Control()
 		{
 			if (STATE_DASH_N == m_iAniIndex ||
 				STATE_DASH_S == m_iAniIndex ||
-				STATE_FURY_NO1 == m_iAniIndex || 
-				STATE_FURY_NO2 == m_iAniIndex || 
+				STATE_FURY_NO1 == m_iAniIndex ||
+				STATE_FURY_NO2 == m_iAniIndex ||
 				STATE_DAMAGE_RESIST == m_iAniIndex ||
 				STATE_DAMAGEFROM_BACK == m_iAniIndex ||
 				STATE_DAMAGEFROM_FRONT == m_iAniIndex ||

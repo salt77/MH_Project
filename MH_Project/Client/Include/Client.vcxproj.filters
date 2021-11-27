@@ -238,6 +238,12 @@
     <Filter Include="02.GameObject\08.Dummy\02.Wall_Collision">
       <UniqueIdentifier>{6a693bca-6d36-4839-8732-72495a2993c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\08.Dummy\03.">
+      <UniqueIdentifier>{691356c5-1816-42b9-a7e8-1f9a1b734996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\15.Box">
+      <UniqueIdentifier>{8dc53edc-bb13-482b-9e02-a9f373e9ddda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -426,6 +432,9 @@
     <ClInclude Include="..\Codes\Wall_Collision.h">
       <Filter>02.GameObject\08.Dummy\02.Wall_Collision</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Box.h">
+      <Filter>02.GameObject\15.Box</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -604,6 +613,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Wall_Collision.cpp">
       <Filter>02.GameObject\08.Dummy\02.Wall_Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Box.cpp">
+      <Filter>02.GameObject\15.Box</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

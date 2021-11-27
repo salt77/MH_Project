@@ -86,6 +86,7 @@ private:
 	void			SetNextSmash(PL_STATE eState, _ulong dwDelay) { m_eNextSmash = eState; m_dwNextSmashCheckTime = GetTickCount();  m_dwNextSmashDelay = dwDelay; }
 	void			Pooling_DamageFont(_uint iDamage, const _matrix* pMatrix, DAMAGEFONT_ID eID);
 	void			Make_TrailEffect(const _float& fDeltaTime);
+	void			SupportFire_Balista();
 
 public:
 	void			Compute_Critical(const _matrix* matWorld);
@@ -99,13 +100,15 @@ private:
 	_bool			m_bCanHit = true;
 	_bool			m_bStopMotion = false;
 	_bool			m_bAnimation = true;
+	_bool			m_bBalistaFire = false;
 
 	_uint			m_iAniIndex = (_uint)STATE_IDLE;
 	_uint			m_iSecondaryCount = 0;
 	_uint			m_iDashCount = 0;
 	_uint			m_iFuryNo7Count = 0;
+	_uint			m_iBalistaFireCount = 0;
 
-	_float			m_fSpeed = 6.f;//3.f;
+	_float			m_fSpeed = 3.f;
 	_float			m_fSkillMoveSpeed = 0.f;
 	_float			m_fAniTime = 0.f;
 	_float			m_fSkillMoveStartTime = 0.f;
@@ -124,6 +127,8 @@ private:
 	_ulong			m_dwFootStepDelay = 300;
 	_ulong			m_dwThrowStart = GetTickCount();
 	_ulong			m_dwThrowDelay = 150;
+	_ulong			m_dwBalistaFire = GetTickCount();
+	_ulong			m_dwBalistaDelay = 200;
 
 	_vec3			m_vDir;
 	_vec3			m_vLookDir;

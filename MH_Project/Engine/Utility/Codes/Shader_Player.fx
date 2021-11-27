@@ -110,7 +110,7 @@ PS_OUT		PS_MAIN(PS_IN In)
 
 
 	float3	TempLightDir = g_vLightDir.xyz;
-	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.5f;
+	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.6f;
 	//bright = normalize(bright);
 
 	Out.vColor.rgb = bright * Out.vColor.xyz;

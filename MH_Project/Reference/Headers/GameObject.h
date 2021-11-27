@@ -61,6 +61,8 @@ protected:
 
 	_float								m_fViewZ;
 
+	SCENE_ID							m_eCurSceneID = SCENE_END;
+
 	TAGINFO								m_tInfo;
 
 private:

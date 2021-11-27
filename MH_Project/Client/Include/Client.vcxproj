@@ -166,6 +166,7 @@
     <ClInclude Include="..\Codes\Boss_Hpbar_YellowUI.h" />
     <ClInclude Include="..\Codes\BackGround.h" />
     <ClInclude Include="..\Codes\Boss_NamingScene.h" />
+    <ClInclude Include="..\Codes\Box.h" />
     <ClInclude Include="..\Codes\Cloyan.h" />
     <ClInclude Include="..\Codes\Cloyan_Info.h" />
     <ClInclude Include="..\Codes\CollisionMgr.h" />
@@ -230,6 +231,7 @@
     <ClCompile Include="..\Codes\Boss_Hpbar_YellowUI.cpp" />
     <ClCompile Include="..\Codes\BackGround.cpp" />
     <ClCompile Include="..\Codes\Boss_NamingScene.cpp" />
+    <ClCompile Include="..\Codes\Box.cpp" />
     <ClCompile Include="..\Codes\Cloyan.cpp" />
     <ClCompile Include="..\Codes\Cloyan_Info.cpp" />
     <ClCompile Include="..\Codes\CollisionMgr.cpp" />

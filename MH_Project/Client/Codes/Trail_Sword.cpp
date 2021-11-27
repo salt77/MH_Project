@@ -121,6 +121,8 @@ HRESULT CTrail_Sword::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
+	pEffect->SetFloat("g_fAlpha", m_fAlphaValue);
+
 	//pEffect->SetTexture("g_BaseTexture", 0);
 	m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture");
 

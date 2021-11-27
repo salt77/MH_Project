@@ -36,6 +36,7 @@ public:
 private:
 	void			Collision_PlayerAttack();
 	void			Collision_MonsterAttack();
+	void			Collision_Balista_Stage();
 	void			Collision_Balista_Stage_1();
 
 	void			Update_MultipleCollision();
@@ -61,6 +62,8 @@ private:
 	CAhglan*		m_pAhglan = nullptr;
 	CStickyBomb*	m_pStickyBomb = nullptr;
 	CWall_Collision*	m_pWall = nullptr;
+
+	CTransform*		m_pPlayerTrans = nullptr;
 
 	PL_STATE		m_ePlayerCurState = STATE_END;
 	PL_STATE		m_ePlayerPreState = STATE_END;

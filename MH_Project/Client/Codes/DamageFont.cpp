@@ -202,6 +202,10 @@ void CDamageFont::Position_Interpolation(const _float& fTimeDelta)
 			case 1000:
 				m_vPos = m_vOriginPos - (vRightDir * fInterval * 0.5f);
 				break;
+
+			case 10000:
+				m_vPos = m_vOriginPos - (vRightDir * fInterval * 1.f);
+				break;
 			}
 
 			m_pTransformCom->Set_Pos(&m_vPos);

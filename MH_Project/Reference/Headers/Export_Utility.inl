@@ -82,7 +82,8 @@ void			Render_Scene(LPDIRECT3DDEVICE9& pGraphicDev)
 
 inline _float Random(_float _fMin, _float _fMax)
 {
-	mt19937 engine((unsigned int)time(NULL));						// MT19937 난수 엔진
+	random_device	rd;
+	mt19937 engine(rd());						// MT19937 난수 엔진
 	uniform_real_distribution<_float> distribution(_fMin, _fMax);    // 생성 범위
 	auto generator = bind(distribution, engine);
 

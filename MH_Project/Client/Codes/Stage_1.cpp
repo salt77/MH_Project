@@ -20,6 +20,7 @@
 #include "Trap.h"
 #include "Balista.h"
 #include "Wall_Collision.h"
+#include "Box.h"
 
 #include "Export_Function.h"
 
@@ -44,6 +45,8 @@ HRESULT CStage_1::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Effect(L"Effect"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Balista(L"Balista"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Box(L"Box"), E_FAIL);
 
 	return S_OK;
 }
@@ -173,16 +176,17 @@ HRESULT CStage_1::Ready_Layer_GameLogic(const wstring pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Trap", pGameObject), E_FAIL);
 
-	// Balista
-	for (_uint i = 0; i < BALISTA_COUNT; ++i)
-	{
-		wstring	wstrName = L"Balista_";
-		wstrName += to_wstring(i);
+	// 오브젝트 탐색을 용이하게 하기 위해서 레이어를 분류해서 넣어둠. 
+	//// Balista
+	//for (_uint i = 0; i < BALISTA_COUNT; ++i)
+	//{
+	//	wstring	wstrName = L"Balista_";
+	//	wstrName += to_wstring(i);
 
-		pGameObject = CBalista::Create(m_pGraphicDev);
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
-	}
+	//	pGameObject = CBalista::Create(m_pGraphicDev);
+	//	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+	//}
 
 	pGameObject = CWall_Collision::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -273,6 +277,53 @@ HRESULT CStage_1::Ready_Layer_Effect(const wstring pLayerTag)
 	return S_OK;
 }
 
+HRESULT CStage_1::Ready_Layer_Balista(const wstring pLayerTag)
+{
+	CLayer*	pLayer = CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	CGameObject*	pGameObject = nullptr;
+
+	// Balista
+	for (_uint i = 0; i < BALISTA_COUNT; ++i)
+	{
+		wstring	wstrName = L"Balista_";
+		wstrName += to_wstring(i);
+
+		pGameObject = CBalista::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrName, pGameObject), E_FAIL);
+	}
+
+	m_mapLayer.emplace(pLayerTag, pLayer);
+
+	return S_OK;
+}
+
+HRESULT CStage_1::Ready_Layer_Box(const wstring pLayerTag)
+{
+	CLayer*	pLayer = CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	CGameObject*	pGameObject = nullptr;
+
+	pGameObject = CBox::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Box", pGameObject), E_FAIL);
+
+	dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&BOX_POS);
+
+	pGameObject = CBox::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Box_2", pGameObject), E_FAIL);
+
+	dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&BOX_2_POS);
+
+	m_mapLayer.emplace(pLayerTag, pLayer);
+
+	return S_OK;
+}
+
 HRESULT CStage_1::Ready_Prototype(void)
 {
 	return S_OK;
@@ -287,7 +338,7 @@ HRESULT CStage_1::Ready_LightInfo(void)
 	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.f);
-	tLightInfo.Direction = _vec3(-0.5f, -1.f, -0.5f);
+	tLightInfo.Direction = _vec3(0.5f, -1.f, -0.5f);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 

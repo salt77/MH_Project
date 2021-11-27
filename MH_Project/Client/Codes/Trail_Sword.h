@@ -39,6 +39,7 @@ public:
 		//m_dwMaxVtxCnt = dwMaxVtxCnt;
 	}
 	void		Set_Render(_bool bValue) { m_bRender = bValue; }
+	void		Set_RenderAlpha(_float fAlpha) { m_fAlphaValue = fAlpha; }
 
 private:
 	_bool		m_bRender = false;
@@ -46,6 +47,7 @@ private:
 	_ulong		m_dwMaxVtxCnt = 15;
 
 	_float		m_fDeltaTime = 0.f;
+	_float		m_fAlphaValue = 1.f;
 
 	_vec3		m_vWeaponLower;
 	_vec3		m_vWeaponUpper;

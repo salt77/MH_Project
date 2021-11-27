@@ -10,6 +10,7 @@
 #include "DynamicCamera.h"
 #include "Wall_Collision.h"
 #include "Balista.h"
+#include "Box.h"
 
 IMPLEMENT_SINGLETON(CCollisionMgr)
 
@@ -29,6 +30,8 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 
 	m_pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
 	NULL_CHECK_RETURN(m_pPlayer, E_FAIL);
+	m_pPlayerTrans = dynamic_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
+	NULL_CHECK_RETURN(m_pPlayerTrans, E_FAIL);
 
 	switch (m_eSceneID)
 	{
@@ -52,6 +55,7 @@ _uint CCollisionMgr::Update_CollisionMgr()
 
 	Collision_PlayerAttack();
 	//Collision_MonsterAttack();
+	Collision_Balista_Stage();
 	Collision_Balista_Stage_1();
 
 	return 0;
@@ -89,6 +93,8 @@ void CCollisionMgr::Collision_PlayerAttack()
 					{
 						iter_BossDamaged = mapBossBoxCol.begin();
 
+						_bool	bAlreadyHit = false;
+
 						for (; iter_BossDamaged != mapBossBoxCol.end(); ++iter_BossDamaged)
 						{
 							if (iter_PlayerHit->second->Get_CanCollision() &&
@@ -96,17 +102,31 @@ void CCollisionMgr::Collision_PlayerAttack()
 							{
 								if (Engine::STATE_SMASH4_B == m_pPlayer->Get_CurState())
 								{
-									if (DIS_SHORTEST >= D3DXVec3Length(&(*pPlayerTrans->Get_Info(INFO_POS) - *(pAhglanTrans->Get_Info(INFO_POS)))))
+									list<CBoxCollider*>::iterator	iter_AlreadyDamaged = m_listEnemyDamagedCol.begin();
+
+									for (; iter_AlreadyDamaged != m_listEnemyDamagedCol.end(); ++iter_AlreadyDamaged)
 									{
-										m_pPlayer->Set_SpPoint(true);
-										m_pPlayer->Set_StopMotion(true, 100);
+										if (iter_BossDamaged->second == *iter_AlreadyDamaged)
+										{
+											bAlreadyHit = true;
+											break;
+										}
+									}
+									if (!bAlreadyHit)
+									{
+										if (DIS_SMASH4B >= D3DXVec3Length(&(*pPlayerTrans->Get_Info(INFO_POS) - *(pAhglanTrans->Get_Info(INFO_POS)))))
+										{
+											m_pPlayer->Set_SpPoint(true);
+											m_pPlayer->Set_StopMotion(true, 100);
 
-										m_pAhglan->Set_Damage(PLAYER_SMASH4POWER + iInterpolDamage);
-										m_pPlayer->Compute_Critical(iter_BossDamaged->second->Get_ColliderWorld());
-										Pooling_DamageFont(PLAYER_SMASH4POWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+											m_pAhglan->Set_Damage(PLAYER_SMASH4POWER + iInterpolDamage);
+											m_pPlayer->Compute_Critical(iter_BossDamaged->second->Get_ColliderWorld());
+											Pooling_DamageFont(PLAYER_SMASH4POWER + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
 
-										bPlayerAtkEnd = true;
-										break;
+											bPlayerAtkEnd = true;
+											m_listEnemyDamagedCol.emplace_back(iter_BossDamaged->second);
+											break;
+										}
 									}
 								}
 
@@ -340,7 +360,7 @@ void CCollisionMgr::Collision_PlayerAttack()
 						{
 							CTransform*	pEnemyTrans = static_cast<CTransform*>(iter_Enemy->second->Get_Component(L"Com_Transform", ID_DYNAMIC));
 
-							if (DIS_SHORTEST >= D3DXVec3Length(&(*pPlayerTrans->Get_Info(INFO_POS) - *(pEnemyTrans->Get_Info(INFO_POS)))))
+							if (DIS_SMASH4B >= D3DXVec3Length(&(*pPlayerTrans->Get_Info(INFO_POS) - *(pEnemyTrans->Get_Info(INFO_POS)))))
 							{
 								m_pPlayer->Set_SpPoint(true);
 								m_pPlayer->Set_StopMotion(true, 100);
@@ -356,7 +376,7 @@ void CCollisionMgr::Collision_PlayerAttack()
 						}
 
 						if (Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
-							&iter_EnemyBoxCol->second->Get_Min(), &iter_EnemyBoxCol->second->Get_Max(), iter_EnemyBoxCol->second->Get_ColliderWorld()))
+										  &iter_EnemyBoxCol->second->Get_Min(), &iter_EnemyBoxCol->second->Get_Max(), iter_EnemyBoxCol->second->Get_ColliderWorld()))
 						{
 							bPlayerAtkEnd = true;
 
@@ -374,8 +394,8 @@ void CCollisionMgr::Collision_PlayerAttack()
 									memcpy(&vPos, &iter_EnemyBoxCol->second->Get_ColliderWorld()->_41, sizeof(_vec3));
 									pEfx->Set_EnableCriticalEfx(vPos);
 								}
-								SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
 
+								SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
 								Pooling_DamageFont(PLAYER_SMASHPOWER2 + iInterpolDamage, iter_PlayerHit->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
 								break;
 
@@ -666,6 +686,42 @@ void CCollisionMgr::Collision_MonsterAttack()
 	}
 }
 
+void CCollisionMgr::Collision_Balista_Stage()
+{
+	if (SCENE_STAGE == m_eSceneID)
+	{
+		map<const wstring, CGameObject*>	mapObject = Engine::Get_MapObject(L"Balista");
+		map<const wstring, CGameObject*>::iterator		iter_Balista = mapObject.begin();
+
+		for (; iter_Balista != mapObject.end(); ++iter_Balista)
+		{
+			CBalista*	pBalista = static_cast<CBalista*>(iter_Balista->second);
+			CTransform*	pBaliTrans = static_cast<CTransform*>(pBalista->Get_Component(L"Com_Transform", ID_DYNAMIC));
+
+			if (!pBalista->Get_AlreadyEnemyHit() && 
+				POOLING_POS != *pBaliTrans->Get_Info(INFO_POS))
+			{
+				map<const wstring, CBoxCollider*>	iter_BalistaCol = iter_Balista->second->Get_MapBoxCollider();
+
+				map<const wstring, CBoxCollider*>	mapAhglanCol = m_pAhglan->Get_MapBoxCollider();
+				map<const wstring, CBoxCollider*>::iterator		iter_AhglanCol = mapAhglanCol.begin();
+
+				for (; iter_AhglanCol != mapAhglanCol.end(); ++iter_AhglanCol)
+				{
+					if (Collision_OBB(&iter_BalistaCol.begin()->second->Get_Min(), &iter_BalistaCol.begin()->second->Get_Max(), iter_BalistaCol.begin()->second->Get_ColliderWorld(), 
+									  &iter_AhglanCol->second->Get_Min(), &iter_AhglanCol->second->Get_Max(), iter_AhglanCol->second->Get_ColliderWorld()))
+					{
+						pBalista->Set_EnemyHit();
+
+						m_pAhglan->Set_Damage(STAGE_BALISTA_POWER);
+						Pooling_DamageFont(STAGE_BALISTA_POWER, iter_AhglanCol->second->Get_ColliderWorld(), DAMAGEFONT_SKILL);
+					}
+				}
+			}
+		}
+	}
+}
+
 void CCollisionMgr::Collision_Balista_Stage_1()
 {
 	if (SCENE_STAGE_1 == m_eSceneID)
@@ -675,37 +731,59 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 		map<const wstring, CBoxCollider*>	mapWallCollider = m_pWall->Get_MapBoxCollider();
 		map<const wstring, CBoxCollider*>::iterator		iter_WallBox = mapWallCollider.begin();
 
-		for (_uint i = 0; i < BALISTA_COUNT; ++i)
+		map<const wstring, CGameObject*> mapObject = Engine::Get_MapObject(L"Balista");
+		map<const wstring, CGameObject*>::iterator	iter_Balista = mapObject.begin();
+
+		map<const wstring, CGameObject*> mapBoxObject = Engine::Get_MapObject(L"Box");
+		map<const wstring, CGameObject*>::iterator	iter_Box = mapBoxObject.begin();
+
+		// Wall - Balista 충돌 
+		for (; iter_Balista != mapObject.end(); ++iter_Balista)
 		{
-			wstring	wstrName = L"Balista_";
-			wstrName += to_wstring(i);
+			CBalista*	pBalista = static_cast<CBalista*>(iter_Balista->second);
+			iter_Box = mapBoxObject.begin();
 
-			CBalista*	pBalista = static_cast<CBalista*>(Engine::Get_GameObject(L"GameLogic", wstrName));
-
-			if (pBalista)
+			if (!pBalista->Get_AlreadyCollision())
 			{
-				if (!pBalista->Get_AlreadyCollision())
-				{
-					map<const wstring, CBoxCollider*>	mapBalistaCol = pBalista->Get_MapBoxCollider();
-					map<const wstring, CBoxCollider*>::iterator		iter_BalistaCol = mapBalistaCol.begin();
+				map<const wstring, CBoxCollider*>	mapBalistaCol = pBalista->Get_MapBoxCollider();
 
-					if (Collision_AABB(&iter_WallBox->second->Get_Min(), &iter_WallBox->second->Get_Max(), iter_WallBox->second->Get_ColliderWorld(),
-						&iter_BalistaCol->second->Get_Min(), &iter_BalistaCol->second->Get_Max(), iter_BalistaCol->second->Get_ColliderWorld()))
+				if (Collision_AABB(&iter_WallBox->second->Get_Min(), &iter_WallBox->second->Get_Max(), iter_WallBox->second->Get_ColliderWorld(),
+								   &mapBalistaCol.begin()->second->Get_Min(), &mapBalistaCol.begin()->second->Get_Max(), mapBalistaCol.begin()->second->Get_ColliderWorld()))
+				{
+					pBalista->Set_CollisionWall();
+
+					if (pPlayerTrans)
+					{
+						_vec3	vPlayerPos = *pPlayerTrans->Get_Info(INFO_POS);
+						_vec3	vWallPos = *static_cast<CTransform*>(m_pWall->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_Info(INFO_POS);
+
+						if (DIS_LONG >= D3DXVec3Length(&(vPlayerPos - vWallPos)))
+						{
+							SoundMgrLowerVol(L"Hit_Flesh_Stab.wav", CSoundMgr::BATTLE, 0.1f / D3DXVec3Length(&(vPlayerPos - vWallPos)));
+						}
+					}
+				}
+
+				// Box - Balista 충돌 
+				for (; iter_Box != mapBoxObject.end(); ++iter_Box)
+				{
+					CBox*	pBox = static_cast<CBox*>(iter_Box->second);
+
+					map<const wstring, CBoxCollider*>	mapBoxCol = pBox->Get_MapBoxCollider();
+
+					if (Collision_AABB(&mapBalistaCol.begin()->second->Get_Min(), &mapBalistaCol.begin()->second->Get_Max(), mapBalistaCol.begin()->second->Get_ColliderWorld(),
+									   &mapBoxCol.begin()->second->Get_Min(), &mapBoxCol.begin()->second->Get_Max(), mapBoxCol.begin()->second->Get_ColliderWorld()))
 					{
 						pBalista->Set_CollisionWall();
 
 						if (pPlayerTrans)
 						{
 							_vec3	vPlayerPos = *pPlayerTrans->Get_Info(INFO_POS);
-							_vec3	vWallPos = *static_cast<CTransform*>(m_pWall->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_Info(INFO_POS);
+							_vec3	vBoxPos = *static_cast<CTransform*>(pBox->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_Info(INFO_POS);
 
-							if (DIS_SHORT * 1.5f >= D3DXVec3Length(&(vPlayerPos - vWallPos)))
+							if (DIS_LONG >= D3DXVec3Length(&(vPlayerPos - vBoxPos)))
 							{
-								SoundMgrLowerVol(L"Hit_Flesh_Stab.wav", CSoundMgr::BATTLE, 0.035f);
-							}
-							else if (DIS_MID >= D3DXVec3Length(&(vPlayerPos - vWallPos)))
-							{
-								SoundMgrLowerVol(L"Hit_Flesh_Stab.wav", CSoundMgr::BATTLE, 0.025f);
+								SoundMgrLowerVol(L"Hit_Flesh_Stab.wav", CSoundMgr::BATTLE, 0.1f / D3DXVec3Length(&(vPlayerPos - vBoxPos)));
 							}
 						}
 					}
@@ -713,6 +791,7 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 			}
 		}
 
+		// Player - Balista 충돌 
 		if (pPlayerTrans)
 		{
 			_bool	bPlayerAttacked = false;
@@ -724,12 +803,11 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 
 			for (; iter_PlayerDamaged != mapPlayerDamaged.end(); ++iter_PlayerDamaged)
 			{
-				for (_uint i = 0; i < BALISTA_COUNT; ++i)
-				{
-					wstring	wstrName = L"Balista_";
-					wstrName += to_wstring(i);
+				iter_Balista = mapObject.begin();
 
-					CBalista*	pBalista = static_cast<CBalista*>(Engine::Get_GameObject(L"GameLogic", wstrName));
+				for (; iter_Balista != mapObject.end(); ++iter_Balista)
+				{
+					CBalista*	pBalista = static_cast<CBalista*>(iter_Balista->second);
 
 					if (pBalista)
 					{
@@ -738,7 +816,7 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 							map<const wstring, CCollider*>	mapBalistaCol = pBalista->Get_MapCollider();
 
 							if (Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
-								mapBalistaCol.begin()->second->Get_Center(), mapBalistaCol.begin()->second->Get_Radius() * SCALE_BALISTA))
+												 mapBalistaCol.begin()->second->Get_Center(), mapBalistaCol.begin()->second->Get_Radius() * SCALE_BALISTA))
 							{
 								bPlayerAttacked = true;
 								m_pPlayer->Set_Damage(AHGLAN_ATKPOWER, iter_PlayerDamaged->second->Get_ColliderWorld());
@@ -897,11 +975,13 @@ void CCollisionMgr::Set_Axis(OBB * pObb)
 
 void CCollisionMgr::Pooling_DamageFont(_uint iDamage, const _matrix * pMatrix, DAMAGEFONT_ID eID)
 {
+	_uint	iDigitTenThousands = _uint((iDamage % 100000) * 0.0001f);
 	_uint	iDigitThousands = _uint((iDamage % 10000) * 0.001f);
 	_uint	iDigitHundreds = _uint((iDamage % 1000) * 0.01f);
 	_uint	iDigitTen = _uint((iDamage % 100) * 0.1f);
 	_uint	iDigitOne = _uint(iDamage % 10);
 
+	CDamageFont*	pFontFirst = nullptr;
 	CDamageFont*	pFont0 = nullptr;
 	CDamageFont*	pFont1 = nullptr;
 	CDamageFont*	pFont2 = nullptr;
@@ -941,30 +1021,33 @@ void CCollisionMgr::Pooling_DamageFont(_uint iDamage, const _matrix * pMatrix, D
 
 			if (POOLING_POS == *pTransform->Get_Info(INFO_POS))
 			{
-				if (!pFont0)
+				if (!pFontFirst)
+				{
+					pFontFirst = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrNormalFont));
+				}
+				else if (!pFont0)
 				{
 					pFont0 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrNormalFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (!pFont1)
 				{
 					pFont1 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrNormalFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (!pFont2)
 				{
 					pFont2 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrNormalFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (!pFont3)
 				{
 					pFont3 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrNormalFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (pFont0 && pFont1 && pFont2 && pFont3)
 				{
+					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 					break;
 				}
+
+				pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 
 				continue;
 			}
@@ -981,30 +1064,33 @@ void CCollisionMgr::Pooling_DamageFont(_uint iDamage, const _matrix * pMatrix, D
 
 			if (POOLING_POS == *pTransform->Get_Info(INFO_POS))
 			{
-				if (!pFont0)
+				if (!pFontFirst)
+				{
+					pFontFirst = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrSkillFont));
+				}
+				else if (!pFont0)
 				{
 					pFont0 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrSkillFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (!pFont1)
 				{
 					pFont1 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrSkillFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (!pFont2)
 				{
 					pFont2 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrSkillFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (!pFont3)
 				{
 					pFont3 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrSkillFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (pFont0 && pFont1 && pFont2 && pFont3)
 				{
+					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 					break;
 				}
+
+				pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 
 				continue;
 			}
@@ -1024,27 +1110,26 @@ void CCollisionMgr::Pooling_DamageFont(_uint iDamage, const _matrix * pMatrix, D
 				if (!pFont0)
 				{
 					pFont0 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrMonsterFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (!pFont1)
 				{
 					pFont1 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrMonsterFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (!pFont2)
 				{
 					pFont2 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrMonsterFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
 				else if (!pFont3)
 				{
 					pFont3 = dynamic_cast<CDamageFont*>(Engine::Get_GameObject(L"UI", wstrMonsterFont));
-					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 				}
-				else if (pFont0 && pFont1 && pFont2 && pFont3)
+				else if (pFontFirst && pFont0 && pFont1 && pFont2 && pFont3)
 				{
+					pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 					break;
 				}
+
+				pTransform->Set_Pos(&(POOLING_POS + POOLING_POS));
 
 				continue;
 			}
@@ -1052,7 +1137,18 @@ void CCollisionMgr::Pooling_DamageFont(_uint iDamage, const _matrix * pMatrix, D
 		break;
 	}
 
-	if (1000 <= iDamage)
+	if (10000 <= iDamage)
+	{
+		if (pFontFirst && pFont0 && pFont1 && pFont2 && pFont3)
+		{
+			pFontFirst->Set_EnableDamageFont(vPos, iDigitTenThousands, 10000);
+			pFont0->Set_EnableDamageFont(vPos, iDigitThousands, 1000);
+			pFont1->Set_EnableDamageFont(vPos, iDigitHundreds, 100);
+			pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
+			pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		}
+	}
+	else if (1000 <= iDamage)
 	{
 		if (pFont0 && pFont1 && pFont2 && pFont3)
 		{

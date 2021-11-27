@@ -177,6 +177,37 @@ void CAhglan::Render_Object(void)
 	Safe_Release(pEffect);
 }
 
+void CAhglan::Set_Damage(_int iDamage)
+{
+	if (iDamage <= m_tInfo.iHp)
+	{
+		m_tInfo.iHp -= iDamage;
+
+		if (m_bBoss)
+		{
+			if (iDamage >= m_iLineHp)
+			{
+				m_iLineHp = m_iMaxLineHp + (m_iLineHp - iDamage);
+			}
+			else
+			{
+				m_iLineHp -= iDamage;
+			}
+
+			if (STAGE_BALISTA_POWER <= iDamage)
+			{
+				m_iAniIndex = LOW_HEALTH;
+
+				Animation_Control();
+			}
+		}
+	}
+	else
+	{
+		m_tInfo.iHp = 0;
+	}
+}
+
 HRESULT CAhglan::Add_Component(void)
 {
 	CComponent*		pComponent = nullptr;
@@ -399,7 +430,7 @@ void CAhglan::Movement()
 void CAhglan::MoveOn_Skill()
 {
 	if (m_bSkillMove && 
-		BS_DAMAGED >= m_eBossAction)
+		BS_DAMAGED > m_eBossAction)
 	{
 		if (m_fSkillMoveStartTime <= m_fAniTime &&
 			m_fSkillMoveEndTime >= m_fAniTime)
@@ -415,7 +446,8 @@ void CAhglan::MoveOn_Skill()
 
 void CAhglan::RotationOn_Skill()
 {
-	if (m_bSkillRotation)
+	if (m_bSkillRotation && 
+		BS_DAMAGED > m_eBossAction)
 	{
 		if (m_fSkillRotStartTime <= m_fAniTime &&
 			m_fSkillRotEndTime >= m_fAniTime)
@@ -556,7 +588,7 @@ void CAhglan::Animation_Control()
 			break;
 
 		case LOW_HEALTH:
-			m_eBossAction = BS_IDLE;
+			m_eBossAction = BS_DAMAGED;
 			break;
 
 		case IDLE:

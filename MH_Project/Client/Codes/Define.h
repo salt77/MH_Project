@@ -8,6 +8,8 @@ extern	HWND		 g_hWnd;
 extern	HINSTANCE	 g_hInst;
 
 
+#pragma region HitBox_Control_Macro 
+
 #define HITBOX_CONTROLL(StartTime, EndTime, Smash)			\
 for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 {															\
@@ -64,6 +66,9 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 		iter_Hit->second->Set_CanCollision(false);			\
 	}
 
+#pragma endregion
+
+
 #define GET_SPPOINT_ATK																	\
 	if (m_tPlayerInfo.iSkillPoint + (rand() % 5 + 1) < m_tPlayerInfo.iMaxSkillPoint)	\
 	{																					\
@@ -99,6 +104,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define DIS_FACETOFACE	1.5f
 #define DIS_VERY_SHORTEST	2.f
 #define DIS_SHORTEST	3.25f
+#define DIS_SMASH4B		3.75f
 #define DIS_SHORT		5.f
 #define DIS_MID			10.f
 #define DIS_LONG		15.f
@@ -123,6 +129,8 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define PLAYER_SMASH4POWER	6500
 #define PLAYER_SMASHPOWER2	9000
 
+#define STAGE_BALISTA_POWER	25000
+
 #define PLAYER_SP_FEVER		100
 #define PLAYER_SP_FURY_NO7	750
 
@@ -141,8 +149,23 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define BOSS_HPBAR_SCALE_X	WINCX * 0.52f
 #define BOSS_HPBAR_SCALE_Y	35.f
 
-#define POOLING_POS			_vec3(0.f, -999.f, 0.f)
-#define	WALL_COLLIDER_POS	_vec3(71.55f, 2.6f, 7.89f)
+
+#pragma region Define_Postion 
+
+#define POOLING_POS				_vec3(0.f, -999.f, 0.f)
+#define STAGE_BALISTA_POS		_vec3(700.f, 5.f, 250.f)
+#define STAGE_BALISTA_TARGET	_vec3(-0.98f, 5.f, 7.12f)
+#define TRAP_POS				_vec3(71.672f, 2.6f, 39.88f)
+#define	WALL_COLLIDER_POS		_vec3(71.55f, 2.6f, 7.89f)
+#define BOX_POS					_vec3(70.f, 2.6f, 12.f)
+#define BOX_2_POS				_vec3(72.f, 2.6f, 20.f)
+#define BALISTA_TRIGGER_START	_vec3(61.4f, 2.6f, 6.47f)
+#define BALISTA_TRIGGER_END		_vec3(66.74f, 2.6f, 40.f)
+
+#pragma endregion
+
+
+#pragma region Object_Pooling_Count
 
 #define DAMAGEFONT_COUNT	40
 #define DAMAGEFONT_SKILL_COUNT	40
@@ -152,14 +175,17 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define SOLDIER_COUNT	6
 #define KNIGHT_COUNT	4
 
-#define	BALISTA_COUNT	8
+#define	BALISTA_COUNT		8
+#define STAGE_BALISTA_COUNT	36
 
 #define SLASHPOINT_COUNT	8
 
+#pragma endregion
 
 
 
 
+#pragma region Sound_Macro
 
 // 사운드 매크로 => 코드량이 너무 길어지고 보기 싫어서 여기로 따로 매크로 잡아놓음
 #define SoundPlayerHurt										\
@@ -251,7 +277,7 @@ else                                                            \
 	SoundMgr(L"golem_attack02.wav", CSoundMgr::MONSTER);		\
 }
 
-
+#pragma endregion
 
 
 //#ifdef _DEBUG

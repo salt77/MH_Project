@@ -24,6 +24,7 @@ public:
 	{
 		MODE_NORMAL, MODE_SECONDARY,
 		MODE_AHGLAN_START, MODE_AHGLAN_RISE, MODE_AHGLAN_STAND, MODE_AHGLAN_COMPLETE,
+		MODE_BALISTA_HIGHLIGHT, 
 		MODE_END
 	};
 
@@ -49,7 +50,7 @@ public:
 	const MODE&	Get_CamMode() { return m_eCurMode; }
 
 public:
-	void		Set_CameraMode(MODE eMode) { m_eCurMode = eMode; if (MODE_AHGLAN_START == eMode)	m_dwStartTime = GetTickCount(); }
+	void		Set_CameraMode(MODE eMode);
 	void		Set_CameraShake(_bool bShakeType, _float fPower, _ulong dwEndTime = 1000, _float fWaveInterpol = 0.5f);
 	void		Set_HighlightSkillShot(_float fDistance, _ulong dwHighlightTime) 
 	{
@@ -88,6 +89,8 @@ private:
 	_ulong		m_dwHighlightDelay = 0;
 	_ulong		m_dwShakeTime = GetTickCount();
 	_ulong		m_dwShakeDelay = 1000;
+	_ulong		m_dwBalistaStart = GetTickCount();
+	_ulong		m_dwBalistaDelay = 3500;
 
 	_float		m_fLongWaveInterpol = 0.5f;
 	_float		m_fFXProgress = 0.f;
@@ -112,6 +115,7 @@ private:
 	_ulong		m_dwCompleteTime = GetTickCount();
 	///////////////////////
 
+	_vec3		m_vOriginEye = m_vEye;
 	_vec3		m_vPrePlayerPos = { 0.f, 0.f, 0.f };
 	_vec3		m_vShakeInterpol = { 0.f, 0.f, 0.f };
 	_vec3		m_vPreShakeInterpol = { 0.f, 0.f, 0.f };

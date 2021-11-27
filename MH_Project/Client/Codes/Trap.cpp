@@ -24,7 +24,7 @@ HRESULT CTrap::Ready_Object()
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	m_pTransformCom->Set_Pos(71.672f, 2.6f, 39.88f);
+	m_pTransformCom->Set_Pos(&TRAP_POS);
 	m_pTransformCom->Set_Scale(SCALE_NORMAL * 2.f, SCALE_NORMAL * 2.f, SCALE_NORMAL * 2.f);
 
 	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90));
@@ -107,11 +107,6 @@ HRESULT CTrap::Add_Component()
 	pComponent->AddRef();
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
-	// Calculator
-	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Clone_Prototype(L"Proto_Calculator"));
-	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
-
 	// Shader
 	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Clone_Prototype(L"Proto_Shader_Mesh"));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
@@ -143,12 +138,12 @@ void CTrap::Fire()
 
 		_uint	iFireCount = 0;
 
-		for (_uint i = 0; i < BALISTA_COUNT; ++i)
-		{
-			wstring	wstrName = L"Balista_";
-			wstrName += to_wstring(i);
+		map<const wstring, CGameObject*> mapObject = Engine::Get_MapObject(L"Balista");
+		map<const wstring, CGameObject*>::iterator	iter_Balista = mapObject.begin();
 
-			CBalista*	pBalista = static_cast<CBalista*>(Engine::Get_GameObject(L"GameLogic", wstrName));
+		for (; iter_Balista != mapObject.end(); ++iter_Balista)
+		{
+			CBalista*	pBalista = static_cast<CBalista*>(iter_Balista->second);
 
 			if (pBalista)
 			{
