@@ -21,6 +21,8 @@
 #include "Player_SlotUI.h"
 #include "DamageFont.h"
 
+#include "Announce_Balista.h"
+
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
@@ -146,7 +148,11 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 		m_bBalistaFire = true;
 		m_iBalistaFireCount = 0;
 
-		//m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_BALISTA_HIGHLIGHT);
+
+		CAnnounce_Balista*	pAnnounce = static_cast<CAnnounce_Balista*>(Engine::Get_GameObject(L"UI", L"Announce_BalistaAttack_UI"));
+		pAnnounce->Set_EnableAnnounce();
+
+		m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_BALISTA_HIGHLIGHT);
 	}
 
 	_vec3 vPos;
@@ -406,7 +412,7 @@ void CPlayer::Set_Damage(_int iDamage, const _matrix* pMatDamageFontPos, _bool b
 	}
 }
 
-HRESULT CPlayer::Add_Component(void)
+HRESULT CPlayer::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
 
@@ -1381,7 +1387,7 @@ void CPlayer::SupportFire_Balista()
 				{
 					m_dwBalistaFire = GetTickCount();
 					++m_iBalistaFireCount;
-					m_dwBalistaDelay = Engine::Random(50.f, 300.f);
+					m_dwBalistaDelay = (_ulong)Engine::Random(50.f, 150.f);
 
 					_float	fRand = Engine::Random(-10.f, 10.f);
 

@@ -158,6 +158,7 @@
     <ClInclude Include="..\Codes\Ahglan.h" />
     <ClInclude Include="..\Codes\Ahglan_FontName.h" />
     <ClInclude Include="..\Codes\Ahglan_StageUI.h" />
+    <ClInclude Include="..\Codes\Announce_Balista.h" />
     <ClInclude Include="..\Codes\Balista.h" />
     <ClInclude Include="..\Codes\Boss_Hpbar_BackUI.h" />
     <ClInclude Include="..\Codes\Boss_Hpbar_FontUI.h" />
@@ -223,6 +224,7 @@
     <ClCompile Include="..\Codes\Ahglan.cpp" />
     <ClCompile Include="..\Codes\Ahglan_FontName.cpp" />
     <ClCompile Include="..\Codes\Ahglan_StageUI.cpp" />
+    <ClCompile Include="..\Codes\Announce_Balista.cpp" />
     <ClCompile Include="..\Codes\Balista.cpp" />
     <ClCompile Include="..\Codes\Boss_Hpbar_BackUI.cpp" />
     <ClCompile Include="..\Codes\Boss_Hpbar_FontUI.cpp" />

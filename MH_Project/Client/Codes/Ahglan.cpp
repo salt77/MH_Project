@@ -38,7 +38,7 @@ HRESULT CAhglan::Ready_Object(void)
 
 	m_pTransformCom->Update_Component(0.f);
 
-	m_tInfo.iHp = 850000;
+	m_tInfo.iHp = 1150000;
 	m_tInfo.iMaxHp = m_tInfo.iHp;
 
 	m_bBoss = true;
@@ -485,6 +485,7 @@ void CAhglan::FootStep()
 
 void CAhglan::Animation_Control()
 {
+	//m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
 	m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 

@@ -129,7 +129,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define PLAYER_SMASH4POWER	6500
 #define PLAYER_SMASHPOWER2	9000
 
-#define STAGE_BALISTA_POWER	25000
+#define STAGE_BALISTA_POWER	50000
 
 #define PLAYER_SP_FEVER		100
 #define PLAYER_SP_FURY_NO7	750
@@ -143,6 +143,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define INFINITY_FLOAT		999999.f
 
 #define SCREEN_CENTER_X		WINCX * 0.5f
+#define SCREEN_CENTER_Y		WINCY * 0.5f
 
 #define LOADINGBAR_Y		WINCY * 0.88f
 #define BOSS_HPBAR_Y		WINCY * 0.15f
@@ -176,7 +177,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define KNIGHT_COUNT	4
 
 #define	BALISTA_COUNT		8
-#define STAGE_BALISTA_COUNT	36
+#define STAGE_BALISTA_COUNT	64
 
 #define SLASHPOINT_COUNT	8
 

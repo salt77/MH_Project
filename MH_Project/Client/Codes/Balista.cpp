@@ -273,7 +273,7 @@ HRESULT CBalista::Ready_Collider()
 	switch (m_eCurSceneID)
 	{
 	case SCENE_STAGE:
-		FAILED_CHECK_RETURN(Add_Collider(-20.f, -20.f, -20.f, 20.f, 20.f, 20.f, L"Collider_Box", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_HIT), E_FAIL);
+		FAILED_CHECK_RETURN(Add_Collider(-60.f, -60.f, -120.f, 60.f, 60.f, 60.f, L"Collider_Box", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_HIT), E_FAIL);
 		break;
 
 	case SCENE_STAGE_1:
@@ -331,7 +331,7 @@ void CBalista::Movement(const _float& fTimeDelta)
 				_uint	iRand = rand() % 3;
 				m_bSoundCheck = true;
 				
-				m_pMainCam->Set_CameraShake(false, CAMSHAKE_POWER * 2.f);
+				m_pMainCam->Set_CameraShake(false, CAMSHAKE_POWER * 2.5f);
 				switch (iRand)
 				{
 				case 0:
@@ -341,7 +341,7 @@ void CBalista::Movement(const _float& fTimeDelta)
 					}
 					else
 					{
-						SoundMgrLowerVol(L"effect_ballista_landing.wav", CSoundMgr::BATTLE, 0.1f);
+						SoundMgrLowerVol(L"effect_ballista_landing.wav", CSoundMgr::BATTLE, 0.15f);
 					}
 					break;
 					
@@ -352,7 +352,7 @@ void CBalista::Movement(const _float& fTimeDelta)
 					}
 					else
 					{
-						SoundMgrLowerVol(L"effect_ballista_landing2.wav", CSoundMgr::BATTLE, 0.1f);
+						SoundMgrLowerVol(L"effect_ballista_landing2.wav", CSoundMgr::BATTLE, 0.15f);
 					}
 					break;
 
@@ -363,7 +363,7 @@ void CBalista::Movement(const _float& fTimeDelta)
 					}
 					else
 					{
-						SoundMgrLowerVol(L"effect_ballista_landing3.wav", CSoundMgr::BATTLE, 0.1f);
+						SoundMgrLowerVol(L"effect_ballista_landing3.wav", CSoundMgr::BATTLE, 0.15f);
 					}
 					break;
 				}

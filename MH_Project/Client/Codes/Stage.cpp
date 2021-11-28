@@ -9,6 +9,7 @@
 #include "CriticalEfx.h"
 #include "RadialBlur.h"
 #include "Balista.h"
+#include "Announce_Balista.h"
 
 #include "Export_Function.h"
 
@@ -218,6 +219,10 @@ HRESULT CStage::Ready_Layer_UI(const wstring pLayerTag)
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrMonsterFont, pGameObject), E_FAIL);
 	}
+
+	pGameObject = CAnnounce_Balista::Create(m_pGraphicDev, SCREEN_CENTER_X, SCREEN_CENTER_Y - 250.f, 500.f, 40.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Announce_BalistaAttack_UI", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 

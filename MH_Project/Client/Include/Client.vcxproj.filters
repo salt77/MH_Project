@@ -244,6 +244,9 @@
     <Filter Include="02.GameObject\15.Box">
       <UniqueIdentifier>{8dc53edc-bb13-482b-9e02-a9f373e9ddda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI\03.Annouce_Balista">
+      <UniqueIdentifier>{8614b21a-200f-45a1-ae12-1a6a568ce550}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -435,6 +438,9 @@
     <ClInclude Include="..\Codes\Box.h">
       <Filter>02.GameObject\15.Box</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Announce_Balista.h">
+      <Filter>02.GameObject\09.UI\04.StageUI\03.Annouce_Balista</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -616,6 +622,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Box.cpp">
       <Filter>02.GameObject\15.Box</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Announce_Balista.cpp">
+      <Filter>02.GameObject\09.UI\04.StageUI\03.Annouce_Balista</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

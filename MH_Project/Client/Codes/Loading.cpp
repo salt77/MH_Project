@@ -205,8 +205,12 @@ _uint CLoading::Loading_ForTextureAll()
 	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Radial_Blur1", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_radial_blur_1.tga", TEX_NORMAL)), E_FAIL);
 	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Radial_Blur", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_radial_blur.tga", TEX_NORMAL)), E_FAIL);
 
+	// Shader Effect 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Dissolve", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/dissolve.png", TEX_NORMAL)), E_FAIL);
 	
+	// Announce 
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Announce_BalistaAttack", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Balista_Announced.png", TEX_NORMAL)), E_FAIL);
+
 	return 0;
 }
 

@@ -10,6 +10,7 @@ BEGIN(Engine)
 
 class CTransform;
 class CStaticMesh;
+class CCalculator;
 
 END
 
@@ -44,6 +45,10 @@ public:
 	virtual HRESULT	LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
+
+//private:
+//	HRESULT		Add_Component();
+//	void		SetOn_Terrain();
 
 public:
 	_vec3		Get_CamDirVector(DIR eDir);
@@ -90,7 +95,7 @@ private:
 	_ulong		m_dwShakeTime = GetTickCount();
 	_ulong		m_dwShakeDelay = 1000;
 	_ulong		m_dwBalistaStart = GetTickCount();
-	_ulong		m_dwBalistaDelay = 3500;
+	_ulong		m_dwBalistaDelay = 2500;
 
 	_float		m_fLongWaveInterpol = 0.5f;
 	_float		m_fFXProgress = 0.f;
@@ -124,11 +129,12 @@ private:
 	MODE		m_eCurMode = MODE_NORMAL;
 	MODE		m_ePreMode = MODE_END;
 
-	CPlayer*	m_pPlayer = nullptr;
-	CTransform*	m_pPlayerTrans = nullptr;
-	CTransform*	m_pTransformCom = nullptr;
+	CPlayer*		m_pPlayer = nullptr;
+	CTransform*		m_pPlayerTrans = nullptr;
+	CTransform*		m_pTransformCom = nullptr;
+	CCalculator*	m_pCalculatorCom = nullptr;
 
-	CFadeInOut*	m_pFadeInOut = nullptr;
+	CFadeInOut*		m_pFadeInOut = nullptr;
 	CStageMesh*		m_pStage = nullptr;
 	CStageMesh_1*	m_pStage_1 = nullptr;
 	CStaticMesh*	m_pStageMesh = nullptr;

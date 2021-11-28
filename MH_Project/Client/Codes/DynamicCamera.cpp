@@ -106,6 +106,30 @@ _int CDynamicCamera::LateUpdate_Object(const _float & fTimeDelta)
 	return iExit;
 }
 
+//HRESULT CDynamicCamera::Add_Component()
+//{
+//	CComponent*		pComponent = nullptr;
+//
+//	// Calculator
+//	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Clone_Prototype(L"Proto_Calculator"));
+//	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
+//	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
+//
+//	return S_OK;
+//}
+
+//void CDynamicCamera::SetOn_Terrain()
+//{
+//	_vec3		vPos;
+//	m_pTransformCom->Get_INFO(INFO_POS, &vPos);
+//
+//	CTerrainTex*	pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(L"GameLogic", L"Terrain", L"Com_Buffer", ID_STATIC));
+//	NULL_CHECK(pTerrainBufferCom);
+//
+//	_float fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos(), VTXCNTX, VTXCNTZ);
+//	m_pTransformCom->Set_Pos(vPos.x, fHeight, vPos.z);
+//}
+
 _vec3 CDynamicCamera::Get_CamDirVector(DIR eDir)
 {
 	_vec3 vRight = {};
