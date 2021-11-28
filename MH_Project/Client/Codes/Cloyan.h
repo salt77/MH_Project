@@ -9,9 +9,9 @@
 BEGIN(Engine)
 
 class CDynamicMesh;
+class CTexture;
 class CTransform;
 class CRenderer;
-class CCalculator;
 class CCollider;
 class CNaviMesh;
 class CShader;
@@ -45,24 +45,25 @@ private:
 	virtual ~CCloyan();
 
 public:
-	virtual HRESULT Ready_Object(void) override;
+	virtual HRESULT Ready_Object() override;
 	virtual HRESULT	LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
-	virtual void	Render_Object(void) override;
+	virtual void	Render_Object() override;
 
 public:
 	void			Set_Enable(_vec3 vPos, _vec3 vRotate);
 
 private:
 	// 기본 함수들
-	HRESULT			Add_Component(void);
+	HRESULT			Add_Component();
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Animation_Control();
 	void			Collision_Control();
 	const _ulong&	Compute_InCell();
 	void			Update_UI();
 	void			Update_State();
+	void			Dissolve(const _float& fTimeDelta);
 
 	// 객체 함수들
 	void			Movement();
@@ -122,9 +123,9 @@ private:
 	
 	// Component
 	CDynamicMesh*	m_pMeshCom = nullptr;
+	CTexture*		m_pTextureCom = nullptr;
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
-	CCalculator*	m_pCalculatorCom = nullptr;
 	CCollider*		m_pColliderCom = nullptr;
 	CNaviMesh*		m_pNaviMeshCom = nullptr;
 	CShader*		m_pShaderCom = nullptr;

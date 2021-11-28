@@ -15,15 +15,15 @@ END
 class CMainApp : public CBase
 {
 private:		// 생성자, 소멸자
-	explicit CMainApp(void);
-	virtual ~CMainApp(void);
+	explicit CMainApp();
+	virtual ~CMainApp();
 
 	// public 함수, 변수
 public:
-	HRESULT			Ready_MainApp(void);
+	HRESULT			Ready_MainApp();
 	_int			Update_MainApp(const _float& fTimeDelta);
 	_int			LateUpdate_MainApp(const _float& fTimeDelta);
-	void			Render_MainApp(void);
+	void			Render_MainApp();
 	// protected 함수, 변수
 	// private 함수, 변수
 
@@ -37,8 +37,8 @@ private:
 	LPDIRECT3DDEVICE9		m_pGraphicDev = nullptr;
 
 public:
-	static CMainApp*		Create(void);		// 생성 함수
-	virtual	void			Free(void);			// 소멸 함수
+	static CMainApp*		Create();		// 생성 함수
+	virtual	void			Free();			// 소멸 함수
 };
 
 #endif // MainApp_h__

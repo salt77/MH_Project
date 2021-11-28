@@ -146,7 +146,7 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 		m_bBalistaFire = true;
 		m_iBalistaFireCount = 0;
 
-		m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_BALISTA_HIGHLIGHT);
+		//m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_BALISTA_HIGHLIGHT);
 	}
 
 	_vec3 vPos;
@@ -1275,25 +1275,37 @@ void CPlayer::Pooling_DamageFont(_uint iDamage, const _matrix* pMatrix, DAMAGEFO
 
 	if (1000 <= iDamage)
 	{
-		pFont0->Set_EnableDamageFont(vPos, iDigitThousands, 1000);
-		pFont1->Set_EnableDamageFont(vPos, iDigitHundreds, 100);
-		pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
-		pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		if (pFont0 && pFont1 && pFont2 && pFont3)
+		{
+			pFont0->Set_EnableDamageFont(vPos, iDigitThousands, 1000);
+			pFont1->Set_EnableDamageFont(vPos, iDigitHundreds, 100);
+			pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
+			pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		}
 	}
 	else if (100 <= iDamage)
 	{
-		pFont1->Set_EnableDamageFont(vPos, iDigitHundreds, 100);
-		pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
-		pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		if (pFont1 && pFont2 && pFont3)
+		{
+			pFont1->Set_EnableDamageFont(vPos, iDigitHundreds, 100);
+			pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
+			pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		}
 	}
 	else if (10 <= iDamage)
 	{
-		pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
-		pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		if (pFont2 && pFont3)
+		{
+			pFont2->Set_EnableDamageFont(vPos, iDigitTen, 10);
+			pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		}
 	}
 	else if (1 <= iDamage)
 	{
-		pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		if (pFont3)
+		{
+			pFont3->Set_EnableDamageFont(vPos, iDigitOne, 1);
+		}
 	}
 }
 
@@ -1375,7 +1387,7 @@ void CPlayer::SupportFire_Balista()
 
 					_vec3	vDir = *D3DXVec3Normalize(&(STAGE_BALISTA_TARGET - STAGE_BALISTA_POS), &(STAGE_BALISTA_TARGET - STAGE_BALISTA_POS));
 					_vec3	vPos = STAGE_BALISTA_POS;
-					vPos = _vec3(vPos.x + Engine::Random(-20.f, 5.f), vPos.y, vPos.z + Engine::Random(-30.f, 10.f));
+					vPos = _vec3(vPos.x + Engine::Random(-20.f, 5.f), vPos.y, vPos.z + Engine::Random(-25.f, 10.f));
 
 					pBalista->Set_EnableBalista(vPos, vDir);
 

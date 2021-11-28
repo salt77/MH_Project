@@ -39,7 +39,7 @@ int Engine::CLayer::Update_Layer(const _float& fTimeDelta)
 			Safe_Release(iter.second);
 			m_mapObject.erase(iter.first);
 
-			return iResult;
+			return NO_EVENT;
 		}
 		//if (iResult & 0x8000000)
 		//	return iResult;

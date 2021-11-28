@@ -62,10 +62,10 @@ HRESULT CStage_1::LateReady_Scene()
 	FAILED_CHECK_RETURN(Load_NaviMesh(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
 
 	m_mapLayer.emplace(L"GameLogic_Spawn", m_pSpawnLayer);
 	m_mapLayer.emplace(L"Enemies", m_pEnemyLayer);
@@ -338,7 +338,7 @@ HRESULT CStage_1::Ready_LightInfo(void)
 	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.f);
-	tLightInfo.Direction = _vec3(0.5f, -1.f, -0.5f);
+	tLightInfo.Direction = _vec3(-0.5f, -1.f, -0.5f);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 

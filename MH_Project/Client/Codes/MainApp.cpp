@@ -13,7 +13,7 @@ CMainApp::~CMainApp(void)
 }
 
 
-HRESULT CMainApp::Ready_MainApp(void)
+HRESULT CMainApp::Ready_MainApp()
 {
 	FAILED_CHECK_RETURN(SetUp_DefaultSetting(&m_pGraphicDev), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Scene(m_pGraphicDev, &m_pManagementClass), E_FAIL);
@@ -44,7 +44,7 @@ _int CMainApp::LateUpdate_MainApp(const _float & fTimeDelta)
 	return 0;
 }
 
-void CMainApp::Render_MainApp(void)
+void CMainApp::Render_MainApp()
 {
 	NULL_CHECK(m_pManagementClass);
 
@@ -92,7 +92,7 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9& pGraphicDev, CManagement** ppMa
 	FAILED_CHECK_RETURN(Create_Management(pGraphicDev, ppManagement), E_FAIL);
 	(*ppManagement)->AddRef();
 	
-	pScene = CLogo::Create(pGraphicDev, 0);
+	pScene = CLogo::Create(pGraphicDev, 1);
 	NULL_CHECK_RETURN(pScene, E_FAIL);
 
 	FAILED_CHECK_RETURN((*ppManagement)->Set_Scene(pScene), E_FAIL);
@@ -100,7 +100,7 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9& pGraphicDev, CManagement** ppMa
 	return S_OK;
 }
 
-CMainApp* CMainApp::Create(void)
+CMainApp* CMainApp::Create()
 {
 	CMainApp*	pInstance = new CMainApp();
 
@@ -110,7 +110,7 @@ CMainApp* CMainApp::Create(void)
 	return pInstance;
 }
 
-void CMainApp::Free(void)
+void CMainApp::Free()
 {
 	CSoundMgr::GetInstance()->DestroyInstance();
 

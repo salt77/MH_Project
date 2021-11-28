@@ -53,6 +53,7 @@ protected:
 	_bool								m_bSoundCheck = false;
 	_bool								m_bBoss = false;
 	_bool								m_bArmorOn = false;
+	_bool								m_bDissolveOn = false;
 
 	// 보스 몬스터 라인 Hp 체크용
 	//_int								m_iPreHp;
@@ -60,6 +61,7 @@ protected:
 	_int								m_iMaxLineHp;
 
 	_float								m_fViewZ;
+	_float								m_fDissolveValue = 0.f;
 
 	SCENE_ID							m_eCurSceneID = SCENE_END;
 
@@ -69,7 +71,7 @@ private:
 	CComponent*		Find_Component(const wstring pComponentTag, COMPONENTID eID);
 
 public:
-	virtual void	Free(void);
+	virtual void	Free();
 };
 
 END

@@ -589,6 +589,8 @@ void CAhglan::Animation_Control()
 
 		case LOW_HEALTH:
 			m_eBossAction = BS_DAMAGED;
+
+			SoundMgrLowerVol(L"golem_low_health_01.wav", CSoundMgr::MONSTER, 0.15f);
 			break;
 
 		case IDLE:

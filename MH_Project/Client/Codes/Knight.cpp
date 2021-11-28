@@ -61,18 +61,6 @@ _int CKnight::Update_Object(const _float & fTimeDelta)
 	if (m_bDead)
 		return iExit;
 
-	//// 디버그용
-	//if (Key_Down('G'))
-	//{
-	//	Set_Damage(15000);
-	//}
-	//else if (Key_Down('H'))
-	//{
-	//	m_iAniIndex = SPAWN;
-
-	//	Animation_Control();
-	//}
-
 	m_fTimeDelta = fTimeDelta;
 
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
@@ -81,7 +69,7 @@ _int CKnight::Update_Object(const _float & fTimeDelta)
 		Animation_Control();
 		Collision_Control();
 		MoveOn_Skill();
-		Make_TrailEffect(fTimeDelta);
+		Dissolve(fTimeDelta);
 
 		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
@@ -121,8 +109,7 @@ void CKnight::Render_Object(void)
 {
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
-		if (m_bAnimation)
-			m_pMeshCom->Play_Animation(m_fTimeDelta);
+		m_pMeshCom->Play_Animation(m_fTimeDelta);
 
 		//if (!m_mapColliderCom.empty())
 		//{
@@ -167,7 +154,7 @@ void CKnight::Render_Object(void)
 
 void CKnight::Set_Damage(_int iDamage)
 {
-	if (iDamage <= m_tInfo.iHp)
+	if (iDamage < m_tInfo.iHp)
 	{
 		m_tInfo.iHp -= iDamage;
 	}
@@ -181,6 +168,9 @@ void CKnight::Set_Damage(_int iDamage)
 
 void CKnight::Set_Enable(_vec3 vPos, _vec3 vRotate)
 {
+	m_bDissolveOn = false;
+	m_fDissolveValue = 0.f;
+
 	m_pTransformCom->Set_Pos(&vPos);
 	m_pTransformCom->RotationFromOriginAngle(ROT_X, vRotate.x);
 	m_pTransformCom->RotationFromOriginAngle(ROT_Y, vRotate.y);
@@ -216,10 +206,10 @@ HRESULT CKnight::Add_Component(void)
 	pComponent->AddRef();
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
-	// Calculator
-	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Prototype(L"Proto_Calculator"));
-	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
+	// Texture_Dissolve
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Prototype(L"Proto_Texture_Dissolve"));
+	NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
 
 	// Shader
 	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Ahglan"));
@@ -241,93 +231,78 @@ HRESULT CKnight::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
-	D3DMATERIAL9		tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+	pEffect->SetFloat("g_fDissolveValue", m_fDissolveValue);
 
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 10.f;
-
-	pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
-	pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
-	pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
-
-	pEffect->SetFloat("g_fPower", tMtrl.Power);
+	m_pTextureCom->Set_Texture(pEffect, "g_DissolveTexture", 0);
 
 	const D3DLIGHT9*	pLightInfo = Get_Light();
 	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
 
 	pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
 
-	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
-	pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
-	pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
-
-	D3DXMatrixInverse(&matView, NULL, &matView);
-	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
-
 	return S_OK;
 }
 
 void CKnight::Movement()
 {
-	if (m_pPlayer)
+	if (KNIGHT_DYING != m_eCurState)
 	{
-		if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
+		if (m_pPlayer)
 		{
-			m_iAniIndex = KNIGHT_IDLE;
-		}
-		else
-		{
-			m_pPlayerTrans = static_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
-
-			m_vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
-			if (m_pPlayerTrans)
-				m_vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
-			m_fDistance = D3DXVec3Length(&(m_vMyPos - m_vPlayerPos));
-
-			_vec3	vPlayerDir = m_vPlayerPos - m_vMyPos;
-			m_vDir = -(*m_pTransformCom->Get_Info(INFO_LOOK));
-			D3DXVec3Normalize(&m_vDir, &m_vDir);
-			D3DXVec3Normalize(&vPlayerDir, &vPlayerDir);
-
-			m_fAngle = D3DXToDegree(acos(D3DXVec3Dot(&m_vDir, &vPlayerDir)));
-
-			// 이것도 축이 반대인가? . Look == Back, Right == Left;
-			if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) > 0.f)
-				m_bTargetIsRight = false;
-			else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) < 0.f)
-				m_bTargetIsRight = true;
-
-
-			if ((m_bCanAction && m_pPlayerTrans) || !m_bAnimation) // m_bAnimation은 디버깅용
+			if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 			{
-				if (10.f <= m_fAngle)
+				m_iAniIndex = KNIGHT_IDLE;
+			}
+			else
+			{
+				m_pPlayerTrans = static_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
+
+				m_vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
+				if (m_pPlayerTrans)
+					m_vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
+				m_fDistance = D3DXVec3Length(&(m_vMyPos - m_vPlayerPos));
+
+				_vec3	vPlayerDir = m_vPlayerPos - m_vMyPos;
+				m_vDir = -(*m_pTransformCom->Get_Info(INFO_LOOK));
+				D3DXVec3Normalize(&m_vDir, &m_vDir);
+				D3DXVec3Normalize(&vPlayerDir, &vPlayerDir);
+
+				m_fAngle = D3DXToDegree(acos(D3DXVec3Dot(&m_vDir, &vPlayerDir)));
+
+				// 이것도 축이 반대인가? . Look == Back, Right == Left;
+				if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) > 0.f)
+					m_bTargetIsRight = false;
+				else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) < 0.f)
+					m_bTargetIsRight = true;
+
+
+				if ((m_bCanAction && m_pPlayerTrans) || !m_bAnimation) // m_bAnimation은 디버깅용
 				{
-					if (m_bTargetIsRight)
+					if (10.f <= m_fAngle)
 					{
-						m_iAniIndex = KNIGHT_TURNRIGHT;
+						if (m_bTargetIsRight)
+						{
+							m_iAniIndex = KNIGHT_TURNRIGHT;
+						}
+						else
+						{
+							m_iAniIndex = KNIGHT_TURNLEFT;
+						}
+					}
+					else if (DIS_FACETOFACE >= m_fDistance)
+					{
+						m_iAniIndex = KNIGHT_ATTACK;
 					}
 					else
 					{
-						m_iAniIndex = KNIGHT_TURNLEFT;
-					}
-				}
-				else if (DIS_FACETOFACE >= m_fDistance)
-				{
-					m_iAniIndex = KNIGHT_ATTACK;
-				}
-				else
-				{
-					if (DIS_FACETOFACE < m_fDistance)
-					{
-						m_iAniIndex = KNIGHT_STAPFRONT;
-					}
-					else
-					{
-						m_iAniIndex = KNIGHT_IDLE;
+						if (DIS_FACETOFACE < m_fDistance)
+						{
+							m_iAniIndex = KNIGHT_STAPFRONT;
+						}
+						else
+						{
+							m_iAniIndex = KNIGHT_IDLE;
+						}
 					}
 				}
 			}
@@ -337,29 +312,32 @@ void CKnight::Movement()
 
 void CKnight::MoveOn_Skill()
 {
-	if (m_bSkillMove)
+	if (KNIGHT_ATTACK == m_eCurState)
 	{
-		if (m_fSkillMoveStartTime <= m_fAniTime &&
-			m_fSkillMoveEndTime >= m_fAniTime)
+		if (m_bSkillMove)
 		{
-			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, &m_vDir, m_fSkillMoveSpeed, m_fTimeDelta));
+			if (m_fSkillMoveStartTime <= m_fAniTime &&
+				m_fSkillMoveEndTime >= m_fAniTime)
+			{
+				m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, &m_vDir, m_fSkillMoveSpeed, m_fTimeDelta));
+			}
+			else if (m_fSkillMoveEndTime < m_fAniTime)
+			{
+				m_bSkillMove = false;
+			}
 		}
-		else if (m_fSkillMoveEndTime < m_fAniTime)
-		{
-			m_bSkillMove = false;
-		}
-	}
 
-	if (m_bSkillMove2)
-	{
-		if (m_fSkillMoveStartTime2 <= m_fAniTime &&
-			m_fSkillMoveEndTime2 >= m_fAniTime)
+		if (m_bSkillMove2)
 		{
-			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, &m_vDir, m_fSkillMoveSpeed, m_fTimeDelta));
-		}
-		else if (m_fSkillMoveEndTime2 < m_fAniTime)
-		{
-			m_bSkillMove2 = false;
+			if (m_fSkillMoveStartTime2 <= m_fAniTime &&
+				m_fSkillMoveEndTime2 >= m_fAniTime)
+			{
+				m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(&m_vMyPos, &m_vDir, m_fSkillMoveSpeed, m_fTimeDelta));
+			}
+			else if (m_fSkillMoveEndTime2 < m_fAniTime)
+			{
+				m_bSkillMove2 = false;
+			}
 		}
 	}
 }
@@ -387,42 +365,14 @@ void CKnight::RotateLookVector()
 	}
 }
 
-void CKnight::Make_TrailEffect(const _float & fDeltaTime)
-{
-	//map<const wstring, CCollider*>::iterator		iter = m_mapColliderCom.begin();
-
-	//for (; iter != m_mapColliderCom.end(); ++iter)
-	//{
-	//	if (L"Attack" == iter->first)
-	//	{
-	//		_float	fRadius = iter->second->Get_Radius();
-	//		_vec3	vPos = iter->second->Get_Center();
-	//		vPos.x += fRadius;
-	//		vPos.y += fRadius;
-	//		vPos.z += fRadius;
-
-	//		// 축을 맞춰주기 위해서 반대로 매개변수를 줬다. 
-	//		m_pTrailSword->Set_InfoForTrail(fDeltaTime, iter->second->Get_Center(), vPos, iter->second->Get_ColliderWorld());
-	//	}
-	//}
-
-	//if (KNIGHT_ATTACK == m_eCurState)
-	//{
-	//	m_pTrailSword->Set_Render(true);
-	//}
-	//else
-	//{
-	//	m_pTrailSword->Set_Render(false);
-	//}
-}
-
 void CKnight::Animation_Control()
 {
+	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
-	//m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 
 	// 상태 변경 시 한번만 실행
 	m_eCurState = (KNIGHT_STATE)m_iAniIndex;
+
 	if (m_eCurState != m_ePreState)
 	{
 		m_bAnimation = true;
@@ -479,10 +429,10 @@ void CKnight::Animation_Control()
 			break;
 
 		case KNIGHT_DYING:
+			m_bDissolveOn = true;
 			m_bCanAction = false;
 
 			m_pMeshCom->Set_TrackSpeed(1.5f);
-			m_lfAniEnd = 0.7f;
 			break;
 		}
 
@@ -568,7 +518,7 @@ void CKnight::Animation_Control()
 
 		if (KNIGHT_DYING == m_eCurState)
 		{
-			m_pTransformCom->Set_Pos(&POOLING_POS);
+			m_bCanAction = false;
 		}
 		else if (0 >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 		{
@@ -610,6 +560,20 @@ void CKnight::Collision_Control()
 			iter_Hit->second->Set_CanCollision(false);
 		}
 		break;
+	}
+}
+
+void CKnight::Dissolve(const _float & fTimeDelta)
+{
+	if (m_bDissolveOn)
+	{
+		m_fDissolveValue += 0.25f * fTimeDelta;
+
+		if (1.f <= m_fDissolveValue)
+		{
+			m_pTransformCom->Set_Pos(&POOLING_POS);
+			//m_pTransformCom->Update_Component(m_fTimeDelta);
+		}
 	}
 }
 

@@ -222,7 +222,7 @@ void CSlashPoint::Scale_Interpolation(const _float & fTimeDelta)
 	else
 	{
 		m_vScale = m_vOriginScale;
-		
+
 		m_pTransformCom->Set_Scale(m_vOriginScale.x, m_vOriginScale.y, m_vOriginScale.z);
 	}
 }

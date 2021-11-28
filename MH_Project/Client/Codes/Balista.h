@@ -10,6 +10,7 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CShader;
+class CTrail;
 
 END
 
@@ -31,12 +32,13 @@ public:
 
 private:
 	HRESULT			Add_Component();
+	HRESULT			Add_Component_ForTrail();
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
+	HRESULT			SetUp_ConstantTable_ForTrail(LPD3DXEFFECT& pEffect);
 
 private:
 	HRESULT			Ready_Collider();
 	void			Movement(const _float& fTimeDelta);
-	void			Scale_Interpolation(const _float& fTimeDelta);
 
 public:
 	const _bool&	Get_AlreadyCollision() { return m_bCollision; }
@@ -54,6 +56,7 @@ private:
 	_ulong			m_dwSurviveTime = GetTickCount();
 	_ulong			m_dwSurviveDelay = 500;
 
+	_float			m_fTimeDelta = 0.f;
 	_float			m_fAlphaValue = 1.f;
 	_float			m_fAlphaInterpol = 0.25f;
 	_float			m_fSpeed = 75.f;
@@ -73,8 +76,14 @@ private:
 	CStaticMesh*	m_pMeshCom = nullptr;
 	CShader*		m_pShaderCom = nullptr;
 
+	// Trail Component
+	CTrail*			m_pTrailCom = nullptr;
+	CTexture*		m_pTextureCom = nullptr;
+	CShader*		m_pTrailShaderCom = nullptr;
+
 	// Sound 
 	_bool			m_bSoundCheck = false;
+	_bool			m_bFlySoundCheck = false;
 
 public:
 	static	CBalista*	Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -25,7 +25,7 @@ public:
 	void			Set_ResetAniTime() { m_pAniCtrl->Set_ResetAniTime(); }
 
 public:
-	void			Play_Animation(const _float& fTimeDelta);
+	void			Play_Animation(const _float& fTimeDelta, _bool bAnimation = true);
 	_bool			Is_AnimationSetFinish(const _float& fEndTime) { return m_pAniCtrl->Is_AnimationSetFinish(fEndTime); }
 
 public:

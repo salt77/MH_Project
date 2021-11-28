@@ -1,7 +1,9 @@
 matrix		g_matWorld, g_matView, g_matProj;		// 상수 테이블
-texture		g_BaseTexture, g_NormalTexture;
 
+float		g_fDissolveValue = 0.f;
 float4		g_vLightDir;
+
+texture		g_BaseTexture, g_NormalTexture, g_DissolveTexture;
 
 sampler BaseSampler = sampler_state
 {
@@ -14,6 +16,14 @@ sampler BaseSampler = sampler_state
 sampler NormalSampler = sampler_state
 {
 	texture = g_NormalTexture;
+
+	minfilter = linear;
+	magfilter = linear;
+};
+
+sampler DissolveSampler = sampler_state
+{
+	texture = g_DissolveTexture;
 
 	minfilter = linear;
 	magfilter = linear;
@@ -59,12 +69,9 @@ VS_OUT			VS_MAIN(VS_IN In)
 	Out.vPosition = mul(vector(In.vPosition.xyz, 1.f), matWVP);
 	Out.vNormal = normalize(mul(In.vNormal.xyz, (float3x3)g_matWorld));
 	Out.vTangent = normalize(mul(In.vTangent.xyz, (float3x3)g_matWorld));
-	Out.vBiNormal = normalize(mul(In.vBiNormal.xyz, (float3x3)g_matWorld));
+	Out.vBiNormal = normalize(cross(Out.vTangent, Out.vNormal));
 
 	Out.vProjPos = Out.vPosition;
-
-	//matrix	mat = { float4(g_fTangent, 0.f), float4(g_fBinormal, 0.f), float4(g_fNormal, 0.f), { 0, 0, 0, 1 } };
-	//Out.vTranspose = transpose(mat);
 
 	return Out;
 }
@@ -91,6 +98,9 @@ PS_OUT		PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
+	float4	vClipAmount = tex2D(DissolveSampler, In.vTexUV).r;
+	clip(vClipAmount - g_fDissolveValue);
+
 	Out.vColor = tex2D(BaseSampler, In.vTexUV);
 	Out.vNormal = tex2D(NormalSampler, In.vTexUV);
 
@@ -106,10 +116,8 @@ PS_OUT		PS_MAIN(PS_IN In)
 	float3	TempLightDir = g_vLightDir.xyz;
 
 	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.35f;
-	//bright = max(0.f, bright);
-	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
-	Out.vColor.rgb = bright * Out.vColor.xyz;
+	Out.vColor.rgb = bright * Out.vColor.rgb;
 	Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w * 0.03f, 0.f, 0.f);
 
 	return Out;

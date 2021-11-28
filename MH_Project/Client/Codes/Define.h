@@ -80,9 +80,9 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 	}
 
 #define GET_SPPOINT_SMASH																\
-	if (m_tPlayerInfo.iSkillPoint + (rand() % 50 + 5) < m_tPlayerInfo.iMaxSkillPoint)	\
+	if (m_tPlayerInfo.iSkillPoint + (rand() % 50 + 20) < m_tPlayerInfo.iMaxSkillPoint)	\
 	{																					\
-		m_tPlayerInfo.iSkillPoint += rand() % 50 + 5;									\
+		m_tPlayerInfo.iSkillPoint += rand() % 50 + 20;									\
 	}																					\
 	else																				\
 	{																					\

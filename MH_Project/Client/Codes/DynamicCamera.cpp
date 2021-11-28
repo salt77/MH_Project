@@ -560,7 +560,7 @@ void CDynamicCamera::Mouse_Move(void)
 		}
 	}
 
-	//Collision_StageMesh();
+	Collision_StageMesh();
 }
 
 void CDynamicCamera::Mouse_Fix(void)

@@ -29,9 +29,10 @@ void CDynamicMesh::Set_AnimationIndex(const _uint & iIndex)
 	m_pAniCtrl->Set_AnimationIndex(iIndex);
 }
 
-void CDynamicMesh::Play_Animation(const _float & fTimeDelta)
+void CDynamicMesh::Play_Animation(const _float & fTimeDelta, _bool bAnimation)
 {
-	m_pAniCtrl->Play_Animation(fTimeDelta);
+	if (bAnimation)
+		m_pAniCtrl->Play_Animation(fTimeDelta);
 
 	_matrix		matTemp;
 	Update_FrameMatrices((D3DXFRAME_DERIVED*)m_pRootFrame, D3DXMatrixIdentity(&matTemp));

@@ -64,6 +64,7 @@ _int CDog::Update_Object(const _float & fTimeDelta)
 		Animation_Control();
 		Collision_Control();
 		MoveOn_Skill();
+		Dissolve(fTimeDelta);
 
 		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
@@ -103,8 +104,7 @@ void CDog::Render_Object(void)
 {
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
-		if (m_bAnimation)
-			m_pMeshCom->Play_Animation(m_fTimeDelta);
+		m_pMeshCom->Play_Animation(m_fTimeDelta);
 
 		m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
@@ -130,18 +130,13 @@ void CDog::Render_Object(void)
 
 void CDog::Set_Damage(_int iDamage)
 {
-	if (iDamage <= m_tInfo.iHp)
+	if (iDamage < m_tInfo.iHp)
 	{
 		m_tInfo.iHp -= iDamage;
 
 		if (1000 <= iDamage)
 		{
-			if (DOGSTATE_DOWN_BEGIN != m_eCurState &&
-				DOGSTATE_DOWN_IDLE != m_eCurState &&
-				DOGSTATE_DOWN_END != m_eCurState)
-			{
-				m_iAniIndex = DOGSTATE_DOWN_BEGIN;
-			}
+			m_iAniIndex = DOGSTATE_DOWN_BEGIN;
 		}
 		else if (DOGSTATE_DOWN_BEGIN != m_eCurState &&
 				 DOGSTATE_DOWN_IDLE != m_eCurState)
@@ -164,10 +159,15 @@ void CDog::Set_Damage(_int iDamage)
 
 		m_iAniIndex = DOGSTATE_DYING;
 	}
+
+	Animation_Control();
 }
 
 void CDog::Set_Enable(_vec3 vPos, _vec3 vRotate)
 {
+	m_bDissolveOn = false;
+	m_fDissolveValue = 0.f;
+
 	m_pTransformCom->Set_Pos(&vPos);
 	m_pTransformCom->RotationFromOriginAngle(ROT_X, vRotate.x);
 	m_pTransformCom->RotationFromOriginAngle(ROT_Y, vRotate.y);
@@ -202,12 +202,12 @@ HRESULT CDog::Add_Component(void)
 	pComponent->AddRef();
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
-	// Calculator
-	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Prototype(L"Proto_Calculator"));
-	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
+	// Texture_Dissolve
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Prototype(L"Proto_Texture_Dissolve"));
+	NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
 
-	// Shader
+	// Shader 
 	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Ahglan"));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Shader", pComponent);
@@ -227,93 +227,78 @@ HRESULT CDog::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
-	D3DMATERIAL9		tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+	pEffect->SetFloat("g_fDissolveValue", m_fDissolveValue);
 
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 10.f;
-
-	pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
-	pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
-	pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
-
-	pEffect->SetFloat("g_fPower", tMtrl.Power);
+	m_pTextureCom->Set_Texture(pEffect, "g_DissolveTexture", 0);
 
 	const D3DLIGHT9*	pLightInfo = Get_Light();
 	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
 
 	pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
 
-	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
-	pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
-	pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
-
-	D3DXMatrixInverse(&matView, NULL, &matView);
-	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
-
 	return S_OK;
 }
 
 void CDog::Movement()
 {
-	if (m_pPlayer)
+	if (DOGSTATE_DEAD_IDLE != m_eCurState)
 	{
-		if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
+		if (m_pPlayer)
 		{
-			m_iAniIndex = DOGSTATE_IDLE;
-		}
-		else
-		{
-			m_pPlayerTrans = static_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
-
-			m_vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
-			if (m_pPlayerTrans)
-				m_vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
-			m_fDistance = D3DXVec3Length(&(m_vMyPos - m_vPlayerPos));
-
-			_vec3	vPlayerDir = m_vPlayerPos - m_vMyPos;
-			m_vDir = -(*m_pTransformCom->Get_Info(INFO_LOOK));
-			D3DXVec3Normalize(&m_vDir, &m_vDir);
-			D3DXVec3Normalize(&vPlayerDir, &vPlayerDir);
-
-			m_fAngle = D3DXToDegree(acos(D3DXVec3Dot(&m_vDir, &vPlayerDir)));
-
-			// 이것도 축이 반대인가? . Look == Back, Right == Left;
-			if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) > 0.f)
-				m_bTargetIsRight = false;
-			else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) < 0.f)
-				m_bTargetIsRight = true;
-
-
-			if ((m_bCanAction && m_pPlayerTrans) || !m_bAnimation) // m_bAnimation은 디버깅용
+			if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 			{
-				if (15.f <= m_fAngle)
+				m_iAniIndex = DOGSTATE_IDLE;
+			}
+			else
+			{
+				m_pPlayerTrans = static_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
+
+				m_vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
+				if (m_pPlayerTrans)
+					m_vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
+				m_fDistance = D3DXVec3Length(&(m_vMyPos - m_vPlayerPos));
+
+				_vec3	vPlayerDir = m_vPlayerPos - m_vMyPos;
+				m_vDir = -(*m_pTransformCom->Get_Info(INFO_LOOK));
+				D3DXVec3Normalize(&m_vDir, &m_vDir);
+				D3DXVec3Normalize(&vPlayerDir, &vPlayerDir);
+
+				m_fAngle = D3DXToDegree(acos(D3DXVec3Dot(&m_vDir, &vPlayerDir)));
+
+				// 이것도 축이 반대인가? . Look == Back, Right == Left;
+				if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) > 0.f)
+					m_bTargetIsRight = false;
+				else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) < 0.f)
+					m_bTargetIsRight = true;
+
+
+				if ((m_bCanAction && m_pPlayerTrans) || (!m_bAnimation)) // m_bAnimation은 디버깅용
 				{
-					if (m_bTargetIsRight)
+					if (15.f <= m_fAngle)
 					{
-						m_iAniIndex = DOGSTATE_TURNRIGHT;
+						if (m_bTargetIsRight)
+						{
+							m_iAniIndex = DOGSTATE_TURNRIGHT;
+						}
+						else
+						{
+							m_iAniIndex = DOGSTATE_TURNLEFT;
+						}
+					}
+					else if (DIS_SHORTEST > m_fDistance)
+					{
+						m_iAniIndex = DOGSTATE_THREAT;
 					}
 					else
 					{
-						m_iAniIndex = DOGSTATE_TURNLEFT;
-					}
-				}
-				else if (DIS_SHORTEST > m_fDistance)
-				{
-					m_iAniIndex = DOGSTATE_THREAT;
-				}
-				else
-				{
-					if (DIS_SHORTEST < m_fDistance)
-					{
-						m_iAniIndex = DOGSTATE_RUN;
-					}
-					else
-					{
-						m_iAniIndex = DOGSTATE_IDLE;
+						if (DIS_SHORTEST < m_fDistance)
+						{
+							m_iAniIndex = DOGSTATE_RUN;
+						}
+						else
+						{
+							m_iAniIndex = DOGSTATE_IDLE;
+						}
 					}
 				}
 			}
@@ -324,7 +309,7 @@ void CDog::Movement()
 void CDog::MoveOn_Skill()
 {
 	if (m_bSkillMove && 
-		DOGSTATE_ATTACK == m_iAniIndex)
+		DOGSTATE_ATTACK == m_eCurState)
 	{
 		if (m_fSkillMoveStartTime <= m_fAniTime &&
 			m_fSkillMoveEndTime >= m_fAniTime)
@@ -340,8 +325,8 @@ void CDog::MoveOn_Skill()
 
 void CDog::Animation_Control()
 {
+	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
-	//m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 
 	// 상태 변경 시 한번만 실행
 	m_eCurState = (DOG_STATE)m_iAniIndex;
@@ -392,16 +377,37 @@ void CDog::Animation_Control()
 			break;
 
 		case DOGSTATE_DAMAGED:
+			m_lfAniEnd = 0.8f;
 			m_bCanAction = false;
 			break;
 
 		case DOGSTATE_DAMAGED2:
+			m_lfAniEnd = 0.8f;
 			m_bCanAction = false;
+			break;
+
+		case DOGSTATE_DOWN_BEGIN:
+			m_bCanAction = false;
+			m_lfAniEnd = 0.58f;
+			break;
+
+		case DOGSTATE_DOWN_IDLE:
+			m_bCanAction = false;
+			break;
+
+		case DOGSTATE_DOWN_END:
+			m_bCanAction = false;
+			m_lfAniEnd = 1.2f;
 			break;
 
 		case DOGSTATE_DYING:
 			m_bCanAction = false; 
-			m_lfAniEnd = 0.8f;
+			m_lfAniEnd = 0.6f;
+			break;
+
+		case DOGSTATE_DEAD_IDLE:
+			m_bDissolveOn = true;
+			m_bCanAction = false;
 			break;
 
 		case DOGSTATE_SPAWN:
@@ -464,15 +470,6 @@ void CDog::Animation_Control()
 			Animation_Control();
 		}
 
-	case DOGSTATE_IDLE:
-		//if (DIS_VERY_SHORTEST > m_fDistance &&
-		//	0.f < m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
-		//{
-		//	// 강제로 다음 행동이 ATK을 수행하게 한다. 
-		//	m_eDogAction = DOG_ATK;
-		//}
-		break;
-
 	case DOGSTATE_ATTACK:
 		if (!m_bSound)
 		{
@@ -498,8 +495,9 @@ void CDog::Animation_Control()
 
 		if (DOGSTATE_DYING == m_eCurState)
 		{
-			m_pTransformCom->Set_Pos(&POOLING_POS);
-			m_pTransformCom->Update_Component(m_fTimeDelta);
+			m_iAniIndex = DOGSTATE_DEAD_IDLE;
+
+			Animation_Control();
 		}
 		else if (DOGSTATE_DOWN_BEGIN == m_eCurState)
 		{
@@ -523,8 +521,9 @@ void CDog::Animation_Control()
 		{
 			m_iAniIndex = DOGSTATE_IDLE;
 		}
-		else if (m_eCurState != DOGSTATE_IDLE &&
-				 m_eCurState != DOGSTATE_RUN)
+		else if (DOGSTATE_IDLE != m_eCurState &&
+				 DOGSTATE_RUN != m_eCurState &&
+				 DOGSTATE_DEAD_IDLE != m_eCurState)
 		{
 			m_fRand = Engine::Random(0.f, 100.f);
 			m_iAniIndex = DOGSTATE_IDLE;
@@ -557,6 +556,20 @@ void CDog::Collision_Control()
 			iter_Hit->second->Set_CanCollision(false);
 		}
 		break;
+	}
+}
+
+void CDog::Dissolve(const _float & fTimeDelta)
+{
+	if (m_bDissolveOn)
+	{
+		m_fDissolveValue += 0.25f * fTimeDelta;
+
+		if (1.f <= m_fDissolveValue)
+		{
+			m_pTransformCom->Set_Pos(&POOLING_POS);
+			//m_pTransformCom->Update_Component(m_fTimeDelta);
+		}
 	}
 }
 

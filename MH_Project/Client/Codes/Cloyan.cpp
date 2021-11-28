@@ -67,17 +67,17 @@ _int CCloyan::Update_Object(const _float & fTimeDelta)
 
 	m_fTimeDelta = fTimeDelta;
 
-	if (Key_Down('G'))
-	{
-		Set_Damage(15000);
-	}
-	else if (Engine::Key_Down('C'))
-	{
-		m_pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
-		m_pTransformCom->Set_Pos(m_pPlayerTrans->Get_Info(INFO_POS));
-		m_iAniIndex = CLOYAN_SPAWN;
-		Animation_Control();
-	}
+	//if (Key_Down('G'))
+	//{
+	//	Set_Damage(15000);
+	//}
+	//else if (Engine::Key_Down('C'))
+	//{
+	//	m_pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
+	//	m_pTransformCom->Set_Pos(m_pPlayerTrans->Get_Info(INFO_POS));
+	//	m_iAniIndex = CLOYAN_SPAWN;
+	//	Animation_Control();
+	//}
 
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
@@ -89,6 +89,7 @@ _int CCloyan::Update_Object(const _float & fTimeDelta)
 		Update_State();
 		MoveOn_Skill();
 		RotationOn_Skill();
+		Dissolve(fTimeDelta);
 
 		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
@@ -124,7 +125,7 @@ _int CCloyan::LateUpdate_Object(const _float & fTimeDelta)
 	return iExit;
 }
 
-void CCloyan::Render_Object(void)
+void CCloyan::Render_Object()
 {
 	Render_Font(L"Font_Nanumgothic_Bold", to_wstring(m_iAniIndex), &_vec2(SCREEN_CENTER_X, LOADINGBAR_Y - 60.f), D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 	/*if (!m_mapColliderCom.empty())
@@ -192,7 +193,7 @@ void CCloyan::Set_Enable(_vec3 vPos, _vec3 vRotate)
 	Animation_Control();
 }
 
-HRESULT CCloyan::Add_Component(void)
+HRESULT CCloyan::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
 
@@ -212,10 +213,10 @@ HRESULT CCloyan::Add_Component(void)
 	pComponent->AddRef();
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
-	// Calculator
-	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Prototype(L"Proto_Calculator"));
-	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
+	// Texture_Dissolve
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Prototype(L"Proto_Texture_Dissolve"));
+	NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
 
 	// Shader
 	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Ahglan"));
@@ -237,32 +238,14 @@ HRESULT CCloyan::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
-	D3DMATERIAL9		tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+	pEffect->SetFloat("g_fDissolveValue", m_fDissolveValue);
 
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 10.f;
-
-	pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
-	pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
-	pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
-
-	pEffect->SetFloat("g_fPower", tMtrl.Power);
+	m_pTextureCom->Set_Texture(pEffect, "g_DissolveTexture", 0);
 
 	const D3DLIGHT9*	pLightInfo = Get_Light();
 	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
 
 	pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
-
-	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
-	pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
-	pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
-
-	D3DXMatrixInverse(&matView, NULL, &matView);
-	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
 
 	return S_OK;
 }
@@ -411,8 +394,8 @@ void CCloyan::RotateLookVector()
 
 void CCloyan::Animation_Control()
 {
+	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
-	//m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 
 	// 상태 변경 시 한번만 실행
 	m_eCurState = (CLOYAN_STATE)m_iAniIndex;
@@ -627,12 +610,6 @@ void CCloyan::Animation_Control()
 				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(360.f * -m_fTimeDelta));
 			}
 		}
-
-		//if (DIS_FACETOFACE >= m_fDistance)
-		//{
-		//	// 강제로 다음 행동이 ATK을 수행하게 한다. 
-		//	Animation_Control();
-		//}
 		break;
 
 	case CCloyan::CLOYAN_SLASHPIERCE:
@@ -863,6 +840,20 @@ void CCloyan::Update_State()
 		m_iAniIndex = CLOYAN_DYING;
 
 		Animation_Control();
+	}
+}
+
+void CCloyan::Dissolve(const _float & fTimeDelta)
+{
+	if (m_bDissolveOn)
+	{
+		m_fDissolveValue += 0.25f * fTimeDelta;
+
+		if (1.f <= m_fDissolveValue)
+		{
+			m_pTransformCom->Set_Pos(&POOLING_POS);
+			//m_pTransformCom->Update_Component(m_fTimeDelta);
+		}
 	}
 }
 

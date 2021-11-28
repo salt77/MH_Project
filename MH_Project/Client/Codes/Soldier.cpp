@@ -61,10 +61,11 @@ _int CSoldier::Update_Object(const _float & fTimeDelta)
 		Animation_Control();
 		Collision_Control();
 		MoveOn_Skill();
+		Dissolve(fTimeDelta);
 
 		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
-		Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+		Engine::Add_RenderGroup(RENDER_ALPHA, this);
 	}
 
 	return iExit;
@@ -102,8 +103,8 @@ void CSoldier::Render_Object(void)
 {
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
-		if (m_bAnimation)
-			m_pMeshCom->Play_Animation(m_fTimeDelta);
+		m_pMeshCom->Play_Animation(m_fTimeDelta);
+
 
 		m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
@@ -129,7 +130,7 @@ void CSoldier::Render_Object(void)
 
 void CSoldier::Set_Damage(_int iDamage)
 {
-	if (iDamage <= m_tInfo.iHp)
+	if (iDamage < m_tInfo.iHp)
 	{
 		m_tInfo.iHp -= iDamage;
 
@@ -167,6 +168,9 @@ void CSoldier::Set_Damage(_int iDamage)
 
 void CSoldier::Set_Enable(_vec3 vPos, _vec3 vRotate)
 {
+	m_bDissolveOn = false;
+	m_fDissolveValue = 0.f;
+
 	m_pTransformCom->Set_Pos(&vPos);
 	m_pTransformCom->RotationFromOriginAngle(ROT_X, vRotate.x);
 	m_pTransformCom->RotationFromOriginAngle(ROT_Y, vRotate.y);
@@ -180,6 +184,7 @@ void CSoldier::Set_Enable(_vec3 vPos, _vec3 vRotate)
 	m_iAniIndex = SOLSTATE_SPAWN;
 
 	Animation_Control();
+	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 }
 
 HRESULT CSoldier::Add_Component(void)
@@ -202,10 +207,10 @@ HRESULT CSoldier::Add_Component(void)
 	pComponent->AddRef();
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
-	// Calculator
-	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Prototype(L"Proto_Calculator"));
-	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
+	// Texture_Dissolve
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Prototype(L"Proto_Texture_Dissolve"));
+	NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
 
 	// Shader
 	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Ahglan"));
@@ -227,93 +232,78 @@ HRESULT CSoldier::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
-	D3DMATERIAL9		tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+	pEffect->SetFloat("g_fDissolveValue", m_fDissolveValue);
 
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 10.f;
-
-	pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
-	pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
-	pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
-
-	pEffect->SetFloat("g_fPower", tMtrl.Power);
+	m_pTextureCom->Set_Texture(pEffect, "g_DissolveTexture", 0);
 
 	const D3DLIGHT9*	pLightInfo = Get_Light();
 	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
 
 	pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
 
-	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
-	pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
-	pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
-
-	D3DXMatrixInverse(&matView, NULL, &matView);
-	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
-
 	return S_OK;
 }
 
 void CSoldier::Movement()
 {
-	if (m_pPlayer)
+	if (SOLSTATE_DYING != m_eCurState)
 	{
-		if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
+		if (m_pPlayer)
 		{
-			m_iAniIndex = SOLSTATE_IDLE;
-		}
-		else
-		{
-			m_pPlayerTrans = static_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
-
-			m_vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
-			if (m_pPlayerTrans)
-				m_vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
-			m_fDistance = D3DXVec3Length(&(m_vMyPos - m_vPlayerPos));
-
-			_vec3	vPlayerDir = m_vPlayerPos - m_vMyPos;
-			m_vDir = -(*m_pTransformCom->Get_Info(INFO_RIGHT));
-			D3DXVec3Normalize(&m_vDir, &m_vDir);
-			D3DXVec3Normalize(&vPlayerDir, &vPlayerDir);
-
-			m_fAngle = D3DXToDegree(acos(D3DXVec3Dot(&m_vDir, &vPlayerDir)));
-
-			// 이것도 축이 반대인가? . Look == Back, Right == Left;
-			if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) > 0.f)
-				m_bTargetIsRight = false;
-			else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) < 0.f)
-				m_bTargetIsRight = true;
-
-
-			if ((m_bCanAction && m_pPlayerTrans) || !m_bAnimation) // m_bAnimation은 디버깅용
+			if (0.f >= m_pPlayer->Get_TagPlayerInfo().tagInfo.iHp)
 			{
-				if (15.f <= m_fAngle)
+				m_iAniIndex = SOLSTATE_IDLE;
+			}
+			else
+			{
+				m_pPlayerTrans = static_cast<CTransform*>(m_pPlayer->Get_Component(L"Com_Transform", ID_DYNAMIC));
+
+				m_vMyPos = *m_pTransformCom->Get_Info(INFO_POS);
+				if (m_pPlayerTrans)
+					m_vPlayerPos = *m_pPlayerTrans->Get_Info(INFO_POS);
+				m_fDistance = D3DXVec3Length(&(m_vMyPos - m_vPlayerPos));
+
+				_vec3	vPlayerDir = m_vPlayerPos - m_vMyPos;
+				m_vDir = -(*m_pTransformCom->Get_Info(INFO_RIGHT));
+				D3DXVec3Normalize(&m_vDir, &m_vDir);
+				D3DXVec3Normalize(&vPlayerDir, &vPlayerDir);
+
+				m_fAngle = D3DXToDegree(acos(D3DXVec3Dot(&m_vDir, &vPlayerDir)));
+
+				// 이것도 축이 반대인가? . Look == Back, Right == Left;
+				if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) > 0.f)
+					m_bTargetIsRight = false;
+				else if (D3DXVec3Dot(&_vec3(0.f, 1.f, 0.f), D3DXVec3Cross(&_vec3(), &vPlayerDir, &m_vDir)) < 0.f)
+					m_bTargetIsRight = true;
+
+
+				if ((m_bCanAction && m_pPlayerTrans) || !m_bAnimation) // m_bAnimation은 디버깅용
 				{
-					if (m_bTargetIsRight)
+					if (15.f <= m_fAngle)
 					{
-						m_iAniIndex = SOLSTATE_TURNRIGHT;
+						if (m_bTargetIsRight)
+						{
+							m_iAniIndex = SOLSTATE_TURNRIGHT;
+						}
+						else
+						{
+							m_iAniIndex = SOLSTATE_TURNLEFT;
+						}
+					}
+					else if (DIS_FACETOFACE >= m_fDistance)
+					{
+						m_iAniIndex = SOLSTATE_ATTACK;
 					}
 					else
 					{
-						m_iAniIndex = SOLSTATE_TURNLEFT;
-					}
-				}
-				else if (DIS_FACETOFACE >= m_fDistance)
-				{
-					m_iAniIndex = SOLSTATE_ATTACK;
-				}
-				else
-				{
-					if (DIS_SHORT < m_fDistance)
-					{
-						m_iAniIndex = SOLSTATE_IDLE;
-					}
-					else if (DIS_FACETOFACE < m_fDistance)
-					{
-						m_iAniIndex = SOLSTATE_RUN;
+						if (DIS_SHORT < m_fDistance)
+						{
+							m_iAniIndex = SOLSTATE_IDLE;
+						}
+						else if (DIS_FACETOFACE < m_fDistance)
+						{
+							m_iAniIndex = SOLSTATE_RUN;
+						}
 					}
 				}
 			}
@@ -323,7 +313,8 @@ void CSoldier::Movement()
 
 void CSoldier::MoveOn_Skill()
 {
-	if (m_bSkillMove)
+	if (m_bSkillMove && 
+		SOLSTATE_ATTACK == m_eCurState)
 	{
 		if (m_fSkillMoveStartTime <= m_fAniTime &&
 			m_fSkillMoveEndTime >= m_fAniTime)
@@ -362,8 +353,8 @@ void CSoldier::RotateLookVector()
 
 void CSoldier::Animation_Control()
 {
+	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
-	//m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 
 	// 상태 변경 시 한번만 실행
 	m_eCurState = (SOL_STATE)m_iAniIndex;
@@ -436,10 +427,10 @@ void CSoldier::Animation_Control()
 			break;
 
 		case SOLSTATE_DYING:
+			m_bDissolveOn = true;
 			m_bCanAction = false;
 
-			m_pMeshCom->Set_TrackSpeed(1.5f);
-			m_lfAniEnd = 0.7f;
+			m_pMeshCom->Set_TrackSpeed(0.5f);
 			break;
 		}
 
@@ -532,8 +523,7 @@ void CSoldier::Animation_Control()
 
 		if (SOLSTATE_DYING == m_eCurState)
 		{
-			m_pTransformCom->Set_Pos(&POOLING_POS);
-			m_pTransformCom->Update_Component(m_fTimeDelta);
+			m_bCanAction = false;
 		}
 		else if (SOLSTATE_DOWN_BEGIN == m_eCurState)
 		{
@@ -587,6 +577,20 @@ void CSoldier::Collision_Control()
 			iter_Hit->second->Set_CanCollision(false);
 		}
 		break;
+	}
+}
+
+void CSoldier::Dissolve(const _float & fTimeDelta)
+{
+	if (m_bDissolveOn)
+	{
+		m_fDissolveValue += 0.25f * fTimeDelta;
+
+		if (1.f <= m_fDissolveValue)
+		{
+			m_pTransformCom->Set_Pos(&POOLING_POS);
+			//m_pTransformCom->Update_Component(m_fTimeDelta);
+		}
 	}
 }
 
