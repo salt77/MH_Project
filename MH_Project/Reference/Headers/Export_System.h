@@ -21,21 +21,21 @@ inline void			Set_TimeDelta(const wstring pTimerTag);
 inline HRESULT		Ready_Timer(const wstring pTimerTag);
 
 // FrameMgr
-inline	_bool				IsPermit_Call(const wstring pFrameTag, const _float& fTimeDelta);
-inline 	HRESULT				Ready_Frame(const wstring pFrameTag, const _float& fCallLimit);
+inline	_bool		IsPermit_Call(const wstring pFrameTag, const _float& fTimeDelta);
+inline 	HRESULT		Ready_Frame(const wstring pFrameTag, const _float& fCallLimit);
 
 // FontMgr
 inline HRESULT	Ready_Font(LPDIRECT3DDEVICE9 pGraphicDev,
-	const wstring pFontTag,
-	const wstring pFontType,
-	const _uint& iWidth,
-	const _uint& iHeight,
-	const _uint& iWeight);
+						   const wstring pFontTag,
+						   const wstring pFontType,
+						   const _uint& iWidth,
+						   const _uint& iHeight,
+						   const _uint& iWeight);
 
 inline void	Render_Font(const wstring pFontTag,
-	const wstring pString,
-	const _vec2* pPos,
-	D3DXCOLOR Color);
+						const wstring pString,
+						const _vec2* pPos,
+						D3DXCOLOR Color);
 
 
 // InputDev

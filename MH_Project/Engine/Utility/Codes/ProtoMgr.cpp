@@ -1,4 +1,5 @@
 #include "ProtoMgr.h"
+#include "Management.h"
 
 USING(Engine)
 IMPLEMENT_SINGLETON(CProtoMgr)
@@ -48,6 +49,23 @@ HRESULT CProtoMgr::Delete_Prototype(const wstring pProtoTag)
 		Safe_Release(pComponent);
 		m_mapPrototype.erase(pProtoTag);
 	}
+
+	return S_OK;
+}
+
+HRESULT CProtoMgr::Clear_Prototype_ForNextStage()
+{
+	map<const wstring, CComponent*>::iterator	iter = m_mapPrototype.begin();
+
+	for (; iter != m_mapPrototype.end(); )
+	{
+		Safe_Release(iter->second);
+		m_mapPrototype.erase(iter->first);
+
+		iter = m_mapPrototype.begin();
+	}
+
+	CManagement::GetInstance()->Ready_Prototype_Shader(CManagement::GetInstance()->Get_CurSceneDevice());
 
 	return S_OK;
 }

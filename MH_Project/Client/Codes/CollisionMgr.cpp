@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "CollisionMgr.h"
 
+#include "Logo.h"
+#include "Stage.h"
+#include "Stage_1.h"
+
 #include "Player.h"
 #include "Ahglan.h"
 #include "StickyBomb.h"
@@ -11,6 +15,8 @@
 #include "Wall_Collision.h"
 #include "Balista.h"
 #include "Box.h"
+#include "LastRoom_Trigger.h"
+#include "Wall_Symbol.h"
 
 IMPLEMENT_SINGLETON(CCollisionMgr)
 
@@ -49,14 +55,21 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 	return S_OK;
 }
 
-_uint CCollisionMgr::Update_CollisionMgr()
+_uint CCollisionMgr::Update_CollisionMgr(const _float& fTimeDelta)
 {
-	Update_MultipleCollision();
+	if (m_bCanCollision)
+	{
+		Update_MultipleCollision();
 
-	Collision_PlayerAttack();
-	//Collision_MonsterAttack();
-	Collision_Balista_Stage();
-	Collision_Balista_Stage_1();
+		Collision_PlayerAttack();
+		//Collision_MonsterAttack();
+		Collision_Balista_Stage();
+		Collision_Balista_Stage_1();
+		Collision_Trigger();
+		Collision_Box_Player_Stage_1(fTimeDelta);
+	}
+
+	CollisionMgr_FrameStart();
 
 	return 0;
 }
@@ -543,7 +556,7 @@ void CCollisionMgr::Collision_PlayerAttack()
 									Pooling_SlashPoint(iter_PlayerHit->second->Get_ColliderWorld());
 								}
 								else if (PL_SMASH == m_pPlayer->Get_CurAction() ||
-										 PL_SKILL == m_pPlayer->Get_CurAction())
+									PL_SKILL == m_pPlayer->Get_CurAction())
 								{
 									Pooling_SlashPoint(iter_PlayerHit->second->Get_ColliderWorld(), true);
 								}
@@ -701,7 +714,7 @@ void CCollisionMgr::Collision_Balista_Stage()
 			CBalista*	pBalista = static_cast<CBalista*>(iter_Balista->second);
 			CTransform*	pBaliTrans = static_cast<CTransform*>(pBalista->Get_Component(L"Com_Transform", ID_DYNAMIC));
 
-			if (!pBalista->Get_AlreadyEnemyHit() && 
+			if (!pBalista->Get_AlreadyEnemyHit() &&
 				POOLING_POS != *pBaliTrans->Get_Info(INFO_POS))
 			{
 				map<const wstring, CBoxCollider*>	iter_BalistaCol = iter_Balista->second->Get_MapBoxCollider();
@@ -711,8 +724,8 @@ void CCollisionMgr::Collision_Balista_Stage()
 
 				for (; iter_AhglanCol != mapAhglanCol.end(); ++iter_AhglanCol)
 				{
-					if (Collision_OBB(&iter_BalistaCol.begin()->second->Get_Min(), &iter_BalistaCol.begin()->second->Get_Max(), iter_BalistaCol.begin()->second->Get_ColliderWorld(), 
-									  &iter_AhglanCol->second->Get_Min(), &iter_AhglanCol->second->Get_Max(), iter_AhglanCol->second->Get_ColliderWorld()))
+					if (Collision_OBB(&iter_BalistaCol.begin()->second->Get_Min(), &iter_BalistaCol.begin()->second->Get_Max(), iter_BalistaCol.begin()->second->Get_ColliderWorld(),
+						&iter_AhglanCol->second->Get_Min(), &iter_AhglanCol->second->Get_Max(), iter_AhglanCol->second->Get_ColliderWorld()))
 					{
 						pBalista->Set_EnemyHit();
 
@@ -780,6 +793,7 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 									   &mapBoxCol.begin()->second->Get_Min(), &mapBoxCol.begin()->second->Get_Max(), mapBoxCol.begin()->second->Get_ColliderWorld()))
 					{
 						pBalista->Set_CollisionWall();
+						pBalista->Set_EnemyHit();
 
 						if (pPlayerTrans)
 						{
@@ -816,17 +830,21 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 
 					if (pBalista)
 					{
-						if (DIS_MID >= D3DXVec3Length(&(vPlayerPos - *static_cast<CTransform*>(pBalista->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_Info(INFO_POS))))
+						if (!pBalista->Get_AlreadyEnemyHit())
 						{
-							map<const wstring, CCollider*>	mapBalistaCol = pBalista->Get_MapCollider();
-
-							if (Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
-												 mapBalistaCol.begin()->second->Get_Center(), mapBalistaCol.begin()->second->Get_Radius() * SCALE_BALISTA))
+							if (DIS_MID >= D3DXVec3Length(&(vPlayerPos - *static_cast<CTransform*>(pBalista->Get_Component(L"Com_Transform", ID_DYNAMIC))->Get_Info(INFO_POS))))
 							{
-								bPlayerAttacked = true;
-								m_pPlayer->Set_Damage(AHGLAN_ATKPOWER, iter_PlayerDamaged->second->Get_ColliderWorld());
+								map<const wstring, CCollider*>	mapBalistaCol = pBalista->Get_MapCollider();
 
-								break;
+								if (Collision_Sphere(iter_PlayerDamaged->second->Get_Center(), iter_PlayerDamaged->second->Get_Radius() * SCALE_PLAYER,
+									mapBalistaCol.begin()->second->Get_Center(), mapBalistaCol.begin()->second->Get_Radius() * SCALE_BALISTA))
+								{
+									bPlayerAttacked = true;
+									pBalista->Set_EnemyHit();
+									m_pPlayer->Set_Damage(AHGLAN_ATKPOWER, iter_PlayerDamaged->second->Get_ColliderWorld());
+
+									break;
+								}
 							}
 						}
 					}
@@ -834,6 +852,140 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 
 				if (bPlayerAttacked)
 					break;
+			}
+		}
+	}
+}
+
+void CCollisionMgr::Collision_Trigger()
+{
+	if (SCENE_STAGE_1 == m_eSceneID)
+	{
+		if (m_pPlayer)
+		{
+			// LastRoom Trigger Collision 
+			map<const wstring, CGameObject*>	mapTriggerObj = Engine::Get_MapObject(L"Trigger");
+			map<const wstring, CGameObject*>	mapPortalObj = Engine::Get_MapObject(L"Symbol");
+
+			CWall_Symbol*	pSymbol = nullptr;
+
+			if (0 < mapPortalObj.size())
+			{
+				pSymbol = static_cast<CWall_Symbol*>(mapPortalObj.begin()->second);
+			}
+
+			if (0 < mapTriggerObj.size())
+			{
+				map<const wstring, CCollider*>		mapTriggerCol = mapTriggerObj.begin()->second->Get_MapCollider();
+
+				map<const wstring, CCollider*>	mapPlayerCol = m_pPlayer->Get_MapCollider();
+				map<const wstring, CCollider*>::iterator	iter_PlayerCol = mapPlayerCol.begin();
+
+				for (; iter_PlayerCol != mapPlayerCol.end(); ++iter_PlayerCol)
+				{
+					if (Collision_Sphere(mapTriggerCol.begin()->second->Get_Center(), mapTriggerCol.begin()->second->Get_Radius(),
+						iter_PlayerCol->second->Get_Center(), iter_PlayerCol->second->Get_Radius() * SCALE_PLAYER))
+					{
+						mapTriggerObj.begin()->second->Set_Dead();
+						pSymbol->Set_ReadyOpenPortal();
+
+						break;
+					}
+				}
+			}
+
+			// NextStage Portal Open Trigger 
+			if (0 < mapPortalObj.size())
+			{
+				if (pSymbol->Get_ReadyToOpenPortal())
+				{
+					_bool	bAllClear = true;
+
+					map<const wstring, CGameObject*>	mapRemainEnemy = Engine::Get_MapObject(L"Enemies");
+					map<const wstring, CGameObject*>::iterator		iter_Enemy = mapRemainEnemy.begin();
+
+					for (; iter_Enemy != mapRemainEnemy.end(); ++iter_Enemy)
+					{
+						if (0 < iter_Enemy->second->Get_TagInfo().iHp)
+						{
+							bAllClear = false;
+
+							break;
+						}
+					}
+
+					if (bAllClear)
+						pSymbol->Set_NextStagePortal();
+				}
+			}
+
+			// NextStage Portal Collision 
+			if (0 < mapPortalObj.size())
+			{
+				if (pSymbol->Get_CanNextStageOpen())
+				{
+					map<const wstring, CBoxCollider*>	mapPortalCol = pSymbol->Get_MapBoxCollider();
+
+					map<const wstring, CBoxCollider*>	mapPlayerCol = m_pPlayer->Get_MapBoxCollider();
+					map<const wstring, CBoxCollider*>::iterator		iter_PlayerCol = mapPlayerCol.begin();
+
+					if (!m_bNextStageLoad)
+					{
+						for (; iter_PlayerCol != mapPlayerCol.end(); ++iter_PlayerCol)
+						{
+							if (Collision_OBB(&mapPortalCol.begin()->second->Get_Min(), &mapPortalCol.begin()->second->Get_Max(), mapPortalCol.begin()->second->Get_ColliderWorld(),
+											  &iter_PlayerCol->second->Get_Min(), &iter_PlayerCol->second->Get_Max(), iter_PlayerCol->second->Get_ColliderWorld()))
+							{
+								m_bNextStageLoad = true;
+
+								static_cast<CStage_1*>(Engine::Get_CurrentScenePointer())->Set_ReadyLoadStage();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void CCollisionMgr::Collision_Box_Player_Stage_1(const _float& fTimeDelta)
+{
+	if (SCENE_STAGE_1 == m_eSceneID)
+	{
+		if (m_pPlayer)
+		{
+			map<const wstring, CGameObject*>	mapBoxObj = Engine::Get_MapObject(L"Box");
+			map<const wstring, CGameObject*>::iterator		iter_Box = mapBoxObj.begin();
+
+			for (; iter_Box != mapBoxObj.end(); ++iter_Box)
+			{
+				CBox*	pBox = static_cast<CBox*>(iter_Box->second);
+
+				map<const wstring, CCollider*>	mapPlayerCol = m_pPlayer->Get_MapCollider();
+				map<const wstring, CCollider*>::iterator	iter_PlayerCol = mapPlayerCol.begin();
+
+				map<const wstring, CCollider*>	mapBoxCol = pBox->Get_MapCollider();
+				map<const wstring, CCollider*>::iterator	iter_BoxObjCol = mapBoxCol.begin();
+
+				for (; iter_BoxObjCol != mapBoxCol.end(); ++iter_BoxObjCol)
+				{
+					for (; iter_PlayerCol != mapPlayerCol.end(); ++iter_PlayerCol)
+					{
+						if (L"Body" == iter_PlayerCol->first)
+						{
+							if (Collision_Sphere(iter_PlayerCol->second->Get_Center(), iter_PlayerCol->second->Get_Radius() * SCALE_PLAYER,
+								iter_BoxObjCol->second->Get_Center(), iter_BoxObjCol->second->Get_Radius() * SCALE_NORMAL * 1.6f))
+							{
+								m_pPlayer->Set_PushState(true);
+								pBox->MoveOn_NaviMesh(_vec3(0.f, 0.f, 1.f), m_pPlayer->Get_PlayerSpeed(), fTimeDelta);
+							}
+							else
+							{
+								m_pPlayer->Set_PushState(false);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -851,6 +1003,15 @@ void CCollisionMgr::Update_MultipleCollision()
 
 			m_ePlayerPreState = m_ePlayerCurState;
 		}
+	}
+}
+
+void CCollisionMgr::CollisionMgr_FrameStart()
+{
+	if (!m_bCollisionFrame)
+	{
+		m_bCollisionFrame = true;
+		m_bCanCollision = true;
 	}
 }
 
@@ -1214,6 +1375,6 @@ void CCollisionMgr::Pooling_SlashPoint(const _matrix * pMatrix, _bool bIsSmash)
 }
 
 
-void CCollisionMgr::Free(void)
+void CCollisionMgr::Free()
 {
 }

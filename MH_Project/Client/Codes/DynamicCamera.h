@@ -32,7 +32,7 @@ public:
 private:
 	explicit CDynamicCamera(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CDynamicCamera(const CDynamicCamera& rhs);
-	virtual ~CDynamicCamera(void);
+	virtual ~CDynamicCamera();
 
 public:
 	HRESULT			Ready_Object(const _vec3* pEye,
@@ -46,9 +46,9 @@ public:
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
 
-//private:
-//	HRESULT		Add_Component();
-//	void		SetOn_Terrain();
+private:
+	HRESULT		Add_Component();
+	void		SetOn_Terrain();
 
 public:
 	_vec3		Get_CamDirVector(DIR eDir);
@@ -76,8 +76,8 @@ private:
 	void		Mode_Change(const _float& fTimeDelta);
 	void		At_Update(const _float& fTimeDelta);
 	void		Key_Input(const _float& fTimeDelta);
-	void		Mouse_Move(void);
-	void		Mouse_Fix(void);
+	void		Mouse_Move();
+	void		Mouse_Fix();
 	void		CutScene_Eye(const _float& fTimeDelta);
 	void		Collision_StageMesh();
 

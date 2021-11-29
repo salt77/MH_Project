@@ -20,6 +20,7 @@ public:
 	HRESULT		Ready_Prototype(const wstring pProtoTag, CComponent* pInstance);
 	CComponent* Clone_Prototype(const wstring pProtoTag);
 	HRESULT		Delete_Prototype(const wstring pProtoTag);
+	HRESULT		Clear_Prototype_ForNextStage();
 
 private:
 	CComponent*	Find_Prototype(const wstring pProtoTag);

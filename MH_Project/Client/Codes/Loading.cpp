@@ -20,7 +20,7 @@ CLoading::~CLoading(void)
 unsigned int CALLBACK CLoading::Thread_Main(void* pArg)
 {
 	CLoading*		pLoading = (CLoading*)pArg;
-	
+
 	_uint		iFlag = 0;
 
 	EnterCriticalSection(pLoading->Get_Crt());
@@ -50,20 +50,20 @@ HRESULT CLoading::Ready_Loading(LOADINGID eLoading)
 	m_hThread = (HANDLE)_beginthreadex(NULL, 0, Thread_Main, this, 0, NULL);
 
 	m_eLoading = eLoading;
-	
+
 	return 0;
 }
 
 Engine::_uint CLoading::Loading_ForStage()
 {
 	lstrcpy(m_szLoading, L"Loading Buffer..");
-	
+
 	Loading_ForBufferAll();
 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_TerrainTex", CTerrainTex::Create(m_pGraphicDev, 64, 48)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_TerrainTex2", CTerrainTex::Create(m_pGraphicDev, 96, 48, 1, 1)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_TerrainTex3", CTerrainTex::Create(m_pGraphicDev, 96, 48, 1, 2)), E_FAIL);
-		
+
 
 	lstrcpy(m_szLoading, L"Loading Texture..");
 
@@ -71,7 +71,7 @@ Engine::_uint CLoading::Loading_ForStage()
 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Terrain", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Ortel_%d.tga", TEX_NORMAL, 2)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Terrain2", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Terrain/Ortel2_%d.tga", TEX_NORMAL, 2)), E_FAIL);
-	
+
 	// Ahglan 등장 이후 소개 폰트
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ahglan_Bottom_FontUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/golem_ahglan_font_bottom.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ahglan_Bottom_FontUI2", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/ortel_font_bottom.png", TEX_NORMAL)), E_FAIL);
@@ -150,19 +150,21 @@ _uint CLoading::Loading_ForStage_1()
 _uint CLoading::Loading_ForBufferAll()
 {
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_Trail", CTrail::Create(m_pGraphicDev)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_CubeTex", CCubeTex::Create(m_pGraphicDev)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_SmashTrail", CSmashTrail::Create(m_pGraphicDev)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_BalistaTrail", CBalistaTrail::Create(m_pGraphicDev)), E_FAIL);
 
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Buffer_CubeTex", CCubeTex::Create(m_pGraphicDev)), E_FAIL);
 	return 0;
 }
 
 _uint CLoading::Loading_ForTextureAll()
 {
 	// SkyBox 
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SkyBox", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/SkyBox/SkyBox%d.dds", TEX_CUBE, 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SkyBox", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/SkyBox/SkyBox0.dds", TEX_CUBE)), E_FAIL);
 
 	// Trail 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SwordTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_longblade_trail02.tga", TEX_NORMAL)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_BalistaTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_longblade_trail00.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_BalistaTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/arrow_trail.tga", TEX_NORMAL)), E_FAIL);
 
 	// Player UI
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Hpbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Hpbar_Back.png", TEX_NORMAL)), E_FAIL);
@@ -202,14 +204,15 @@ _uint CLoading::Loading_ForTextureAll()
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SlashPoint", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_slashpoint.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Critical", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/critical_roll.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ground_Hit", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/ground_hit.png", TEX_NORMAL)), E_FAIL);
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Radial_Blur1", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_radial_blur_1.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Symbol", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/ghostwall_symbol.tga", TEX_NORMAL)), E_FAIL);
 	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Radial_Blur", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_radial_blur.tga", TEX_NORMAL)), E_FAIL);
 
 	// Shader Effect 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Dissolve", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/dissolve.png", TEX_NORMAL)), E_FAIL);
-	
+
 	// Announce 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Announce_BalistaAttack", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Balista_Announced.png", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Announce_BalistaReady", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Announce_Balista_Ready.png", TEX_NORMAL)), E_FAIL);
 
 	return 0;
 }
@@ -227,7 +230,7 @@ CLoading* CLoading::Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID eID)
 void CLoading::Free(void)
 {
 	Safe_Release(m_pGraphicDev);
-	
+
 	WaitForSingleObject(m_hThread, INFINITE);
 	CloseHandle(m_hThread);
 	DeleteCriticalSection(&m_Crt);

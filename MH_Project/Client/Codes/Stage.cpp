@@ -5,11 +5,13 @@
 #include "DamageFont.h"
 #include "CollisionMgr.h"
 #include "Trail_Sword.h"
+#include "Trail_Smash.h"
 #include "SlashPoint.h"
 #include "CriticalEfx.h"
 #include "RadialBlur.h"
 #include "Balista.h"
 #include "Announce_Balista.h"
+#include "Announce_Balista_Ready.h"
 
 #include "Export_Function.h"
 
@@ -58,7 +60,7 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 
-	CCollisionMgr::GetInstance()->Update_CollisionMgr();
+	CCollisionMgr::GetInstance()->Update_CollisionMgr(fTimeDelta);
 
 	return iExit;
 }
@@ -94,18 +96,18 @@ HRESULT CStage::Ready_Layer_Environment(const wstring pLayerTag)
 
 	// DynamicCamera
 	pGameObject = CDynamicCamera::Create(m_pGraphicDev,
-		&_vec3(0.f, 1.5f, 13.f),
-		&_vec3(0.f, 0.f, 1.f),
-		&_vec3(0.f, 1.f, 0.f),
-		D3DXToRadian(60.f), (_float)WINCX / WINCY,
-		0.1f, 1000.f);
+				  &_vec3(0.f, 1.5f, 13.f),
+				  &_vec3(0.f, 0.f, 1.f),
+				  &_vec3(0.f, 1.f, 0.f),
+				  D3DXToRadian(60.f), (_float)WINCX / WINCY,
+				  0.1f, 300.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"DynamicCamera", pGameObject), E_FAIL);
 
-	//// SkyBox
-	//pGameObject = CSkyBox::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
+	// SkyBox
+	pGameObject = CSkyBox::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
@@ -160,6 +162,15 @@ HRESULT CStage::Ready_Layer_GameLogic(const wstring pLayerTag)
 	pGameObject = CTrail_Sword::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Sword_Trail2", pGameObject), E_FAIL);
+
+	// Trail_Smash
+	pGameObject = CTrail_Smash::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Smash_Trail", pGameObject), E_FAIL);
+
+	pGameObject = CTrail_Smash::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Smash_Trail2", pGameObject), E_FAIL);
 
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
@@ -220,9 +231,13 @@ HRESULT CStage::Ready_Layer_UI(const wstring pLayerTag)
 		FAILED_CHECK_RETURN(pLayer->Add_GameObject(wstrMonsterFont, pGameObject), E_FAIL);
 	}
 
-	pGameObject = CAnnounce_Balista::Create(m_pGraphicDev, SCREEN_CENTER_X, SCREEN_CENTER_Y - 250.f, 500.f, 40.f);
+	pGameObject = CAnnounce_Balista::Create(m_pGraphicDev, SCREEN_CENTER_X, SCREEN_CENTER_Y - 250.f, 500.f, 45.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Announce_BalistaAttack_UI", pGameObject), E_FAIL);
+
+	pGameObject = CAnnounce_Balista_Ready::Create(m_pGraphicDev, SCREEN_CENTER_X, SCREEN_CENTER_Y - 250.f, 500.f, 45.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Announce_BalistaReady_UI", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 

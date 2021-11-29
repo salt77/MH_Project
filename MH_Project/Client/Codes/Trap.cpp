@@ -155,19 +155,19 @@ void CTrap::Fire()
 					switch (iFireCount)
 					{
 					case 0:
-						vPos += -*m_pTransformCom->Get_Info(INFO_LOOK) * 50.f;
+						vPos += -*m_pTransformCom->Get_Info(INFO_LOOK) * 55.f;
 						break;
 
 					case 1:
-						vPos += -*m_pTransformCom->Get_Info(INFO_LOOK) * 18.f;
+						vPos += -*m_pTransformCom->Get_Info(INFO_LOOK) * 23.f;
 						break;
 
 					case 2:
-						vPos += *m_pTransformCom->Get_Info(INFO_LOOK) * 18.f;
+						vPos += *m_pTransformCom->Get_Info(INFO_LOOK) * 23.f;
 						break;
 
 					case 3:
-						vPos += *m_pTransformCom->Get_Info(INFO_LOOK) * 50.f;
+						vPos += *m_pTransformCom->Get_Info(INFO_LOOK) * 55.f;
 						break;
 					}
 

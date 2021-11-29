@@ -31,15 +31,19 @@ private:
 
 public:
 	HRESULT			Ready_CollisionMgr();
-	_uint			Update_CollisionMgr();
+	_uint			Update_CollisionMgr(const _float& fTimeDelta);
 
 private:
 	void			Collision_PlayerAttack();
 	void			Collision_MonsterAttack();
 	void			Collision_Balista_Stage();
 	void			Collision_Balista_Stage_1();
+	void			Collision_Trigger();
+	void			Collision_Box_Player_Stage_1(const _float& fTimeDelta);
 
 	void			Update_MultipleCollision();
+
+	void			CollisionMgr_FrameStart();
 	
 private:
 	_bool			Collision_Sphere(const _vec3& vDstCenter, const _float& fDstRadius, const _vec3& vSrcCenter, const _float& fSrcRadius);
@@ -56,17 +60,21 @@ private:
 	void			Pooling_SlashPoint(const _matrix* pMatrix, _bool bIsSmash = false);
 
 private:
-	SCENE_ID		m_eSceneID = SCENE_END;
+	_bool				m_bCollisionFrame = false;
+	_bool				m_bCanCollision = false;
+	_bool				m_bNextStageLoad = false;
 
-	CPlayer*		m_pPlayer = nullptr;
-	CAhglan*		m_pAhglan = nullptr;
-	CStickyBomb*	m_pStickyBomb = nullptr;
+	SCENE_ID			m_eSceneID = SCENE_END;
+
+	CPlayer*			m_pPlayer = nullptr;
+	CAhglan*			m_pAhglan = nullptr;
+	CStickyBomb*		m_pStickyBomb = nullptr;
 	CWall_Collision*	m_pWall = nullptr;
 
-	CTransform*		m_pPlayerTrans = nullptr;
+	CTransform*			m_pPlayerTrans = nullptr;
 
-	PL_STATE		m_ePlayerCurState = STATE_END;
-	PL_STATE		m_ePlayerPreState = STATE_END;
+	PL_STATE			m_ePlayerCurState = STATE_END;
+	PL_STATE			m_ePlayerPreState = STATE_END;
 
 	list<CBoxCollider*>		m_listEnemyDamagedCol;
 

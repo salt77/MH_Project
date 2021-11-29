@@ -36,6 +36,7 @@ HRESULT CDynamicCamera::Ready_Object(const _vec3* pEye, const _vec3* pAt, const 
 	m_fFar = fFar;
 
 	FAILED_CHECK_RETURN(CCamera::Ready_Object(), E_FAIL);
+	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	CComponent* pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Clone_Prototype(L"Proto_Transform"));
 	NULL_CHECK_RETURN(m_pTransformCom, E_FAIL);
@@ -89,6 +90,7 @@ Engine::_int CDynamicCamera::Update_Object(const _float& fTimeDelta)
 		Mouse_Fix();
 	}
 	Highlight_SkillShot();
+	//SetOn_Terrain();
 	Mouse_Move();
 	CutScene_Eye(fTimeDelta);
 
@@ -106,29 +108,33 @@ _int CDynamicCamera::LateUpdate_Object(const _float & fTimeDelta)
 	return iExit;
 }
 
-//HRESULT CDynamicCamera::Add_Component()
-//{
-//	CComponent*		pComponent = nullptr;
-//
-//	// Calculator
-//	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Clone_Prototype(L"Proto_Calculator"));
-//	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
-//	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
-//
-//	return S_OK;
-//}
+HRESULT CDynamicCamera::Add_Component()
+{
+	CComponent*		pComponent = nullptr;
 
-//void CDynamicCamera::SetOn_Terrain()
-//{
-//	_vec3		vPos;
-//	m_pTransformCom->Get_INFO(INFO_POS, &vPos);
-//
-//	CTerrainTex*	pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(L"GameLogic", L"Terrain", L"Com_Buffer", ID_STATIC));
-//	NULL_CHECK(pTerrainBufferCom);
-//
-//	_float fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos(), VTXCNTX, VTXCNTZ);
-//	m_pTransformCom->Set_Pos(vPos.x, fHeight, vPos.z);
-//}
+	// Calculator
+	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Clone_Prototype(L"Proto_Calculator"));
+	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
+
+	return S_OK;
+}
+
+void CDynamicCamera::SetOn_Terrain()
+{
+	if (SCENE_STAGE == Engine::Get_SceneID())
+	{
+		if (0.1f >= m_vEye.y)
+		{
+			CTerrainTex*	pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(L"GameLogic", L"Terrain", L"Com_Buffer", ID_STATIC));
+			NULL_CHECK(pTerrainBufferCom);
+
+			_float fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&m_vEye, pTerrainBufferCom->Get_VtxPos(), VTXCNTX, VTXCNTZ);
+
+			m_vEye.y = fHeight + 0.1f;
+		}
+	}
+}
 
 _vec3 CDynamicCamera::Get_CamDirVector(DIR eDir)
 {
@@ -308,6 +314,11 @@ void CDynamicCamera::Mode_Change(const _float& fTimeDelta)
 		if (m_dwCompleteTime + 6100 < GetTickCount())
 			m_eCurMode = MODE_NORMAL;
 		break;
+
+	case CDynamicCamera::MODE_BALISTA_HIGHLIGHT:
+		if (m_dwBalistaStart + m_dwBalistaDelay < GetTickCount())
+			m_eCurMode = MODE_NORMAL;
+		break;
 	}
 
 
@@ -339,6 +350,11 @@ void CDynamicCamera::Mode_Change(const _float& fTimeDelta)
 				_vec3	vDir = -*m_pPlayerTrans->Get_Info(INFO_LOOK);
 
 				m_vEye = vPos + vDir * m_fDistanceFromTarget;
+			}
+			else if (MODE_BALISTA_HIGHLIGHT == m_ePreMode)
+			{
+				m_eCurMode = MODE_NORMAL;
+				m_vEye.y = m_vAt.y - 0.5f;
 			}
 			break;
 
@@ -373,6 +389,9 @@ void CDynamicCamera::Mode_Change(const _float& fTimeDelta)
 				m_vEye = *D3DXVec3Normalize(&(-*pBossTrans->Get_Info(INFO_RIGHT)), &(-*pBossTrans->Get_Info(INFO_RIGHT))) * (m_fDistanceFromTarget);
 				m_dwCompleteTime = GetTickCount();
 			}
+			break;
+
+		case CDynamicCamera::MODE_BALISTA_HIGHLIGHT:
 			break;
 		}
 
@@ -469,10 +488,6 @@ void CDynamicCamera::At_Update(const _float& fTimeDelta)
 					m_vAt = *pBaliTrans->Get_Info(INFO_POS);
 				}
 			}
-			else
-			{
-				m_eCurMode = MODE_NORMAL;
-			}
 		}
 	}
 }
@@ -542,6 +557,20 @@ void CDynamicCamera::Mouse_Move(void)
 				D3DXMatrixRotationAxis(&matRotate, &vPlayerUp, D3DXToRadian(dwMouse * 0.1f));
 				D3DXVec3TransformCoord(&vDirToCam, &vDirToCam, &matRotate);
 			}
+
+			//if (SCENE_STAGE == Engine::Get_SceneID())
+			//{
+			//	if (0.1f >= m_vEye.y)
+			//	{
+			//		_vec3	vPos = m_vEye;
+			//		vPos.y = 0.1f;
+			//		m_fDistanceFromTarget = D3DXVec3Length(&(m_vAt - vPos));
+			//	}
+			//	else
+			//	{
+			//		m_fDistanceFromTarget = m_fOriginDistanceFromTarget;
+			//	}
+			//}
 
 			m_vEye = m_vAt + vDirToCam * m_fDistanceFromTarget;
 			m_vVirtualEye = m_vAt + vDirToCam * m_fOriginDistanceFromTarget;

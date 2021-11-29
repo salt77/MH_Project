@@ -238,14 +238,29 @@
     <Filter Include="02.GameObject\08.Dummy\02.Wall_Collision">
       <UniqueIdentifier>{6a693bca-6d36-4839-8732-72495a2993c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\08.Dummy\03.">
-      <UniqueIdentifier>{691356c5-1816-42b9-a7e8-1f9a1b734996}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\15.Box">
       <UniqueIdentifier>{8dc53edc-bb13-482b-9e02-a9f373e9ddda}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\09.UI\04.StageUI\03.Annouce_Balista">
       <UniqueIdentifier>{8614b21a-200f-45a1-ae12-1a6a568ce550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI\03.Annouce_Balista\01.Ready">
+      <UniqueIdentifier>{398baa92-6579-4459-a4eb-17bcd1b4652c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI\03.Annouce_Balista\00.Fire">
+      <UniqueIdentifier>{61ee5b6c-1b47-4293-95a6-74390801da64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\10.Trail_Sword\00.Normal">
+      <UniqueIdentifier>{98faf5a3-2603-421c-97ab-8767cf27201f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\10.Trail_Sword\01.Smash">
+      <UniqueIdentifier>{a9ad39ab-049d-4b2f-85b6-004bff321386}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\16.Wall_Symbol">
+      <UniqueIdentifier>{691356c5-1816-42b9-a7e8-1f9a1b734996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Dummy\03.LastRoom_Trigger">
+      <UniqueIdentifier>{4b70b00d-2c45-4039-9f48-22395f534369}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -360,9 +375,6 @@
     <ClInclude Include="..\Codes\Player_Buff_CriticalUI.h">
       <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Trail_Sword.h">
-      <Filter>02.GameObject\10.Trail_Sword</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\DamageFont.h">
       <Filter>02.GameObject\11.DamageFont</Filter>
     </ClInclude>
@@ -439,7 +451,22 @@
       <Filter>02.GameObject\15.Box</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Announce_Balista.h">
-      <Filter>02.GameObject\09.UI\04.StageUI\03.Annouce_Balista</Filter>
+      <Filter>02.GameObject\09.UI\04.StageUI\03.Annouce_Balista\00.Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Announce_Balista_Ready.h">
+      <Filter>02.GameObject\09.UI\04.StageUI\03.Annouce_Balista\01.Ready</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Trail_Sword.h">
+      <Filter>02.GameObject\10.Trail_Sword\00.Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Trail_Smash.h">
+      <Filter>02.GameObject\10.Trail_Sword\01.Smash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Wall_Symbol.h">
+      <Filter>02.GameObject\16.Wall_Symbol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\LastRoom_Trigger.h">
+      <Filter>02.GameObject\08.Dummy\03.LastRoom_Trigger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -539,9 +566,6 @@
     <ClCompile Include="..\Codes\Player_Buff_CriticalUI.cpp">
       <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Trail_Sword.cpp">
-      <Filter>02.GameObject\10.Trail_Sword</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\DamageFont.cpp">
       <Filter>02.GameObject\11.DamageFont</Filter>
     </ClCompile>
@@ -624,7 +648,22 @@
       <Filter>02.GameObject\15.Box</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Announce_Balista.cpp">
-      <Filter>02.GameObject\09.UI\04.StageUI\03.Annouce_Balista</Filter>
+      <Filter>02.GameObject\09.UI\04.StageUI\03.Annouce_Balista\00.Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Announce_Balista_Ready.cpp">
+      <Filter>02.GameObject\09.UI\04.StageUI\03.Annouce_Balista\01.Ready</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Trail_Sword.cpp">
+      <Filter>02.GameObject\10.Trail_Sword\00.Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Trail_Smash.cpp">
+      <Filter>02.GameObject\10.Trail_Sword\01.Smash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Wall_Symbol.cpp">
+      <Filter>02.GameObject\16.Wall_Symbol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\LastRoom_Trigger.cpp">
+      <Filter>02.GameObject\08.Dummy\03.LastRoom_Trigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

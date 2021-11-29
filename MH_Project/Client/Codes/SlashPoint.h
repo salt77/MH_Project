@@ -18,7 +18,7 @@ public:
 	virtual void	Render_Object() override;
 
 private:
-	HRESULT			Add_Component(void);
+	HRESULT			Add_Component();
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 public:

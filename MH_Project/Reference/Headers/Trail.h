@@ -16,18 +16,15 @@ public:
 	virtual void	Render_Buffer() override;
 
 public:
-	//void		SetVertexTrail(const _vec3* pPos, const _ulong& dwCnt);
 	void		Management_Point();
-	//void		Clear_TrailBuffer() { m_listPoint.clear(); }
 
 public:
-	void		Set_InfoForTrail(const _float& fDeltaTime, const _vec3& vWeaponLower, const _vec3& vWeaponUpper, const _matrix* pMatWeapon/*, _ulong dwVtxCnt = 30*/)
+	void		Set_InfoForTrail(const _float& fDeltaTime, const _vec3& vWeaponLower, const _vec3& vWeaponUpper, const _matrix* pMatWeapon)
 	{
 		m_fDeltaTime = fDeltaTime;
 		m_vWeaponLower = vWeaponLower;
 		m_vWeaponUpper = vWeaponUpper;
 		m_pMatWeapon = pMatWeapon;
-		//m_dwVtxCnt = dwVtxCnt;
 
 		Management_Point();
 	}

@@ -15,7 +15,7 @@ CBackGround::CBackGround(const CBackGround& rhs)
 
 }
 
-CBackGround::~CBackGround(void)
+CBackGround::~CBackGround()
 {
 
 }
@@ -41,13 +41,28 @@ _int CBackGround::Update_Object(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CBackGround::Render_Object(void)
+void CBackGround::Render_Object()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
-	m_pTextureCom->Set_Texture();
+	LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
+	pEffect->AddRef();
 
+	FAILED_CHECK_RETURN(SetUp_ConstantTable(pEffect), );
+
+	_uint iMaxPass = 0;
+
+	pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
+											// 2인자 : 시작하는 방식을 묻는 FLAG
+	pEffect->BeginPass(0);
+
+	m_pTextureCom->Set_Texture();
 	m_pBufferCom->Render_Buffer();
+
+	pEffect->EndPass();
+	pEffect->End();
+
+	Safe_Release(pEffect);
 }
 
 CBackGround* CBackGround::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iTexIndex)
@@ -60,12 +75,12 @@ CBackGround* CBackGround::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iTexIndex)
 	return pInstance;
 }
 
-void CBackGround::Free(void)
+void CBackGround::Free()
 {
 	CGameObject::Free();
 }
 
-HRESULT CBackGround::Add_Component(void)
+HRESULT CBackGround::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
 	
@@ -98,6 +113,22 @@ HRESULT CBackGround::Add_Component(void)
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Clone_Prototype(L"Proto_Transform"));
 	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].emplace(L"Com_Transform", pComponent);
+
+	// Shader
+	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Clone_Prototype(L"Proto_Shader_BackGround"));
+	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
+	m_mapComponent[ID_DYNAMIC].emplace(L"Com_Shader", pComponent);
+
+	return S_OK;
+}
+
+HRESULT CBackGround::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
+{
+	_matrix		matWorld, matView, matProj;
+
+	m_pTransformCom->Get_WorldMatrix(&matWorld);
+
+	pEffect->SetMatrix("g_matWorld", &matWorld);
 
 	return S_OK;
 }

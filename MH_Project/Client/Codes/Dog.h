@@ -56,6 +56,7 @@ private:
 	void			Animation_Control();
 	void			Collision_Control();
 	void			Dissolve(const _float& fTimeDelta);
+	void			Update_State();
 	const _ulong&	Compute_InCell();
 
 	// °´Ã¼ ÇÔ¼öµé

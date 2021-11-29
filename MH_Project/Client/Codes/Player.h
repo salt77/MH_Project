@@ -10,15 +10,16 @@ class CDynamicMesh;
 class CTransform;
 class CRenderer;
 class CCalculator;
-class CCollider;
 class CNaviMesh;
 class CShader;
+class CTexture;
 
 END
 
 class CDynamicCamera;
 class CAhglan;
 class CTrail_Sword;
+class CTrail_Smash;
 class CRadialBlur;
 class CPlayer_Hpbar_ValueUI;
 class CPlayer_Hpbar_LerpUI;
@@ -30,7 +31,7 @@ class CPlayer : public CGameObject
 private:
 	explicit CPlayer(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CPlayer(const CPlayer& rhs);
-	virtual ~CPlayer(void);
+	virtual ~CPlayer();
 
 public:
 	virtual HRESULT Ready_Object() override;
@@ -44,6 +45,7 @@ public:
 	const _bool&	Get_CanHit() { return m_bCanHit; }
 	const PL_STATE&	Get_CurState() { return m_eCurState; }
 	const PL_ACTION&	Get_CurAction() { return m_eCurAction; }
+	const _float&	Get_PlayerSpeed() { return m_fSpeed; }
 
 public:
 	void			Set_CanHit(_bool bValue) { m_bCanHit = bValue; }
@@ -57,7 +59,7 @@ public:
 			m_dwSteminaRecoveryTime = GetTickCount();
 		}
 	}
-
+	void			Set_PushState(_bool bValue) { m_bPush = bValue; }
 	virtual	void	Set_Damage(_int iDamage, const _matrix* pMatDamageFontPos, _bool bFront = false);
 
 private:
@@ -101,6 +103,7 @@ private:
 	_bool			m_bStopMotion = false;
 	_bool			m_bAnimation = true;
 	_bool			m_bBalistaFire = false;
+	_bool			m_bPush = false;
 
 	_uint			m_iAniIndex = (_uint)STATE_IDLE;
 	_uint			m_iSecondaryCount = 0;
@@ -109,6 +112,7 @@ private:
 	_uint			m_iBalistaFireCount = 0;
 
 	_float			m_fSpeed = 3.f;
+	_float			m_fOriginSpeed = 3.f;
 	_float			m_fSkillMoveSpeed = 0.f;
 	_float			m_fAniTime = 0.f;
 	_float			m_fSkillMoveStartTime = 0.f;
@@ -157,7 +161,6 @@ private:
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
 	CCalculator*	m_pCalculatorCom = nullptr;
-	CCollider*		m_pColliderCom = nullptr;
 	CNaviMesh*		m_pNaviMeshCom = nullptr;
 	CShader*		m_pShaderCom = nullptr;
 
@@ -168,6 +171,8 @@ private:
 	CLayer*			m_pOtherLayer = nullptr;
 	CTrail_Sword*	m_pTrailSwordL = nullptr;
 	CTrail_Sword*	m_pTrailSwordR = nullptr;
+	CTrail_Smash*	m_pTrailSmashL = nullptr;
+	CTrail_Smash*	m_pTrailSmashR = nullptr;
 	CRadialBlur*	m_pRadialBlur = nullptr;
 	CPlayer_Hpbar_ValueUI*	m_pHpbarValueUI = nullptr;
 	CPlayer_Hpbar_LerpUI*	m_pHpbarLerpUI = nullptr;

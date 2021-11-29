@@ -37,7 +37,7 @@ _int CTrail_Sword::Update_Object(const _float& fTimeDelta)
 
 void CTrail_Sword::Render_Object(void)
 {
-	m_pTrailCom->Set_InfoForTrail(m_fDeltaTime, m_vWeaponLower, m_vWeaponUpper, m_pMatWeapon/*, m_dwMaxVtxCnt*/);
+	m_pTrailCom->Set_InfoForTrail(m_fDeltaTime, m_vWeaponLower, m_vWeaponUpper, m_pMatWeapon);
 
 	if (m_bRender)
 	{

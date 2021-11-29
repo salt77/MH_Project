@@ -49,7 +49,7 @@ HRESULT CBalista::LateReady_Object()
 		m_fSpeedDown = 100.f;
 		m_dwSurviveDelay = 5000;
 
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(60.f));
+		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(70.f));
 		m_pTransformCom->Rotation(ROT_X, D3DXToRadian(-65.f));
 
 		m_pMainCam = dynamic_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
@@ -147,29 +147,37 @@ void CBalista::Render_Object()
 
 	if (SCENE_STAGE == m_eCurSceneID)
 	{
-		m_pTrailCom->Set_InfoForTrail(m_fTimeDelta, m_mapBoxColliderCom.begin()->second->Get_Min(), m_mapBoxColliderCom.begin()->second->Get_Max(), m_mapBoxColliderCom.begin()->second->Get_ColliderWorld());
+		//_vec3	vMin = m_mapBoxColliderCom.begin()->second->Get_Min();
+		//_vec3	vMax = m_mapBoxColliderCom.begin()->second->Get_Max();
+		//vMin.x = -1.f;
+		//vMin.y = -1.f;
+		////vMin.z = -1.f;
+		//vMax.x = 1.f;
+		//vMax.y = 1.f;
+		//vMax.z = 1.f;
+		//m_pTrailCom->Set_InfoForTrail(m_fTimeDelta, vMin, vMax, m_mapBoxColliderCom.begin()->second->Get_ColliderWorld());
 
-		if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS) && 
-			!m_bEnemyHit)
-		{
-			LPD3DXEFFECT	 pEffect = m_pTrailShaderCom->Get_EffectHandle();
-			pEffect->AddRef();
+		//if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS) && 
+		//	!m_bEnemyHit)
+		//{
+		//	LPD3DXEFFECT	 pEffect = m_pTrailShaderCom->Get_EffectHandle();
+		//	pEffect->AddRef();
 
-			FAILED_CHECK_RETURN(SetUp_ConstantTable_ForTrail(pEffect), );
+		//	FAILED_CHECK_RETURN(SetUp_ConstantTable_ForTrail(pEffect), );
 
-			_uint iMaxPass = 0;
+		//	_uint iMaxPass = 0;
 
-			pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
-													// 2인자 : 시작하는 방식을 묻는 FLAG
-			pEffect->BeginPass(0);
+		//	pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
+		//											// 2인자 : 시작하는 방식을 묻는 FLAG
+		//	pEffect->BeginPass(0);
 
-			m_pTrailCom->Render_Buffer();
+		//	m_pTrailCom->Render_Buffer();
 
-			pEffect->EndPass();
-			pEffect->End();
+		//	pEffect->EndPass();
+		//	pEffect->End();
 
-			Safe_Release(pEffect);
-		}
+		//	Safe_Release(pEffect);
+		//}
 	}
 }
 
@@ -214,7 +222,7 @@ HRESULT CBalista::Add_Component_ForTrail()
 		CComponent*		pComponent = nullptr;
 
 		// Buffer
-		pComponent = m_pTrailCom = dynamic_cast<CTrail*>(Clone_Prototype(L"Proto_Buffer_Trail"));
+		pComponent = m_pTrailCom = dynamic_cast<CBalistaTrail*>(Clone_Prototype(L"Proto_Buffer_BalistaTrail"));
 		NULL_CHECK_RETURN(m_pTrailCom, E_FAIL);
 		m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
 

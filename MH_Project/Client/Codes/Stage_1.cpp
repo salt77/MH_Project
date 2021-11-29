@@ -13,6 +13,7 @@
 #include "Cloyan_Info.h"
 
 #include "Trail_Sword.h"
+#include "Trail_Smash.h"
 #include "SlashPoint.h"
 #include "CriticalEfx.h"
 #include "RadialBlur.h"
@@ -20,9 +21,12 @@
 #include "Trap.h"
 #include "Balista.h"
 #include "Wall_Collision.h"
+#include "Wall_Symbol.h"
 #include "Box.h"
+#include "LastRoom_Trigger.h"
 
 #include "Export_Function.h"
+#include "Logo.h"
 
 CStage_1::CStage_1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -47,6 +51,8 @@ HRESULT CStage_1::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_Effect(L"Effect"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Balista(L"Balista"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Box(L"Box"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Symbol(L"Symbol"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Trigger(L"Trigger"), E_FAIL);
 
 	return S_OK;
 }
@@ -62,10 +68,10 @@ HRESULT CStage_1::LateReady_Scene()
 	FAILED_CHECK_RETURN(Load_NaviMesh(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
 
 	m_mapLayer.emplace(L"GameLogic_Spawn", m_pSpawnLayer);
 	m_mapLayer.emplace(L"Enemies", m_pEnemyLayer);
@@ -81,7 +87,9 @@ Engine::_int CStage_1::Update_Scene(const _float& fTimeDelta)
 
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 
-	CCollisionMgr::GetInstance()->Update_CollisionMgr();
+	Load_NextStage();
+
+	CCollisionMgr::GetInstance()->Update_CollisionMgr(fTimeDelta);
 
 	return iExit;
 }
@@ -117,18 +125,18 @@ HRESULT CStage_1::Ready_Layer_Environment(const wstring pLayerTag)
 
 	// DynamicCamera
 	pGameObject = CDynamicCamera::Create(m_pGraphicDev,
-		&_vec3(0.f, 1.5f, 13.f),
-		&_vec3(0.f, 0.f, 1.f),
-		&_vec3(0.f, 1.f, 0.f),
-		D3DXToRadian(60.f), (_float)WINCX / WINCY,
-		0.1f, 1000.f);
+				  &_vec3(0.f, 1.5f, 13.f),
+				  &_vec3(0.f, 0.f, 1.f),
+				  &_vec3(0.f, 1.f, 0.f),
+				  D3DXToRadian(60.f), (_float)WINCX / WINCY,
+				  0.1f, 300.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"DynamicCamera", pGameObject), E_FAIL);
 
-	//// SkyBox
-	//pGameObject = CSkyBox::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
+	// SkyBox
+	pGameObject = CSkyBox::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
@@ -170,6 +178,15 @@ HRESULT CStage_1::Ready_Layer_GameLogic(const wstring pLayerTag)
 	pGameObject = CTrail_Sword::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Sword_Trail2", pGameObject), E_FAIL);
+
+	// Trail_Smash
+	pGameObject = CTrail_Smash::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Smash_Trail", pGameObject), E_FAIL);
+
+	pGameObject = CTrail_Smash::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Smash_Trail2", pGameObject), E_FAIL);
 
 	// Trap
 	pGameObject = CTrap::Create(m_pGraphicDev);
@@ -318,6 +335,38 @@ HRESULT CStage_1::Ready_Layer_Box(const wstring pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Box_2", pGameObject), E_FAIL);
 
 	dynamic_cast<CTransform*>(pGameObject->Get_Component(L"Com_Transform", ID_DYNAMIC))->Set_Pos(&BOX_2_POS);
+
+	m_mapLayer.emplace(pLayerTag, pLayer);
+
+	return S_OK;
+}
+
+HRESULT CStage_1::Ready_Layer_Symbol(const wstring pLayerTag)
+{
+	CLayer*		pLayer = CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	CGameObject*	pGameObject = nullptr;
+
+	pGameObject = CWall_Symbol::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall_Symbol", pGameObject), E_FAIL);
+
+	m_mapLayer.emplace(pLayerTag, pLayer);
+
+	return S_OK;
+}
+
+HRESULT CStage_1::Ready_Layer_Trigger(const wstring pLayerTag)
+{
+	CLayer*		pLayer = CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	CGameObject*	pGameObject = nullptr;
+
+	pGameObject = CLastRoom_Trigger::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Trigger_LastRoom", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
@@ -807,6 +856,47 @@ HRESULT CStage_1::Load_NaviMesh()
 	return S_OK;
 }
 
+HRESULT CStage_1::Load_NextStage()
+{
+	if (m_bReadyToLoadStage)
+	{
+		CFadeInOut*		pFadeInOut = static_cast<CFadeInOut*>(Engine::Get_GameObject(L"UI", L"FadeInOut_UI"));
+
+		if (pFadeInOut)
+		{
+			m_fFadeOutRatio += FADEOUTSPEED * 20.f ;
+			pFadeInOut->Set_ValueRatio(m_fFadeOutRatio);
+		}
+
+		if (1.f <= m_fFadeOutRatio)
+		{
+			// 메인 보스 스테이지로 로드하는 코드 작성하기 
+			Engine::Clear_Prototype_ForNextStage();
+			CScene*		pScene = CLogo::Create(Engine::Get_CurSceneDevice(), 0);
+			NULL_CHECK(pScene);
+
+			CManagement*	pManagement = nullptr;
+			Engine::Get_Management(&pManagement);
+			FAILED_CHECK_RETURN(pManagement->Set_Scene(pScene), );
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CStage_1::Delete_ForNextStage()
+{
+	map<const wstring, CLayer*>::iterator	iter = m_mapLayer.begin();
+
+	for (; iter != m_mapLayer.end(); ++iter)
+	{
+		Safe_Release(iter->second);
+		m_mapLayer.erase(iter->first);
+	}
+
+	return S_OK;
+}
+
 CStage_1* CStage_1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CStage_1*	pInstance = new CStage_1(pGraphicDev);
@@ -817,11 +907,13 @@ CStage_1* CStage_1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pInstance;
 }
 
-void CStage_1::Free(void)
+void CStage_1::Free()
 {
 	Safe_Release(m_pLayer);
 	Safe_Release(m_pSpawnLayer);
 	Safe_Release(m_pEnemyLayer);
+
+	
 
 	CCollisionMgr::DestroyInstance();
 

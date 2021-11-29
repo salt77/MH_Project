@@ -8,13 +8,12 @@
 CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
 {
-
 }
 
-CLogo::~CLogo(void)
+CLogo::~CLogo()
 {
-
 }
+
 
 HRESULT CLogo::Ready_Scene(_uint iStageNum)
 {
@@ -91,7 +90,7 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CLogo::Render_Scene(void)
+void CLogo::Render_Scene()
 {
 	Render_Font(L"Font_Nanumgothic_Bold", m_pLoading->Get_String(), &_vec2(SCREEN_CENTER_X - 390.f, LOADINGBAR_Y - 60.f), D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 }
@@ -137,7 +136,7 @@ HRESULT CLogo::Ready_Layer_UI(const wstring pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLogo::Ready_Prototype(void)
+HRESULT CLogo::Ready_Prototype()
 {
 	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Buffer_TriCol", CTriCol::Create(m_pGraphicDev)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Prototype(L"Proto_Buffer_RcTex", CRcTex::Create(m_pGraphicDev)), E_FAIL);
@@ -243,7 +242,7 @@ CLogo* CLogo::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iStageNum)
 	return pInstance;
 }
 
-void CLogo::Free(void)
+void CLogo::Free()
 {
 	Safe_Release(m_pLoading);
 

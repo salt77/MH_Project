@@ -20,6 +20,14 @@ inline CComponent * Get_MFCComponent(const wstring pLayerTag, const wstring pObj
 {
 	return CManagement::GetInstance()->Get_MFCComponent(pLayerTag, pObjTag, pComponentTag, eID);
 }
+inline CScene * Get_CurrentScenePointer()
+{
+	return CManagement::GetInstance()->Get_CurrentScenePointer();
+}
+inline LPDIRECT3DDEVICE9 & Get_CurSceneDevice()
+{
+	return CManagement::GetInstance()->Get_CurSceneDevice();
+}
 inline CGameObject * Get_GameObject(const wstring pLayerTag, const wstring pObjTag)
 {
 	return CManagement::GetInstance()->Get_GameObject(pLayerTag, pObjTag);
@@ -67,6 +75,16 @@ HRESULT		Create_Management(LPDIRECT3DDEVICE9& pGraphicDev, CManagement** ppManag
 	return S_OK;
 }
 
+inline HRESULT Get_Management(CManagement ** ppManagement)
+{
+	CManagement*	pManagement = CManagement::GetInstance();
+	NULL_CHECK_RETURN(pManagement, E_FAIL);
+
+	*ppManagement = pManagement;
+
+	return S_OK;
+}
+
 HRESULT		Set_Scene(CScene* pScene)
 {
 	return CManagement::GetInstance()->Set_Scene(pScene);
@@ -80,11 +98,23 @@ void			Render_Scene(LPDIRECT3DDEVICE9& pGraphicDev)
 	CManagement::GetInstance()->Render_Scene(pGraphicDev);
 }
 
+inline void Release_CurrentScene()
+{
+	CManagement::GetInstance()->Release_CurrentScene();
+}
+
+inline HRESULT Ready_Prototype_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
+{
+	CManagement::GetInstance()->Ready_Prototype_Shader(pGraphicDev);
+
+	return S_OK;
+}
+
 inline _float Random(_float _fMin, _float _fMax)
 {
 	random_device rd;
 
-	mt19937 engine(rd());						// MT19937 난수 엔진
+	mt19937 engine(rd());
 	uniform_real_distribution<_float> distribution(_fMin, _fMax);    // 생성 범위
 	auto generator = bind(distribution, engine);
 
@@ -118,6 +148,13 @@ CComponent* Clone_Prototype(const wstring pProtoTag)
 inline HRESULT Delete_Prototype(const wstring pProtoTag)
 {
 	CProtoMgr::GetInstance()->Delete_Prototype(pProtoTag);
+
+	return S_OK;
+}
+
+inline HRESULT Clear_Prototype_ForNextStage()
+{
+	CProtoMgr::GetInstance()->Clear_Prototype_ForNextStage();
 
 	return S_OK;
 }

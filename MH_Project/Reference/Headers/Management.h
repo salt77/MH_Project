@@ -10,8 +10,8 @@ class ENGINE_DLL CManagement : public CBase
 	DECLARE_SINGLETON(CManagement)
 
 private:
-	explicit CManagement(void);
-	virtual ~CManagement(void);
+	explicit CManagement();
+	virtual ~CManagement();
 
 	// MFC
 public:
@@ -24,17 +24,21 @@ public:
 	// Client
 public:
 	HRESULT			Ready_Shader(LPDIRECT3DDEVICE9& pGraphicDev);
+	HRESULT			Ready_Prototype_Shader(LPDIRECT3DDEVICE9& pGraphicDev);
 
 public:
 	CGameObject*	Get_GameObject(const wstring pLayerTag, const wstring pObjTag);
 	CComponent*		Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
 	const SCENE_ID&	Get_SceneID();
 	const map<const wstring, CLayer*>&	Get_MapLayer();
-	CLayer*	Get_Layer(const wstring wstrLayerTag);
+	CLayer*			Get_Layer(const wstring wstrLayerTag);
 	const map<const wstring, CGameObject*>&	Get_MapObject(const wstring wstrLayerTag);
+	LPDIRECT3DDEVICE9&	Get_CurSceneDevice() { return m_pScene->Get_Device(); }
+	CScene*			Get_CurrentScenePointer() { return m_pScene; }
 
 public:
 	HRESULT			Set_Scene(CScene* pScene);
+	void			Release_CurrentScene() { Safe_Release(m_pScene); }
 	void			Emplace_Layer(const wstring wstrLayerTag, CLayer* pLayer);
 	void			Delete_Layer(const wstring wstrLayerTag, const wstring wstrObjTag);
 	void			Delete_AllInLayer(const wstring wstrLayerTag);
@@ -48,8 +52,7 @@ private:
 	CScene*			m_pScene = nullptr;
 
 public:
-	virtual void Free(void);
-
+	virtual void Free();
 };
 
 END

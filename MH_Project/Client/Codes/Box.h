@@ -8,6 +8,7 @@ BEGIN(Engine)
 class CStaticMesh;
 class CTexture;
 class CRenderer;
+class CNaviMesh;
 class CTransform;
 class CShader;
 
@@ -36,13 +37,19 @@ public:
 
 private:
 	HRESULT			Add_Component();
+	HRESULT			Add_NaviMesh();
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	HRESULT			Ready_Collider();
+	const _ulong&	Compute_InCell();
+
+public:
+	void			MoveOn_NaviMesh(_vec3 vDir, _float fSpeed, const _float& fTimeDelta);
 
 private:
 	CTransform*		m_pTransformCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
 	CStaticMesh*	m_pMeshCom = nullptr;
+	CNaviMesh*		m_pNaviMeshCom = nullptr;
 	CShader*		m_pShaderCom = nullptr;
 
 public:

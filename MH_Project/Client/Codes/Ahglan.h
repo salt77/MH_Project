@@ -79,6 +79,7 @@ private:
 	void			MoveOn_Skill();
 	void			RotationOn_Skill();
 	void			FootStep();
+	void			Announce();
 
 public:
 	HRESULT			Add_NaviMesh();
@@ -90,6 +91,7 @@ private:
 	_bool			m_bSkillMove = false;
 	_bool			m_bSkillRotation = false;
 	_bool			m_bAnimation = true;
+	_bool			m_bAnnounceBaliReady = false;
 
 	_uint			m_iAniIndex = (_uint)ENTRY_IDLE;
 

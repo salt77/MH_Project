@@ -119,7 +119,7 @@ void CSlashPoint::Render_Object()
 	}
 }
 
-HRESULT CSlashPoint::Add_Component(void)
+HRESULT CSlashPoint::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
 

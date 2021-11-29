@@ -25,6 +25,7 @@ public:
 	const map<const wstring, CBoxCollider*>&	Get_MapBoxCollider() { return m_mapBoxColliderCom; }
 
 public:
+	void					Set_Dead() { m_bDead = true; }
 	virtual		void		Set_Damage(_int iDamage);
 
 public:

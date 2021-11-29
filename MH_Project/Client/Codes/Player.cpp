@@ -7,6 +7,7 @@
 #include "StickyBomb.h"
 #include "Balista.h"
 #include "Trail_Sword.h"
+#include "Trail_Smash.h"
 #include "CriticalEfx.h"
 #include "RadialBlur.h"
 
@@ -34,7 +35,7 @@ CPlayer::CPlayer(const CPlayer& rhs)
 {
 }
 
-CPlayer::~CPlayer(void)
+CPlayer::~CPlayer()
 {
 }
 
@@ -118,6 +119,8 @@ HRESULT CPlayer::LateReady_Object()
 
 	m_pTrailSwordL = dynamic_cast<CTrail_Sword*>(Engine::Get_GameObject(L"GameLogic", L"Player_Sword_Trail"));
 	m_pTrailSwordR = dynamic_cast<CTrail_Sword*>(Engine::Get_GameObject(L"GameLogic", L"Player_Sword_Trail2"));
+	m_pTrailSmashL = dynamic_cast<CTrail_Smash*>(Engine::Get_GameObject(L"GameLogic", L"Player_Smash_Trail"));
+	m_pTrailSmashR = dynamic_cast<CTrail_Smash*>(Engine::Get_GameObject(L"GameLogic", L"Player_Smash_Trail2"));
 
 	m_pRadialBlur = dynamic_cast<CRadialBlur*>(Engine::Get_GameObject(L"Effect", L"Efx_RadiulBlur"));
 
@@ -125,6 +128,8 @@ HRESULT CPlayer::LateReady_Object()
 	m_pHpbarLerpUI = dynamic_cast<CPlayer_Hpbar_LerpUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Hpbar_LerpUI"));
 	m_pSteminabarValueUI = dynamic_cast<CPlayer_Steminabar_ValueUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Steminabar_ValueUI"));
 	m_pSpbarValueUI = dynamic_cast<CPlayer_Spbar_ValueUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Spbar_ValueUI"));
+
+	//m_pTransformCom->Set_Pos(&WALL_SYMBOL_POS);
 
 	m_pNaviMeshCom->Set_CellIndex(Compute_InCell());
 
@@ -145,18 +150,21 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	}
 	if (Key_Down('B'))
 	{
-		m_bBalistaFire = true;
-		m_iBalistaFireCount = 0;
+		if (SCENE_STAGE == Engine::Get_SceneID())
+		{
+			m_bBalistaFire = true;
+			m_iBalistaFireCount = 0;
 
+			CAnnounce_Balista*	pAnnounce = static_cast<CAnnounce_Balista*>(Engine::Get_GameObject(L"UI", L"Announce_BalistaAttack_UI"));
+			pAnnounce->Set_EnableAnnounce();
 
-		CAnnounce_Balista*	pAnnounce = static_cast<CAnnounce_Balista*>(Engine::Get_GameObject(L"UI", L"Announce_BalistaAttack_UI"));
-		pAnnounce->Set_EnableAnnounce();
-
-		m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_BALISTA_HIGHLIGHT);
+			m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_BALISTA_HIGHLIGHT);
+		}
 	}
 
-	_vec3 vPos;
-	vPos = *m_pTransformCom->Get_Info(INFO_POS);
+	//_vec3 vPos;
+	//vPos = *m_pTransformCom->Get_Info(INFO_POS);
+	//m_fSpeed = 9.f;
 
 	m_pMainCam = static_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
 
@@ -457,32 +465,10 @@ HRESULT CPlayer::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
-	D3DMATERIAL9		tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 10.f;
-
-	pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
-	pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
-	pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
-
-	pEffect->SetFloat("g_fPower", tMtrl.Power);
-
 	const D3DLIGHT9*	pLightInfo = Get_Light();
 	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
 
 	pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
-
-	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
-	pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
-	pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
-
-	D3DXMatrixInverse(&matView, NULL, &matView);
-	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
 
 	return S_OK;
 }
@@ -738,6 +724,11 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_pMainCam->Sync_PlayerPos(vMoveDir);
 
 			m_iAniIndex = STATE_RUN;
+
+			if (m_bPush)
+			{
+				m_iAniIndex = STATE_PUSH;
+			}
 		}
 
 		m_eCurAction = PL_MOVE;
@@ -827,7 +818,7 @@ void CPlayer::Compute_CanAction()
 		}
 	}
 	else if (m_eCurAction == PL_SMASH ||
-		m_eCurAction == PL_SKILL)
+			 m_eCurAction == PL_SKILL)
 	{
 		if (m_fAniTime < (m_lfAniEnd * 0.25f))
 		{
@@ -1321,6 +1312,15 @@ void CPlayer::Make_TrailEffect(const _float& fDeltaTime)
 
 	for (; iter != m_mapBoxColliderCom.end(); ++iter)
 	{
+		if (L"Hit_LHand" == iter->first)
+		{
+			// 축을 맞춰주기 위해서 반대로 매개변수를 줬다. 
+			m_pTrailSmashL->Set_InfoForTrail(fDeltaTime, iter->second->Get_Max(), iter->second->Get_Min(), iter->second->Get_ColliderWorld());
+		}
+		else if (L"Hit_RHand" == iter->first)
+		{
+			m_pTrailSmashR->Set_InfoForTrail(fDeltaTime, iter->second->Get_Min(), iter->second->Get_Max(), iter->second->Get_ColliderWorld());
+		}
 		if (STATE_SMASH4 == m_eCurState)
 		{
 			if (L"Hit_LHandLong" == iter->first)
@@ -1353,13 +1353,23 @@ void CPlayer::Make_TrailEffect(const _float& fDeltaTime)
 		PL_SKILL == m_eCurAction) &&
 		WEAPON_MODE::WEAPON_SECONDARY != m_eCurWeaponMode)
 	{
-		m_pTrailSwordL->Set_Render(true);
-		m_pTrailSwordR->Set_Render(true);
+		if (PL_SKILL == m_eCurAction)
+		{
+			m_pTrailSmashL->Set_Render(true);
+			m_pTrailSmashR->Set_Render(true);
+		}
+		else
+		{
+			m_pTrailSwordL->Set_Render(true);
+			m_pTrailSwordR->Set_Render(true);
+		}
 	}
 	else
 	{
 		m_pTrailSwordL->Set_Render(false);
 		m_pTrailSwordR->Set_Render(false);
+		m_pTrailSmashL->Set_Render(false);
+		m_pTrailSmashR->Set_Render(false);
 	}
 }
 
@@ -1434,7 +1444,7 @@ void CPlayer::Animation_Control()
 		m_pMeshCom->Set_TrackSpeed(1.8f);
 	}
 	else if (STATE_RUN == m_eCurState ||
-		STATE_SPRINT == m_eCurState)
+			 STATE_SPRINT == m_eCurState)
 	{
 		m_pMeshCom->Set_TrackSpeed(2.f);
 	}
@@ -1477,6 +1487,10 @@ void CPlayer::Animation_Control()
 		_uint	iRandSound = 0;
 		switch (m_eCurState)
 		{
+		case STATE_PUSH:
+			m_fSpeed = 0.75f;
+			break;
+
 		case STATE_FURY_NO2:
 			SKILL_MOVE_BYANI(0.1f, 3250.f, 0.2f);
 			++m_iFuryNo7Count;
@@ -1767,6 +1781,7 @@ void CPlayer::Animation_Control()
 		default:
 			SKILL_MOVE_END;
 
+			m_fSpeed = m_fOriginSpeed;
 			m_eNextAtk = STATE_ATK1;
 			//m_eNextSmash = STATE_DASHATK;
 			break;
@@ -1801,7 +1816,8 @@ void CPlayer::Animation_Control()
 			Engine::STATE_RUN == m_eCurState ||
 			Engine::STATE_SPRINT == m_eCurState ||
 			Engine::STATE_THROW_DURING == m_eCurState ||
-			Engine::STATE_TIRED_DURING == m_eCurState)
+			Engine::STATE_TIRED_DURING == m_eCurState || 
+			Engine::STATE_PUSH == m_eCurState)
 		{
 			m_bAnimation = true;
 		}
@@ -1819,6 +1835,9 @@ void CPlayer::Animation_Control()
 			break;
 
 		case Engine::STATE_DOWNIDLE_BACK:
+			break;
+
+		case Engine::STATE_PUSH:
 			break;
 
 		case Engine::STATE_DAMAGEFROM_FRONT:

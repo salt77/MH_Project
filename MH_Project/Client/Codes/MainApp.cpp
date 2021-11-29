@@ -27,9 +27,6 @@ _int CMainApp::Update_MainApp(const _float& fTimeDelta)
 
 	Update_InputDev();
 
-	if (Engine::Key_Down('P'))
-		CSoundMgr::GetInstance()->SetVolume(0.1f);
-
 	m_pManagementClass->Update_Scene(fTimeDelta);
 
 	return 0;
@@ -92,7 +89,7 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9& pGraphicDev, CManagement** ppMa
 	FAILED_CHECK_RETURN(Create_Management(pGraphicDev, ppManagement), E_FAIL);
 	(*ppManagement)->AddRef();
 	
-	pScene = CLogo::Create(pGraphicDev, 0);
+	pScene = CLogo::Create(pGraphicDev, 1);
 	NULL_CHECK_RETURN(pScene, E_FAIL);
 
 	FAILED_CHECK_RETURN((*ppManagement)->Set_Scene(pScene), E_FAIL);

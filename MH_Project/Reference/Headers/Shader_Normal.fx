@@ -91,4 +91,17 @@ technique Default_Technique
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_MAIN();
 	}
+
+	pass AlphaBlend_Cull_None
+	{
+		cullmode = none;
+
+		AlphaTestEnable = false;
+		AlphaBlendEnable = true;
+		srcblend = one;
+		destblend = one;
+
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_MAIN();
+	}
 };

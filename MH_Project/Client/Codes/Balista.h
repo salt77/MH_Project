@@ -10,7 +10,7 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CShader;
-class CTrail;
+class CBalistaTrail;
 
 END
 
@@ -54,7 +54,7 @@ private:
 	_bool			m_bEnemyHit = false;
 
 	_ulong			m_dwSurviveTime = GetTickCount();
-	_ulong			m_dwSurviveDelay = 500;
+	_ulong			m_dwSurviveDelay = 6000;
 
 	_float			m_fTimeDelta = 0.f;
 	_float			m_fAlphaValue = 1.f;
@@ -77,7 +77,7 @@ private:
 	CShader*		m_pShaderCom = nullptr;
 
 	// Trail Component
-	CTrail*			m_pTrailCom = nullptr;
+	CBalistaTrail*	m_pTrailCom = nullptr;
 	CTexture*		m_pTextureCom = nullptr;
 	CShader*		m_pTrailShaderCom = nullptr;
 

@@ -11,6 +11,7 @@
 #include "Boss_Hpbar_FontUI.h"
 #include "Ahglan_FontName.h"
 #include "Boss_NamingScene.h"
+#include "Announce_Balista_Ready.h"
 
 #include "Export_Function.h"
 #include "Export_Utility.h"
@@ -99,6 +100,7 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 	FootStep();
 	MoveOn_Skill();
 	RotationOn_Skill();
+	Announce();
 
 	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	if (m_bAnimation)
@@ -480,6 +482,21 @@ void CAhglan::FootStep()
 
 		SoundMgr(L"step_lv3.wav", CSoundMgr::MONSTER2);
 		m_pMainCamera->Set_CameraShake(false, CAMSHAKE_POWER * 1.3f);
+	}
+}
+
+void CAhglan::Announce()
+{
+	if (!m_bAnnounceBaliReady)
+	{
+		if (m_tInfo.iHp <= m_tInfo.iMaxHp * 0.7f)
+		{
+			m_bAnnounceBaliReady = true;
+
+			CAnnounce_Balista_Ready*	pAnnounce = static_cast<CAnnounce_Balista_Ready*>(Engine::Get_GameObject(L"UI", L"Announce_BalistaReady_UI"));
+
+			pAnnounce->Set_EnableAnnounce();
+		}
 	}
 }
 

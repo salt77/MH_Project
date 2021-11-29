@@ -159,6 +159,7 @@
     <ClInclude Include="..\Codes\Ahglan_FontName.h" />
     <ClInclude Include="..\Codes\Ahglan_StageUI.h" />
     <ClInclude Include="..\Codes\Announce_Balista.h" />
+    <ClInclude Include="..\Codes\Announce_Balista_Ready.h" />
     <ClInclude Include="..\Codes\Balista.h" />
     <ClInclude Include="..\Codes\Boss_Hpbar_BackUI.h" />
     <ClInclude Include="..\Codes\Boss_Hpbar_FontUI.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="..\Codes\EffectMgr.h" />
     <ClInclude Include="..\Codes\Knight.h" />
     <ClInclude Include="..\Codes\Knight_Info.h" />
+    <ClInclude Include="..\Codes\LastRoom_Trigger.h" />
     <ClInclude Include="..\Codes\Player_Buff_CriticalUI.h" />
     <ClInclude Include="..\Codes\Player_SlotUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_BackUI.h" />
@@ -211,10 +213,12 @@
     <ClInclude Include="..\Codes\Stage_1.h" />
     <ClInclude Include="..\Codes\StickyBomb.h" />
     <ClInclude Include="..\Codes\Terrain.h" />
+    <ClInclude Include="..\Codes\Trail_Smash.h" />
     <ClInclude Include="..\Codes\Trail_Sword.h" />
     <ClInclude Include="..\Codes\Trap.h" />
     <ClInclude Include="..\Codes\UI.h" />
     <ClInclude Include="..\Codes\Wall_Collision.h" />
+    <ClInclude Include="..\Codes\Wall_Symbol.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -225,6 +229,7 @@
     <ClCompile Include="..\Codes\Ahglan_FontName.cpp" />
     <ClCompile Include="..\Codes\Ahglan_StageUI.cpp" />
     <ClCompile Include="..\Codes\Announce_Balista.cpp" />
+    <ClCompile Include="..\Codes\Announce_Balista_Ready.cpp" />
     <ClCompile Include="..\Codes\Balista.cpp" />
     <ClCompile Include="..\Codes\Boss_Hpbar_BackUI.cpp" />
     <ClCompile Include="..\Codes\Boss_Hpbar_FontUI.cpp" />
@@ -245,6 +250,7 @@
     <ClCompile Include="..\Codes\EffectMgr.cpp" />
     <ClCompile Include="..\Codes\Knight.cpp" />
     <ClCompile Include="..\Codes\Knight_Info.cpp" />
+    <ClCompile Include="..\Codes\LastRoom_Trigger.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
     <ClCompile Include="..\Codes\Player_Buff_CriticalUI.cpp" />
     <ClCompile Include="..\Codes\Player_SlotUI.cpp" />
@@ -276,10 +282,12 @@
     <ClCompile Include="..\Codes\Stage_1.cpp" />
     <ClCompile Include="..\Codes\StickyBomb.cpp" />
     <ClCompile Include="..\Codes\Terrain.cpp" />
+    <ClCompile Include="..\Codes\Trail_Smash.cpp" />
     <ClCompile Include="..\Codes\Trail_Sword.cpp" />
     <ClCompile Include="..\Codes\Trap.cpp" />
     <ClCompile Include="..\Codes\UI.cpp" />
     <ClCompile Include="..\Codes\Wall_Collision.cpp" />
+    <ClCompile Include="..\Codes\Wall_Symbol.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -325,6 +325,8 @@ void CDog::MoveOn_Skill()
 
 void CDog::Animation_Control()
 {
+	Update_State();
+
 	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
 
@@ -570,6 +572,14 @@ void CDog::Dissolve(const _float & fTimeDelta)
 			m_pTransformCom->Set_Pos(&POOLING_POS);
 			//m_pTransformCom->Update_Component(m_fTimeDelta);
 		}
+	}
+}
+
+void CDog::Update_State()
+{
+	if (0 >= m_tInfo.iHp)
+	{
+		m_iAniIndex = DOGSTATE_DYING;
 	}
 }
 

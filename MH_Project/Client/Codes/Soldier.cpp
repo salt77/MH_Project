@@ -163,6 +163,7 @@ void CSoldier::Set_Damage(_int iDamage)
 		m_tInfo.iHp = 0;
 
 		m_iAniIndex = SOLSTATE_DYING;
+		m_pMeshCom->Set_TrackSpeed(1.f);
 	}
 }
 
@@ -353,6 +354,8 @@ void CSoldier::RotateLookVector()
 
 void CSoldier::Animation_Control()
 {
+	Update_State();
+
 	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
 
@@ -584,13 +587,21 @@ void CSoldier::Dissolve(const _float & fTimeDelta)
 {
 	if (m_bDissolveOn)
 	{
-		m_fDissolveValue += 0.25f * fTimeDelta;
+		m_fDissolveValue += 0.5f * fTimeDelta;
 
 		if (1.f <= m_fDissolveValue)
 		{
 			m_pTransformCom->Set_Pos(&POOLING_POS);
-			//m_pTransformCom->Update_Component(m_fTimeDelta);
 		}
+	}
+}
+
+void CSoldier::Update_State()
+{
+	if (0 >= m_tInfo.iHp)
+	{
+		m_iAniIndex = SOLSTATE_DYING;
+		m_pMeshCom->Set_TrackSpeed(1.f);
 	}
 }
 

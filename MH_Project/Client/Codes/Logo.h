@@ -17,19 +17,19 @@ class CLogo : public CScene
 {
 private:
 	explicit CLogo(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CLogo(void);
+	virtual ~CLogo();
 
 public:
 	virtual HRESULT Ready_Scene(_uint iStageNum);
 	virtual HRESULT	LateReady_Scene() override;
 	virtual _int	Update_Scene(const _float& fTimeDelta) override;
-	virtual void	Render_Scene(void) override;
+	virtual void	Render_Scene() override;
 
 private:
 	HRESULT				Ready_Layer_Environment(const wstring pLayerTag);
 	HRESULT				Ready_Layer_GameLogic(const wstring pLayerTag) { return S_OK; }
 	HRESULT				Ready_Layer_UI(const wstring pLayerTag);
-	HRESULT				Ready_Prototype(void);
+	HRESULT				Ready_Prototype();
 
 private:
 	void				Update_ProgressUI(const _float& fTimeDelta);
@@ -46,7 +46,7 @@ public:
 	static CLogo*		Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iStageNum = 0);
 
 private:
-	virtual void Free(void) override;
+	virtual void Free() override;
 
 };
 

@@ -115,6 +115,12 @@
     <Filter Include="04.Component\10.Shader\HLSL">
       <UniqueIdentifier>{6a363f39-84c6-423f-8b6c-dd3bf48daaa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Component\00.VIBuffer\05.SmashTrail">
+      <UniqueIdentifier>{3e71e491-59ad-4dd0-b140-df8dbe2cd368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\00.VIBuffer\06.BalistaTrail">
+      <UniqueIdentifier>{5ac31b65-91d0-44bd-9802-5d0bad745f73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Headers\Export_Utility.h">
@@ -261,6 +267,12 @@
     <ClInclude Include="..\Codes\Shader_UI.fx">
       <Filter>04.Component\10.Shader\HLSL</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\SmashTrail.h">
+      <Filter>04.Component\00.VIBuffer\05.SmashTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\BalistaTrail.h">
+      <Filter>04.Component\00.VIBuffer\06.BalistaTrail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Headers\Export_Utility.inl">
@@ -373,6 +385,12 @@
     <ClCompile Include="..\Codes\Trail.cpp">
       <Filter>04.Component\00.VIBuffer\04.Trail</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\SmashTrail.cpp">
+      <Filter>04.Component\00.VIBuffer\05.SmashTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\BalistaTrail.cpp">
+      <Filter>04.Component\00.VIBuffer\06.BalistaTrail</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Codes\Shader_DamageFont.fx">
@@ -385,6 +403,15 @@
       <Filter>04.Component\10.Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\Codes\Shader_Trail.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Codes\Shader_Sky.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Codes\Shader_Symbol.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Codes\Shader_BackGround.fx">
       <Filter>04.Component\10.Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

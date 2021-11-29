@@ -129,7 +129,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define PLAYER_SMASH4POWER	6500
 #define PLAYER_SMASHPOWER2	9000
 
-#define STAGE_BALISTA_POWER	50000
+#define STAGE_BALISTA_POWER	25000
 
 #define PLAYER_SP_FEVER		100
 #define PLAYER_SP_FURY_NO7	750
@@ -158,7 +158,9 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define STAGE_BALISTA_TARGET	_vec3(-0.98f, 5.f, 7.12f)
 #define TRAP_POS				_vec3(71.672f, 2.6f, 39.88f)
 #define	WALL_COLLIDER_POS		_vec3(71.55f, 2.6f, 7.89f)
-#define BOX_POS					_vec3(70.f, 2.6f, 12.f)
+#define WALL_SYMBOL_POS			_vec3(-0.42f, 5.5f, 68.93f)
+#define LASTROOM_POS			_vec3(2.5f, 3.f, 61.28f)
+#define BOX_POS					_vec3(68.f, 2.6f, 11.5f)
 #define BOX_2_POS				_vec3(72.f, 2.6f, 20.f)
 #define BALISTA_TRIGGER_START	_vec3(61.4f, 2.6f, 6.47f)
 #define BALISTA_TRIGGER_END		_vec3(66.74f, 2.6f, 40.f)

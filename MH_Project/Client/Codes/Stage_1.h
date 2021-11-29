@@ -27,6 +27,9 @@ public:
 	virtual	_int	LateUpdate_Scene(const _float& fTimeDelta) override;
 	virtual void	Render_Scene() override;
 
+public:
+	void				Set_ReadyLoadStage() { m_bReadyToLoadStage = true; }
+
 private:
 	HRESULT				Ready_Layer_Environment(const wstring pLayerTag);
 	HRESULT				Ready_Layer_GameLogic(const wstring pLayerTag);
@@ -34,6 +37,10 @@ private:
 	HRESULT				Ready_Layer_Effect(const wstring pLayerTag);
 	HRESULT				Ready_Layer_Balista(const wstring pLayerTag);
 	HRESULT				Ready_Layer_Box(const wstring pLayerTag);
+	HRESULT				Ready_Layer_Symbol(const wstring pLayerTag);
+	HRESULT				Ready_Layer_Trigger(const wstring pLayerTag);
+
+
 	HRESULT				Ready_Prototype();
 	HRESULT				Ready_LightInfo();
 
@@ -45,10 +52,18 @@ private:
 	HRESULT				Load_PlayerCol();
 	HRESULT				Load_NaviMesh();
 
+public:
+	HRESULT				Load_NextStage();
+	HRESULT				Delete_ForNextStage();
+
 private:
+	_bool					m_bReadyToLoadStage = false;
+
 	_ulong					m_dwRenderCnt = 0;
 	_tchar					m_szFPS[256] = L"FPS : 0";
 	_float					m_fTime = 0.f;
+
+	_float					m_fFadeOutRatio = 0.f;
 
 	vector<_matrix>			m_vecSavePoint;
 
@@ -60,7 +75,7 @@ public:
 	static CStage_1*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
-	virtual void	Free(void) override;
+	virtual void	Free() override;
 };
 
 

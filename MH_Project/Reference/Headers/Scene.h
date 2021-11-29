@@ -16,7 +16,8 @@ public:
 	CComponent*			Get_Component(const wstring pLayerTag, const wstring pObjTag, const wstring pComponentTag, COMPONENTID eID);
 	const SCENE_ID&		Get_SceneID() { return m_eSceneID; }
 	const map<const wstring, CLayer*>&	Get_MapLayer() { return m_mapLayer; }
-	CLayer*		Get_Layer(const wstring wstrLayerTag);
+	CLayer*				Get_Layer(const wstring wstrLayerTag);
+	LPDIRECT3DDEVICE9&	Get_Device() { return m_pGraphicDev; }
 
 public:
 	virtual HRESULT		Ready_Scene(void);

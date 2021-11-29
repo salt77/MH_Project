@@ -86,13 +86,13 @@ HRESULT CCollider::Ready_Collider(const _float& fRadius, const _matrix * pCollid
 	for (_ulong i = 0; i < COL_END; ++i)
 	{
 		D3DXCreateTexture(m_pGraphicDev,
-			1,
-			1,
-			1,  // miplevel
-			0,	// 텍스처의 용도, D3DUSAGE_RENDERTARGET
-			D3DFMT_A8R8G8B8,
-			D3DPOOL_MANAGED,
-			&m_pTexture[i]);
+						  1,
+						  1,
+						  1,  // miplevel
+						  0,	// 텍스처의 용도, D3DUSAGE_RENDERTARGET
+						  D3DFMT_A8R8G8B8,
+						  D3DPOOL_MANAGED,
+						  &m_pTexture[i]);
 
 		D3DLOCKED_RECT LockRect;
 		m_pTexture[i]->LockRect(0, &LockRect, NULL, 0);
@@ -141,19 +141,6 @@ void CCollider::Render_Collider(COLTYPE eType, const _matrix * pColliderMatrix)
 		m_matColMatrix = *pColliderMatrix;
 
 	memcpy(&m_vCenter, &m_matColMatrix._41, sizeof(_vec3));
-
-	//if (0.f != m_vPos.x)
-	//{
-	//	m_matColMatrix._41 = m_vPos.x * m_matColMatrix._41;
-	//}
-	//else if (0.f != m_vPos.y)
-	//{
-	//	m_matColMatrix._42 = m_vPos.y * m_matColMatrix._42;
-	//}
-	//else if (0.f != m_vPos.z)
-	//{
-	//	m_matColMatrix._43 = m_vPos.z * m_matColMatrix._43;
-	//}
 
 //#ifdef _DEBUG
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matColMatrix);
