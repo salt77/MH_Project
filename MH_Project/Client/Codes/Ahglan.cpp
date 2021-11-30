@@ -61,7 +61,6 @@ HRESULT CAhglan::LateReady_Object()
 	m_mapActiveParts.emplace(L"golem_ahglan_RHand.tga", TRUE);
 	m_mapActiveParts.emplace(L"golem_ahglan_ore.tga", TRUE);
 
-
 	m_pUILayer = CLayer::Create();
 	NULL_CHECK_RETURN(m_pUILayer, E_FAIL);
 
@@ -80,12 +79,12 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 	{
 		Set_Damage(15000);
 	}
-	else if (Key_Down('H'))
-	{
-		m_iAniIndex = SPAWN;
+	//else if (Key_Down('H'))
+	//{
+	//	m_iAniIndex = SPAWN;
 
-		Animation_Control();
-	}
+	//	Animation_Control();
+	//}
 	//else if (Key_Down('J'))
 	//{
 	//	m_bDead = true;

@@ -148,9 +148,6 @@
     <Filter Include="02.GameObject\09.UI\00.PlayerUI\03.Buff">
       <UniqueIdentifier>{c149420b-e917-43fa-b503-88abab0eeb1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical">
-      <UniqueIdentifier>{4abd34b4-b0e2-4827-b720-0d77a7932fb5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\10.Trail_Sword">
       <UniqueIdentifier>{eef3002d-1c61-4f41-832c-29d196e6e54e}</UniqueIdentifier>
     </Filter>
@@ -262,6 +259,45 @@
     <Filter Include="02.GameObject\08.Dummy\03.LastRoom_Trigger">
       <UniqueIdentifier>{4b70b00d-2c45-4039-9f48-22395f534369}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\04.Slot\00.Slot">
+      <UniqueIdentifier>{1f22d97e-59be-4592-a1cc-9a5c8f6ab87b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill">
+      <UniqueIdentifier>{6bc86b6c-3937-4cd7-838e-34a8335238fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\03.Potion_Sp">
+      <UniqueIdentifier>{58f99576-ae7d-4d32-b496-21569ff671e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\02.Potion_Stemina">
+      <UniqueIdentifier>{db293838-5fe9-402f-985c-18ca5c8c78d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\01.Potion_Hp">
+      <UniqueIdentifier>{770d8eea-c43c-4406-9015-5a568b494fb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\03.Buff\01.Buff_Reinforce">
+      <UniqueIdentifier>{35c30899-edbe-4b08-803d-ed01c37e7cdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Buff_Stemina">
+      <UniqueIdentifier>{bebbdc30-92be-4e7f-88fe-912f8def46b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\04.Skill_Sp_Stand">
+      <UniqueIdentifier>{d2234884-4790-46b4-afaa-7bac42975f70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\05.Skill_Sp_Fever">
+      <UniqueIdentifier>{0bf713f0-822f-4f24-b870-eaef9d9b4b05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\06.Skill_Fury_No7">
+      <UniqueIdentifier>{1ce14812-fded-47cc-996d-2dc49b20490b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\06.Buff_Tooltip">
+      <UniqueIdentifier>{81ab79df-420d-42c9-a8fc-668f5fdfa452}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\06.Buff_Tooltip\00.Tooltip_Stemina">
+      <UniqueIdentifier>{7da77953-154d-40d3-91d5-cfc207ae114c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\06.Buff_Tooltip\01.Tooltip_Reinforce">
+      <UniqueIdentifier>{b4607dba-64a4-42f2-9dc7-f8b5bf1195d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -372,9 +408,6 @@
     <ClInclude Include="..\Codes\Player_Spbar_ValueUI.h">
       <Filter>02.GameObject\09.UI\00.PlayerUI\02.Spbar\01.Value</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Player_Buff_CriticalUI.h">
-      <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\DamageFont.h">
       <Filter>02.GameObject\11.DamageFont</Filter>
     </ClInclude>
@@ -423,9 +456,6 @@
     <ClInclude Include="..\Codes\EffectMgr.h">
       <Filter>97.Manager\01.EffectMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Codes\Player_SlotUI.h">
-      <Filter>02.GameObject\09.UI\00.PlayerUI\04.Slot</Filter>
-    </ClInclude>
     <ClInclude Include="..\Codes\Cloyan.h">
       <Filter>02.GameObject\06.Enemy\01.Cloyan</Filter>
     </ClInclude>
@@ -467,6 +497,45 @@
     </ClInclude>
     <ClInclude Include="..\Codes\LastRoom_Trigger.h">
       <Filter>02.GameObject\08.Dummy\03.LastRoom_Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Player_SlotUI.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\04.Slot\00.Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Potion_Hp.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\01.Potion_Hp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Potion_Stemina.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\02.Potion_Stemina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Potion_Sp.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\03.Potion_Sp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Skill_Sp_Fever.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\05.Skill_Sp_Fever</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Skill_Fury_No7.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\06.Skill_Fury_No7</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Slot_ItemSkill.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Skill_Sp_Stand.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\04.Skill_Sp_Stand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Buff_Player.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Buff_Stemina.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Buff_Stemina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Buff_Reinforce.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\01.Buff_Reinforce</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Tooltip_Stemina.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\06.Buff_Tooltip\00.Tooltip_Stemina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Tooltip_Reinforce.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\06.Buff_Tooltip\01.Tooltip_Reinforce</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -563,9 +632,6 @@
     <ClCompile Include="..\Codes\Player_Spbar_ValueUI.cpp">
       <Filter>02.GameObject\09.UI\00.PlayerUI\02.Spbar\01.Value</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Player_Buff_CriticalUI.cpp">
-      <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Critical</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\DamageFont.cpp">
       <Filter>02.GameObject\11.DamageFont</Filter>
     </ClCompile>
@@ -620,9 +686,6 @@
     <ClCompile Include="..\Codes\EffectMgr.cpp">
       <Filter>97.Manager\01.EffectMgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Player_SlotUI.cpp">
-      <Filter>02.GameObject\09.UI\00.PlayerUI\04.Slot</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\Cloyan.cpp">
       <Filter>02.GameObject\06.Enemy\01.Cloyan</Filter>
     </ClCompile>
@@ -664,6 +727,45 @@
     </ClCompile>
     <ClCompile Include="..\Codes\LastRoom_Trigger.cpp">
       <Filter>02.GameObject\08.Dummy\03.LastRoom_Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player_SlotUI.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\04.Slot\00.Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Potion_Hp.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\01.Potion_Hp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Potion_Stemina.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\02.Potion_Stemina</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Potion_Sp.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\03.Potion_Sp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Skill_Sp_Fever.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\05.Skill_Sp_Fever</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Skill_Fury_No7.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\06.Skill_Fury_No7</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Slot_ItemSkill.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Skill_Sp_Stand.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\04.Skill_Sp_Stand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Buff_Player.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Buff_Stemina.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\00.Buff_Stemina</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Buff_Reinforce.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\03.Buff\01.Buff_Reinforce</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Tooltip_Stemina.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\06.Buff_Tooltip\00.Tooltip_Stemina</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Tooltip_Reinforce.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\06.Buff_Tooltip\01.Tooltip_Reinforce</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

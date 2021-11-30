@@ -58,7 +58,7 @@ _int CLastRoom_Trigger::LateUpdate_Object(const _float & fTimeDelta)
 
 void CLastRoom_Trigger::Render_Object()
 {
-	m_mapColliderCom.begin()->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	//m_mapColliderCom.begin()->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 }
 
 HRESULT CLastRoom_Trigger::Add_Component()

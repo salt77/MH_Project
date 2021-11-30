@@ -62,7 +62,7 @@ _uint CCollisionMgr::Update_CollisionMgr(const _float& fTimeDelta)
 		Update_MultipleCollision();
 
 		Collision_PlayerAttack();
-		//Collision_MonsterAttack();
+		Collision_MonsterAttack();
 		Collision_Balista_Stage();
 		Collision_Balista_Stage_1();
 		Collision_Trigger();
@@ -144,7 +144,7 @@ void CCollisionMgr::Collision_PlayerAttack()
 								}
 
 								if (Collision_OBB(&iter_PlayerHit->second->Get_Min(), &iter_PlayerHit->second->Get_Max(), iter_PlayerHit->second->Get_ColliderWorld(),
-									&iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
+												  &iter_BossDamaged->second->Get_Min(), &iter_BossDamaged->second->Get_Max(), iter_BossDamaged->second->Get_ColliderWorld()))
 								{
 									bPlayerAtkEnd = true;
 
@@ -556,7 +556,7 @@ void CCollisionMgr::Collision_PlayerAttack()
 									Pooling_SlashPoint(iter_PlayerHit->second->Get_ColliderWorld());
 								}
 								else if (PL_SMASH == m_pPlayer->Get_CurAction() ||
-									PL_SKILL == m_pPlayer->Get_CurAction())
+										 PL_SKILL == m_pPlayer->Get_CurAction())
 								{
 									Pooling_SlashPoint(iter_PlayerHit->second->Get_ColliderWorld(), true);
 								}
@@ -769,6 +769,7 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 								   &mapBalistaCol.begin()->second->Get_Min(), &mapBalistaCol.begin()->second->Get_Max(), mapBalistaCol.begin()->second->Get_ColliderWorld()))
 				{
 					pBalista->Set_CollisionWall();
+					pBalista->Set_EnemyHit();
 
 					if (pPlayerTrans)
 					{
@@ -794,6 +795,8 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 					{
 						pBalista->Set_CollisionWall();
 						pBalista->Set_EnemyHit();
+						pBalista->Set_StickBox(*mapBoxCol.begin()->second->Get_ColliderWorld());
+						pBalista->Set_ReturnPoolingPos();
 
 						if (pPlayerTrans)
 						{

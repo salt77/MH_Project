@@ -20,6 +20,19 @@
 #include "Player_Spbar_ValueUI.h"
 #include "Player_Buff_CriticalUI.h"
 #include "Player_SlotUI.h"
+#include "Potion_Hp.h"
+#include "Potion_Stemina.h"
+#include "Potion_Sp.h"
+
+#include "Skill_Sp_Stand.h"
+#include "Skill_Sp_Fever.h"
+#include "Skill_Fury_No7.h"
+
+#include "Buff_Stemina.h"
+#include "Buff_Reinforce.h"
+#include "Tooltip_Stemina.h"
+#include "Tooltip_Reinforce.h"
+
 #include "DamageFont.h"
 
 #include "Announce_Balista.h"
@@ -54,63 +67,14 @@ HRESULT CPlayer::Ready_Object()
 	m_vDir = *m_pTransformCom->Get_Info(INFO_LOOK);
 	m_pTransformCom->Update_Component(0.f);
 
-	m_tPlayerInfo.tagInfo.iHp = 10000;
-	m_tPlayerInfo.tagInfo.iMaxHp = m_tPlayerInfo.tagInfo.iHp;
-	m_tPlayerInfo.fStamina = 300.f;
-	m_tPlayerInfo.fMaxStamina = m_tPlayerInfo.fStamina;
-	m_tPlayerInfo.iSkillPoint = 0;
-	m_tPlayerInfo.iMaxSkillPoint = 1000;
+	Ready_PlayerStructInfo();
 
 	return S_OK;
 }
 
 HRESULT CPlayer::LateReady_Object()
 {
-	m_pOtherLayer = CLayer::Create();
-	NULL_CHECK_RETURN(m_pOtherLayer, E_FAIL);
-	m_pUILayer = CLayer::Create();
-	NULL_CHECK_RETURN(m_pUILayer, E_FAIL);
-
-	CGameObject*			pGameObject = nullptr;
-
-	// Hpbar
-	pGameObject = CPlayer_Hpbar_BackUI::Create(m_pGraphicDev, 340.f, WINCY - 185.f, 650.f, 25.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Hpbar_BackUI", pGameObject), E_FAIL);
-
-	pGameObject = CPlayer_Hpbar_LerpUI::Create(m_pGraphicDev, 340.f, WINCY - 185.f, 650.f, 25.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Hpbar_LerpUI", pGameObject), E_FAIL);
-
-	pGameObject = CPlayer_Hpbar_ValueUI::Create(m_pGraphicDev, 340.f, WINCY - 185.f, 650.f, 25.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Hpbar_ValueUI", pGameObject), E_FAIL);
-
-	// Steminabar
-	pGameObject = CPlayer_Steminabar_BackUI::Create(m_pGraphicDev, 340.f, WINCY - 165.f, 650.f, 25.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Steminabar_BackUI", pGameObject), E_FAIL);
-
-	pGameObject = CPlayer_Steminabar_ValueUI::Create(m_pGraphicDev, 340.f, WINCY - 165.f, 650.f, 25.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Steminabar_ValueUI", pGameObject), E_FAIL);
-
-	// Spbar
-	pGameObject = CPlayer_Spbar_BackUI::Create(m_pGraphicDev, 210.f, WINCY - 150.f, 350.f, 25.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Spbar_BackUI", pGameObject), E_FAIL);
-
-	pGameObject = CPlayer_Spbar_ValueUI::Create(m_pGraphicDev, 210.f, WINCY - 150.f, 350.f, 25.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Spbar_ValueUI", pGameObject), E_FAIL);
-
-	// Slot
-	pGameObject = CPlayer_SlotUI::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, 550.f, 70.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_SlotUI", pGameObject), E_FAIL);
-
-	Engine::Emplace_Layer(L"Player_UI", m_pUILayer);
-
+	Ready_Layer_PlayerUI();
 
 	m_mapActiveParts.emplace(L"dualsword_vanquisher.tga", TRUE);
 	m_mapActiveParts.emplace(L"sticky_bomb.tga", FALSE);
@@ -128,8 +92,6 @@ HRESULT CPlayer::LateReady_Object()
 	m_pHpbarLerpUI = dynamic_cast<CPlayer_Hpbar_LerpUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Hpbar_LerpUI"));
 	m_pSteminabarValueUI = dynamic_cast<CPlayer_Steminabar_ValueUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Steminabar_ValueUI"));
 	m_pSpbarValueUI = dynamic_cast<CPlayer_Spbar_ValueUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_Spbar_ValueUI"));
-
-	//m_pTransformCom->Set_Pos(&WALL_SYMBOL_POS);
 
 	m_pNaviMeshCom->Set_CellIndex(Compute_InCell());
 
@@ -473,6 +435,102 @@ HRESULT CPlayer::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	return S_OK;
 }
 
+HRESULT CPlayer::Ready_Layer_PlayerUI()
+{
+	m_pOtherLayer = CLayer::Create();
+	NULL_CHECK_RETURN(m_pOtherLayer, E_FAIL);
+	m_pUILayer = CLayer::Create();
+	NULL_CHECK_RETURN(m_pUILayer, E_FAIL);
+
+	CGameObject*			pGameObject = nullptr;
+
+	// Hpbar
+	pGameObject = CPlayer_Hpbar_BackUI::Create(m_pGraphicDev, 340.f, WINCY - 185.f, 650.f, 25.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Hpbar_BackUI", pGameObject), E_FAIL);
+
+	pGameObject = CPlayer_Hpbar_LerpUI::Create(m_pGraphicDev, 340.f, WINCY - 185.f, 650.f, 25.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Hpbar_LerpUI", pGameObject), E_FAIL);
+
+	pGameObject = CPlayer_Hpbar_ValueUI::Create(m_pGraphicDev, 340.f, WINCY - 185.f, 650.f, 25.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Hpbar_ValueUI", pGameObject), E_FAIL);
+
+	// Steminabar
+	pGameObject = CPlayer_Steminabar_BackUI::Create(m_pGraphicDev, 340.f, WINCY - 165.f, 650.f, 25.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Steminabar_BackUI", pGameObject), E_FAIL);
+
+	pGameObject = CPlayer_Steminabar_ValueUI::Create(m_pGraphicDev, 340.f, WINCY - 165.f, 650.f, 25.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Steminabar_ValueUI", pGameObject), E_FAIL);
+
+	// Spbar
+	pGameObject = CPlayer_Spbar_BackUI::Create(m_pGraphicDev, 210.f, WINCY - 150.f, 350.f, 25.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Spbar_BackUI", pGameObject), E_FAIL);
+
+	pGameObject = CPlayer_Spbar_ValueUI::Create(m_pGraphicDev, 210.f, WINCY - 150.f, 350.f, 25.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_Spbar_ValueUI", pGameObject), E_FAIL);
+
+	// QuickSlot
+	pGameObject = CPlayer_SlotUI::Create(m_pGraphicDev, SCREEN_CENTER_X, 50.f, 620.f, 85.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Player_SlotUI", pGameObject), E_FAIL);
+
+	// QuickSlot Item 
+	// 퀵슬롯 아이템들은 퀵슬롯 UI를 따라다닐 것이기 때문에 아무 위치에나 배치해도 상관없음.  
+	pGameObject = CPotion_Hp::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ITEM, SCALE_ITEM);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Potion_Hp", pGameObject), E_FAIL);
+
+	pGameObject = CPotion_Stemina::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ITEM, SCALE_ITEM);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Potion_Stemina", pGameObject), E_FAIL);
+
+	pGameObject = CPotion_Sp::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ITEM, SCALE_ITEM);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Potion_Sp", pGameObject), E_FAIL);
+
+	pGameObject = CSkill_Sp_Stand::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ITEM, SCALE_ITEM);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Skill_Sp_Stand", pGameObject), E_FAIL);
+
+	// QuickSlot Skill Icon 
+	pGameObject = CSkill_Sp_Fever::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ITEM, SCALE_ITEM);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Skill_Sp_Fever", pGameObject), E_FAIL);
+
+	pGameObject = CSkill_Fury_No7::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ITEM, SCALE_ITEM);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Skill_Fury_No7", pGameObject), E_FAIL);
+
+	// QuickSlot Buff Icon 
+	pGameObject = CBuff_Stemina::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ICON, SCALE_ICON);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Buff_Stemina_Icon", pGameObject), E_FAIL);
+
+	pGameObject = CBuff_Reinforce::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ICON, SCALE_ICON);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Buff_Reinforce_Icon", pGameObject), E_FAIL);
+
+	// Buff_Tooltip
+	pGameObject = CTooltip_Stemina::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_TOOLTIP, SCALE_TOOLTIP - 135.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Tooltip_Stemina", pGameObject), E_FAIL);
+
+	pGameObject = CTooltip_Reinforce::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_TOOLTIP, SCALE_TOOLTIP - 135.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Tooltip_Reinforce", pGameObject), E_FAIL);
+
+
+	Engine::Emplace_Layer(L"Player_UI", m_pUILayer);
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Add_NaviMesh()
 {
 	CComponent*		pComponent = nullptr;
@@ -486,9 +544,6 @@ HRESULT CPlayer::Add_NaviMesh()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-	//m_pTransformCom->Get_INFO(INFO_LOOK, &m_vDir);
-	//m_pTransformCom->Get_INFO(INFO_RIGHT, &m_vRightDir);\
-
 	_vec3 vMoveDir = _vec3(0.f, 0.f, 0.f);
 	_vec3 m_vLookDir = m_pMainCam->Get_CamDirVector(DIR_LOOK);
 	_vec3 m_vRightDir = m_pMainCam->Get_CamDirVector(DIR_RIGHT);
@@ -570,16 +625,21 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	// 스킬 액션(sp스킬, 보조무기 액션)
 	if (PL_SKILL >= m_eCurAction)
 	{
-		if (Key_Down('4'))
+		if (Key_Down('G'))
 		{
 			if (m_bCanAction)
 			{
 				if (PLAYER_SP_FURY_NO7 <= m_tPlayerInfo.iSkillPoint)
 				{
-					m_eCurAction = PL_SKILL;
-					m_iAniIndex = STATE_FURY_NO1;
+					if (static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Skill_Fury_No7"))->Get_CanUseItemSkill())
+					{
+						m_eCurAction = PL_SKILL;
+						m_iAniIndex = STATE_FURY_NO1;
 
-					m_tPlayerInfo.iSkillPoint -= PLAYER_SP_FURY_NO7;
+						m_tPlayerInfo.iSkillPoint -= PLAYER_SP_FURY_NO7;
+
+						static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Skill_Fury_No7"))->Set_UseItemSkill();
+					}
 				}
 			}
 		}
@@ -589,10 +649,35 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			{
 				if (PLAYER_SP_FEVER <= m_tPlayerInfo.iSkillPoint)
 				{
-					m_eCurAction = PL_SKILL;
-					m_iAniIndex = STATE_SP_FEVER;
+					if (static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Skill_Sp_Fever"))->Get_CanUseItemSkill())
+					{
+						m_eCurAction = PL_SKILL;
+						m_iAniIndex = STATE_SP_FEVER;
 
-					m_tPlayerInfo.iSkillPoint -= PLAYER_SP_FEVER;
+						m_tPlayerInfo.iSkillPoint -= PLAYER_SP_FEVER;
+
+						static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Skill_Sp_Fever"))->Set_UseItemSkill();
+					}
+				}
+			}
+		}
+		else if (Key_Down('4'))
+		{
+			if (m_bCanAction)
+			{
+				if (PLAYER_SP_STAND <= m_tPlayerInfo.iSkillPoint)
+				{
+					if (static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Skill_Sp_Stand"))->Get_CanUseItemSkill())
+					{
+						m_eCurAction = PL_SKILL;
+						m_iAniIndex = STATE_SP_STAND;
+
+						m_tPlayerInfo.iSkillPoint -= PLAYER_SP_STAND;
+
+						static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Skill_Sp_Stand"))->Set_UseItemSkill();
+
+						Add_Buff(BUFF_REINFORCE, 30000);
+					}
 				}
 			}
 		}
@@ -705,41 +790,88 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (PL_MOVE >= m_eCurAction &&
 		vMoveDir != _vec3(0.f, 0.f, 0.f))
 	{
-		D3DXVec3Normalize(&vMoveDir, &vMoveDir);
-
-		if (Key_Pressing(VK_SHIFT))
+		if (m_bCanAction)
 		{
-			m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
-			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed * 1.35f, fTimeDelta, true));
-			//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
-			m_pMainCam->Sync_PlayerPos(vMoveDir);
+			D3DXVec3Normalize(&vMoveDir, &vMoveDir);
 
-			m_iAniIndex = STATE_SPRINT;
-		}
-		else
-		{
-			m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
-			m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta, true));
-			//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed, fTimeDelta);
-			m_pMainCam->Sync_PlayerPos(vMoveDir);
-
-			m_iAniIndex = STATE_RUN;
-
-			if (m_bPush)
+			if (Key_Pressing(VK_SHIFT))
 			{
-				m_iAniIndex = STATE_PUSH;
+				m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
+				m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed * 1.35f, fTimeDelta, true));
+				//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed * 1.35f, fTimeDelta);
+				m_pMainCam->Sync_PlayerPos(vMoveDir);
+
+				m_iAniIndex = STATE_SPRINT;
 			}
+			else
+			{
+				m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
+				m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &vMoveDir, m_fSpeed, fTimeDelta, true));
+				//m_pTransformCom->Move_Pos(&vMoveDir, m_fSpeed, fTimeDelta);
+				m_pMainCam->Sync_PlayerPos(vMoveDir);
+
+				m_iAniIndex = STATE_RUN;
+
+				if (m_bPush)
+				{
+					m_iAniIndex = STATE_PUSH;
+				}
+			}
+
+			m_eCurAction = PL_MOVE;
+
+			Rotate_PlayerLook(fTimeDelta, vMoveDir);
 		}
-
-		m_eCurAction = PL_MOVE;
-
-		Rotate_PlayerLook(fTimeDelta, vMoveDir);
 	}
 
 	// 대기
 	if (PL_IDLE >= m_eCurAction)
 	{
-		m_iAniIndex = STATE_IDLE;
+		if (Key_Down('1'))
+		{
+			if (m_bCanAction)
+			{
+				if (static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Potion_Hp"))->Get_CanUseItemSkill())
+				{
+					m_ePotionType = POTION_HP;
+
+					m_iAniIndex = STATE_POTION_BEGIN;
+					Animation_Control();
+				}
+			}
+		}
+		else if (Key_Down('2'))
+		{
+			if (m_bCanAction)
+			{
+				if (static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Potion_Stemina"))->Get_CanUseItemSkill())
+				{
+					m_ePotionType = POTION_STEMINA;
+
+					m_iAniIndex = STATE_POTION_BEGIN;
+					Animation_Control();
+				}
+			}
+		}
+		else if (Key_Down('3'))
+		{
+			if (m_bCanAction)
+			{
+				if (static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Potion_Sp"))->Get_CanUseItemSkill())
+				{
+					m_ePotionType = POTION_SP;
+
+					m_iAniIndex = STATE_POTION_BEGIN;
+					Animation_Control();
+				}
+			}
+		}
+
+		if (STATE_POTION_BEGIN != m_eCurState &&
+			STATE_POTION_DURING != m_eCurState)
+		{
+			m_iAniIndex = STATE_IDLE;
+		}
 	}
 }
 
@@ -778,6 +910,23 @@ void CPlayer::SecondaryMode_MouseMove()
 //
 //	return m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
 //}
+
+void CPlayer::Ready_PlayerStructInfo()
+{
+	m_tPlayerInfo.tagInfo.iHp = 10000;
+	m_tPlayerInfo.tagInfo.iMaxHp = m_tPlayerInfo.tagInfo.iHp;
+
+	m_tPlayerInfo.fStamina = 300.f;
+	m_tPlayerInfo.fMaxStamina = m_tPlayerInfo.fStamina;
+
+	m_tPlayerInfo.fStaminaRecovery = 0.35f;
+	m_tPlayerInfo.fStaminaOriginRecovery = m_tPlayerInfo.fStaminaRecovery;
+
+	m_tPlayerInfo.fAttackSpeedInterpol = 0.f;
+
+	m_tPlayerInfo.iSkillPoint = 0;
+	m_tPlayerInfo.iMaxSkillPoint = 1000;
+}
 
 void CPlayer::Compute_CanAction()
 {
@@ -820,14 +969,33 @@ void CPlayer::Compute_CanAction()
 	else if (m_eCurAction == PL_SMASH ||
 			 m_eCurAction == PL_SKILL)
 	{
-		if (m_fAniTime < (m_lfAniEnd * 0.25f))
+		if (STATE_SP_FEVER == m_eCurState)
 		{
-			m_bCanAction = false;
+			if (m_fAniTime < (m_lfAniEnd * 0.15f))
+			{
+				m_bCanAction = false;
+			}
+			else
+			{
+				m_bCanAction = true;
+			}
 		}
 		else
 		{
-			m_bCanAction = true;
+			if (m_fAniTime < (m_lfAniEnd * 0.25f))
+			{
+				m_bCanAction = false;
+			}
+			else
+			{
+				m_bCanAction = true;
+			}
 		}
+	}
+	else if (STATE_POTION_BEGIN == m_eCurState || 
+			 STATE_POTION_DURING == m_eCurState)
+	{
+		m_bCanAction = false;
 	}
 	else
 	{
@@ -843,12 +1011,7 @@ void CPlayer::Compute_Buff()
 
 		for (; iter != m_listBuff.end(); )
 		{
-			if ((*iter)->dwBuffStartTime + (*iter)->dwBuffDuration < GetTickCount())
-			{
-				Safe_Delete(*iter);
-				iter = m_listBuff.erase(iter);
-			}
-
+			// Buff 효과 
 			switch ((*iter)->eBuffID)
 			{
 			case BUFF_CRITICAL:
@@ -861,12 +1024,46 @@ void CPlayer::Compute_Buff()
 					SetNextSmash(STATE_FURY2, (*iter)->dwBuffDuration);
 				}
 
-				Safe_Delete(*iter);
-				iter = m_listBuff.erase(iter);
+				//Safe_Delete(*iter);
+				//iter = m_listBuff.erase(iter);
 				break;
 
-			default:
+			case BUFF_STAMINA:
+				m_tPlayerInfo.fStaminaRecovery = m_tPlayerInfo.fStaminaOriginRecovery * 2.5f;
 				break;
+
+			case BUFF_REINFORCE:
+				m_fSpeed = 3.5f;
+				m_tPlayerInfo.fAttackSpeedInterpol = 0.25f;
+				break;
+			}
+
+			// Buff 시간 종료 시 삭제 
+			if ((*iter)->dwBuffStartTime + (*iter)->dwBuffDuration < GetTickCount())
+			{
+				switch ((*iter)->eBuffID)
+				{
+				case BUFF_CRITICAL:
+					break;
+
+				case BUFF_STAMINA:
+					m_tPlayerInfo.fStaminaRecovery = m_tPlayerInfo.fStaminaOriginRecovery;
+
+					static_cast<CBuff_Player*>(Engine::Get_GameObject(L"Player_UI", L"Buff_Stemina_Icon"))->Set_BuffIcon(false);
+					static_cast<CTooltip_Stemina*>(Engine::Get_GameObject(L"Player_UI", L"Tooltip_Stemina"))->Set_TooltipOn(false);
+					break;
+
+				case BUFF_REINFORCE:
+					m_fSpeed = m_fOriginSpeed;
+					m_tPlayerInfo.fAttackSpeedInterpol = 0.f;
+
+					static_cast<CBuff_Player*>(Engine::Get_GameObject(L"Player_UI", L"Buff_Reinforce_Icon"))->Set_BuffIcon(false);
+					static_cast<CTooltip_Reinforce*>(Engine::Get_GameObject(L"Player_UI", L"Tooltip_Reinforce"))->Set_TooltipOn(false);
+					break;
+				}
+
+				Safe_Delete(*iter);
+				iter = m_listBuff.erase(iter);
 			}
 
 			if (iter != m_listBuff.end())
@@ -890,6 +1087,7 @@ void CPlayer::Compute_Critical(const _matrix* matWorld)
 			memcpy(&vPos, &matWorld->_41, sizeof(_vec3));
 			pEfx->Set_EnableCriticalEfx(vPos);
 		}
+
 		SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
 	}
 }
@@ -916,6 +1114,22 @@ void CPlayer::Add_Buff(BUFF_ID eID, _ulong dwBuffDuration)
 
 	if (iter == m_listBuff.end())
 	{
+		switch (eID)
+		{
+		case Engine::BUFF_CRITICAL:
+			break;
+
+		case Engine::BUFF_STAMINA:
+			static_cast<CBuff_Player*>(Engine::Get_GameObject(L"Player_UI", L"Buff_Stemina_Icon"))->Set_BuffIcon(true);
+			static_cast<CTooltip_Stemina*>(Engine::Get_GameObject(L"Player_UI", L"Tooltip_Stemina"))->Set_TooltipOn(true);
+			break;
+
+		case Engine::BUFF_REINFORCE:
+			static_cast<CBuff_Player*>(Engine::Get_GameObject(L"Player_UI", L"Buff_Reinforce_Icon"))->Set_BuffIcon(true);
+			static_cast<CTooltip_Reinforce*>(Engine::Get_GameObject(L"Player_UI", L"Tooltip_Reinforce"))->Set_TooltipOn(true);
+			break;
+		}
+
 		m_listBuff.emplace_back(new tag_BuffDeBuff(eID, GetTickCount(), dwBuffDuration));
 	}
 }
@@ -1348,20 +1562,24 @@ void CPlayer::Make_TrailEffect(const _float& fDeltaTime)
 		}
 	}
 
-	if ((PL_ATK == m_eCurAction ||
+	if (PL_ATK == m_eCurAction ||
 		PL_SMASH == m_eCurAction ||
-		PL_SKILL == m_eCurAction) &&
-		WEAPON_MODE::WEAPON_SECONDARY != m_eCurWeaponMode)
+		PL_SKILL == m_eCurAction)
 	{
-		if (PL_SKILL == m_eCurAction)
+		if (WEAPON_MODE::WEAPON_SECONDARY != m_eCurWeaponMode &&
+			STATE_SP_STAND != m_eCurState &&
+			STATE_THROW_DURING != m_eCurState)
 		{
-			m_pTrailSmashL->Set_Render(true);
-			m_pTrailSmashR->Set_Render(true);
-		}
-		else
-		{
-			m_pTrailSwordL->Set_Render(true);
-			m_pTrailSwordR->Set_Render(true);
+			if (PL_SKILL == m_eCurAction)
+			{
+				m_pTrailSmashL->Set_Render(true);
+				m_pTrailSmashR->Set_Render(true);
+			}
+			else
+			{
+				m_pTrailSwordL->Set_Render(true);
+				m_pTrailSwordR->Set_Render(true);
+			}
 		}
 	}
 	else
@@ -1421,22 +1639,26 @@ void CPlayer::Animation_Control()
 	// Speed 조절
 	if (PL_ATK == m_eCurAction)
 	{
-		m_pMeshCom->Set_TrackSpeed(3.2f);
+		m_pMeshCom->Set_TrackSpeed(3.f + m_tPlayerInfo.fAttackSpeedInterpol);
 	}
 	else if (PL_SMASH == m_eCurAction || PL_SKILL == m_eCurAction || PL_DASH == m_eCurAction)
 	{
 		if (STATE_FURY == m_iAniIndex ||
 			STATE_FURY2 == m_iAniIndex)
 		{
-			m_pMeshCom->Set_TrackSpeed(2.15f);
+			m_pMeshCom->Set_TrackSpeed(2.15f + m_tPlayerInfo.fAttackSpeedInterpol);
 		}
 		else if (STATE_SP_FEVER == m_iAniIndex)
 		{
-			m_pMeshCom->Set_TrackSpeed(2.65f);
+			m_pMeshCom->Set_TrackSpeed(2.65f + m_tPlayerInfo.fAttackSpeedInterpol);
+		}
+		else if (STATE_SP_STAND == m_iAniIndex)
+		{
+			m_pMeshCom->Set_TrackSpeed(3.5f);
 		}
 		else
 		{
-			m_pMeshCom->Set_TrackSpeed(2.4f);
+			m_pMeshCom->Set_TrackSpeed(2.3f + m_tPlayerInfo.fAttackSpeedInterpol);
 		}
 	}
 	else if (STATE_DAMAGE_RESIST == m_eCurState)
@@ -1446,12 +1668,14 @@ void CPlayer::Animation_Control()
 	else if (STATE_RUN == m_eCurState ||
 			 STATE_SPRINT == m_eCurState)
 	{
-		m_pMeshCom->Set_TrackSpeed(2.f);
+		m_pMeshCom->Set_TrackSpeed(2.f + m_tPlayerInfo.fAttackSpeedInterpol);
 	}
 	else
 	{
 		m_pMeshCom->Set_TrackSpeed(1.9f);
 	}
+
+	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
 
 	// 스테미나 오링 
@@ -1487,6 +1711,17 @@ void CPlayer::Animation_Control()
 		_uint	iRandSound = 0;
 		switch (m_eCurState)
 		{
+		case STATE_SP_STAND:
+			SoundMgrLowerVol(L"lethita_liberalize.wav", CSoundMgr::PLAYER, 0.1f);
+			SoundMgrLowerVol(L"effect_lethita_dualspear_liberalize.wav", CSoundMgr::PLAYER_EFFECT2, 0.1f);
+
+			m_pMainCam->Set_HighlightSkillShot(1.38f, 1000);
+			break;
+
+		case STATE_POTION_DURING:
+			SoundMgr(L"action_drink_potion.wav", CSoundMgr::PLAYER);
+			break;
+
 		case STATE_PUSH:
 			m_fSpeed = 0.75f;
 			break;
@@ -1528,7 +1763,6 @@ void CPlayer::Animation_Control()
 			m_eNextSmash = STATE_DASHATK;
 
 			m_eCurWeaponMode = WEAPON_SECONDARY;
-
 			Rotate_PlayerLook(-*m_pTransformCom->Get_Info(INFO_LOOK));
 			break;
 
@@ -1557,8 +1791,6 @@ void CPlayer::Animation_Control()
 		case STATE_SP_FEVER:
 			SKILL_MOVE_BYANI(0.6f, 2500.f, 0.73f);
 			m_pMainCam->Set_HighlightSkillShot(1.3f, 500);
-
-			m_lfAniEnd *= 2.f;
 			break;
 
 			//case STATE_SPRINT_STOP:
@@ -1579,7 +1811,6 @@ void CPlayer::Animation_Control()
 			m_eNextAtk = STATE_ATK1;
 			m_eNextSmash = STATE_DASHATK;
 
-			m_lfAniEnd *= 1.1f;
 			SoundPlayerHurt;
 			SoundMgr(L"Skill_DownResist.wav", CSoundMgr::PLAYER_EFFECT);
 			break;
@@ -1783,7 +2014,6 @@ void CPlayer::Animation_Control()
 
 			m_fSpeed = m_fOriginSpeed;
 			m_eNextAtk = STATE_ATK1;
-			//m_eNextSmash = STATE_DASHATK;
 			break;
 		}
 
@@ -1812,12 +2042,12 @@ void CPlayer::Animation_Control()
 	// State 자동 변경
 	if (m_fAniTime >= m_lfAniEnd)
 	{
-		if (Engine::STATE_IDLE == m_eCurState ||
-			Engine::STATE_RUN == m_eCurState ||
-			Engine::STATE_SPRINT == m_eCurState ||
-			Engine::STATE_THROW_DURING == m_eCurState ||
-			Engine::STATE_TIRED_DURING == m_eCurState || 
-			Engine::STATE_PUSH == m_eCurState)
+		if (STATE_IDLE == m_eCurState ||
+			STATE_RUN == m_eCurState ||
+			STATE_SPRINT == m_eCurState ||
+			STATE_THROW_DURING == m_eCurState ||
+			STATE_TIRED_DURING == m_eCurState ||
+			STATE_PUSH == m_eCurState)
 		{
 			m_bAnimation = true;
 		}
@@ -1828,38 +2058,43 @@ void CPlayer::Animation_Control()
 
 		switch (m_eCurState)
 		{
-		case Engine::STATE_DEAD:
+		case STATE_DEAD:
 			break;
 
-		case Engine::STATE_DOWNIDLE_FRONT:		// 누운 상태에서 지 혼자 못 일어나게 막음
+		case STATE_DOWNIDLE_FRONT:		// 누운 상태에서 지 혼자 못 일어나게 막음
 			break;
 
-		case Engine::STATE_DOWNIDLE_BACK:
+		case STATE_DOWNIDLE_BACK:
 			break;
 
-		case Engine::STATE_PUSH:
+		case STATE_PUSH:
 			break;
 
-		case Engine::STATE_DAMAGEFROM_FRONT:
+		case STATE_DAMAGEFROM_FRONT:
 			//m_iAniIndex = (_uint)STATE_DOWNIDLE_BACK;
 			break;
 
-		case Engine::STATE_DAMAGEFROM_BACK:
+		case STATE_DAMAGEFROM_BACK:
 			//m_iAniIndex = (_uint)STATE_DOWNIDLE_FRONT;
 			break;
 
-		case Engine::STATE_THROW_BEGIN:
+		case STATE_THROW_BEGIN:
 			//m_iAniIndex = (_uint)STATE_THROW_DURING;
 			break;
 
-		case Engine::STATE_THROW_DURING:
+		case STATE_THROW_DURING:
 			break;
 
-		case Engine::STATE_TIRED_BEGIN:
+		case STATE_TIRED_BEGIN:
 			m_iAniIndex = (_uint)STATE_TIRED_DURING;
 			break;
 
-		case Engine::STATE_TIRED_DURING:
+		case STATE_TIRED_DURING:
+			break;
+
+		case STATE_POTION_BEGIN:
+			m_iAniIndex = STATE_POTION_DURING;
+			Animation_Control();
 			break;
 
 		default:
@@ -1871,7 +2106,7 @@ void CPlayer::Animation_Control()
 				Rotate_PlayerLook(+*m_pTransformCom->Get_Info(INFO_LOOK));
 			}
 			else if (STATE_FURY_NO1 == m_eCurState ||
-				STATE_FURY_NO2 == m_eCurState)
+					 STATE_FURY_NO2 == m_eCurState)
 			{
 				if (7 > m_iFuryNo7Count)
 				{
@@ -1892,6 +2127,32 @@ void CPlayer::Animation_Control()
 				{
 					m_iFuryNo7Count = 0;
 				}
+			}
+			else if (STATE_POTION_DURING == m_eCurState)
+			{
+				m_iAniIndex = STATE_IDLE;
+
+				switch (m_ePotionType)
+				{
+				case Engine::POTION_HP:
+					m_tPlayerInfo.tagInfo.iHp += 3000;
+
+					static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Potion_Hp"))->Set_UseItemSkill();
+					break;
+
+				case Engine::POTION_STEMINA:
+					static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Potion_Stemina"))->Set_UseItemSkill();
+					Add_Buff(BUFF_STAMINA, 35000);
+					break;
+
+				case Engine::POTION_SP:
+					m_tPlayerInfo.iSkillPoint += 500;
+
+					static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Potion_Sp"))->Set_UseItemSkill();
+					break;
+				}
+				
+				SoundMgr(L"effect_HP_recover.wav", CSoundMgr::PLAYER_EFFECT);
 			}
 
 			m_iDashCount = 0;
@@ -1956,6 +2217,7 @@ void CPlayer::Collision_Control()
 		//}
 
 		_uint iRandSound = 0;
+
 		switch (m_iAniIndex)
 		{
 		case STATE_SMASH4_B:
@@ -2088,7 +2350,7 @@ void CPlayer::Collision_Control()
 					L"Hit_RHandLongLong" == iter->first)
 				{
 					if (0.37f <= m_fAniTime &&
-						0.6f >= m_fAniTime)
+						0.7f >= m_fAniTime)
 					{
 						iter->second->Set_CanCollision(true);
 					}
@@ -2120,7 +2382,7 @@ void CPlayer::Collision_Control()
 					L"Hit_RHandLongLong" == iter->first)
 				{
 					if (0.37f <= m_fAniTime &&
-						0.6f >= m_fAniTime)
+						0.7f >= m_fAniTime)
 					{
 						iter->second->Set_CanCollision(true);
 					}
@@ -2375,7 +2637,7 @@ void CPlayer::Update_State()
 	if (m_tPlayerInfo.fStamina < m_tPlayerInfo.fMaxStamina &&
 		m_dwSteminaRecoveryTime + m_dwSteminaRecoveryDelay < GetTickCount())
 	{
-		m_tPlayerInfo.fStamina += 0.3f;
+		m_tPlayerInfo.fStamina += m_tPlayerInfo.fStaminaRecovery;
 	}
 
 	// sp 관련

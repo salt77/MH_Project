@@ -100,7 +100,7 @@ HRESULT CStage::Ready_Layer_Environment(const wstring pLayerTag)
 				  &_vec3(0.f, 0.f, 1.f),
 				  &_vec3(0.f, 1.f, 0.f),
 				  D3DXToRadian(60.f), (_float)WINCX / WINCY,
-				  0.1f, 300.f);
+				  0.1f, 1000.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"DynamicCamera", pGameObject), E_FAIL);
 

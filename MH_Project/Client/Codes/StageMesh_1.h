@@ -17,19 +17,19 @@ class CStageMesh_1 : public CGameObject
 private:
 	explicit CStageMesh_1(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CStageMesh_1(const CStageMesh_1& rhs);
-	virtual ~CStageMesh_1(void);
+	virtual ~CStageMesh_1();
 
 public:
-	virtual HRESULT Ready_Object(void) override;
+	virtual HRESULT Ready_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
-	virtual void	Render_Object(void) override;
+	virtual void	Render_Object() override;
 
 public:
 	CStaticMesh*	Get_MeshInfo() { return m_pMeshCom; }
 	const _matrix*	Get_WorldMatrix() { return m_pTransformCom->Get_WorldMatrix(); }
 
 private:
-	HRESULT			Add_Component(void);
+	HRESULT			Add_Component();
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 private:
@@ -43,5 +43,5 @@ private:
 
 public:
 	static CStageMesh_1*	Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual void			Free(void);
+	virtual void			Free();
 };

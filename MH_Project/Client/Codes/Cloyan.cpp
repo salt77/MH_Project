@@ -26,7 +26,7 @@ CCloyan::~CCloyan()
 }
 
 
-HRESULT CCloyan::Ready_Object(void)
+HRESULT CCloyan::Ready_Object()
 {
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);

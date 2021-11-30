@@ -68,11 +68,11 @@ _int CBox::LateUpdate_Object(const _float & fTimeDelta)
 
 void CBox::Render_Object()
 {
-	_matrix		matWorld = *m_pTransformCom->Get_WorldMatrix();
-	matWorld._42 += 0.3f;
-	matWorld._43 -= 0.25f;
-	m_mapColliderCom.begin()->second->Render_Collider(COL_FALSE, &matWorld);
-	m_mapBoxColliderCom.begin()->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	//_matrix		matWorld = *m_pTransformCom->Get_WorldMatrix();
+	//matWorld._42 += 0.3f;
+	//matWorld._43 -= 0.25f;
+	//m_mapColliderCom.begin()->second->Render_Collider(COL_FALSE, &matWorld);
+	//m_mapBoxColliderCom.begin()->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 
 	//
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
@@ -154,7 +154,7 @@ HRESULT CBox::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 HRESULT CBox::Ready_Collider()
 {
 	FAILED_CHECK_RETURN(Add_Collider(25.f, L"Box_Push_Collider", m_pTransformCom->Get_WorldMatrix(), COLTYPE_SPHERE_DAMAGED), E_FAIL);
-	FAILED_CHECK_RETURN(Add_Collider(-32.f, -35.f, -35.f, 32.f, 50.f, 150.f, L"Gimmick_Box_Collider", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_OTHER), E_FAIL);
+	FAILED_CHECK_RETURN(Add_Collider(-32.f, -35.f, -35.f, 32.f, 50.f, 170.f, L"Gimmick_Box_Collider", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_OTHER), E_FAIL);
 
 	return S_OK;
 }

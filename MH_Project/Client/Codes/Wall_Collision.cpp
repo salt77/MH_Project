@@ -57,7 +57,7 @@ _int CWall_Collision::LateUpdate_Object(const _float & fTimeDelta)
 
 void CWall_Collision::Render_Object()
 {
-	m_mapBoxColliderCom.begin()->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	//m_mapBoxColliderCom.begin()->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 }
 
 HRESULT CWall_Collision::Add_Component()
@@ -80,7 +80,7 @@ HRESULT CWall_Collision::Add_Component()
 
 HRESULT CWall_Collision::Ready_Collider()
 {
-	FAILED_CHECK_RETURN(Add_Collider(-3.f, -2.f, -0.5f, 3.f, 2.f, 0.5f, L"Wall_Collider", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_DAMAGED), E_FAIL);
+	FAILED_CHECK_RETURN(Add_Collider(-3.f, -2.f, -0.5f, 6.f, 2.f, 0.5f, L"Wall_Collider", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_DAMAGED), E_FAIL);
 
 	return S_OK;
 }

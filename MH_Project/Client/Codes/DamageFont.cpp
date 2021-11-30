@@ -24,7 +24,7 @@ HRESULT CDamageFont::Ready_Object(DAMAGEFONT_ID eID)
 	m_vPos = POOLING_POS;
 
 	m_pTransformCom->Set_Pos(&m_vPos);
-	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+	m_pTransformCom->Set_Scale(1.25f, 1.25f, 1.25f);
 
 	m_vOriginScale = *m_pTransformCom->Get_ScaleInfo();
 
@@ -231,7 +231,7 @@ void CDamageFont::Scale_Interpolation(const _float& fTimeDelta)
 
 		if (0.f <= vScale.x)
 		{
-			m_fScaleDown += m_fOriginScaleDown;
+			m_fScaleDown += m_fOriginScaleDown * 3.f;
 
 			m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
 		}

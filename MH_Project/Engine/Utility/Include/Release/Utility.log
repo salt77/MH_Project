@@ -1,3 +1,85 @@
-﻿  failed to open file: C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Codes\Shader_BackGround.fx
-  compilation failed; no code produced
-C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets(1235,5): error MSB6006: "fxc.exe"이(가) 종료되었습니다(코드: 1).
+﻿  BalistaTrail.cpp
+LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무시됩니다.
+     ../Bin\Utility.lib 라이브러리 및 ../Bin\Utility.exp 개체를 생성하고 있습니다.
+  코드를 생성하고 있습니다.
+  1 of 3220 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    3 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  Utility.vcxproj -> C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Include\../Bin\Utility.dll
+  Utility.vcxproj -> ../Bin\Utility.pdb (Full PDB)
+  .\Engine\Utility\Codes\AniCtrl.h
+  .\Engine\Utility\Codes\BalistaTrail.h
+  .\Engine\Utility\Codes\BoxCollider.h
+  .\Engine\Utility\Codes\Calculator.h
+  .\Engine\Utility\Codes\Camera.h
+  .\Engine\Utility\Codes\Cell.h
+  .\Engine\Utility\Codes\Collider.h
+  .\Engine\Utility\Codes\Component.h
+  .\Engine\Utility\Codes\CubeTex.h
+  .\Engine\Utility\Codes\DynamicMesh.h
+  .\Engine\Utility\Codes\Frustum.h
+  .\Engine\Utility\Codes\GameObject.h
+  .\Engine\Utility\Codes\HierachyLoader.h
+  .\Engine\Utility\Codes\Layer.h
+  .\Engine\Utility\Codes\Light.h
+  .\Engine\Utility\Codes\LightMgr.h
+  .\Engine\Utility\Codes\Line.h
+  .\Engine\Utility\Codes\Management.h
+  .\Engine\Utility\Codes\MFC_ObjectManager.h
+  .\Engine\Utility\Codes\Navimesh.h
+  .\Engine\Utility\Codes\Optimization.h
+  .\Engine\Utility\Codes\ProtoMgr.h
+  .\Engine\Utility\Codes\QuadTree.h
+  .\Engine\Utility\Codes\RcTex.h
+  .\Engine\Utility\Codes\Renderer.h
+  .\Engine\Utility\Codes\RenderTarget.h
+  .\Engine\Utility\Codes\RenderTargetMgr.h
+  .\Engine\Utility\Codes\Scene.h
+  .\Engine\Utility\Codes\Shader.h
+  .\Engine\Utility\Codes\SmashTrail.h
+  .\Engine\Utility\Codes\StaticMesh.h
+  .\Engine\Utility\Codes\TerrainTex.h
+  .\Engine\Utility\Codes\Texture.h
+  .\Engine\Utility\Codes\Trail.h
+  .\Engine\Utility\Codes\TrailBuffer.h
+  .\Engine\Utility\Codes\Transform.h
+  .\Engine\Utility\Codes\TriCol.h
+  .\Engine\Utility\Codes\VIBuffer.h
+         38개 파일이 복사되었습니다.
+  .\Engine\Utility\Codes\Shader_Ahglan.fx
+  .\Engine\Utility\Codes\Shader_BackGround.fx
+  .\Engine\Utility\Codes\Shader_Blend.fx
+  .\Engine\Utility\Codes\Shader_Boss_Hpbar.fx
+  .\Engine\Utility\Codes\Shader_DamageFont.fx
+  .\Engine\Utility\Codes\Shader_FadeInOut.fx
+  .\Engine\Utility\Codes\Shader_Loading_Progress.fx
+  .\Engine\Utility\Codes\Shader_Mesh.fx
+  .\Engine\Utility\Codes\Shader_Normal.fx
+  .\Engine\Utility\Codes\Shader_Player.fx
+  .\Engine\Utility\Codes\Shader_Player_Hpbar.fx
+  .\Engine\Utility\Codes\Shader_Sample.fx
+  .\Engine\Utility\Codes\Shader_Shade.fx
+  .\Engine\Utility\Codes\Shader_Sky.fx
+  .\Engine\Utility\Codes\Shader_StageMesh.fx
+  .\Engine\Utility\Codes\Shader_Symbol.fx
+  .\Engine\Utility\Codes\Shader_Terrain.fx
+  .\Engine\Utility\Codes\Shader_Trail.fx
+  .\Engine\Utility\Codes\Shader_UI.fx
+         19개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+          1개 파일이 복사되었습니다.
+  .\Engine\Headers\Engine_Define.h
+  .\Engine\Headers\Engine_Enum.h
+  .\Engine\Headers\Engine_Function.h
+  .\Engine\Headers\Engine_Macro.h
+  .\Engine\Headers\Engine_Struct.h
+  .\Engine\Headers\Engine_Typedef.h
+  .\Engine\Headers\Export_Function.h
+  .\Engine\Headers\Export_System.h
+  .\Engine\Headers\Export_Utility.h
+          9개 파일이 복사되었습니다.
+  .\Engine\Headers\Export_System.inl
+  .\Engine\Headers\Export_Utility.inl
+          2개 파일이 복사되었습니다.

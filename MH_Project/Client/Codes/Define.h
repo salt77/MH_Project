@@ -114,6 +114,9 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define SCALE_NORMAL	0.01f
 #define SCALE_MANKIND	0.012f
 #define SCALE_BALISTA	0.03f
+#define SCALE_ITEM		30.f
+#define SCALE_ICON		32.f
+#define SCALE_TOOLTIP	250.f
 
 #define CAMSHAKE_POWER	0.025f
 
@@ -132,6 +135,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define STAGE_BALISTA_POWER	25000
 
 #define PLAYER_SP_FEVER		100
+#define PLAYER_SP_STAND		300
 #define PLAYER_SP_FURY_NO7	750
 
 #define FADEOUTSPEED		0.0005f
@@ -161,7 +165,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define WALL_SYMBOL_POS			_vec3(-0.42f, 5.5f, 68.93f)
 #define LASTROOM_POS			_vec3(2.5f, 3.f, 61.28f)
 #define BOX_POS					_vec3(68.f, 2.6f, 11.5f)
-#define BOX_2_POS				_vec3(72.f, 2.6f, 20.f)
+#define BOX_2_POS				_vec3(72.f, 2.6f, 15.f)
 #define BALISTA_TRIGGER_START	_vec3(61.4f, 2.6f, 6.47f)
 #define BALISTA_TRIGGER_END		_vec3(66.74f, 2.6f, 40.f)
 

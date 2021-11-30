@@ -22,7 +22,7 @@ vector		g_vMtrlDiffuse = (vector)1.f;
 vector		g_vMtrlAmbient = (vector)1.f;
 
 vector		g_vCamPos;
-float		g_fPower = 50.f;
+float		g_fPower = 100.f;
 
 matrix		g_matInvProj;
 matrix		g_matInvView;

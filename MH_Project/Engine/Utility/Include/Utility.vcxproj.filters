@@ -414,5 +414,14 @@
     <FxCompile Include="..\Codes\Shader_BackGround.fx">
       <Filter>04.Component\10.Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="..\Codes\Shader_Stage_1Mesh.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Codes\Shader_Skill_UI.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Codes\Shader_Item.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

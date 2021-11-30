@@ -29,6 +29,8 @@ HRESULT CBalista::Ready_Object()
 
 	m_vOriginScale = *m_pTransformCom->Get_ScaleInfo();
 
+	D3DXMatrixIdentity(&m_matStick);
+
 	return S_OK;
 }
 
@@ -47,7 +49,7 @@ HRESULT CBalista::LateReady_Object()
 		m_fFallingSpeed = 300.f;
 		m_fOriginFallingSpeed = m_fFallingSpeed;
 		m_fSpeedDown = 100.f;
-		m_dwSurviveDelay = 5000;
+		m_dwSurviveDelay = 6000;
 
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(70.f));
 		m_pTransformCom->Rotation(ROT_X, D3DXToRadian(-65.f));
@@ -147,37 +149,38 @@ void CBalista::Render_Object()
 
 	if (SCENE_STAGE == m_eCurSceneID)
 	{
-		//_vec3	vMin = m_mapBoxColliderCom.begin()->second->Get_Min();
-		//_vec3	vMax = m_mapBoxColliderCom.begin()->second->Get_Max();
-		//vMin.x = -1.f;
-		//vMin.y = -1.f;
-		////vMin.z = -1.f;
-		//vMax.x = 1.f;
-		//vMax.y = 1.f;
-		//vMax.z = 1.f;
-		//m_pTrailCom->Set_InfoForTrail(m_fTimeDelta, vMin, vMax, m_mapBoxColliderCom.begin()->second->Get_ColliderWorld());
+		_vec3	vMin = m_mapBoxColliderCom.begin()->second->Get_Min();
+		_vec3	vMax = m_mapBoxColliderCom.begin()->second->Get_Max();
+		vMin.x = -1.f;
+		vMin.y = -1.f;
+		//vMin.z = -1.f;
+		vMax.x = 1.f;
+		vMax.y = 1.f;
+		vMax.z = 1.f;
+		m_pTrailCom->Set_InfoForTrail(m_fTimeDelta, vMin, vMax, m_mapBoxColliderCom.begin()->second->Get_ColliderWorld());
 
-		//if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS) && 
-		//	!m_bEnemyHit)
-		//{
-		//	LPD3DXEFFECT	 pEffect = m_pTrailShaderCom->Get_EffectHandle();
-		//	pEffect->AddRef();
+		if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS) && 
+			!m_bEnemyHit && 
+			0.f <= m_fFallingSpeed)
+		{
+			LPD3DXEFFECT	 pEffect = m_pTrailShaderCom->Get_EffectHandle();
+			pEffect->AddRef();
 
-		//	FAILED_CHECK_RETURN(SetUp_ConstantTable_ForTrail(pEffect), );
+			FAILED_CHECK_RETURN(SetUp_ConstantTable_ForTrail(pEffect), );
 
-		//	_uint iMaxPass = 0;
+			_uint iMaxPass = 0;
 
-		//	pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
-		//											// 2인자 : 시작하는 방식을 묻는 FLAG
-		//	pEffect->BeginPass(0);
+			pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
+													// 2인자 : 시작하는 방식을 묻는 FLAG
+			pEffect->BeginPass(0);
 
-		//	m_pTrailCom->Render_Buffer();
+			m_pTrailCom->Render_Buffer();
 
-		//	pEffect->EndPass();
-		//	pEffect->End();
+			pEffect->EndPass();
+			pEffect->End();
 
-		//	Safe_Release(pEffect);
-		//}
+			Safe_Release(pEffect);
+		}
 	}
 }
 
@@ -308,7 +311,15 @@ void CBalista::Movement(const _float& fTimeDelta)
 				m_bCollision = false;
 				m_bEnemyHit = true;
 	
+				D3DXMatrixIdentity(&m_matStick);
 				m_pTransformCom->Set_Pos(&POOLING_POS);
+			}
+			else if (0.f != m_matStick._43)
+			{
+				_vec3	vPos = *m_pTransformCom->Get_Info(INFO_POS);
+				vPos.z = m_matStick._43;
+
+				m_pTransformCom->Set_Pos(&vPos);
 			}
 		}
 	}
@@ -423,9 +434,17 @@ void CBalista::Set_EnableBalista(_vec3 vPos, _vec3 vDir)
 	m_bFlySoundCheck = false;
 	m_fFallingSpeed = m_fOriginFallingSpeed;
 	m_fAlphaValue = 1.f;
+	m_dwSurviveDelay = 3000;
 
 	m_pTransformCom->Set_Pos(&vPos);
 	m_vDir = *D3DXVec3Normalize(&vDir, &vDir);
+
+	D3DXMatrixIdentity(&m_matStick);
+}
+
+void CBalista::Set_ReturnPoolingPos()
+{
+	m_pTransformCom->Set_Pos(&POOLING_POS);
 }
 
 

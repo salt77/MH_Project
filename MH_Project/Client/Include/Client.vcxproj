@@ -169,6 +169,9 @@
     <ClInclude Include="..\Codes\BackGround.h" />
     <ClInclude Include="..\Codes\Boss_NamingScene.h" />
     <ClInclude Include="..\Codes\Box.h" />
+    <ClInclude Include="..\Codes\Buff_Player.h" />
+    <ClInclude Include="..\Codes\Buff_Reinforce.h" />
+    <ClInclude Include="..\Codes\Buff_Stemina.h" />
     <ClInclude Include="..\Codes\Cloyan.h" />
     <ClInclude Include="..\Codes\Cloyan_Info.h" />
     <ClInclude Include="..\Codes\CollisionMgr.h" />
@@ -181,7 +184,6 @@
     <ClInclude Include="..\Codes\Knight.h" />
     <ClInclude Include="..\Codes\Knight_Info.h" />
     <ClInclude Include="..\Codes\LastRoom_Trigger.h" />
-    <ClInclude Include="..\Codes\Player_Buff_CriticalUI.h" />
     <ClInclude Include="..\Codes\Player_SlotUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_BackUI.h" />
     <ClInclude Include="..\Codes\Player_Spbar_ValueUI.h" />
@@ -200,9 +202,16 @@
     <ClInclude Include="..\Codes\Player_Hpbar_LerpUI.h" />
     <ClInclude Include="..\Codes\Player_Hpbar_ValueUI.h" />
     <ClInclude Include="..\Codes\Player_Steminabar_ValueUI.h" />
+    <ClInclude Include="..\Codes\Potion_Hp.h" />
+    <ClInclude Include="..\Codes\Skill_Sp_Stand.h" />
+    <ClInclude Include="..\Codes\Potion_Sp.h" />
+    <ClInclude Include="..\Codes\Potion_Stemina.h" />
     <ClInclude Include="..\Codes\RadialBlur.h" />
+    <ClInclude Include="..\Codes\Skill_Fury_No7.h" />
+    <ClInclude Include="..\Codes\Skill_Sp_Fever.h" />
     <ClInclude Include="..\Codes\SkyBox.h" />
     <ClInclude Include="..\Codes\SlashPoint.h" />
+    <ClInclude Include="..\Codes\Slot_ItemSkill.h" />
     <ClInclude Include="..\Codes\Soldier.h" />
     <ClInclude Include="..\Codes\Soldier_Info.h" />
     <ClInclude Include="..\Codes\SoundMgr.h" />
@@ -213,6 +222,8 @@
     <ClInclude Include="..\Codes\Stage_1.h" />
     <ClInclude Include="..\Codes\StickyBomb.h" />
     <ClInclude Include="..\Codes\Terrain.h" />
+    <ClInclude Include="..\Codes\Tooltip_Reinforce.h" />
+    <ClInclude Include="..\Codes\Tooltip_Stemina.h" />
     <ClInclude Include="..\Codes\Trail_Smash.h" />
     <ClInclude Include="..\Codes\Trail_Sword.h" />
     <ClInclude Include="..\Codes\Trap.h" />
@@ -239,6 +250,9 @@
     <ClCompile Include="..\Codes\BackGround.cpp" />
     <ClCompile Include="..\Codes\Boss_NamingScene.cpp" />
     <ClCompile Include="..\Codes\Box.cpp" />
+    <ClCompile Include="..\Codes\Buff_Player.cpp" />
+    <ClCompile Include="..\Codes\Buff_Reinforce.cpp" />
+    <ClCompile Include="..\Codes\Buff_Stemina.cpp" />
     <ClCompile Include="..\Codes\Cloyan.cpp" />
     <ClCompile Include="..\Codes\Cloyan_Info.cpp" />
     <ClCompile Include="..\Codes\CollisionMgr.cpp" />
@@ -252,7 +266,6 @@
     <ClCompile Include="..\Codes\Knight_Info.cpp" />
     <ClCompile Include="..\Codes\LastRoom_Trigger.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
-    <ClCompile Include="..\Codes\Player_Buff_CriticalUI.cpp" />
     <ClCompile Include="..\Codes\Player_SlotUI.cpp" />
     <ClCompile Include="..\Codes\Player_Spbar_BackUI.cpp" />
     <ClCompile Include="..\Codes\Player_Spbar_ValueUI.cpp" />
@@ -269,9 +282,16 @@
     <ClCompile Include="..\Codes\Player_Hpbar_LerpUI.cpp" />
     <ClCompile Include="..\Codes\Player_Hpbar_ValueUI.cpp" />
     <ClCompile Include="..\Codes\Player_Steminabar_ValueUI.cpp" />
+    <ClCompile Include="..\Codes\Potion_Hp.cpp" />
+    <ClCompile Include="..\Codes\Skill_Sp_Stand.cpp" />
+    <ClCompile Include="..\Codes\Potion_Sp.cpp" />
+    <ClCompile Include="..\Codes\Potion_Stemina.cpp" />
     <ClCompile Include="..\Codes\RadialBlur.cpp" />
+    <ClCompile Include="..\Codes\Skill_Fury_No7.cpp" />
+    <ClCompile Include="..\Codes\Skill_Sp_Fever.cpp" />
     <ClCompile Include="..\Codes\SkyBox.cpp" />
     <ClCompile Include="..\Codes\SlashPoint.cpp" />
+    <ClCompile Include="..\Codes\Slot_ItemSkill.cpp" />
     <ClCompile Include="..\Codes\Soldier.cpp" />
     <ClCompile Include="..\Codes\Soldier_Info.cpp" />
     <ClCompile Include="..\Codes\SoundMgr.cpp" />
@@ -282,6 +302,8 @@
     <ClCompile Include="..\Codes\Stage_1.cpp" />
     <ClCompile Include="..\Codes\StickyBomb.cpp" />
     <ClCompile Include="..\Codes\Terrain.cpp" />
+    <ClCompile Include="..\Codes\Tooltip_Reinforce.cpp" />
+    <ClCompile Include="..\Codes\Tooltip_Stemina.cpp" />
     <ClCompile Include="..\Codes\Trail_Smash.cpp" />
     <ClCompile Include="..\Codes\Trail_Sword.cpp" />
     <ClCompile Include="..\Codes\Trap.cpp" />

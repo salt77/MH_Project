@@ -577,9 +577,12 @@ void CDog::Dissolve(const _float & fTimeDelta)
 
 void CDog::Update_State()
 {
-	if (0 >= m_tInfo.iHp)
+	if (DOGSTATE_DEAD_IDLE != m_iAniIndex)
 	{
-		m_iAniIndex = DOGSTATE_DYING;
+		if (0 >= m_tInfo.iHp)
+		{
+			m_iAniIndex = DOGSTATE_DYING;
+		}
 	}
 }
 

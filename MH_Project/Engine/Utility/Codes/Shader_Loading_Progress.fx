@@ -71,7 +71,7 @@ technique Default_Technique
 {
 	pass Default
 	{
-		AlphaBlendenable = true;
+		AlphaBlendEnable = true;
 		srcblend = srcalpha;
 		destblend = invsrcalpha;
 		

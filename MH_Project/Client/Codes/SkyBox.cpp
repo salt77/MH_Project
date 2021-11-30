@@ -23,7 +23,7 @@ HRESULT CSkyBox::Ready_Object()
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	m_pTransformCom->Set_Scale(10.f, 10.f, 10.f);
+	m_pTransformCom->Set_Scale(500.f, 500.f, 500.f);
 
 	return S_OK;
 }

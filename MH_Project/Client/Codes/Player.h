@@ -44,7 +44,7 @@ public:
 	const PL_INFO&	Get_TagPlayerInfo() { return m_tPlayerInfo; }
 	const _bool&	Get_CanHit() { return m_bCanHit; }
 	const PL_STATE&	Get_CurState() { return m_eCurState; }
-	const PL_ACTION&	Get_CurAction() { return m_eCurAction; }
+	const PL_ACTION&Get_CurAction() { return m_eCurAction; }
 	const _float&	Get_PlayerSpeed() { return m_fSpeed; }
 
 public:
@@ -66,10 +66,11 @@ private:
 	// 기본 함수들
 	HRESULT			Add_Component();
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
+	HRESULT			Ready_Layer_PlayerUI();
 	void			Key_Input(const _float& fTimeDelta);
 	void			SecondaryMode_MouseMove();
-	//void			SetUp_OnTerrain(void);
-	//_vec3			PickUp_OnTerrain(void);
+	//void			SetUp_OnTerrain();
+	//_vec3			PickUp_OnTerrain();
 	void			Animation_Control();
 	void			Collision_Control();
 	void			Update_UI();
@@ -77,6 +78,7 @@ private:
 	const _ulong&	Compute_InCell();
 
 	// 객체 함수들
+	void			Ready_PlayerStructInfo();
 	void			Compute_CanAction();
 	void			Compute_Buff();
 	void			Rotate_PlayerLook(const _float& fTimeDelta, _vec3& TargetLookVector);
@@ -117,7 +119,7 @@ private:
 	_float			m_fAniTime = 0.f;
 	_float			m_fSkillMoveStartTime = 0.f;
 	_float			m_fSkillMoveEndTime = 0.f;
-	_float			m_fCriticalPotential = 4.f;
+	_float			m_fCriticalPotential = 3.f;
 
 	_double			m_lfAniEnd = 0.f;
 
@@ -152,6 +154,8 @@ private:
 
 	WEAPON_MODE		m_eCurWeaponMode = WEAPON_DUALSWORD;
 	WEAPON_MODE		m_ePreWeaponMode = WEAPON_DUALSWORD;
+
+	POTION_TYPE		m_ePotionType = POTION_END;
 
 	list<tag_BuffDeBuff*>		m_listBuff;
 	map<const wstring, _bool>	m_mapActiveParts;

@@ -354,7 +354,7 @@ void CDynamicCamera::Mode_Change(const _float& fTimeDelta)
 			else if (MODE_BALISTA_HIGHLIGHT == m_ePreMode)
 			{
 				m_eCurMode = MODE_NORMAL;
-				m_vEye.y = m_vAt.y - 0.5f;
+				At_Update(fTimeDelta);
 			}
 			break;
 

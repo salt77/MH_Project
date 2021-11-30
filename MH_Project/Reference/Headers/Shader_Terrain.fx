@@ -58,11 +58,8 @@ VS_OUT			VS_MAIN(VS_IN In)
 
 	Out.vPosition = mul(vector(In.vPosition.xyz, 1.f), matWVP);
 	Out.vNormal = normalize(mul(In.vNormal.xyz, (float3x3)g_matWorld));
-	//Out.vTangent = normalize(mul(In.vTangent.xyz, (float3x3)g_matWorld));
-	//Out.vBiNormal = normalize(mul(In.vBiNormal.xyz, (float3x3)g_matWorld));
-
-	//matrix	mat = { float4(g_fTangent, 0.f), float4(g_fBinormal, 0.f), float4(g_fNormal, 0.f), { 0, 0, 0, 1 } };
-	//Out.vTranspose = transpose(mat);
+	Out.vTangent = normalize(mul(In.vTangent.xyz, (float3x3)g_matWorld));
+	Out.vBiNormal = normalize(cross(Out.vTangent, Out.vNormal));
 
 	Out.vProjPos = Out.vPosition;
 
@@ -84,7 +81,7 @@ struct PS_OUT
 {
 	vector			vColor : COLOR0;
 	vector			vNormal : COLOR1;
-	//vector			vDepth  : COLOR2;
+	vector			vDepth  : COLOR2;
 };
 
 PS_OUT		PS_MAIN(PS_IN In)
@@ -105,14 +102,10 @@ PS_OUT		PS_MAIN(PS_IN In)
 
 	float3	TempLightDir = g_vLightDir.xyz;
 
-	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.75f;
-	//bright = max(0.f, bright);
-	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.7f;
 
-	//Out.vColor.r = Out.vColor.r * bright;
-	//Out.vColor.g = Out.vColor.g * bright;
-	//Out.vColor.b = Out.vColor.b * bright;
 	Out.vColor.rgb = bright * Out.vColor.xyz;
+	//Out.vNormal = vector(worldNormal.xyz, 1.f);
 
 	//// r : z 나누기가 끝난 투영 상태의 z값을 보관
 	//// g : 뷰스페이스 상태의 z값을 보관

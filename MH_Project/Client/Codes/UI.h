@@ -31,6 +31,10 @@ protected:
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 public:
+	const _float&	Get_PosX() { return m_fX; }
+	const _float&	Get_PosY() { return m_fY; }
+
+public:
 	void			Set_ValueRatio(_float fValue) { m_fValueRatio = fValue; }
 	void			Set_MaxValueRatio(_float fValue) { m_fFullValueRatio = fValue; }
 

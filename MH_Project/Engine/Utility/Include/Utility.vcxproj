@@ -115,9 +115,12 @@
   <ItemGroup>
     <FxCompile Include="..\Codes\Shader_BackGround.fx" />
     <FxCompile Include="..\Codes\Shader_DamageFont.fx" />
+    <FxCompile Include="..\Codes\Shader_Item.fx" />
     <FxCompile Include="..\Codes\Shader_Normal.fx" />
+    <FxCompile Include="..\Codes\Shader_Skill_UI.fx" />
     <FxCompile Include="..\Codes\Shader_Sky.fx" />
     <FxCompile Include="..\Codes\Shader_StageMesh.fx" />
+    <FxCompile Include="..\Codes\Shader_Stage_1Mesh.fx" />
     <FxCompile Include="..\Codes\Shader_Symbol.fx" />
     <FxCompile Include="..\Codes\Shader_Trail.fx" />
   </ItemGroup>

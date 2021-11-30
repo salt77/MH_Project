@@ -85,6 +85,10 @@ HRESULT CManagement::Ready_Prototype_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_StageMesh", pShader), E_FAIL);
 
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Stage_1Mesh.fx");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Stage_1Mesh", pShader), E_FAIL);
+
 	// shader_shade
 	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Shade.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
@@ -144,6 +148,16 @@ HRESULT CManagement::Ready_Prototype_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Symbol.fx");
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Symbol", pShader), E_FAIL);
+
+	// Shader_Item_UI
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Item.fx");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Item_UI", pShader), E_FAIL);
+
+	// Shader_Skill_UI
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Skill_UI.fx");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Skill_UI", pShader), E_FAIL);
 
 	return S_OK;
 }

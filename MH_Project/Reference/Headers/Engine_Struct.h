@@ -17,6 +17,10 @@ namespace Engine
 
 		_float			fStamina;
 		_float			fMaxStamina;
+		_float			fStaminaRecovery;
+		_float			fStaminaOriginRecovery;
+		_float			fAttackSpeedInterpol;
+
 		_int			iSkillPoint;
 		_int			iMaxSkillPoint;
 

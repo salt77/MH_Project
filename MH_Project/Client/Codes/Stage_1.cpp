@@ -68,10 +68,10 @@ HRESULT CStage_1::LateReady_Scene()
 	FAILED_CHECK_RETURN(Load_NaviMesh(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
 
 	m_mapLayer.emplace(L"GameLogic_Spawn", m_pSpawnLayer);
 	m_mapLayer.emplace(L"Enemies", m_pEnemyLayer);
@@ -864,7 +864,7 @@ HRESULT CStage_1::Load_NextStage()
 
 		if (pFadeInOut)
 		{
-			m_fFadeOutRatio += FADEOUTSPEED * 20.f ;
+			m_fFadeOutRatio += FADEOUTSPEED * 5.f;
 			pFadeInOut->Set_ValueRatio(m_fFadeOutRatio);
 		}
 

@@ -18,18 +18,18 @@ class CPlayer_SlotUI final : public CUI
 {
 private:
 	explicit CPlayer_SlotUI(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CPlayer_SlotUI(void);
+	virtual ~CPlayer_SlotUI();
 
 public:
-	virtual HRESULT Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY);
-	virtual _int	Update_Object(const _float& fTimeDelta) override;
-	virtual void	Render_Object(void) override;
+	virtual HRESULT		Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY);
+	virtual _int		Update_Object(const _float& fTimeDelta) override;
+	virtual void		Render_Object() override;
 
 protected:
-	HRESULT				Add_Component(void);
-	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
+	HRESULT					Add_Component();
+	virtual HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 public:
 	static CPlayer_SlotUI*	Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY);
-	virtual void			Free(void);
+	virtual void			Free();
 };

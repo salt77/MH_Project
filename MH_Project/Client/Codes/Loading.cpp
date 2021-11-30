@@ -164,7 +164,7 @@ _uint CLoading::Loading_ForTextureAll()
 
 	// Trail 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SwordTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_longblade_trail02.tga", TEX_NORMAL)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_BalistaTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/arrow_trail.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_BalistaTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_longblade_trail02.tga", TEX_NORMAL)), E_FAIL);
 
 	// Player UI
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Player_Hpbar_BackUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Player_Hpbar_Back.png", TEX_NORMAL)), E_FAIL);
@@ -190,10 +190,6 @@ _uint CLoading::Loading_ForTextureAll()
 	// Boss 등장 이후 소개 백그라운드(공용)
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_NamingSceneUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossNamingScene.dds", TEX_NORMAL)), E_FAIL);
 
-	// Buff UI
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_CriticalUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/skill_lethita_glidingfury.tga", TEX_NORMAL)), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_ReinforceFuryUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/skill_lethita_spirit_wind.tga", TEX_NORMAL)), E_FAIL);
-
 	// Damage Font UI
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Damage_Font_NormalUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Font_Damage/Font_Damage_Normal_%d.png", TEX_NORMAL, 10)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Damage_Font_SkillUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Font_Damage/Font_Damage_Skill_%d.png", TEX_NORMAL, 10)), E_FAIL);
@@ -205,7 +201,6 @@ _uint CLoading::Loading_ForTextureAll()
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Critical", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/critical_roll.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ground_Hit", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/ground_hit.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Symbol", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/ghostwall_symbol.tga", TEX_NORMAL)), E_FAIL);
-	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Radial_Blur", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/efx_sword_radial_blur.tga", TEX_NORMAL)), E_FAIL);
 
 	// Shader Effect 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Dissolve", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/dissolve.png", TEX_NORMAL)), E_FAIL);
@@ -214,6 +209,24 @@ _uint CLoading::Loading_ForTextureAll()
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Announce_BalistaAttack", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Balista_Announced.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Announce_BalistaReady", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Announce_Balista_Ready.png", TEX_NORMAL)), E_FAIL);
 
+	// Buff UI && QuickSlot Skill UI
+	//FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_CriticalUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/skill_lethita_glidingfury.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Sp_Fever_Icon", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/skill_lethita_fever.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Fury_No7_Icon", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/skill_lethita_gliding_loop.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Sp_Reinforce", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/skill_lethita_reinforce_fury.tga", TEX_NORMAL)), E_FAIL);
+
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Buff_Reinforce", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/skill_hp_mastery.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Buff_Stemina_Recovery", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/skill_breath.tga", TEX_NORMAL)), E_FAIL);
+
+	// QuickSlot Item 
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Potion_Hp", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/recovery_potion.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Potion_Stemina", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/stamina_potion_lv1.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Potion_Sp", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/stim_potion_lvl3.tga", TEX_NORMAL)), E_FAIL);
+
+	// Buff Tooltip
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Tooltip_Stemina", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Tooltip_Stemina.png", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Tooltip_Reinforce", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Tooltip_Reinforce.png", TEX_NORMAL)), E_FAIL);
+	
 	return 0;
 }
 

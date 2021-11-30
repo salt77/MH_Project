@@ -48,6 +48,8 @@ public:
 	void			Set_EnableBalista(_vec3 vPos, _vec3 vDir);
 	void			Set_CollisionWall() { m_bCollision = true; m_dwSurviveTime = GetTickCount(); }
 	void			Set_EnemyHit() { m_bEnemyHit = true; }
+	void			Set_StickBox(_matrix matBoxWorld) { m_matStick = matBoxWorld; }
+	void			Set_ReturnPoolingPos();
 
 private:
 	_bool			m_bCollision = false;
@@ -66,6 +68,8 @@ private:
 
 	_vec3			m_vDir;
 	_vec3			m_vOriginScale;
+
+	_matrix			m_matStick;
 
 	CDynamicCamera*	m_pMainCam = nullptr;
 	CTransform*		m_pPlayerTrans = nullptr;

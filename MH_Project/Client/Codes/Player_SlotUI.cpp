@@ -138,35 +138,6 @@ HRESULT CPlayer_SlotUI::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 
 	m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 0);
 
-	//pEffect->SetFloat("g_fHpRatio", m_fValueRatio);
-
-	//D3DMATERIAL9		tMtrl;
-	//ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	//tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	//tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	//tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	//tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	//tMtrl.Power = 10.f;
-
-	//pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
-	//pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
-	//pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
-
-	//pEffect->SetFloat("g_fPower", tMtrl.Power);
-
-	//const D3DLIGHT9*	pLightInfo = Get_Light();
-	//NULL_CHECK_RETURN(pLightInfo, E_FAIL);
-
-	//pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
-
-	//pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
-	//pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
-	//pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
-
-	//D3DXMatrixInverse(&matView, NULL, &matView);
-	//pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
-
 	return S_OK;
 }
 

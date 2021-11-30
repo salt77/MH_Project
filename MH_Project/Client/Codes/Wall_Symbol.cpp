@@ -59,7 +59,7 @@ _int CWall_Symbol::LateUpdate_Object(const _float & fTimeDelta)
 
 void CWall_Symbol::Render_Object()
 {
-	m_mapBoxColliderCom.begin()->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+	//m_mapBoxColliderCom.begin()->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
 
 	//
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());

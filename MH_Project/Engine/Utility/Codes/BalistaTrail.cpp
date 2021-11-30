@@ -95,7 +95,7 @@ void CBalistaTrail::Management_Point()
 
 	m_fInTime += m_fDeltaTime;
 
-	if (1.f <= m_fInTime)
+	if (0.05f <= m_fInTime)
 	{
 		_vec3	vPoint[2];
 		vPoint[0] = _vec3(0.f, 0.f, 0.f);
@@ -113,11 +113,11 @@ void CBalistaTrail::Management_Point()
 
 			if (i % 2)
 			{
-				pVertex[i].vTexUV = _vec2(i / _float(m_dwVtxCnt), 1.f);
+				pVertex[i].vTexUV = _vec2(1.f, i / _float(m_dwVtxCnt));
 			}
 			else
 			{
-				pVertex[i].vTexUV = _vec2(i / _float(m_dwVtxCnt), 0.f);
+				pVertex[i].vTexUV = _vec2(0.f, i / _float(m_dwVtxCnt));
 			}
 
 			++i;
