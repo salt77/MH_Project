@@ -102,6 +102,12 @@ HRESULT CBackGround::Add_Component()
 		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
 		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
 	}
+	else if (98 == m_iTexIndex)
+	{
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Start_Scene"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	}
 
 	// Renderer
 	pComponent = m_pRendererCom = Engine::Get_Renderer();

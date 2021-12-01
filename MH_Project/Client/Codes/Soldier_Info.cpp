@@ -41,6 +41,8 @@ HRESULT CSoldier_Info::LateReady_Object()
 	m_pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
 	NULL_CHECK_RETURN(m_pPlayerTrans, E_FAIL);
 
+	m_fContactPlayerDis = DIS_MID - 3.f;
+
 	return S_OK;
 }
 

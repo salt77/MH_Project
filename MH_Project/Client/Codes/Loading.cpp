@@ -164,6 +164,7 @@ _uint CLoading::Loading_ForTextureAll()
 
 	// Trail 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_SwordTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_longblade_trail02.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_CloyanTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/trail_cloyan.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_BalistaTrail", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/heroes_longblade_trail02.tga", TEX_NORMAL)), E_FAIL);
 
 	// Player UI
@@ -201,6 +202,7 @@ _uint CLoading::Loading_ForTextureAll()
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Critical", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/critical_roll.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Ground_Hit", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/ground_hit.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Symbol", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/ghostwall_symbol.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Efx_Bomb", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/bomb.png", TEX_NORMAL)), E_FAIL);
 
 	// Shader Effect 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Dissolve", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/dissolve.png", TEX_NORMAL)), E_FAIL);
@@ -222,7 +224,9 @@ _uint CLoading::Loading_ForTextureAll()
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Potion_Hp", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/recovery_potion.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Potion_Stemina", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/stamina_potion_lv1.tga", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Potion_Sp", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/stim_potion_lvl3.tga", TEX_NORMAL)), E_FAIL);
-
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Item_StickBomb", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/sticky_bomb.tga", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Skill_Balista", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/skill_battle_will.tga", TEX_NORMAL)), E_FAIL);
+	
 	// Buff Tooltip
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Tooltip_Stemina", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Tooltip_Stemina.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Tooltip_Reinforce", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Tooltip_Reinforce.png", TEX_NORMAL)), E_FAIL);

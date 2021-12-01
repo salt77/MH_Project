@@ -1,7 +1,7 @@
 #ifndef Define_h__
 #define Define_h__
 
-#define	WINCX	1300
+#define	WINCX	1400
 #define	WINCY	900
 
 extern	HWND		 g_hWnd;
@@ -114,9 +114,9 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define SCALE_NORMAL	0.01f
 #define SCALE_MANKIND	0.012f
 #define SCALE_BALISTA	0.03f
-#define SCALE_ITEM		30.f
-#define SCALE_ICON		32.f
-#define SCALE_TOOLTIP	250.f
+#define SCALE_ITEM		29.5f
+#define SCALE_ICON		30.f
+#define SCALE_TOOLTIP	275.f
 
 #define CAMSHAKE_POWER	0.025f
 

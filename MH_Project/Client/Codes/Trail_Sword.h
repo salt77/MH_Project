@@ -18,15 +18,15 @@ class CTrail_Sword final : public CGameObject
 {
 private:
 	explicit CTrail_Sword(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CTrail_Sword(void);
+	virtual ~CTrail_Sword();
 
 public:
 	virtual HRESULT Ready_Object();
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
-	virtual void	Render_Object(void) override;
+	virtual void	Render_Object() override;
 
 protected:
-	HRESULT				Add_Component(void);
+	HRESULT				Add_Component();
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 public:
@@ -59,5 +59,5 @@ private:
 
 public:
 	static CTrail_Sword*	Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual void	Free(void);
+	virtual void			Free();
 };

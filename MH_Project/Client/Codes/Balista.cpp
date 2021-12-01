@@ -112,18 +112,6 @@ _int CBalista::LateUpdate_Object(const _float & fTimeDelta)
 
 void CBalista::Render_Object()
 {
-	//map<const wstring, CCollider*>::iterator	iter_Sphere = m_mapColliderCom.begin();
-	//map<const wstring, CBoxCollider*>::iterator	iter_Box = m_mapBoxColliderCom.begin();
-
-	//for (; iter_Sphere != m_mapColliderCom.end(); ++iter_Sphere)
-	//{
-	//	iter_Sphere->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-	//}
-	//for (; iter_Box != m_mapBoxColliderCom.end(); ++iter_Box)
-	//{
-	//	iter_Box->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-	//}
-
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
 		m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
@@ -236,7 +224,7 @@ HRESULT CBalista::Add_Component_ForTrail()
 
 		// Shader
 		pComponent = m_pTrailShaderCom = dynamic_cast<CShader*>(Clone_Prototype(L"Proto_Shader_Trail"));
-		NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
+		NULL_CHECK_RETURN(m_pTrailShaderCom, E_FAIL);
 		m_mapComponent[ID_STATIC].emplace(L"Com_TrailShader", pComponent);
 	}
 
@@ -284,7 +272,7 @@ HRESULT CBalista::Ready_Collider()
 	switch (m_eCurSceneID)
 	{
 	case SCENE_STAGE:
-		FAILED_CHECK_RETURN(Add_Collider(-60.f, -60.f, -120.f, 60.f, 60.f, 60.f, L"Collider_Box", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_HIT), E_FAIL);
+		FAILED_CHECK_RETURN(Add_Collider(-70.f, -70.f, -120.f, 70.f, 70.f, 70.f, L"Collider_Box", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_HIT), E_FAIL);
 		break;
 
 	case SCENE_STAGE_1:

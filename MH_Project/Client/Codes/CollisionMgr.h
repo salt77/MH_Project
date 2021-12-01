@@ -63,6 +63,7 @@ private:
 	_bool				m_bCollisionFrame = false;
 	_bool				m_bCanCollision = false;
 	_bool				m_bNextStageLoad = false;
+	_bool				m_bMainBossEnd = false;
 
 	SCENE_ID			m_eSceneID = SCENE_END;
 

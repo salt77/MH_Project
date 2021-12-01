@@ -2,7 +2,7 @@
 #include "Cloyan.h"
 
 #include "Player.h"
-#include "Trail_Sword.h"
+#include "Trail_Cloyan.h"
 #include "Boss_Hpbar_BackUI.h"
 #include "Boss_Hpbar_GreenUI.h"
 #include "Boss_Hpbar_YellowUI.h"
@@ -52,8 +52,14 @@ HRESULT CCloyan::LateReady_Object()
 	Load_ColInfo();
 	Add_NaviMesh();
 
-	m_pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+	m_pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+	NULL_CHECK_RETURN(m_pPlayer, E_FAIL);
+
+	m_pTrail = dynamic_cast<CTrail_Cloyan*>(Engine::Get_GameObject(L"GameLogic", L"Cloyan_Trail"));
+	NULL_CHECK_RETURN(m_pTrail, E_FAIL);
+
 	m_pUILayer = CLayer::Create();
+	NULL_CHECK_RETURN(m_pUILayer, E_FAIL);
 
 	return S_OK;
 }
@@ -67,17 +73,7 @@ _int CCloyan::Update_Object(const _float & fTimeDelta)
 
 	m_fTimeDelta = fTimeDelta;
 
-	//if (Key_Down('G'))
-	//{
-	//	Set_Damage(15000);
-	//}
-	//else if (Engine::Key_Down('C'))
-	//{
-	//	m_pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
-	//	m_pTransformCom->Set_Pos(m_pPlayerTrans->Get_Info(INFO_POS));
-	//	m_iAniIndex = CLOYAN_SPAWN;
-	//	Animation_Control();
-	//}
+	Make_TrailEffect(fTimeDelta);
 
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
@@ -90,6 +86,7 @@ _int CCloyan::Update_Object(const _float & fTimeDelta)
 		MoveOn_Skill();
 		RotationOn_Skill();
 		Dissolve(fTimeDelta);
+		
 
 		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
@@ -127,28 +124,6 @@ _int CCloyan::LateUpdate_Object(const _float & fTimeDelta)
 
 void CCloyan::Render_Object()
 {
-	Render_Font(L"Font_Nanumgothic_Bold", to_wstring(m_iAniIndex), &_vec2(SCREEN_CENTER_X, LOADINGBAR_Y - 60.f), D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	/*if (!m_mapColliderCom.empty())
-	{
-		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
-
-		for (; iter != m_mapColliderCom.end(); ++iter)
-		{
-			if (iter->second->Get_CanCollision())
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-		}
-	}
-	if (!m_mapBoxColliderCom.empty())
-	{
-		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
-
-		for (; iter != m_mapBoxColliderCom.end(); ++iter)
-		{
-			if (iter->second->Get_CanCollision())
-				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-		}
-	}*/
-
 	if (POOLING_POS != *m_pTransformCom->Get_Info(INFO_POS))
 	{
 		if (m_bAnimation)
@@ -216,7 +191,7 @@ HRESULT CCloyan::Add_Component()
 	// Texture_Dissolve
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Prototype(L"Proto_Texture_Dissolve"));
 	NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Texture_Dissolve", pComponent);
 
 	// Shader
 	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Ahglan"));
@@ -420,7 +395,7 @@ void CCloyan::Animation_Control()
 			m_bCanAction = false;
 			m_lfAniEnd = 2.6f;
 			m_eCurAction = CL_ATK;
-			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.4f, 3.5f, (_float)m_lfAniEnd * 0.5f);
+			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.38f, 3.5f, (_float)m_lfAniEnd * 0.55f);
 			ENEMY_SKILL_ROTATION((float)m_lfAniEnd * 0.1f, 180.f, (float)m_lfAniEnd * 0.5f);
 			m_pMeshCom->Set_TrackSpeed(2.1f);
 			break;
@@ -438,8 +413,10 @@ void CCloyan::Animation_Control()
 			break;
 
 		case CCloyan::CLOYAN_DYING:
+			m_bDissolveOn = true;
 			m_bCanAction = false;
-			m_pMeshCom->Set_TrackSpeed(1.5f);
+			m_pMeshCom->Set_TrackSpeed(1.f);
+			m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 			m_lfAniEnd = 0.7f;
 			m_eCurAction = CL_DEAD;
 			break;
@@ -461,8 +438,8 @@ void CCloyan::Animation_Control()
 		case CCloyan::CLOYAN_SLASHPIERCE:
 			m_bCanAction = false;
 			m_lfAniEnd = 2.8f;
-			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.6f, 5.f, (_float)m_lfAniEnd * 0.65f);
-			ENEMY_SKILL_ROTATION((float)m_lfAniEnd * 0.1f, 180.f, (float)m_lfAniEnd * 0.6f);
+			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.6f, 6.f, (_float)m_lfAniEnd * 0.7f);
+			ENEMY_SKILL_ROTATION((float)m_lfAniEnd * 0.1f, 180.f, (float)m_lfAniEnd * 0.65f);
 			m_eCurAction = CL_ATK;
 			m_pMeshCom->Set_TrackSpeed(2.2f);
 			break;
@@ -516,7 +493,7 @@ void CCloyan::Animation_Control()
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"9.Cloyan_NamingScene_Back", pGameObject), );
 
-			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X + 5.f, WINCY - 130.f, 210.f, 95.f, NAMING_BOSSNAME, BOSS_CLOYAN);
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X + 5.f, WINCY - 130.f, 205.f, 95.f, NAMING_BOSSNAME, BOSS_CLOYAN);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"10.Cloyan_NamingScene_BossName", pGameObject), );
 
@@ -545,8 +522,8 @@ void CCloyan::Animation_Control()
 			m_bCanAction = false;
 			m_lfAniEnd = 3.5f;
 			m_eCurAction = CL_ATK;
-			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.73f, 17.5f, (_float)m_lfAniEnd * 0.77f);
-			ENEMY_SKILL_ROTATION((float)m_lfAniEnd * 0.1f, 180.f, (float)m_lfAniEnd * 0.75f);
+			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.75f, 17.f, (_float)m_lfAniEnd * 0.85f);
+			ENEMY_SKILL_ROTATION((float)m_lfAniEnd * 0.1f, 180.f, (float)m_lfAniEnd * 0.8f);
 			m_pMeshCom->Set_TrackSpeed(2.2f);
 			break;
 
@@ -555,6 +532,7 @@ void CCloyan::Animation_Control()
 			m_lfAniEnd = 2.8f;
 			m_eCurAction = CL_ATK;
 			m_pMeshCom->Set_TrackSpeed(2.1f);
+			ENEMY_SKILL_ROTATION((float)m_lfAniEnd * 0.1f, 180.f, (float)m_lfAniEnd * 0.6f);
 			break;
 
 		case CCloyan::CLOYAN_TURNLEFT:
@@ -727,15 +705,15 @@ void CCloyan::Collision_Control()
 			break;
 
 		case CCloyan::CLOYAN_SLASHPIERCE:
-			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.2f, m_lfAniEnd * 0.8f);
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.25f, m_lfAniEnd * 0.9f);
 			break;
 
 		case CCloyan::CLOYAN_STEPPIERCE:
-			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.7f, m_lfAniEnd * 0.8f);
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.7f, m_lfAniEnd * 0.85f);
 			break;
 
 		case CCloyan::CLOYAN_TWINBOLT:
-			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.4f, m_lfAniEnd * 0.55f);
+			HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.5f, m_lfAniEnd * 0.8f);
 			break;
 
 		default:
@@ -848,12 +826,28 @@ void CCloyan::Dissolve(const _float & fTimeDelta)
 	if (m_bDissolveOn)
 	{
 		m_fDissolveValue += 0.25f * fTimeDelta;
+	}
+}
 
-		if (1.f <= m_fDissolveValue)
+void CCloyan::Make_TrailEffect(const _float & fTimeDelta)
+{
+	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+
+	for (; iter != m_mapBoxColliderCom.end(); ++iter)
+	{
+		if (L"Trail_Info" == iter->first)
 		{
-			m_pTransformCom->Set_Pos(&POOLING_POS);
-			//m_pTransformCom->Update_Component(m_fTimeDelta);
+			m_pTrail->Set_InfoForTrail(fTimeDelta, iter->second->Get_Min(), iter->second->Get_Max(), iter->second->Get_ColliderWorld());
 		}
+	}
+
+	if (CL_ATK == m_eCurAction)
+	{
+		m_pTrail->Set_Render(true);
+	}
+	else
+	{
+		m_pTrail->Set_Render(false);
 	}
 }
 

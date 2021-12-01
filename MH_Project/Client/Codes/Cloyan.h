@@ -19,6 +19,7 @@ class CShader;
 END
 
 class CPlayer;
+class CTrail_Cloyan;
 class CBoss_Hpbar_GreenUI;
 class CBoss_Hpbar_YellowUI;
 class CBoss_Hpbar_RedUI;
@@ -64,6 +65,7 @@ private:
 	void			Update_UI();
 	void			Update_State();
 	void			Dissolve(const _float& fTimeDelta);
+	void			Make_TrailEffect(const _float& fTimeDelta);
 
 	// °´Ã¼ ÇÔ¼öµé
 	void			Movement();
@@ -131,6 +133,7 @@ private:
 	CShader*		m_pShaderCom = nullptr;
 
 	// Instance 
+	CTrail_Cloyan*			m_pTrail = nullptr;
 	CBoss_Hpbar_GreenUI*	m_pGreenHpbar = nullptr;
 	CBoss_Hpbar_YellowUI*	m_pYellowHpbar = nullptr;
 	CBoss_Hpbar_RedUI*		m_pRedHpbar = nullptr;

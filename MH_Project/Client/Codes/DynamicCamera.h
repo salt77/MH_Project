@@ -26,6 +26,7 @@ public:
 		MODE_NORMAL, MODE_SECONDARY,
 		MODE_AHGLAN_START, MODE_AHGLAN_RISE, MODE_AHGLAN_STAND, MODE_AHGLAN_COMPLETE,
 		MODE_BALISTA_HIGHLIGHT, 
+		MODE_GAME_END, 
 		MODE_END
 	};
 
@@ -96,6 +97,8 @@ private:
 	_ulong		m_dwShakeDelay = 1000;
 	_ulong		m_dwBalistaStart = GetTickCount();
 	_ulong		m_dwBalistaDelay = 2500;
+	_ulong		m_dwEndSceneStart = GetTickCount();
+	_ulong		m_dwEndSceneDelay = 8000;
 
 	_float		m_fLongWaveInterpol = 0.5f;
 	_float		m_fFXProgress = 0.f;

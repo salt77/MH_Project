@@ -29,8 +29,11 @@ public:
 	virtual void		Render_Object() override;
 
 protected:
-	HRESULT					Add_Component();
-	virtual HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
+	HRESULT				Add_Component();
+	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
+
+private:
+	void				Can_UseSkill();
 
 public:
 	static CSkill_Sp_Stand*		Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY);

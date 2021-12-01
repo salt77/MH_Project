@@ -10,6 +10,7 @@ BEGIN(Engine)
 
 class CDynamicMesh;
 class CTransform;
+class CTexture;
 class CRenderer;
 class CCalculator;
 class CCollider;
@@ -47,6 +48,7 @@ public:
 		ATK_ROLLING_ONETIME_END, ATK_ROLLING_ONETIME_BEGIN, ATK_ONEHAND,
 		DAMAGE_FROM_FRONT, DAMAGE_FROM_BACK,
 		ENTRY_IDLE, ENTRY_CONTACT, ATK_THREETIME_STAMP, ATK_ONETIME_STAMP,
+		DYING, 
 
 		A_STATE_END
 	};
@@ -56,22 +58,26 @@ private:
 	virtual ~CAhglan();
 
 public:
-	virtual HRESULT Ready_Object(void) override;
+	virtual HRESULT Ready_Object() override;
 	virtual HRESULT	LateReady_Object() override;
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
 	virtual _int	LateUpdate_Object(const _float& fTimeDelta) override;
-	virtual void	Render_Object(void) override;
+	virtual void	Render_Object() override;
+
+public:
+	const	_bool&	Get_DissoveOn() { return m_bDissolveOn; }
 
 public:
 	virtual	void	Set_Damage(_int iDamage) override;
 
 private:
 	// 기본 함수들
-	HRESULT			Add_Component(void);
+	HRESULT			Add_Component();
 	HRESULT			SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 	void			Animation_Control();
 	void			Collision_Control();
 	void			Update_UI();
+	void			Update_State();
 
 	// 객체 함수들
 	void			Contact();
@@ -80,6 +86,7 @@ private:
 	void			RotationOn_Skill();
 	void			FootStep();
 	void			Announce();
+	void			Dissolve(const _float& fTimeDelta);
 
 public:
 	HRESULT			Add_NaviMesh();
@@ -144,6 +151,7 @@ private:
 	// Component
 	CDynamicMesh*	m_pMeshCom = nullptr;
 	CTransform*		m_pTransformCom = nullptr;
+	CTexture*		m_pTextureCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
 	CCalculator*	m_pCalculatorCom = nullptr;
 	CCollider*		m_pColliderCom = nullptr;

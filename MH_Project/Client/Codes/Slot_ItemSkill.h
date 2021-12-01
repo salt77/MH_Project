@@ -13,6 +13,7 @@ class CShader;
 
 END
 
+class CPlayer;
 class CPlayer_SlotUI;
 
 class CSlot_ItemSkill abstract : public CUI
@@ -41,7 +42,7 @@ public:
 	void					Set_UseItemSkill() { m_bCanUse = false; m_fCoolDownValue = 0.f; }
 
 protected:
-	void					Cool_Down(const _float& fTimeDelta);
+	virtual	void			Cool_Down(const _float& fTimeDelta);
 
 protected:
 	_bool					m_bCanUse = true;
@@ -49,6 +50,7 @@ protected:
 	_float					m_fCoolDownDelay = 0.01f;
 	_float					m_fCoolDownValue = 1.f;
 
+	CPlayer*				m_pPlayer = nullptr;
 	CPlayer_SlotUI*			m_pSlotUI = nullptr;
 
 public:

@@ -42,7 +42,7 @@ _int CWall_Symbol::Update_Object(const _float & fTimeDelta)
 {
 	_int iExit = CGameObject::Update_Object(fTimeDelta);
 
-	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+	Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
 	return iExit;
 }

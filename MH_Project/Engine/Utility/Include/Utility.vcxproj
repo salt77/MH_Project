@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Codes\Shader_BackGround.fx" />
+    <FxCompile Include="..\Codes\Shader_Buff_UI.fx" />
     <FxCompile Include="..\Codes\Shader_DamageFont.fx" />
     <FxCompile Include="..\Codes\Shader_Item.fx" />
     <FxCompile Include="..\Codes\Shader_Normal.fx" />

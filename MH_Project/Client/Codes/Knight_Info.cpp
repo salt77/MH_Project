@@ -19,7 +19,7 @@ CKnight_Info::~CKnight_Info(void)
 }
 
 
-HRESULT CKnight_Info::Ready_Object(void)
+HRESULT CKnight_Info::Ready_Object()
 {
 	FAILED_CHECK_RETURN(CSpawn_Info::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -29,7 +29,7 @@ HRESULT CKnight_Info::Ready_Object(void)
 	m_pTransformCom->Update_Component(0.f);
 
 	m_fAreaLimit = DIS_MID;
-	m_fContactPlayerDis = DIS_SHORT;
+	m_fContactPlayerDis = DIS_SHORT + 1.f;
 
 	return S_OK;
 }

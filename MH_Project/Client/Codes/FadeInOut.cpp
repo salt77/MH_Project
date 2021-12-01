@@ -141,17 +141,6 @@ HRESULT CFadeInOut::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
 	pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
 
-	//pEffect->SetFloat("g_fPower", tMtrl.Power);
-
-	//const D3DLIGHT9*	pLightInfo = Get_Light();
-	//NULL_CHECK_RETURN(pLightInfo, E_FAIL);
-
-	//pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
-
-	//pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
-	//pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
-	//pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
-
 	return S_OK;
 }
 

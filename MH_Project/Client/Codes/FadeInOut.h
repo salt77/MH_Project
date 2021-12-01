@@ -14,7 +14,7 @@ public:
 	virtual void	Render_Object() override;
 
 protected:
-	HRESULT				Add_Component(void);
+	HRESULT				Add_Component();
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 public:
@@ -28,6 +28,6 @@ private:
 
 public:
 	static CFadeInOut*	Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY, _float fStartAlpha = 1.f);
-	virtual void		Free(void) override;
+	virtual void		Free() override;
 };
 

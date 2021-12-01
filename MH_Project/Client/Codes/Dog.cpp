@@ -372,10 +372,26 @@ void CDog::Animation_Control()
 
 			m_lfAniEnd = 1.2424f;
 			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.2f, 4.f, (_float)m_lfAniEnd * 0.6f);
+
+			iRandSound = rand() % 3;
+			if (0 == iRandSound)
+			{
+				SoundMgrLowerVol(L"attackdog_shout_01.wav", CSoundMgr::MONSTER, 0.05f);
+			}
+			else if (1 == iRandSound)
+			{
+				SoundMgrLowerVol(L"attackdog_shout_02.wav", CSoundMgr::MONSTER, 0.05f);
+			}
+			else
+			{
+				SoundMgrLowerVol(L"attackdog_shout_03.wav", CSoundMgr::MONSTER, 0.05f);
+			}
 			break;
 
 		case DOGSTATE_THREAT:
 			m_bCanAction = false;
+
+			SoundMgrLowerVol(L"attackdog_breath_02.wav", CSoundMgr::MONSTER, 0.05f);
 			break;
 
 		case DOGSTATE_DAMAGED:
@@ -391,6 +407,16 @@ void CDog::Animation_Control()
 		case DOGSTATE_DOWN_BEGIN:
 			m_bCanAction = false;
 			m_lfAniEnd = 0.58f;
+
+			iRandSound = rand() % 2;
+			if (0 == iRandSound)
+			{
+				SoundMgrLowerVol(L"attackdog_hurt_01.wav", CSoundMgr::MONSTER, 0.05f);
+			}
+			else
+			{
+				SoundMgrLowerVol(L"attackdog_hurt_02.wav", CSoundMgr::MONSTER, 0.05f);
+			}
 			break;
 
 		case DOGSTATE_DOWN_IDLE:
@@ -405,6 +431,8 @@ void CDog::Animation_Control()
 		case DOGSTATE_DYING:
 			m_bCanAction = false; 
 			m_lfAniEnd = 0.6f;
+
+			SoundMgrLowerVol(L"attackdog_hurt_03.wav", CSoundMgr::MONSTER, 0.05f);
 			break;
 
 		case DOGSTATE_DEAD_IDLE:
@@ -415,6 +443,9 @@ void CDog::Animation_Control()
 		case DOGSTATE_SPAWN:
 			m_bCanAction = false;
 			m_lfAniEnd = 2.f;
+
+			SoundMgrLowerVol(L"attackdog_spawn_01.wav", CSoundMgr::MONSTER, 0.035f);
+			SoundMgrLowerVol(L"effect_monster_spawn.wav", CSoundMgr::ENEMY_EFFECT, 0.015f);
 			break;
 		}
 

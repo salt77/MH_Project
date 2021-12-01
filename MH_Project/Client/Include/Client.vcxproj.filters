@@ -298,6 +298,21 @@
     <Filter Include="02.GameObject\09.UI\00.PlayerUI\06.Buff_Tooltip\01.Tooltip_Reinforce">
       <UniqueIdentifier>{b4607dba-64a4-42f2-9dc7-f8b5bf1195d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\10.Trail_Sword\02.Cloyan">
+      <UniqueIdentifier>{bc01d353-def5-4a07-b402-a2fddd3d17c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\12.Effect\03.Bomb">
+      <UniqueIdentifier>{9356dcae-bc5e-4ae2-8a8c-305fa6b432f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\07.Item_StickyBomb">
+      <UniqueIdentifier>{b56b26c5-90a0-488a-8bff-43ddd28fadb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\08.Skill_Balista">
+      <UniqueIdentifier>{a42e8073-36be-4b1c-b431-667ad0570897}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\98.Start_Scene">
+      <UniqueIdentifier>{ed11ba74-c8f6-433e-89b6-adfcca99fafd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -537,6 +552,21 @@
     <ClInclude Include="..\Codes\Tooltip_Reinforce.h">
       <Filter>02.GameObject\09.UI\00.PlayerUI\06.Buff_Tooltip\01.Tooltip_Reinforce</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Trail_Cloyan.h">
+      <Filter>02.GameObject\10.Trail_Sword\02.Cloyan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Efx_Bomb.h">
+      <Filter>02.GameObject\12.Effect\03.Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Item_StickyBomb.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\07.Item_StickyBomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Skill_Balista.h">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\08.Skill_Balista</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Start_Scene.h">
+      <Filter>01.Scene\98.Start_Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -766,6 +796,21 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Tooltip_Reinforce.cpp">
       <Filter>02.GameObject\09.UI\00.PlayerUI\06.Buff_Tooltip\01.Tooltip_Reinforce</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Trail_Cloyan.cpp">
+      <Filter>02.GameObject\10.Trail_Sword\02.Cloyan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Efx_Bomb.cpp">
+      <Filter>02.GameObject\12.Effect\03.Bomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Item_StickyBomb.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\07.Item_StickyBomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Skill_Balista.cpp">
+      <Filter>02.GameObject\09.UI\00.PlayerUI\05.Item&amp;Skill\08.Skill_Balista</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Start_Scene.cpp">
+      <Filter>01.Scene\98.Start_Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

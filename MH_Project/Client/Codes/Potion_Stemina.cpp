@@ -26,7 +26,7 @@ HRESULT CPotion_Stemina::Ready_Object(_float fX, _float fY, _float fSizeX, _floa
 	m_fSizeY = fSizeY;
 
 	m_fValueRatio = 0.9f;
-	m_fCoolDownDelay = 0.008f;
+	m_fCoolDownDelay = 0.02f;
 
 	return S_OK;
 }

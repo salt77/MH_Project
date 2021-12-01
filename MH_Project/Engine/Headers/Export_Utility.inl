@@ -121,6 +121,15 @@ inline _float Random(_float _fMin, _float _fMax)
 	return generator();
 }
 
+inline _float Random_Time(_float _fMin, _float _fMax)
+{
+	mt19937 engine((_uint)time(NULL));
+	uniform_real_distribution<_float> distribution(_fMin, _fMax);    // 생성 범위
+	auto generator = bind(distribution, engine);
+
+	return generator();
+}
+
 inline void Emplace_Layer(const wstring wstrLayerTag, CLayer * pLayer)
 {
 	CManagement::GetInstance()->Emplace_Layer(wstrLayerTag, pLayer);

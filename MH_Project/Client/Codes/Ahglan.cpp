@@ -12,6 +12,7 @@
 #include "Ahglan_FontName.h"
 #include "Boss_NamingScene.h"
 #include "Announce_Balista_Ready.h"
+#include "Skill_Balista.h"
 
 #include "Export_Function.h"
 #include "Export_Utility.h"
@@ -75,20 +76,10 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 		return iExit;
 
 	//// 디버그용
-	if (Key_Down('G'))
+	if (Key_Down('L'))
 	{
-		Set_Damage(15000);
+		Set_Damage(500000);
 	}
-	//else if (Key_Down('H'))
-	//{
-	//	m_iAniIndex = SPAWN;
-
-	//	Animation_Control();
-	//}
-	//else if (Key_Down('J'))
-	//{
-	//	m_bDead = true;
-	//}
 
 	m_fTimeDelta = fTimeDelta;
 
@@ -100,6 +91,7 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 	MoveOn_Skill();
 	RotationOn_Skill();
 	Announce();
+	Dissolve(fTimeDelta);
 
 	m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	if (m_bAnimation)
@@ -206,6 +198,11 @@ void CAhglan::Set_Damage(_int iDamage)
 	else
 	{
 		m_tInfo.iHp = 0;
+		m_iAniIndex = DYING;
+		m_pMeshCom->Set_TrackSpeed(1.5f);
+		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
+
+		Animation_Control();
 	}
 }
 
@@ -229,10 +226,10 @@ HRESULT CAhglan::Add_Component(void)
 	pComponent->AddRef();
 	m_mapComponent[ID_STATIC].emplace(L"Com_Renderer", pComponent);
 
-	// Calculator
-	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Prototype(L"Proto_Calculator"));
-	NULL_CHECK_RETURN(m_pCalculatorCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Calculator", pComponent);
+	// Texture_Dissolve
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Prototype(L"Proto_Texture_Dissolve"));
+	NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+	m_mapComponent[ID_STATIC].emplace(L"Com_Texture_Dissolve", pComponent);
 
 	// Shader
 	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Ahglan"));
@@ -254,32 +251,14 @@ HRESULT CAhglan::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
 
-	D3DMATERIAL9		tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+	pEffect->SetFloat("g_fDissolveValue", m_fDissolveValue);
 
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 10.f;
-
-	pEffect->SetVector("g_vMtrlDiffuse", (_vec4*)&tMtrl.Diffuse);
-	pEffect->SetVector("g_vMtrlSpecular", (_vec4*)&tMtrl.Specular);
-	pEffect->SetVector("g_vMtrlAmbient", (_vec4*)&tMtrl.Ambient);
-
-	pEffect->SetFloat("g_fPower", tMtrl.Power);
+	m_pTextureCom->Set_Texture(pEffect, "g_DissolveTexture", 0);
 
 	const D3DLIGHT9*	pLightInfo = Get_Light();
 	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
 
 	pEffect->SetVector("g_vLightDir", &_vec4(pLightInfo->Direction, 0.f));
-
-	pEffect->SetVector("g_vLightDiffuse", (_vec4*)&pLightInfo->Diffuse);
-	pEffect->SetVector("g_vLightSpecular", (_vec4*)&pLightInfo->Specular);
-	pEffect->SetVector("g_vLightAmbient", (_vec4*)&pLightInfo->Ambient);
-
-	D3DXMatrixInverse(&matView, NULL, &matView);
-	pEffect->SetVector("g_vCamPos", (_vec4*)&matView._41);
 
 	return S_OK;
 }
@@ -492,21 +471,48 @@ void CAhglan::Announce()
 		{
 			m_bAnnounceBaliReady = true;
 
-			CAnnounce_Balista_Ready*	pAnnounce = static_cast<CAnnounce_Balista_Ready*>(Engine::Get_GameObject(L"UI", L"Announce_BalistaReady_UI"));
+			static_cast<CAnnounce_Balista_Ready*>(Engine::Get_GameObject(L"UI", L"Announce_BalistaReady_UI"))->Set_EnableAnnounce();
+			static_cast<CSkill_Balista*>(Engine::Get_GameObject(L"Player_UI", L"Skill_Balista"))->Set_ReadyToFire();
+		}
+	}
+}
 
-			pAnnounce->Set_EnableAnnounce();
+void CAhglan::Dissolve(const _float & fTimeDelta)
+{
+	if (m_bDissolveOn)
+	{
+		if (!m_bAnimation)
+			m_fDissolveValue += 0.05f * fTimeDelta;
+		else
+			m_fDissolveValue += 2.f * fTimeDelta;
+
+		if (1.f <= m_fDissolveValue)
+		{
+			m_bDead = true;
+
+			Engine::Delete_AllInLayer(L"Boss_UI");
+			Update_Object(fTimeDelta);
 		}
 	}
 }
 
 void CAhglan::Animation_Control()
 {
-	//m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
 	m_lfAniEnd = m_pMeshCom->Get_AniFrameEndTime();
 
+	if (CDynamicCamera::MODE_GAME_END == m_pMainCamera->Get_CamMode())
+	{
+		m_bAnimation = false;
+	}
+	else
+	{
+		m_bAnimation = true;
+	}
+
 	// 상태 변경 시 한번만 실행
 	m_eCurState = (STATE)m_iAniIndex;
+
 	if (m_eCurState != m_ePreState)
 	{
 		m_bAnimation = true;
@@ -608,6 +614,13 @@ void CAhglan::Animation_Control()
 			m_eBossAction = BS_DAMAGED;
 
 			SoundMgrLowerVol(L"golem_low_health_01.wav", CSoundMgr::MONSTER, 0.15f);
+			break;
+
+		case DYING:
+			m_eBossAction = BS_DEAD;
+			m_bDissolveOn = true;
+
+			m_pMainCamera->Set_CameraMode(CDynamicCamera::MODE_GAME_END);
 			break;
 
 		case IDLE:
@@ -754,10 +767,10 @@ void CAhglan::Animation_Control()
 		case DAMAGE_FROM_FRONT:
 			m_eBossAction = BS_DAMAGED;
 
-			m_pMeshCom->Set_TrackSpeed(1.2f);
+			m_pMeshCom->Set_TrackSpeed(1.8f);
 			BS_SKILL_MOVE((_float)m_lfAniEnd * 0.1f, -0.8f, (_float)m_lfAniEnd * 0.5f);
 
-			m_fAniEndDelay = 0.86f;
+			m_fAniEndDelay = 0.6f;
 			m_bCanAction = false;
 			break;
 
@@ -1037,7 +1050,8 @@ void CAhglan::Animation_Control()
 		_uint	iRandomPattern = rand() % 2;
 
 		if (m_iAniIndex == (_uint)WALK || 
-			m_iAniIndex == (_uint)IDLE)
+			m_iAniIndex == (_uint)IDLE || 
+			m_iAniIndex == (_uint)DYING)
 		{
 			m_bAnimation = true;
 		}
@@ -1119,7 +1133,7 @@ void CAhglan::Animation_Control()
 				m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f));
 			}
 
-			m_fRand = Engine::Random(0.f, 100.f);
+			m_fRand = Engine::Random_Time(0.f, 100.f);
 
 			m_iAniIndex = (_uint)IDLE;
 			m_eBossAction = BS_IDLE;
@@ -1344,6 +1358,18 @@ void CAhglan::Update_UI()
 	}
 }
 
+void CAhglan::Update_State()
+{
+	if (0 >= m_tInfo.iHp)
+	{
+		m_iAniIndex = DYING;
+		m_pMeshCom->Set_TrackSpeed(1.5f);
+		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
+
+		Animation_Control();
+	}
+}
+
 HRESULT CAhglan::Add_NaviMesh()
 {
 	CComponent*		pComponent = nullptr;
@@ -1386,6 +1412,8 @@ void CAhglan::BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName)
 				if (iter->second)
 				{
 					iter->second = FALSE;
+					Set_Damage(15000);
+
 					break;
 				}
 				else
@@ -1397,6 +1425,8 @@ void CAhglan::BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName)
 						if (L"golem_ahglan_ore_tga" == iter_Begin->first)
 						{
 							iter_Begin->second = FALSE;
+							Set_Damage(20000);
+
 							break;
 						}
 					}
@@ -1411,6 +1441,8 @@ void CAhglan::BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName)
 			if (iter->first == wstrPartsName)
 			{
 				iter->second = FALSE;
+				Set_Damage(15000);
+
 				break;
 			}
 		}
@@ -1422,6 +1454,8 @@ void CAhglan::BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName)
 			if (iter->first == wstrPartsName)
 			{
 				iter->second = FALSE;
+				Set_Damage(10000);
+
 				break;
 			}
 		}

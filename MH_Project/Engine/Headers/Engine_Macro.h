@@ -3,7 +3,7 @@
 
 namespace Engine
 {
-	#define WINCX_ENGINE	1300
+	#define WINCX_ENGINE	1400
 	#define WINCY_ENGINE	900
 
 	#define	NO_EVENT	0

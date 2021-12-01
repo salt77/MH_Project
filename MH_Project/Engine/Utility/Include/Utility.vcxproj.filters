@@ -423,5 +423,8 @@
     <FxCompile Include="..\Codes\Shader_Item.fx">
       <Filter>04.Component\10.Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="..\Codes\Shader_Buff_UI.fx">
+      <Filter>04.Component\10.Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

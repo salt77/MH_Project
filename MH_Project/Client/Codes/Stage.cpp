@@ -9,6 +9,7 @@
 #include "SlashPoint.h"
 #include "CriticalEfx.h"
 #include "RadialBlur.h"
+#include "Efx_Bomb.h"
 #include "Balista.h"
 #include "Announce_Balista.h"
 #include "Announce_Balista_Ready.h"
@@ -269,6 +270,10 @@ HRESULT CStage::Ready_Layer_Effect(const wstring pLayerTag)
 	pGameObject = CRadialBlur::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Efx_RadiulBlur", pGameObject), E_FAIL);
+
+	pGameObject = CEfx_Bomb::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Efx_Bomb", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 

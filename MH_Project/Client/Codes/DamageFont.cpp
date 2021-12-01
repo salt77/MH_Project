@@ -24,7 +24,7 @@ HRESULT CDamageFont::Ready_Object(DAMAGEFONT_ID eID)
 	m_vPos = POOLING_POS;
 
 	m_pTransformCom->Set_Pos(&m_vPos);
-	m_pTransformCom->Set_Scale(1.25f, 1.25f, 1.25f);
+	m_pTransformCom->Set_Scale(1.75f, 1.75f, 1.75f);
 
 	m_vOriginScale = *m_pTransformCom->Get_ScaleInfo();
 
@@ -48,10 +48,6 @@ _int CDamageFont::Update_Object(const _float & fTimeDelta)
 		matBill._13 = matView._13;
 		matBill._31 = matView._31;
 		matBill._33 = matView._33;
-
-		//matBill._22 = matView._22;
-		//matBill._23 = matView._23;
-		//matBill._32 = matView._32;
 
 		D3DXMatrixInverse(&matBill, NULL, &matBill);
 
@@ -231,7 +227,7 @@ void CDamageFont::Scale_Interpolation(const _float& fTimeDelta)
 
 		if (0.f <= vScale.x)
 		{
-			m_fScaleDown += m_fOriginScaleDown * 3.f;
+			m_fScaleDown += m_fOriginScaleDown * 2.f;
 
 			m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
 		}

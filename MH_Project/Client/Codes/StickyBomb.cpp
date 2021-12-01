@@ -2,21 +2,22 @@
 #include "StickyBomb.h"
 #include "DynamicCamera.h"
 #include "Ahglan.h"
+#include "Efx_Bomb.h"
 
 #include "Export_Function.h"
 
 CStickyBomb::CStickyBomb(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
-	, m_fSpeed(15.f)
-	, m_fFallSpeed(5.f)
+	, m_fSpeed(20.f)
+	, m_fFallSpeed(7.5f)
 	, m_fTime(0.f)
 {
 }
 
 CStickyBomb::CStickyBomb(const CStickyBomb& rhs)
 	: CGameObject(rhs)
-	, m_fSpeed(15.f)
-	, m_fFallSpeed(5.f)
+	, m_fSpeed(20.f)
+	, m_fFallSpeed(7.5f)
 	, m_fTime(0.f)
 {
 }
@@ -39,6 +40,9 @@ HRESULT CStickyBomb::Ready_Object(void)
 HRESULT CStickyBomb::LateReady_Object()
 {
 	FAILED_CHECK_RETURN(CGameObject::LateReady_Object(), E_FAIL);
+
+	m_pEfxBomb = dynamic_cast<CEfx_Bomb*>(Engine::Get_GameObject(L"Effect", L"Efx_Bomb"));
+	NULL_CHECK_RETURN(m_pEfxBomb, E_FAIL);
 
 	CTransform*		pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
 	CDynamicCamera*	pCamera = dynamic_cast<CDynamicCamera*>(Engine::Get_GameObject(L"Environment", L"DynamicCamera"));
@@ -67,7 +71,7 @@ HRESULT CStickyBomb::LateReady_Object()
 
 		if (vCamPos.y < vAtPos.y)
 		{
-			m_fCamAngle *= 0.35f;
+			m_fCamAngle *= 2.f;
 			m_fFallSpeed += m_fCamAngle;
 		}
 		else
@@ -220,9 +224,6 @@ HRESULT CStickyBomb::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 
 HRESULT CStickyBomb::Ready_Collider()
 {
-	//D3DXComputeBoundingBox(m_pTransformCom->Get_Info(INFO_POS), 8, sizeof(_vec3), &m_vMin, &m_vMax);
-
-	//Add_Collider(m_vMin.x, m_vMin.y, m_vMin.z, m_vMax.x, m_vMax.y, m_vMax.z, L"Collider_StickyBomb", COLTYPE_BOX_HIT);
 	FAILED_CHECK_RETURN(Add_Collider(-5.f, -5.f, -5.f, 5.f, 5.f, 5.f, L"Collider_StickyBomb", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_HIT), E_FAIL);
 
 	return S_OK;
@@ -237,9 +238,11 @@ void CStickyBomb::Movement(const _float & fTimeDelta)
 	{
 		_float	fY = m_pTransformCom->Get_Info(INFO_POS)->y;
 
-		if (0.1f >= fY)
+		if (0.1f >= fY || 
+			m_dwSurviveTime + m_dwSurviveDelay < GetTickCount())
 		{
 			m_bDead = true;
+			m_pEfxBomb->Set_EnableBombEfx(*m_pTransformCom->Get_Info(INFO_POS));
 			SoundMgr(L"effect_bomb_explode.wav", CSoundMgr::PLAYER_EFFECT);
 
 			return;
@@ -260,6 +263,8 @@ void CStickyBomb::Bomb()
 	{
 		m_bDead = true;
 		SoundMgr(L"effect_bomb_explode.wav", CSoundMgr::PLAYER_EFFECT);
+
+		m_pEfxBomb->Set_EnableBombEfx(*m_pTransformCom->Get_Info(INFO_POS));
 
 		CAhglan*	pAhglan = static_cast<CAhglan*>(Engine::Get_GameObject(L"GameLogic", L"Ahglan"));
 

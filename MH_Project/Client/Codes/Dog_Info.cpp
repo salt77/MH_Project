@@ -14,12 +14,12 @@ CDog_Info::CDog_Info(const CDog_Info& rhs)
 {
 }
 
-CDog_Info::~CDog_Info(void)
+CDog_Info::~CDog_Info()
 {
 }
 
 
-HRESULT CDog_Info::Ready_Object(void)
+HRESULT CDog_Info::Ready_Object()
 {
 	FAILED_CHECK_RETURN(CSpawn_Info::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -40,6 +40,8 @@ HRESULT CDog_Info::LateReady_Object()
 
 	m_pPlayerTrans = dynamic_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Player", L"Com_Transform", ID_DYNAMIC));
 	NULL_CHECK_RETURN(m_pPlayerTrans, E_FAIL);
+
+	m_fContactPlayerDis = DIS_MID - 3.f;
 
 	return S_OK;
 }
@@ -65,7 +67,7 @@ _int CDog_Info::LateUpdate_Object(const _float & fTimeDelta)
 	return iExit;
 }
 
-void CDog_Info::Render_Object(void)
+void CDog_Info::Render_Object()
 {
 }
 
@@ -79,12 +81,12 @@ CDog_Info* CDog_Info::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pInstance;
 }
 
-void CDog_Info::Free(void)
+void CDog_Info::Free()
 {
 	CGameObject::Free();
 }
 
-HRESULT CDog_Info::Add_Component(void)
+HRESULT CDog_Info::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
 

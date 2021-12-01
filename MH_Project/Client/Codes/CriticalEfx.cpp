@@ -25,7 +25,7 @@ HRESULT CCriticalEfx::Ready_Object()
 	m_vPos = POOLING_POS;
 
 	m_pTransformCom->Set_Pos(&m_vPos);
-	m_pTransformCom->Set_Scale(6.f, 6.f, 6.f);
+	m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);
 	m_pTransformCom->Rotation(ROT_Z, 90.f);
 
 	m_vOriginScale = *m_pTransformCom->Get_ScaleInfo();

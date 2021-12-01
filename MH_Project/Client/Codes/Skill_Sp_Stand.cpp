@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Skill_Sp_Stand.h"
+#include "Player.h"
 #include "Player_SlotUI.h"
 
 #include "Export_Function.h"
@@ -26,7 +27,7 @@ HRESULT CSkill_Sp_Stand::Ready_Object(_float fX, _float fY, _float fSizeX, _floa
 	m_fSizeY = fSizeY;
 
 	m_fValueRatio = 0.9f;
-	m_fCoolDownDelay = 0.005f;
+	m_fCoolDownDelay = 0.008f;
 
 	return S_OK;
 }
@@ -35,6 +36,8 @@ HRESULT CSkill_Sp_Stand::LateReady_Object()
 {
 	FAILED_CHECK_RETURN(CSlot_ItemSkill::LateReady_Object(), E_FAIL);
 
+	m_pPlayer = dynamic_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+	NULL_CHECK_RETURN(m_pPlayer, E_FAIL);
 	m_pSlotUI = dynamic_cast<CPlayer_SlotUI*>(Engine::Get_GameObject(L"Player_UI", L"Player_SlotUI"));
 	NULL_CHECK_RETURN(m_pSlotUI, E_FAIL);
 
@@ -52,6 +55,7 @@ _int CSkill_Sp_Stand::Update_Object(const _float& fTimeDelta)
 
 	D3DXMatrixOrthoLH(&m_matProj, WINCX, WINCY, 0.f, 1.f);
 
+	Can_UseSkill();
 	Cool_Down(fTimeDelta);
 
 	Add_RenderGroup(RENDER_ALPHA, this);
@@ -170,5 +174,23 @@ HRESULT CSkill_Sp_Stand::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 0);
 
 	return S_OK;
+}
+
+void CSkill_Sp_Stand::Can_UseSkill()
+{
+	if (m_pPlayer)
+	{
+		if (m_bCanUse)
+		{
+			if (PLAYER_SP_STAND > m_pPlayer->Get_TagPlayerInfo().iSkillPoint)
+			{
+				m_fValueRatio = 0.25f;
+			}
+			else
+			{
+				m_fValueRatio = 0.9f;
+			}
+		}
+	}
 }
 

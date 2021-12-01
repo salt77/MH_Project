@@ -413,6 +413,18 @@ void CKnight::Animation_Control()
 		case KNIGHT_SPAWN:
 			m_bCanAction = false;
 			m_lfAniEnd = 2.5f;
+
+			iRandSound = rand() % 2;
+			if (0 == iRandSound)
+			{
+				SoundMgrLowerVol(L"mankind_spawn_01.wav", CSoundMgr::MONSTER3, 0.035f);
+			}
+			else
+			{
+				SoundMgrLowerVol(L"mankind_spawn_02.wav", CSoundMgr::MONSTER3, 0.035f);
+			}
+
+			SoundMgrLowerVol(L"effect_monster_spawn.wav", CSoundMgr::ENEMY_EFFECT, 0.015f);
 			break;
 
 		case KNIGHT_ATTACK:
@@ -436,6 +448,16 @@ void CKnight::Animation_Control()
 			m_bCanAction = false;
 
 			m_pMeshCom->Set_TrackSpeed(1.5f);
+
+			iRandSound = rand() % 2;
+			if (0 == iRandSound)
+			{
+				SoundMgrLowerVol(L"mankind_dying_01.wav", CSoundMgr::MONSTER3, 0.05f);
+			}
+			else
+			{
+				SoundMgrLowerVol(L"mankind_dying_02.wav", CSoundMgr::MONSTER3, 0.05f);
+			}
 			break;
 		}
 

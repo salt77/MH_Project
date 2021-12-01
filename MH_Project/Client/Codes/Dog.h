@@ -115,7 +115,7 @@ private:
 
 public:
 	static CDog*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual void		Free(void);
+	virtual void		Free();
 
 private:
 	// Sound º¯¼öµé

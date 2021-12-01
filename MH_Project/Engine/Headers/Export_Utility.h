@@ -56,6 +56,7 @@ inline void			Release_CurrentScene();
 inline HRESULT		Ready_Prototype_Shader(LPDIRECT3DDEVICE9& pGraphicDev);
 
 inline _float		Random(_float _fMin, _float _fMax);
+inline _float		Random_Time(_float _fMin, _float _fMax);
 
 inline void			Emplace_Layer(const wstring wstrLayerTag, CLayer* pLayer);
 inline void			Delete_Layer(const wstring wstrLayerTag, const wstring wstrObjTag);

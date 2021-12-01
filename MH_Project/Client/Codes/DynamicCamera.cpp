@@ -170,13 +170,19 @@ void CDynamicCamera::Set_CameraMode(MODE eMode)
 {
 	m_eCurMode = eMode;
 
-	if (MODE_AHGLAN_START == eMode)
+	switch (eMode)
 	{
+	case CDynamicCamera::MODE_AHGLAN_START:
 		m_dwStartTime = GetTickCount();
-	}
-	else if (MODE_BALISTA_HIGHLIGHT == eMode)
-	{
+		break;
+
+	case CDynamicCamera::MODE_BALISTA_HIGHLIGHT:
 		m_dwBalistaStart = GetTickCount();
+		break;
+
+	case CDynamicCamera::MODE_GAME_END:
+		m_dwEndSceneStart = GetTickCount();
+		break;
 	}
 }
 
@@ -319,6 +325,11 @@ void CDynamicCamera::Mode_Change(const _float& fTimeDelta)
 		if (m_dwBalistaStart + m_dwBalistaDelay < GetTickCount())
 			m_eCurMode = MODE_NORMAL;
 		break;
+
+	case CDynamicCamera::MODE_GAME_END:
+		if (m_dwEndSceneStart + m_dwEndSceneDelay < GetTickCount())
+			m_eCurMode = MODE_NORMAL;
+		break;
 	}
 
 
@@ -392,6 +403,11 @@ void CDynamicCamera::Mode_Change(const _float& fTimeDelta)
 			break;
 
 		case CDynamicCamera::MODE_BALISTA_HIGHLIGHT:
+			break;
+
+		case CDynamicCamera::MODE_GAME_END:
+			SoundMgrStopChannel(CSoundMgr::BGM);
+			SoundMgr(L"bgm_quest_success.mp3", CSoundMgr::BGM);
 			break;
 		}
 
@@ -486,6 +502,21 @@ void CDynamicCamera::At_Update(const _float& fTimeDelta)
 				if (POOLING_POS != *pBaliTrans->Get_Info(INFO_POS))
 				{
 					m_vAt = *pBaliTrans->Get_Info(INFO_POS);
+				}
+			}
+		}
+	}
+	else if (MODE_GAME_END == m_eCurMode)
+	{
+		if (m_dwEndSceneStart + m_dwEndSceneDelay >= GetTickCount())
+		{
+			if (SCENE_STAGE == Engine::Get_SceneID())
+			{
+				CTransform*		pBossTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"Ahglan", L"Com_Transform", ID_DYNAMIC));
+
+				if (pBossTrans)
+				{
+					m_vAt = *pBossTrans->Get_Info(INFO_POS);
 				}
 			}
 		}
@@ -743,6 +774,29 @@ void CDynamicCamera::CutScene_Eye(const _float& fTimeDelta)
 					m_fFarAway += 20.f * fTimeDelta;
 				}
 			}
+		}
+	}
+	else if (MODE_GAME_END == m_eCurMode)
+	{
+		_vec3 vUp = _vec3(0.f, 1.f, 0.f);
+		_vec3 vDirToCam = m_vEye - m_vAt;
+		D3DXVec3Normalize(&vDirToCam, &vDirToCam);
+
+		if (0.35f < m_fFarAway)
+		{
+			m_fFarAway = 0.f;
+
+			_matrix matRotate;
+			D3DXMatrixIdentity(&matRotate);
+			D3DXMatrixRotationAxis(&matRotate, &vUp, D3DXToRadian(Engine::Random(0.f, 359.f)));
+			D3DXVec3TransformCoord(&vDirToCam, &vDirToCam, &matRotate);
+		}
+
+		if (0.35f >= m_fFarAway)
+		{
+			m_fFarAway += 0.26f * fTimeDelta;
+
+			m_vEye = m_vAt + vDirToCam * (m_fDistanceFromTarget * 5.f + m_fFarAway);
 		}
 	}
 	/*else if (MODE_BALISTA_HIGHLIGHT == m_eCurMode)

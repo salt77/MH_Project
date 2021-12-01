@@ -23,6 +23,8 @@
 #include "Potion_Hp.h"
 #include "Potion_Stemina.h"
 #include "Potion_Sp.h"
+#include "Item_StickyBomb.h"
+#include "Skill_Balista.h"
 
 #include "Skill_Sp_Stand.h"
 #include "Skill_Sp_Fever.h"
@@ -106,23 +108,10 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 		return iExit;
 
 	// Debug ¿ë
-	if (Key_Down('J'))
-	{
-		m_tPlayerInfo.iSkillPoint += 1000;
-	}
-	if (Key_Down('B'))
-	{
-		if (SCENE_STAGE == Engine::Get_SceneID())
-		{
-			m_bBalistaFire = true;
-			m_iBalistaFireCount = 0;
-
-			CAnnounce_Balista*	pAnnounce = static_cast<CAnnounce_Balista*>(Engine::Get_GameObject(L"UI", L"Announce_BalistaAttack_UI"));
-			pAnnounce->Set_EnableAnnounce();
-
-			m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_BALISTA_HIGHLIGHT);
-		}
-	}
+	//if (Key_Down('J'))
+	//{
+	//	m_tPlayerInfo.iSkillPoint += 1000;
+	//}
 
 	//_vec3 vPos;
 	//vPos = *m_pTransformCom->Get_Info(INFO_POS);
@@ -498,6 +487,17 @@ HRESULT CPlayer::Ready_Layer_PlayerUI()
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Skill_Sp_Stand", pGameObject), E_FAIL);
 
+	if (SCENE_STAGE == Engine::Get_SceneID())
+	{
+		pGameObject = CItem_StickyBomb::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ITEM, SCALE_ITEM);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Skill_StickyBomb", pGameObject), E_FAIL);
+
+		pGameObject = CSkill_Balista::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ITEM, SCALE_ITEM);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Skill_Balista", pGameObject), E_FAIL);
+	}
+
 	// QuickSlot Skill Icon 
 	pGameObject = CSkill_Sp_Fever::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_ITEM, SCALE_ITEM);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -517,11 +517,11 @@ HRESULT CPlayer::Ready_Layer_PlayerUI()
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Buff_Reinforce_Icon", pGameObject), E_FAIL);
 
 	// Buff_Tooltip
-	pGameObject = CTooltip_Stemina::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_TOOLTIP, SCALE_TOOLTIP - 135.f);
+	pGameObject = CTooltip_Stemina::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_TOOLTIP, SCALE_TOOLTIP - 150.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Tooltip_Stemina", pGameObject), E_FAIL);
 
-	pGameObject = CTooltip_Reinforce::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_TOOLTIP, SCALE_TOOLTIP - 135.f);
+	pGameObject = CTooltip_Reinforce::Create(m_pGraphicDev, SCREEN_CENTER_X, 70.f, SCALE_TOOLTIP, SCALE_TOOLTIP - 150.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"Tooltip_Reinforce", pGameObject), E_FAIL);
 
@@ -587,6 +587,25 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		else if (PL_MOVE >= m_eCurAction)
 		{
 			m_eCurAction = PL_IDLE;
+		}
+	}
+
+	// Balista Support Fire s
+	if (Key_Down('B'))
+	{
+		if (SCENE_STAGE == Engine::Get_SceneID())
+		{
+			if (static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Skill_Balista"))->Get_CanUseItemSkill())
+			{
+				m_bBalistaFire = true;
+				m_iBalistaFireCount = 0;
+
+				CAnnounce_Balista*	pAnnounce = static_cast<CAnnounce_Balista*>(Engine::Get_GameObject(L"UI", L"Announce_BalistaAttack_UI"));
+				pAnnounce->Set_EnableAnnounce();
+
+				m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_BALISTA_HIGHLIGHT);
+				static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Skill_Balista"))->Set_UseItemSkill();
+			}
 		}
 	}
 
@@ -701,10 +720,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 					{
 						if (!pBomb)
 						{
-							m_eCurAction = PL_SKILL;
-							m_iAniIndex = (_uint)STATE_THROW_DURING;
+							if (static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Skill_StickyBomb"))->Get_CanUseItemSkill())
+							{
+								m_eCurAction = PL_SKILL;
+								m_iAniIndex = (_uint)STATE_THROW_DURING;
 
-							m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_SECONDARY);
+								m_pMainCam->Set_CameraMode(CDynamicCamera::MODE_SECONDARY);
+							}
 						}
 					}
 				}
@@ -717,8 +739,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				if (STATE_THROW_DURING == m_eCurState)
 				{
 					m_iAniIndex = (_uint)STATE_THROW_END;
-
 					m_dwThrowStart = GetTickCount();
+
+					static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Skill_StickyBomb"))->Set_UseItemSkill();
 				}
 			}
 		}
@@ -1222,19 +1245,22 @@ void CPlayer::MoveOn_Skill(const _float & fTimeDelta)
 {
 	if (m_bSkillMove && !m_bStopMotion)
 	{
-		if (PL_TIRED != m_eCurAction)
+		if (CDynamicCamera::MODE_GAME_END != m_pMainCam->Get_CamMode())
 		{
-			if (m_fSkillMoveStartTime <= m_fAniTime &&
-				m_fSkillMoveEndTime >= m_fAniTime)
+			if (PL_TIRED != m_eCurAction)
 			{
-				//m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
-				m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
-				m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT), m_fSkillMoveSpeed, fTimeDelta);
-				//m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT));
-			}
-			else if (m_fSkillMoveEndTime < m_fAniTime)
-			{
-				m_bSkillMove = false;
+				if (m_fSkillMoveStartTime <= m_fAniTime &&
+					m_fSkillMoveEndTime >= m_fAniTime)
+				{
+					//m_pMainCam->Set_PrePlayerPos(*m_pTransformCom->Get_Info(INFO_POS));
+					m_pTransformCom->Set_Pos(&m_pNaviMeshCom->MoveOn_NaviMesh(m_pTransformCom->Get_Info(INFO_POS), &(-*m_pTransformCom->Get_Info(INFO_RIGHT)), m_fSkillMoveSpeed, fTimeDelta));
+					m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT), m_fSkillMoveSpeed, fTimeDelta);
+					//m_pMainCam->Sync_PlayerPos(-*m_pTransformCom->Get_Info(INFO_RIGHT));
+				}
+				else if (m_fSkillMoveEndTime < m_fAniTime)
+				{
+					m_bSkillMove = false;
+				}
 			}
 		}
 	}
@@ -1535,7 +1561,7 @@ void CPlayer::Make_TrailEffect(const _float& fDeltaTime)
 		{
 			m_pTrailSmashR->Set_InfoForTrail(fDeltaTime, iter->second->Get_Min(), iter->second->Get_Max(), iter->second->Get_ColliderWorld());
 		}
-		if (STATE_SMASH4 == m_eCurState)
+		if (STATE_SMASH4 == m_iAniIndex)
 		{
 			if (L"Hit_LHandLong" == iter->first)
 			{
@@ -1568,7 +1594,8 @@ void CPlayer::Make_TrailEffect(const _float& fDeltaTime)
 	{
 		if (WEAPON_MODE::WEAPON_SECONDARY != m_eCurWeaponMode &&
 			STATE_SP_STAND != m_eCurState &&
-			STATE_THROW_DURING != m_eCurState)
+			STATE_THROW_DURING != m_eCurState && 
+			STATE_THROW_END != m_eCurState)
 		{
 			if (PL_SKILL == m_eCurAction)
 			{
@@ -1636,21 +1663,30 @@ void CPlayer::Animation_Control()
 {
 	m_fAniTime = m_pMeshCom->Get_AniFrameTime();
 
+	if (CDynamicCamera::MODE_GAME_END == m_pMainCam->Get_CamMode())
+	{
+		m_bAnimation = false;
+	}
+	else
+	{
+		m_bAnimation = true;
+	}
+
 	// Speed Á¶Àý
 	if (PL_ATK == m_eCurAction)
 	{
-		m_pMeshCom->Set_TrackSpeed(3.f + m_tPlayerInfo.fAttackSpeedInterpol);
+		m_pMeshCom->Set_TrackSpeed(3.25f + (m_tPlayerInfo.fAttackSpeedInterpol + 0.5f));
 	}
 	else if (PL_SMASH == m_eCurAction || PL_SKILL == m_eCurAction || PL_DASH == m_eCurAction)
 	{
 		if (STATE_FURY == m_iAniIndex ||
 			STATE_FURY2 == m_iAniIndex)
 		{
-			m_pMeshCom->Set_TrackSpeed(2.15f + m_tPlayerInfo.fAttackSpeedInterpol);
+			m_pMeshCom->Set_TrackSpeed(2.15f + (m_tPlayerInfo.fAttackSpeedInterpol + 0.25f));
 		}
 		else if (STATE_SP_FEVER == m_iAniIndex)
 		{
-			m_pMeshCom->Set_TrackSpeed(2.65f + m_tPlayerInfo.fAttackSpeedInterpol);
+			m_pMeshCom->Set_TrackSpeed(2.65f + (m_tPlayerInfo.fAttackSpeedInterpol + 0.3f));
 		}
 		else if (STATE_SP_STAND == m_iAniIndex)
 		{

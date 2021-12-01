@@ -35,7 +35,7 @@ _int CTrail_Sword::Update_Object(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CTrail_Sword::Render_Object(void)
+void CTrail_Sword::Render_Object()
 {
 	m_pTrailCom->Set_InfoForTrail(m_fDeltaTime, m_vWeaponLower, m_vWeaponUpper, m_pMatWeapon);
 
@@ -123,24 +123,7 @@ HRESULT CTrail_Sword::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 
 	pEffect->SetFloat("g_fAlpha", m_fAlphaValue);
 
-	//pEffect->SetTexture("g_BaseTexture", 0);
 	m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture");
-
-	//_matrix		matWorld, matView, matProj;
-
-	//m_pGraphicDev->GetTransform(D3DTS_WORLD, &matWorld);
-	//m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-	//m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
-
-	//m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
-	//m_pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
-	//m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
-
-	//pEffect->SetMatrix("g_matWorld", &matWorld);
-	//pEffect->SetMatrix("g_matView", &matView);
-	//pEffect->SetMatrix("g_matProj", &matProj);
-
-	//m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture");
 
 	return S_OK;
 }

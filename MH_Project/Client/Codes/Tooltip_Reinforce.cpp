@@ -158,8 +158,6 @@ HRESULT CTooltip_Reinforce::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &m_matProj);
 
-	pEffect->SetFloat("g_fAlphaValue", 0.9f);
-
 	m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 0);
 
 	return S_OK;

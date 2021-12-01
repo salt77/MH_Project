@@ -1,10 +1,60 @@
-﻿  BalistaTrail.cpp
+﻿FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  compilation object save succeeded; see C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Bin\Shader_Buff_UI.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  compilation object save succeeded; see C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Bin\Shader_Item.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  compilation object save succeeded; see C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Bin\Shader_Skill_UI.cso
+C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Codes\Shader_Stage_1Mesh.fx(105,23-41): warning X3206: 'mul': implicit truncation of vector type
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  compilation object save succeeded; see C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Bin\Shader_Stage_1Mesh.cso
+  AniCtrl.cpp
+  BalistaTrail.cpp
+  BoxCollider.cpp
+  Calculator.cpp
+  Camera.cpp
+  Cell.cpp
+  Collider.cpp
+  Component.cpp
+  CubeTex.cpp
+  DynamicMesh.cpp
+  Frustum.cpp
+  GameObject.cpp
+  HierachyLoader.cpp
+  Layer.cpp
+  Light.cpp
+  LightMgr.cpp
+  Line.cpp
+  MFC_ObjectManager.cpp
+  Management.cpp
+  Navimesh.cpp
+  컴파일하고 있습니다...
+  Optimization.cpp
+  ProtoMgr.cpp
+  QuadTree.cpp
+  RcTex.cpp
+  RenderTarget.cpp
+  RenderTargetMgr.cpp
+  Renderer.cpp
+  Scene.cpp
+  Shader.cpp
+  SmashTrail.cpp
+  StaticMesh.cpp
+  TerrainTex.cpp
+  Texture.cpp
+  Trail.cpp
+  Transform.cpp
+  TriCol.cpp
+  VIBuffer.cpp
 LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무시됩니다.
      ../Bin\Utility.lib 라이브러리 및 ../Bin\Utility.exp 개체를 생성하고 있습니다.
   코드를 생성하고 있습니다.
-  1 of 3220 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  4 of 3220 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    7 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   Utility.vcxproj -> C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Include\../Bin\Utility.dll
   Utility.vcxproj -> ../Bin\Utility.pdb (Full PDB)
@@ -51,8 +101,10 @@ LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무�
   .\Engine\Utility\Codes\Shader_BackGround.fx
   .\Engine\Utility\Codes\Shader_Blend.fx
   .\Engine\Utility\Codes\Shader_Boss_Hpbar.fx
+  .\Engine\Utility\Codes\Shader_Buff_UI.fx
   .\Engine\Utility\Codes\Shader_DamageFont.fx
   .\Engine\Utility\Codes\Shader_FadeInOut.fx
+  .\Engine\Utility\Codes\Shader_Item.fx
   .\Engine\Utility\Codes\Shader_Loading_Progress.fx
   .\Engine\Utility\Codes\Shader_Mesh.fx
   .\Engine\Utility\Codes\Shader_Normal.fx
@@ -60,13 +112,15 @@ LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무�
   .\Engine\Utility\Codes\Shader_Player_Hpbar.fx
   .\Engine\Utility\Codes\Shader_Sample.fx
   .\Engine\Utility\Codes\Shader_Shade.fx
+  .\Engine\Utility\Codes\Shader_Skill_UI.fx
   .\Engine\Utility\Codes\Shader_Sky.fx
   .\Engine\Utility\Codes\Shader_StageMesh.fx
+  .\Engine\Utility\Codes\Shader_Stage_1Mesh.fx
   .\Engine\Utility\Codes\Shader_Symbol.fx
   .\Engine\Utility\Codes\Shader_Terrain.fx
   .\Engine\Utility\Codes\Shader_Trail.fx
   .\Engine\Utility\Codes\Shader_UI.fx
-         19개 파일이 복사되었습니다.
+         23개 파일이 복사되었습니다.
           1개 파일이 복사되었습니다.
           1개 파일이 복사되었습니다.
           1개 파일이 복사되었습니다.

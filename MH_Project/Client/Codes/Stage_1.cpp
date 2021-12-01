@@ -18,6 +18,8 @@
 #include "CriticalEfx.h"
 #include "RadialBlur.h"
 
+#include "Trail_Cloyan.h"
+
 #include "Trap.h"
 #include "Balista.h"
 #include "Wall_Collision.h"
@@ -68,10 +70,10 @@ HRESULT CStage_1::LateReady_Scene()
 	FAILED_CHECK_RETURN(Load_NaviMesh(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
 
 	m_mapLayer.emplace(L"GameLogic_Spawn", m_pSpawnLayer);
 	m_mapLayer.emplace(L"Enemies", m_pEnemyLayer);
@@ -187,6 +189,11 @@ HRESULT CStage_1::Ready_Layer_GameLogic(const wstring pLayerTag)
 	pGameObject = CTrail_Smash::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player_Smash_Trail2", pGameObject), E_FAIL);
+
+	// Trail_Cloyan
+	pGameObject = CTrail_Cloyan::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Cloyan_Trail", pGameObject), E_FAIL);
 
 	// Trap
 	pGameObject = CTrap::Create(m_pGraphicDev);

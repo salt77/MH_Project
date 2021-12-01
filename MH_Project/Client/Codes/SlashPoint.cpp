@@ -25,7 +25,7 @@ HRESULT CSlashPoint::Ready_Object()
 	m_vPos = POOLING_POS;
 
 	m_pTransformCom->Set_Pos(&m_vPos);
-	m_pTransformCom->Set_Scale(1.75f, 1.75f, 1.75f);
+	m_pTransformCom->Set_Scale(2.75f, 2.75f, 1.f);
 	// Radian이 아닌 Degree로 회전(약간 어긋나보이게끔)
 	m_pTransformCom->Rotation(ROT_Z, 90.f);
 
@@ -59,14 +59,14 @@ _int CSlashPoint::Update_Object(const _float & fTimeDelta)
 		//matBill._21 = matView._21;
 		//matBill._22 = matView._22;
 
-		//matBill._11 = matView._11;
-		//matBill._13 = matView._13;
-		//matBill._31 = matView._31;
-		//matBill._33 = matView._33;
+		matBill._11 = matView._11;
+		matBill._13 = matView._13;
+		matBill._31 = matView._31;
+		matBill._33 = matView._33;
 
-		matBill._22 = matView._22;
-		matBill._23 = matView._23;
-		matBill._32 = matView._32;
+		//matBill._22 = matView._22;
+		//matBill._23 = matView._23;
+		//matBill._32 = matView._32;
 
 		D3DXMatrixInverse(&matBill, NULL, &matBill);
 

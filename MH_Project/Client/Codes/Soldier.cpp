@@ -391,6 +391,18 @@ void CSoldier::Animation_Control()
 		case SOLSTATE_SPAWN:
 			m_bCanAction = false;
 			m_lfAniEnd = 2.5f;
+
+			iRandSound = rand() % 2;
+			if (0 == iRandSound)
+			{
+				SoundMgrLowerVol(L"mankind_spawn_01.wav", CSoundMgr::MONSTER2, 0.035f);
+			}
+			else
+			{
+				SoundMgrLowerVol(L"mankind_spawn_02.wav", CSoundMgr::MONSTER2, 0.035f);
+			}
+
+			SoundMgrLowerVol(L"effect_monster_spawn.wav", CSoundMgr::ENEMY_EFFECT, 0.015f);
 			break;
 
 		case SOLSTATE_ATTACK:
@@ -413,6 +425,20 @@ void CSoldier::Animation_Control()
 		case SOLSTATE_DOWN_BEGIN:
 			m_bCanAction = false;
 			m_lfAniEnd = 1.f;
+
+			iRandSound = rand() % 3;
+			if (0 == iRandSound)
+			{
+				SoundMgrLowerVol(L"mankind_hurt_01.wav", CSoundMgr::MONSTER2, 0.05f);
+			}
+			else if (1 == iRandSound)
+			{
+				SoundMgrLowerVol(L"mankind_hurt_02.wav", CSoundMgr::MONSTER2, 0.05f);
+			}
+			else
+			{
+				SoundMgrLowerVol(L"mankind_hurt_03.wav", CSoundMgr::MONSTER2, 0.05f);
+			}
 			break;
 
 		case SOLSTATE_DOWN_IDLE:
@@ -434,6 +460,16 @@ void CSoldier::Animation_Control()
 			m_bCanAction = false;
 
 			m_pMeshCom->Set_TrackSpeed(0.5f);
+
+			iRandSound = rand() % 2;
+			if (0 == iRandSound)
+			{
+				SoundMgrLowerVol(L"mankind_dying_01.wav", CSoundMgr::MONSTER2, 0.05f);
+			}
+			else
+			{
+				SoundMgrLowerVol(L"mankind_dying_02.wav", CSoundMgr::MONSTER2, 0.05f);
+			}
 			break;
 		}
 

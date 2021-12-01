@@ -127,7 +127,7 @@ HRESULT CBuff_Reinforce::Add_Component()
 	m_mapComponent[ID_DYNAMIC].emplace(L"Com_Transform", pComponent);
 
 	// Shader
-	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Skill_UI"));
+	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Prototype(L"Proto_Shader_Buff_UI"));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Shader", pComponent);
 
