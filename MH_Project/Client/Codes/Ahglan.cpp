@@ -590,11 +590,11 @@ void CAhglan::Animation_Control()
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"9.Ahglan_NamingScene_Back", pGameObject), );
 
-			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 125.f, 250.f, 120.f, NAMING_BOSSNAME, BOSS_AHGLAN);
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 150.f, 285.f, 135.f, NAMING_BOSSNAME, BOSS_AHGLAN);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"10.Ahglan_NamingScene_BossName", pGameObject), );
 
-			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 75.f, 183.f, 90.f, NAMING_STAGENAME, BOSS_AHGLAN);
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X, WINCY - 90.f, 183.f, 90.f, NAMING_STAGENAME, BOSS_AHGLAN);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"11.Ahglan_NamingScene_StageName", pGameObject), );
 
@@ -672,7 +672,7 @@ void CAhglan::Animation_Control()
 
 			m_pMeshCom->Set_TrackSpeed(2.3f + m_fRandSpeed);
 
-			m_fAniEndDelay = 1.07f;
+			m_fAniEndDelay = 1.03f;
 			m_bCanAction = false;
 
 			SoundGolemAtk;
@@ -683,7 +683,7 @@ void CAhglan::Animation_Control()
 
 			m_pMeshCom->Set_TrackSpeed(2.3f + m_fRandSpeed);
 
-			m_fAniEndDelay = 1.07f;
+			m_fAniEndDelay = 1.03f;
 			m_bCanAction = false;
 
 			SoundGolemAtk;
@@ -1211,7 +1211,7 @@ void CAhglan::Collision_Control()
 			if (L"Hit_LHand" == iter_Hit->first ||
 				L"Hit_RHand" == iter_Hit->first)
 			{
-				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.35f, m_lfAniEnd * 0.55f);
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.38f, m_lfAniEnd * 0.55f);
 			}
 		}
 		break;
@@ -1222,7 +1222,7 @@ void CAhglan::Collision_Control()
 			if (L"Hit_LHand" == iter_Hit->first ||
 				L"Hit_RHand" == iter_Hit->first)
 			{
-				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.4f, m_lfAniEnd * 0.65f);
+				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.43f, m_lfAniEnd * 0.65f);
 			}
 		}
 		break;
@@ -1412,7 +1412,7 @@ void CAhglan::BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName)
 				if (iter->second)
 				{
 					iter->second = FALSE;
-					Set_Damage(15000);
+					Set_Damage(35000);
 
 					break;
 				}
@@ -1425,7 +1425,7 @@ void CAhglan::BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName)
 						if (L"golem_ahglan_ore_tga" == iter_Begin->first)
 						{
 							iter_Begin->second = FALSE;
-							Set_Damage(20000);
+							Set_Damage(50000);
 
 							break;
 						}
@@ -1441,7 +1441,7 @@ void CAhglan::BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName)
 			if (iter->first == wstrPartsName)
 			{
 				iter->second = FALSE;
-				Set_Damage(15000);
+				Set_Damage(45000);
 
 				break;
 			}
@@ -1454,7 +1454,7 @@ void CAhglan::BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName)
 			if (iter->first == wstrPartsName)
 			{
 				iter->second = FALSE;
-				Set_Damage(10000);
+				Set_Damage(20000);
 
 				break;
 			}

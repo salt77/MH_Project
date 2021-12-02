@@ -78,6 +78,8 @@ HRESULT CPlayer::LateReady_Object()
 {
 	Ready_Layer_PlayerUI();
 
+	m_eSceneID = Engine::Get_SceneID();
+
 	m_mapActiveParts.emplace(L"dualsword_vanquisher.tga", TRUE);
 	m_mapActiveParts.emplace(L"sticky_bomb.tga", FALSE);
 
@@ -415,6 +417,16 @@ HRESULT CPlayer::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	pEffect->SetMatrix("g_matWorld", &matWorld);
 	pEffect->SetMatrix("g_matView", &matView);
 	pEffect->SetMatrix("g_matProj", &matProj);
+
+	switch (m_eSceneID)
+	{
+	case Engine::SCENE_STAGE:
+		pEffect->SetInt("g_iStageNum", 0);
+		break;
+	case Engine::SCENE_STAGE_1:
+		pEffect->SetInt("g_iStageNum", 1);
+		break;
+	}
 
 	const D3DLIGHT9*	pLightInfo = Get_Light();
 	NULL_CHECK_RETURN(pLightInfo, E_FAIL);
@@ -1099,19 +1111,39 @@ void CPlayer::Compute_Buff()
 
 void CPlayer::Compute_Critical(const _matrix* matWorld)
 {
-	if (m_fCriticalPotential >= Engine::Random(0.f, 10.f))
+	if (STATE_SMASH4_B == m_iAniIndex)
 	{
-		Add_Buff(BUFF_CRITICAL, 1500);
-
-		CCriticalEfx*	pEfx = static_cast<CCriticalEfx*>(Engine::Get_GameObject(L"Effect", L"Efx_Critical"));
-		if (pEfx)
+		if (8.f >= Engine::Random(0.f, 10.f))
 		{
-			_vec3 vPos;
-			memcpy(&vPos, &matWorld->_41, sizeof(_vec3));
-			pEfx->Set_EnableCriticalEfx(vPos);
-		}
+			Add_Buff(BUFF_CRITICAL, 1500);
 
-		SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
+			CCriticalEfx*	pEfx = static_cast<CCriticalEfx*>(Engine::Get_GameObject(L"Effect", L"Efx_Critical"));
+			if (pEfx)
+			{
+				_vec3 vPos;
+				memcpy(&vPos, &matWorld->_41, sizeof(_vec3));
+				pEfx->Set_EnableCriticalEfx(vPos);
+			}
+
+			SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
+		}
+	}
+	else
+	{
+		if (m_fCriticalPotential >= Engine::Random(0.f, 10.f))
+		{
+			Add_Buff(BUFF_CRITICAL, 1500);
+
+			CCriticalEfx*	pEfx = static_cast<CCriticalEfx*>(Engine::Get_GameObject(L"Effect", L"Efx_Critical"));
+			if (pEfx)
+			{
+				_vec3 vPos;
+				memcpy(&vPos, &matWorld->_41, sizeof(_vec3));
+				pEfx->Set_EnableCriticalEfx(vPos);
+			}
+
+			SoundMgrLowerVol(L"hit_common_critical.wav", CSoundMgr::BATTLE, 0.3f);
+		}
 	}
 }
 

@@ -1,6 +1,7 @@
 matrix		g_matWorld, g_matView, g_matProj;		// 상수 테이블
 texture		g_BaseTexture, g_NormalTexture;
 
+int			g_iStageNum = 1;
 float4		g_vLightDir;
 
 sampler BaseSampler = sampler_state
@@ -64,7 +65,7 @@ VS_OUT			VS_MAIN(VS_IN In)
 	Out.vNormal = normalize(mul(In.vNormal.xyz, (float3x3)g_matWorld));
 	Out.vTangent = normalize(mul(In.vTangent.xyz, (float3x3)g_matWorld));
 	//Out.vBiNormal = normalize(mul(In.vBiNormal.xyz, (float3x3)g_matWorld));
-	Out.vBiNormal = normalize(cross(In.vTangent, In.vNormal));
+	Out.vBiNormal = normalize(cross(In.vNormal, In.vTangent));
 
 	Out.vProjPos = Out.vPosition;
 
@@ -108,12 +109,24 @@ PS_OUT		PS_MAIN(PS_IN In)
 	float3	worldNormal = mul(TBN, normalVec);
 	worldNormal = normalize(worldNormal);
 
-
 	float3	TempLightDir = g_vLightDir.xyz;
-	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.7f;
-	//bright = normalize(bright);
+	float3 bright;
 
-	Out.vColor.rgb = bright * Out.vColor.xyz;
+	if (1 == g_iStageNum)
+	{
+		TempLightDir.x *= 2.f;
+		TempLightDir.y *= -1.f;
+		TempLightDir.z *= 2.f;
+		bright = saturate(dot(TempLightDir, worldNormal)) + 0.5f;
+		//bright = saturate(bright);
+		//bright = normalize(bright);
+	}
+	else if (0 == g_iStageNum)
+	{
+		bright = saturate(dot(-TempLightDir, worldNormal)) + 0.7f;
+	}
+
+	Out.vColor.rgb = bright * Out.vColor.rgb;
 	Out.vNormal = vector(worldNormal.xyz, 1.f);
 	Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w * 0.03f, 0.f, 0.f);
 

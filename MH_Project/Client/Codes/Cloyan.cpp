@@ -493,7 +493,7 @@ void CCloyan::Animation_Control()
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"9.Cloyan_NamingScene_Back", pGameObject), );
 
-			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X + 5.f, WINCY - 130.f, 205.f, 95.f, NAMING_BOSSNAME, BOSS_CLOYAN);
+			pGameObject = CBoss_NamingScene::Create(m_pGraphicDev, SCREEN_CENTER_X + 5.f, WINCY - 150.f, 285.f, 135.f, NAMING_BOSSNAME, BOSS_CLOYAN);
 			NULL_CHECK_RETURN(pGameObject, );
 			FAILED_CHECK_RETURN(m_pUILayer->Add_GameObject(L"10.Cloyan_NamingScene_BossName", pGameObject), );
 
@@ -663,6 +663,8 @@ void CCloyan::Animation_Control()
 		if (CLOYAN_DYING == m_eCurState)
 		{
 			m_bDead = true;
+
+			SoundMgrStopChannel(CSoundMgr::BGM);
 		}
 		else if (CLOYAN_SLIPDASH == m_eCurState)
 		{

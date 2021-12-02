@@ -221,6 +221,7 @@ void CLogo::Update_ProgressUI(const _float& fTimeDelta)
 		if (1.f <= m_fProgressBar)
 		{
 			m_fFadeOut += FADEOUTSPEED;
+
 			pProgress->Set_ValueRatio(m_fProgressBar);
 			pFadeInOut->Set_ValueRatio(m_fFadeOut);
 		}

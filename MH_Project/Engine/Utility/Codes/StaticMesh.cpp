@@ -116,7 +116,7 @@ HRESULT CStaticMesh::Ready_Meshes(const wstring pFilePath, const wstring pFileNa
 	{
 		//m_pOriMesh->CloneMeshFVF(m_pOriMesh->GetOptions(), dwFVF, m_pGraphicDev, &m_pMesh);
 		m_pOriMesh->CloneMesh(m_pOriMesh->GetOptions(), vertexDecl, m_pGraphicDev, &m_pMesh);
-
+		
 		D3DXComputeNormals(m_pMesh, (_ulong*)m_pAdjacency->GetBufferPointer());
 		D3DXComputeTangent(m_pMesh, 0, 0, 0, 0, (_ulong*)m_pAdjacency->GetBufferPointer());
 		//D3DXComputeTangentFrame()

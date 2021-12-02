@@ -189,7 +189,7 @@ _uint CLoading::Loading_ForTextureAll()
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_Hpbar_FontUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossLife%d.png", TEX_NORMAL, 11)), E_FAIL);
 
 	// Boss 등장 이후 소개 백그라운드(공용)
-	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_NamingSceneUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossNamingScene.dds", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_NamingSceneUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossNamingScene_02.png", TEX_NORMAL)), E_FAIL);
 
 	// Damage Font UI
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Damage_Font_NormalUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Font_Damage/Font_Damage_Normal_%d.png", TEX_NORMAL, 10)), E_FAIL);
@@ -206,7 +206,8 @@ _uint CLoading::Loading_ForTextureAll()
 
 	// Shader Effect 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Dissolve", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/dissolve.png", TEX_NORMAL)), E_FAIL);
-
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Distortion", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Effect/distortion.png", TEX_NORMAL)), E_FAIL);
+	
 	// Announce 
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Announce_BalistaAttack", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Balista_Announced.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Announce_BalistaReady", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Announce_Balista_Ready.png", TEX_NORMAL)), E_FAIL);
@@ -230,6 +231,9 @@ _uint CLoading::Loading_ForTextureAll()
 	// Buff Tooltip
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Tooltip_Stemina", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Tooltip_Stemina.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Tooltip_Reinforce", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Player/Tooltip_Reinforce.png", TEX_NORMAL)), E_FAIL);
+
+	// Stage_Title
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Stage_Title_UI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/Stage_Title_%d.png", TEX_NORMAL, 2)), E_FAIL);
 	
 	return 0;
 }

@@ -223,6 +223,8 @@
     <ClInclude Include="..\Codes\StageMesh.h" />
     <ClInclude Include="..\Codes\StageMesh_1.h" />
     <ClInclude Include="..\Codes\Stage_1.h" />
+    <ClInclude Include="..\Codes\Stage_Title_UI.h" />
+    <ClInclude Include="..\Codes\Start_Dissolve.h" />
     <ClInclude Include="..\Codes\Start_Scene.h" />
     <ClInclude Include="..\Codes\StickyBomb.h" />
     <ClInclude Include="..\Codes\Terrain.h" />
@@ -308,6 +310,8 @@
     <ClCompile Include="..\Codes\StageMesh.cpp" />
     <ClCompile Include="..\Codes\StageMesh_1.cpp" />
     <ClCompile Include="..\Codes\Stage_1.cpp" />
+    <ClCompile Include="..\Codes\Stage_Title_UI.cpp" />
+    <ClCompile Include="..\Codes\Start_Dissolve.cpp" />
     <ClCompile Include="..\Codes\Start_Scene.cpp" />
     <ClCompile Include="..\Codes\StickyBomb.cpp" />
     <ClCompile Include="..\Codes\Terrain.cpp" />

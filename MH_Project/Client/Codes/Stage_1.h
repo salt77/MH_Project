@@ -18,7 +18,7 @@ class CStage_1 : public CScene
 {
 private:
 	explicit CStage_1(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CStage_1(void);
+	virtual ~CStage_1();
 
 public:
 	virtual HRESULT Ready_Scene() override;

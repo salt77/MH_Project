@@ -117,7 +117,7 @@ PS_OUT		PS_MAIN(PS_IN In)
 
 	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.7f;
 
-	Out.vColor.rgb = bright * Out.vColor.rgb;
+	Out.vColor.rgb = bright * Out.vColor.rgb * 1.5f;
 	Out.vNormal = vector(worldNormal.xyz, 1.f);
 	Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w * 0.03f, 0.f, 0.f);
 

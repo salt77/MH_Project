@@ -59,9 +59,6 @@ _int CWall_Symbol::LateUpdate_Object(const _float & fTimeDelta)
 
 void CWall_Symbol::Render_Object()
 {
-	//m_mapBoxColliderCom.begin()->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-
-	//
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
 	if (!m_bCanNextStage)
@@ -75,7 +72,7 @@ void CWall_Symbol::Render_Object()
 
 		pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
 												// 2인자 : 시작하는 방식을 묻는 FLAG
-		pEffect->BeginPass(2);
+		pEffect->BeginPass(0);
 
 		m_pBufferCom->Render_Buffer();
 		m_pTextureCom->Set_Texture(pEffect, "g_BaseTexture", 0);

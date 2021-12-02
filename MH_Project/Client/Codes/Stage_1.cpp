@@ -26,6 +26,7 @@
 #include "Wall_Symbol.h"
 #include "Box.h"
 #include "LastRoom_Trigger.h"
+#include "Stage_Title_UI.h"
 
 #include "Export_Function.h"
 #include "Logo.h"
@@ -70,10 +71,10 @@ HRESULT CStage_1::LateReady_Scene()
 	FAILED_CHECK_RETURN(Load_NaviMesh(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_PlayerCol(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_DogInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_SoldierInfo(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_KnightInfo(), E_FAIL);
-	//FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_CloyanInfo(), E_FAIL);
 
 	m_mapLayer.emplace(L"GameLogic_Spawn", m_pSpawnLayer);
 	m_mapLayer.emplace(L"Enemies", m_pEnemyLayer);
@@ -226,12 +227,17 @@ HRESULT CStage_1::Ready_Layer_UI(const wstring pLayerTag)
 	CLayer*		pLayer = CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
-	CGameObject*			pGameObject = nullptr;
+	CGameObject*		pGameObject = nullptr;
 
 	// FadeInOut
 	pGameObject = CFadeInOut::Create(m_pGraphicDev, 0.f, 0.f, WINCX * 2.f, WINCY * 2.f, 0.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"FadeInOut_UI", pGameObject), E_FAIL);
+
+	// Stage_Title 
+	pGameObject = CStage_Title_UI::Create(m_pGraphicDev, 200.f, WINCY - 250.f, 300.f, 150.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Stage_Title_UI", pGameObject), E_FAIL);
 
 	// Damage Font UI (풀링 사용 => 미리 생성 (종류별로 30개씩 생성 -> 최대 4자릿수 데미지))
 	for (_uint i = 0; i < DAMAGEFONT_COUNT; ++i)
@@ -394,7 +400,7 @@ HRESULT CStage_1::Ready_LightInfo(void)
 	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.f);
-	tLightInfo.Direction = _vec3(-0.5f, -1.f, -0.5f);
+	tLightInfo.Direction = _vec3(0.5f, -1.f, 0.5f);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 
@@ -919,8 +925,6 @@ void CStage_1::Free()
 	Safe_Release(m_pLayer);
 	Safe_Release(m_pSpawnLayer);
 	Safe_Release(m_pEnemyLayer);
-
-	
 
 	CCollisionMgr::DestroyInstance();
 

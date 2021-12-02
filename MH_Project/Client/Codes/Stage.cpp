@@ -13,6 +13,7 @@
 #include "Balista.h"
 #include "Announce_Balista.h"
 #include "Announce_Balista_Ready.h"
+#include "Stage_Title_UI.h"
 
 #include "Export_Function.h"
 
@@ -200,6 +201,11 @@ HRESULT CStage::Ready_Layer_UI(const wstring pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"0.Ahglan_QuestTarget", pGameObject), E_FAIL);
 
+	// Stage_Title 
+	pGameObject = CStage_Title_UI::Create(m_pGraphicDev, 200.f, WINCY - 235.f, 300.f, 150.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Stage_Title_UI", pGameObject), E_FAIL);
+
 	// Damage Font UI (풀링 사용 => 미리 생성 (종류별로 30개씩 생성 -> 최대 4자릿수 데미지))
 	for (_uint i = 0; i < DAMAGEFONT_COUNT; ++i)
 	{
@@ -317,7 +323,7 @@ HRESULT CStage::Ready_LightInfo(void)
 	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Ambient = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f);
-	tLightInfo.Direction = _vec3(-1.f, -1.f, -1.f);
+	tLightInfo.Direction = _vec3(-0.5f, -1.f, -0.5f);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 

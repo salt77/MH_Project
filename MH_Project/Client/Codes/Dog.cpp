@@ -70,6 +70,10 @@ _int CDog::Update_Object(const _float & fTimeDelta)
 
 		Engine::Add_RenderGroup(RENDER_NONALPHA, this);
 	}
+	else
+	{
+		m_tInfo.iHp = 0;
+	}
 
 	return iExit;
 }

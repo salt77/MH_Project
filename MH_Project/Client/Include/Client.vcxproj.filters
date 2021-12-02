@@ -313,6 +313,12 @@
     <Filter Include="01.Scene\98.Start_Scene">
       <UniqueIdentifier>{ed11ba74-c8f6-433e-89b6-adfcca99fafd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI\04.Stage_Title">
+      <UniqueIdentifier>{5c991d06-5102-4f89-8d8b-308b6195c85b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI\05.Start_Dissolve">
+      <UniqueIdentifier>{757942a0-f2d6-48e8-8cab-45c4d2224342}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -567,6 +573,12 @@
     <ClInclude Include="..\Codes\Start_Scene.h">
       <Filter>01.Scene\98.Start_Scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Stage_Title_UI.h">
+      <Filter>02.GameObject\09.UI\04.StageUI\04.Stage_Title</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Start_Dissolve.h">
+      <Filter>02.GameObject\09.UI\04.StageUI\05.Start_Dissolve</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -811,6 +823,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Start_Scene.cpp">
       <Filter>01.Scene\98.Start_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Stage_Title_UI.cpp">
+      <Filter>02.GameObject\09.UI\04.StageUI\04.Stage_Title</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Start_Dissolve.cpp">
+      <Filter>02.GameObject\09.UI\04.StageUI\05.Start_Dissolve</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

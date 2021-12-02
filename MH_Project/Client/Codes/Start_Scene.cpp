@@ -44,7 +44,7 @@ Engine::_int CStart_Scene::Update_Scene(const _float& fTimeDelta)
 
 		CScene*		pScene = nullptr;
 
-		pScene = CLogo::Create(m_pGraphicDev, 0);
+		pScene = CLogo::Create(m_pGraphicDev, 1);
 		NULL_CHECK_RETURN(pScene, E_FAIL);
 
 		FAILED_CHECK_RETURN(Set_Scene(pScene), E_FAIL);
