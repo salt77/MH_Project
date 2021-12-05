@@ -13,8 +13,10 @@ CAhglan_StageUI::~CAhglan_StageUI(void)
 }
 
 
-HRESULT CAhglan_StageUI::Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY)
+HRESULT CAhglan_StageUI::Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY, BOSS_ID eBossType)
 {
+	m_eBossId = eBossType;
+
 	FAILED_CHECK_RETURN(CUI::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
@@ -67,22 +69,22 @@ void CAhglan_StageUI::Render_Object(void)
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matOldProj);
 }
 
-CAhglan_StageUI* CAhglan_StageUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY)
+CAhglan_StageUI* CAhglan_StageUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY, BOSS_ID eBossType)
 {
 	CAhglan_StageUI*	pInstance = new CAhglan_StageUI(pGraphicDev);
 
-	if (FAILED(pInstance->Ready_Object(fX, fY, fSizeX, fSizeY)))
+	if (FAILED(pInstance->Ready_Object(fX, fY, fSizeX, fSizeY, eBossType)))
 		Safe_Release(pInstance);
 
 	return pInstance;
 }
 
-void CAhglan_StageUI::Free(void)
+void CAhglan_StageUI::Free()
 {
 	CUI::Free();
 }
 
-HRESULT CAhglan_StageUI::Add_Component(void)
+HRESULT CAhglan_StageUI::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
 
@@ -91,10 +93,22 @@ HRESULT CAhglan_StageUI::Add_Component(void)
 	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
 	m_mapComponent[ID_STATIC].emplace(L"Com_Buffer", pComponent);
 
-	// texture
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Ahglan_QuestUI"));
-	NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
-	m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+	switch (m_eBossId)
+	{
+	case Engine::BOSS_AHGLAN:
+		// texture
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Ahglan_QuestUI"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+		break;
+
+	case Engine::BOSS_CLOYAN:
+		// texture
+		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Clone_Prototype(L"Proto_Texture_Cloyan_QuestUI"));
+		NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Texture", pComponent);
+		break;
+	}
 
 	// Renderer
 	pComponent = m_pRendererCom = Engine::Get_Renderer();

@@ -110,6 +110,8 @@ void CStart_Scene::Ready_to_Logo(const _float& fTimeDelta)
 	if (Key_Down(VK_RETURN))
 	{
 		m_bReadyFadeOut = true;
+
+		SoundMgrLowerVol(L"ui_horn_sound.wav", CSoundMgr::BATTLE, 0.15f);
 	}
 
 	if (m_bReadyFadeOut)

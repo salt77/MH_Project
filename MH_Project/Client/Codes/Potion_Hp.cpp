@@ -26,7 +26,7 @@ HRESULT CPotion_Hp::Ready_Object(_float fX, _float fY, _float fSizeX, _float fSi
 	m_fSizeY = fSizeY;
 
 	m_fValueRatio = 0.9f;
-	m_fCoolDownDelay = 0.1f;
+	m_fCoolDownDelay = 0.25f;
 
 	return S_OK;
 }

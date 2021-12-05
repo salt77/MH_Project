@@ -69,6 +69,7 @@ public:
 
 public:
 	virtual	void	Set_Damage(_int iDamage) override;
+	void			Set_ColRender() { m_bColRender = !m_bColRender; }
 
 private:
 	// 기본 함수들
@@ -93,6 +94,8 @@ public:
 	void			BombAttacked(const _vec3& vBombPos, const wstring& wstrPartsName = L"");
 
 private:
+	_bool			m_bColRender = false;
+
 	_bool			m_bTargetIsRight = false;
 	_bool			m_bCanAction = true;
 	_bool			m_bSkillMove = false;

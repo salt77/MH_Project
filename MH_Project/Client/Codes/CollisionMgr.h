@@ -58,6 +58,7 @@ private:
 
 	void			Pooling_DamageFont(_uint iDamage, const _matrix* pMatrix, DAMAGEFONT_ID eID);
 	void			Pooling_SlashPoint(const _matrix* pMatrix, _bool bIsSmash = false);
+	void			Pooling_Distortion(const _matrix* pMatrix);
 
 private:
 	_bool				m_bCollisionFrame = false;

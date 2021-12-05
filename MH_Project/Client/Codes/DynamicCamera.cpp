@@ -266,7 +266,7 @@ void CDynamicCamera::Camera_Shake(const _float& fTimeDelta)
 		m_vShakeInterpol.z = sin(m_fShakeWaveX * 10.f) * powf(0.5f, m_fShakeWaveX) * m_fShakePower;
 	}
 	else if (m_bLongShake &&
-		m_dwShakeTime + m_dwShakeDelay >= GetTickCount())
+			 m_dwShakeTime + m_dwShakeDelay >= GetTickCount())
 	{
 		m_fFXProgress += WaveFxProgressive * fTimeDelta;
 		m_fShakeWaveX += m_fFXProgress;
@@ -277,7 +277,7 @@ void CDynamicCamera::Camera_Shake(const _float& fTimeDelta)
 		m_vShakeInterpol.z = sin(m_fShakeWaveX * m_fLongWaveInterpol) * powf(0.9f, m_fShakeWaveX * 0.02f) * m_fShakePower;
 	}
 	else if (m_bShake &&
-		m_dwShakeTime + m_dwShakeDelay < GetTickCount())
+			 m_dwShakeTime + m_dwShakeDelay < GetTickCount())
 	{
 		m_bShake = false;
 		m_bLongShake = false;
@@ -328,7 +328,10 @@ void CDynamicCamera::Mode_Change(const _float& fTimeDelta)
 
 	case CDynamicCamera::MODE_GAME_END:
 		if (m_dwEndSceneStart + m_dwEndSceneDelay < GetTickCount())
+		{
 			m_eCurMode = MODE_NORMAL;
+			m_bGameEnd = true; 
+		}
 		break;
 	}
 
@@ -796,7 +799,7 @@ void CDynamicCamera::CutScene_Eye(const _float& fTimeDelta)
 		{
 			m_fFarAway += 0.26f * fTimeDelta;
 
-			m_vEye = m_vAt + vDirToCam * (m_fDistanceFromTarget * 5.f + m_fFarAway);
+			m_vEye = m_vAt + vDirToCam * (m_fDistanceFromTarget * 3.f + m_fFarAway);
 		}
 	}
 	/*else if (MODE_BALISTA_HIGHLIGHT == m_eCurMode)

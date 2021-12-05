@@ -272,7 +272,7 @@ HRESULT CBalista::Ready_Collider()
 	switch (m_eCurSceneID)
 	{
 	case SCENE_STAGE:
-		FAILED_CHECK_RETURN(Add_Collider(-70.f, -70.f, -120.f, 70.f, 70.f, 70.f, L"Collider_Box", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_HIT), E_FAIL);
+		FAILED_CHECK_RETURN(Add_Collider(-60.f, -60.f, -120.f, 60.f, 60.f, 60.f, L"Collider_Box", m_pTransformCom->Get_WorldMatrix(), COLTYPE_BOX_HIT), E_FAIL);
 		break;
 
 	case SCENE_STAGE_1:

@@ -34,6 +34,9 @@
 
 #include <process.h>
 
+static bool	bColRender = false;
+static bool	bNaviMeshRender = false;
+
 // »ç¿îµå
 #include <io.h>
 #include "fmod.h"

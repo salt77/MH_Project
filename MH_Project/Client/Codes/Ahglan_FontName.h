@@ -18,15 +18,15 @@ class CAhglan_FontName final : public CUI
 {
 private:
 	explicit CAhglan_FontName(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CAhglan_FontName(void);
+	virtual ~CAhglan_FontName();
 
 public:
 	virtual HRESULT Ready_Object(_float fX, _float fY, _float fSizeX, _float fSizeY, BOSS_ID eBossType);
 	virtual _int	Update_Object(const _float& fTimeDelta) override;
-	virtual void	Render_Object(void) override;
+	virtual void	Render_Object() override;
 
 protected:
-	HRESULT				Add_Component(void);
+	HRESULT				Add_Component();
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 private:
@@ -34,5 +34,5 @@ private:
 
 public:
 	static CAhglan_FontName*	Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fX, _float fY, _float fSizeX, _float fSizeY, BOSS_ID eBossType = BOSS_AHGLAN);
-	virtual void		Free(void);
+	virtual void		Free();
 };

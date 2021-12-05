@@ -144,6 +144,17 @@ HRESULT CFadeInOut::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 	return S_OK;
 }
 
+//void CFadeInOut::GameEndFadeOut(const _float & fTimeDelta)
+//{
+//	if (m_bGameEndOut)
+//	{
+//		if (1.f > m_fValueRatio)
+//		{
+//			m_fValueRatio += FADEOUTSPEED * 900.f * fTimeDelta;
+//		}
+//	}
+//}
+
 void CFadeInOut::AhglanFadeOut(const _float& fTimeDelta)
 {
 	if (m_bAhglanFadeOut)

@@ -1,16 +1,6 @@
 ﻿FXC : warning X4717: Effects deprecated for D3DCompiler_47
   
-  compilation object save succeeded; see C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Bin\Shader_Buff_UI.cso
-FXC : warning X4717: Effects deprecated for D3DCompiler_47
-  
-  compilation object save succeeded; see C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Bin\Shader_Item.cso
-FXC : warning X4717: Effects deprecated for D3DCompiler_47
-  
-  compilation object save succeeded; see C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Bin\Shader_Skill_UI.cso
-C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Codes\Shader_Stage_1Mesh.fx(105,23-41): warning X3206: 'mul': implicit truncation of vector type
-FXC : warning X4717: Effects deprecated for D3DCompiler_47
-  
-  compilation object save succeeded; see C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Bin\Shader_Stage_1Mesh.cso
+  compilation object save succeeded; see C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Bin\Shader_Distortion.cso
   AniCtrl.cpp
   BalistaTrail.cpp
   BoxCollider.cpp
@@ -52,9 +42,9 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
 LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무시됩니다.
      ../Bin\Utility.lib 라이브러리 및 ../Bin\Utility.exp 개체를 생성하고 있습니다.
   코드를 생성하고 있습니다.
-  4 of 3220 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    7 functions had inline decision re-evaluated but remain unchanged
+  18 of 3220 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    26 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   Utility.vcxproj -> C:\Users\USER\Desktop\MH_Project\MH_Project\Engine\Utility\Include\../Bin\Utility.dll
   Utility.vcxproj -> ../Bin\Utility.pdb (Full PDB)
@@ -103,6 +93,7 @@ LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무�
   .\Engine\Utility\Codes\Shader_Boss_Hpbar.fx
   .\Engine\Utility\Codes\Shader_Buff_UI.fx
   .\Engine\Utility\Codes\Shader_DamageFont.fx
+  .\Engine\Utility\Codes\Shader_Distortion.fx
   .\Engine\Utility\Codes\Shader_FadeInOut.fx
   .\Engine\Utility\Codes\Shader_Item.fx
   .\Engine\Utility\Codes\Shader_Loading_Progress.fx
@@ -120,7 +111,7 @@ LINK : warning LNK4075: '/INCREMENTAL'이(가) '/LTCG' 사양으로 인해 무�
   .\Engine\Utility\Codes\Shader_Terrain.fx
   .\Engine\Utility\Codes\Shader_Trail.fx
   .\Engine\Utility\Codes\Shader_UI.fx
-         23개 파일이 복사되었습니다.
+         24개 파일이 복사되었습니다.
           1개 파일이 복사되었습니다.
           1개 파일이 복사되었습니다.
           1개 파일이 복사되었습니다.

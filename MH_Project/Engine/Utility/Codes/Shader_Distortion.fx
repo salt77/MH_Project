@@ -85,7 +85,7 @@ technique Default_Technique
 
 		AlphaBlendenable = true;
 		srcblend = srcalpha;
-		destblend = invsrcalpha;
+		destblend = one;
 
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_MAIN();

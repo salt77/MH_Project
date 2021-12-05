@@ -17,6 +17,7 @@
 #include "SlashPoint.h"
 #include "CriticalEfx.h"
 #include "RadialBlur.h"
+#include "Efx_Distortion.h"
 
 #include "Trail_Cloyan.h"
 
@@ -27,7 +28,11 @@
 #include "Box.h"
 #include "LastRoom_Trigger.h"
 #include "Stage_Title_UI.h"
+#include "Ahglan_FontName.h"
+#include "Ahglan_StageUI.h"
+#include "Ahglan_Stage_Back_UI.h"
 
+#include "DataMgr.h"
 #include "Export_Function.h"
 #include "Logo.h"
 
@@ -107,16 +112,16 @@ _int CStage_1::LateUpdate_Scene(const _float & fTimeDelta)
 void CStage_1::Render_Scene()
 {
 	// DEBUG 용
-	m_dwRenderCnt++;
+	//m_dwRenderCnt++;
 
-	if (m_fTime >= 1.f)
-	{
-		wsprintf(m_szFPS, L"FPS : %d", m_dwRenderCnt);
-		m_dwRenderCnt = 0;
-		m_fTime = 0.f;
-	}
+	//if (m_fTime >= 1.f)
+	//{
+	//	wsprintf(m_szFPS, L"FPS : %d", m_dwRenderCnt);
+	//	m_dwRenderCnt = 0;
+	//	m_fTime = 0.f;
+	//}
 
-	Render_Font(L"Font_DFP", m_szFPS, &_vec2(850.f, 10.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
+	//Render_Font(L"Font_DFP", m_szFPS, &_vec2(850.f, 10.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
 }
 
 HRESULT CStage_1::Ready_Layer_Environment(const wstring pLayerTag)
@@ -234,6 +239,19 @@ HRESULT CStage_1::Ready_Layer_UI(const wstring pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"FadeInOut_UI", pGameObject), E_FAIL);
 
+	// Quest Target에 붙는 UI
+	pGameObject = CAhglan_Stage_Back_UI::Create(m_pGraphicDev, 85.f, 50.f, 300.f, 200.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"0.Cloyan_Quest_Back_UI", pGameObject), E_FAIL);
+
+	pGameObject = CAhglan_StageUI::Create(m_pGraphicDev, 85.f, 65.f, 200.f, 100.f, BOSS_CLOYAN);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"1.Cloyan_QuestTarget", pGameObject), E_FAIL);
+
+	pGameObject = CAhglan_FontName::Create(m_pGraphicDev, 45.f, 30.f, 100.f, 50.f, BOSS_CLOYAN);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"2.Cloyan_FontName", pGameObject), E_FAIL);
+
 	// Stage_Title 
 	pGameObject = CStage_Title_UI::Create(m_pGraphicDev, 200.f, WINCY - 250.f, 300.f, 150.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -301,6 +319,10 @@ HRESULT CStage_1::Ready_Layer_Effect(const wstring pLayerTag)
 	pGameObject = CRadialBlur::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Efx_RadiulBlur", pGameObject), E_FAIL);
+
+	pGameObject = CEfx_Distortion::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Efx_Distortion", pGameObject), E_FAIL);
 
 	m_mapLayer.emplace(pLayerTag, pLayer);
 
@@ -883,6 +905,9 @@ HRESULT CStage_1::Load_NextStage()
 
 		if (1.f <= m_fFadeOutRatio)
 		{
+			CPlayer*	pPlayer = static_cast<CPlayer*>(Engine::Get_GameObject(L"GameLogic", L"Player"));
+			CDataMgr::GetInstance()->Set_PlayerData(pPlayer->Get_TagPlayerInfo());
+
 			// 메인 보스 스테이지로 로드하는 코드 작성하기 
 			Engine::Clear_Prototype_ForNextStage();
 			CScene*		pScene = CLogo::Create(Engine::Get_CurSceneDevice(), 0);

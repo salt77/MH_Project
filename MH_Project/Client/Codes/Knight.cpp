@@ -73,7 +73,7 @@ _int CKnight::Update_Object(const _float & fTimeDelta)
 
 		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
-		Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+		Engine::Add_RenderGroup(RENDER_ALPHA, this);
 	}
 
 	return iExit;
@@ -141,7 +141,7 @@ void CKnight::Render_Object(void)
 
 		pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
 												// 2인자 : 시작하는 방식을 묻는 FLAG
-		pEffect->BeginPass(0);
+		pEffect->BeginPass(1);
 
 		m_pMeshCom->Render_Meshes(pEffect);
 
@@ -183,6 +183,8 @@ void CKnight::Set_Enable(_vec3 vPos, _vec3 vRotate)
 	m_tInfo.iHp = m_tInfo.iMaxHp;
 
 	m_iAniIndex = KNIGHT_SPAWN;
+
+	m_pMeshCom->Set_TrackSpeed(2.f);
 
 	Animation_Control();
 }
@@ -433,6 +435,20 @@ void CKnight::Animation_Control()
 			m_lfAniEnd = 4.3f;
 			ENEMY_SKILL_MOVE((float)m_lfAniEnd * 0.38f, 4.f, (_float)m_lfAniEnd * 0.48f);
 			ENEMY_SKILL_MOVE2((float)m_lfAniEnd * 0.58f, 4.f, (_float)m_lfAniEnd * 0.66f);
+
+			iRandSound = rand() % 3;
+			if (0 == iRandSound)
+			{
+				SoundMgrLowerVol(L"mankind_hurt_01.wav", CSoundMgr::MONSTER3, 0.05f);
+			}
+			else if (1 == iRandSound)
+			{
+				SoundMgrLowerVol(L"mankind_hurt_02.wav", CSoundMgr::MONSTER3, 0.05f);
+			}
+			else
+			{
+				SoundMgrLowerVol(L"mankind_hurt_03.wav", CSoundMgr::MONSTER3, 0.05f);
+			}
 			break;
 
 		case KNIGHT_DAMAGED:

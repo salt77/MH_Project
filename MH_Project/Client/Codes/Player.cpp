@@ -39,6 +39,8 @@
 
 #include "Announce_Balista.h"
 
+#include "DataMgr.h"
+
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
@@ -80,6 +82,11 @@ HRESULT CPlayer::LateReady_Object()
 
 	m_eSceneID = Engine::Get_SceneID();
 
+	if (SCENE_STAGE == m_eSceneID)
+	{
+		m_tPlayerInfo = CDataMgr::GetInstance()->Get_PlayerInfo();
+	}
+
 	m_mapActiveParts.emplace(L"dualsword_vanquisher.tga", TRUE);
 	m_mapActiveParts.emplace(L"sticky_bomb.tga", FALSE);
 
@@ -109,11 +116,11 @@ _int CPlayer::Update_Object(const _float& fTimeDelta)
 	if (m_bDead)
 		return iExit;
 
-	// Debug ¿ë
-	//if (Key_Down('J'))
-	//{
-	//	m_tPlayerInfo.iSkillPoint += 1000;
-	//}
+	if (Key_Down('Y'))
+	{
+		m_bColRender = !m_bColRender;
+		m_bNaviMeshRender = !m_bNaviMeshRender;
+	}
 
 	//_vec3 vPos;
 	//vPos = *m_pTransformCom->Get_Info(INFO_POS);
@@ -193,44 +200,41 @@ _int CPlayer::LateUpdate_Object(const _float & fTimeDelta)
 
 void CPlayer::Render_Object()
 {
-	//if (!m_mapColliderCom.empty())
-	//{
-	//	map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+	if (m_bColRender)
+	{
+		if (!m_mapColliderCom.empty())
+		{
+			map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
 
-	//	for (; iter != m_mapColliderCom.end(); ++iter)
-	//	{
-	//		//if (iter->second->Get_CanCollision())
-	//		//{
-	//			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-	//		//}
-	//	}
-	//}
-	//if (!m_mapBoxColliderCom.empty())
-	//{
-	//	map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+			for (; iter != m_mapColliderCom.end(); ++iter)
+			{
+				if (iter->second->Get_CanCollision())
+				{
+					iter->second->Render_Collider(COL_TRUE, m_pTransformCom->Get_WorldMatrix());
+				}
+			}
+		}
+		if (!m_mapBoxColliderCom.empty())
+		{
+			map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
 
-	//	for (; iter != m_mapBoxColliderCom.end(); ++iter)
-	//	{
-	//		//if (iter->second->Get_CanCollision())
-	//		//{
-	//			if (L"Other_Attack" == iter->first)
-	//			{
-	//				CTransform*	pHitBoxPosTrans = static_cast<CTransform*>(Engine::Get_Component(L"GameLogic", L"HitBox_Pos", L"Com_Transform", ID_DYNAMIC));
+			for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			{
+				if (iter->second->Get_CanCollision())
+				{
+					iter->second->Render_Collider(COL_TRUE, m_pTransformCom->Get_WorldMatrix());
+				}
+			}
+		}
+	}
 
-	//				iter->second->Render_Collider(COL_FALSE, pHitBoxPosTrans->Get_WorldMatrix());
-	//			}
-	//			else
-	//			{
-	//				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-	//			}
-	//		//}
-	//	}
-	//}
+	if (m_bNaviMeshRender)
+	{
+		if (m_pNaviMeshCom)
+			m_pNaviMeshCom->Render_NaviMesh();
+	}
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-
-	//if (m_pNaviMeshCom)
-	//	m_pNaviMeshCom->Render_NaviMesh();
 
 	LPD3DXEFFECT	pEffect = m_pShaderCom->Get_EffectHandle();
 	pEffect->AddRef();
@@ -332,11 +336,11 @@ void CPlayer::Set_Damage(_int iDamage, const _matrix* pMatDamageFontPos, _bool b
 		{
 			if (bFront)
 			{
-				m_iAniIndex = STATE_DAMAGEFROM_FRONT;
+				m_iAniIndex = STATE_DAMAGEFROM_BACK;
 			}
 			else
 			{
-				m_iAniIndex = STATE_DAMAGEFROM_BACK;
+				m_iAniIndex = STATE_DAMAGEFROM_FRONT;
 			}
 
 			m_eCurAction = PL_DAMAGED;
@@ -1002,7 +1006,7 @@ void CPlayer::Compute_CanAction()
 		}
 	}
 	else if (m_eCurAction == PL_SMASH ||
-			 m_eCurAction == PL_SKILL)
+		m_eCurAction == PL_SKILL)
 	{
 		if (STATE_SP_FEVER == m_eCurState)
 		{
@@ -1027,8 +1031,8 @@ void CPlayer::Compute_CanAction()
 			}
 		}
 	}
-	else if (STATE_POTION_BEGIN == m_eCurState || 
-			 STATE_POTION_DURING == m_eCurState)
+	else if (STATE_POTION_BEGIN == m_eCurState ||
+		STATE_POTION_DURING == m_eCurState)
 	{
 		m_bCanAction = false;
 	}
@@ -1070,6 +1074,7 @@ void CPlayer::Compute_Buff()
 			case BUFF_REINFORCE:
 				m_fSpeed = 3.5f;
 				m_tPlayerInfo.fAttackSpeedInterpol = 0.25f;
+				m_fCriticalPotential = 5.5f;
 				break;
 			}
 
@@ -1091,6 +1096,7 @@ void CPlayer::Compute_Buff()
 				case BUFF_REINFORCE:
 					m_fSpeed = m_fOriginSpeed;
 					m_tPlayerInfo.fAttackSpeedInterpol = 0.f;
+					m_fCriticalPotential = m_fOriginCriticalPotectial;
 
 					static_cast<CBuff_Player*>(Engine::Get_GameObject(L"Player_UI", L"Buff_Reinforce_Icon"))->Set_BuffIcon(false);
 					static_cast<CTooltip_Reinforce*>(Engine::Get_GameObject(L"Player_UI", L"Tooltip_Reinforce"))->Set_TooltipOn(false);
@@ -1626,7 +1632,7 @@ void CPlayer::Make_TrailEffect(const _float& fDeltaTime)
 	{
 		if (WEAPON_MODE::WEAPON_SECONDARY != m_eCurWeaponMode &&
 			STATE_SP_STAND != m_eCurState &&
-			STATE_THROW_DURING != m_eCurState && 
+			STATE_THROW_DURING != m_eCurState &&
 			STATE_THROW_END != m_eCurState)
 		{
 			if (PL_SKILL == m_eCurAction)
@@ -1734,7 +1740,7 @@ void CPlayer::Animation_Control()
 		m_pMeshCom->Set_TrackSpeed(1.8f);
 	}
 	else if (STATE_RUN == m_eCurState ||
-			 STATE_SPRINT == m_eCurState)
+		STATE_SPRINT == m_eCurState)
 	{
 		m_pMeshCom->Set_TrackSpeed(2.f + m_tPlayerInfo.fAttackSpeedInterpol);
 	}
@@ -2174,7 +2180,7 @@ void CPlayer::Animation_Control()
 				Rotate_PlayerLook(+*m_pTransformCom->Get_Info(INFO_LOOK));
 			}
 			else if (STATE_FURY_NO1 == m_eCurState ||
-					 STATE_FURY_NO2 == m_eCurState)
+				STATE_FURY_NO2 == m_eCurState)
 			{
 				if (7 > m_iFuryNo7Count)
 				{
@@ -2210,7 +2216,7 @@ void CPlayer::Animation_Control()
 
 				case Engine::POTION_STEMINA:
 					static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Potion_Stemina"))->Set_UseItemSkill();
-					Add_Buff(BUFF_STAMINA, 35000);
+					Add_Buff(BUFF_STAMINA, 50000);
 					break;
 
 				case Engine::POTION_SP:
@@ -2219,7 +2225,7 @@ void CPlayer::Animation_Control()
 					static_cast<CSlot_ItemSkill*>(Engine::Get_GameObject(L"Player_UI", L"Potion_Sp"))->Set_UseItemSkill();
 					break;
 				}
-				
+
 				SoundMgr(L"effect_HP_recover.wav", CSoundMgr::PLAYER_EFFECT);
 			}
 

@@ -120,6 +120,7 @@ _uint CLoading::Loading_ForStage_1()
 	// Boss 등장 이후 소개 폰트
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Cloyan_FontUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/Cloyan_Font_Name.png", TEX_NORMAL)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Cloyan_Bottom_FontUI2", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/Ortel_Font_Name_2.png", TEX_NORMAL)), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Cloyan_QuestUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/quest_mankind_cloyan_target.tga", TEX_NORMAL)), E_FAIL);
 
 	lstrcpy(m_szLoading, L"Loading Etc..");
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Calculator", CCalculator::Create(m_pGraphicDev)), E_FAIL);
@@ -190,7 +191,8 @@ _uint CLoading::Loading_ForTextureAll()
 
 	// Boss 등장 이후 소개 백그라운드(공용)
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_NamingSceneUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/BossNamingScene_02.png", TEX_NORMAL)), E_FAIL);
-
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Boss_Quest_Back_UI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Quest_Back_UI.png", TEX_NORMAL)), E_FAIL);
+	
 	// Damage Font UI
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Damage_Font_NormalUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Font_Damage/Font_Damage_Normal_%d.png", TEX_NORMAL, 10)), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Damage_Font_SkillUI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Font_Damage/Font_Damage_Skill_%d.png", TEX_NORMAL, 10)), E_FAIL);
@@ -234,6 +236,9 @@ _uint CLoading::Loading_ForTextureAll()
 
 	// Stage_Title
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_Stage_Title_UI", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Boss/Stage_Title_%d.png", TEX_NORMAL, 2)), E_FAIL);
+
+	// End_Scene 
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Texture_End_Scene", CTexture::Create(m_pGraphicDev, L"../Bin/Resource/Texture/UI/Ending/END_background.png", TEX_NORMAL)), E_FAIL);
 	
 	return 0;
 }

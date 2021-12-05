@@ -45,6 +45,7 @@ private:
 
 	_float		m_fDeltaTime = 0.f;
 	_float		m_fAlphaValue = 1.f;
+	_float		m_fDistorionValue = 1.f;
 
 	_vec3		m_vWeaponLower;
 	_vec3		m_vWeaponUpper;

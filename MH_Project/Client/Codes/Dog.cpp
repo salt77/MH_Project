@@ -68,7 +68,7 @@ _int CDog::Update_Object(const _float & fTimeDelta)
 
 		m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 
-		Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+		Engine::Add_RenderGroup(RENDER_ALPHA, this);
 	}
 	else
 	{
@@ -121,7 +121,7 @@ void CDog::Render_Object(void)
 
 		pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
 												// 2인자 : 시작하는 방식을 묻는 FLAG
-		pEffect->BeginPass(0);
+		pEffect->BeginPass(1);
 
 		m_pMeshCom->Render_Meshes(pEffect);
 

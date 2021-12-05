@@ -11,6 +11,7 @@
 #include "DamageFont.h"
 #include "SlashPoint.h"
 #include "CriticalEfx.h"
+#include "Efx_Distortion.h"
 #include "DynamicCamera.h"
 #include "Wall_Collision.h"
 #include "Balista.h"
@@ -317,9 +318,10 @@ void CCollisionMgr::Collision_PlayerAttack()
 												Pooling_SlashPoint(iter_PlayerHit->second->Get_ColliderWorld());
 											}
 											else if (PL_SMASH == m_pPlayer->Get_CurAction() ||
-												PL_SKILL == m_pPlayer->Get_CurAction())
+													 PL_SKILL == m_pPlayer->Get_CurAction())
 											{
 												Pooling_SlashPoint(iter_PlayerHit->second->Get_ColliderWorld(), true);
+												Pooling_Distortion(iter_PlayerHit->second->Get_ColliderWorld());
 											}
 
 											m_pPlayer->Set_CanHit(false);
@@ -570,6 +572,7 @@ void CCollisionMgr::Collision_PlayerAttack()
 										 PL_SKILL == m_pPlayer->Get_CurAction())
 								{
 									Pooling_SlashPoint(iter_PlayerHit->second->Get_ColliderWorld(), true);
+									//Pooling_Distortion(iter_PlayerHit->second->Get_ColliderWorld());
 								}
 
 								break;
@@ -793,7 +796,7 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 				map<const wstring, CBoxCollider*>	mapBalistaCol = pBalista->Get_MapBoxCollider();
 
 				if (Collision_AABB(&iter_WallBox->second->Get_Min(), &iter_WallBox->second->Get_Max(), iter_WallBox->second->Get_ColliderWorld(),
-								   &mapBalistaCol.begin()->second->Get_Min(), &mapBalistaCol.begin()->second->Get_Max(), mapBalistaCol.begin()->second->Get_ColliderWorld()))
+					&mapBalistaCol.begin()->second->Get_Min(), &mapBalistaCol.begin()->second->Get_Max(), mapBalistaCol.begin()->second->Get_ColliderWorld()))
 				{
 					pBalista->Set_CollisionWall();
 					pBalista->Set_EnemyHit();
@@ -818,7 +821,7 @@ void CCollisionMgr::Collision_Balista_Stage_1()
 					map<const wstring, CBoxCollider*>	mapBoxCol = pBox->Get_MapBoxCollider();
 
 					if (Collision_AABB(&mapBalistaCol.begin()->second->Get_Min(), &mapBalistaCol.begin()->second->Get_Max(), mapBalistaCol.begin()->second->Get_ColliderWorld(),
-									   &mapBoxCol.begin()->second->Get_Min(), &mapBoxCol.begin()->second->Get_Max(), mapBoxCol.begin()->second->Get_ColliderWorld()))
+						&mapBoxCol.begin()->second->Get_Min(), &mapBoxCol.begin()->second->Get_Max(), mapBoxCol.begin()->second->Get_ColliderWorld()))
 					{
 						pBalista->Set_CollisionWall();
 						pBalista->Set_EnemyHit();
@@ -914,7 +917,7 @@ void CCollisionMgr::Collision_Trigger()
 				for (; iter_PlayerCol != mapPlayerCol.end(); ++iter_PlayerCol)
 				{
 					if (Collision_Sphere(mapTriggerCol.begin()->second->Get_Center(), mapTriggerCol.begin()->second->Get_Radius(),
-										 iter_PlayerCol->second->Get_Center(), iter_PlayerCol->second->Get_Radius() * SCALE_PLAYER))
+						iter_PlayerCol->second->Get_Center(), iter_PlayerCol->second->Get_Radius() * SCALE_PLAYER))
 					{
 						mapTriggerObj.begin()->second->Set_Dead();
 						pSymbol->Set_ReadyOpenPortal();
@@ -964,7 +967,7 @@ void CCollisionMgr::Collision_Trigger()
 						for (; iter_PlayerCol != mapPlayerCol.end(); ++iter_PlayerCol)
 						{
 							if (Collision_OBB(&mapPortalCol.begin()->second->Get_Min(), &mapPortalCol.begin()->second->Get_Max(), mapPortalCol.begin()->second->Get_ColliderWorld(),
-											  &iter_PlayerCol->second->Get_Min(), &iter_PlayerCol->second->Get_Max(), iter_PlayerCol->second->Get_ColliderWorld()))
+								&iter_PlayerCol->second->Get_Min(), &iter_PlayerCol->second->Get_Max(), iter_PlayerCol->second->Get_ColliderWorld()))
 							{
 								m_bNextStageLoad = true;
 
@@ -1400,6 +1403,22 @@ void CCollisionMgr::Pooling_SlashPoint(const _matrix * pMatrix, _bool bIsSmash)
 
 				break;
 			}
+		}
+	}
+}
+
+void CCollisionMgr::Pooling_Distortion(const _matrix * pMatrix)
+{
+	_vec3	vPos;
+	memcpy(&vPos, &pMatrix->_41, sizeof(_vec3));
+
+	CTransform*	pTransform = static_cast<CTransform*>(Engine::Get_Component(L"Effect", L"Efx_Distortion", L"Com_Transform", ID_DYNAMIC));
+
+	if (pTransform)
+	{
+		if (POOLING_POS == *pTransform->Get_Info(INFO_POS))
+		{
+			static_cast<CEfx_Distortion*>(Engine::Get_GameObject(L"Effect", L"Efx_Distortion"))->Set_EnableDistortion(vPos);
 		}
 	}
 }

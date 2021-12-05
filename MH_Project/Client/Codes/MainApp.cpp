@@ -3,6 +3,7 @@
 #include "Logo.h"
 #include "Start_Scene.h"
 #include "SoundMgr.h"
+#include "DataMgr.h"
 
 
 CMainApp::CMainApp()
@@ -113,6 +114,7 @@ CMainApp* CMainApp::Create()
 void CMainApp::Free()
 {
 	CSoundMgr::GetInstance()->DestroyInstance();
+	CDataMgr::GetInstance()->DestroyInstance();
 
 	Safe_Release(m_pGraphicDev);
 

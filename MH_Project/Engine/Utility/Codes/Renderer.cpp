@@ -54,6 +54,20 @@ void Engine::CRenderer::Render_Alpha(LPDIRECT3DDEVICE9& pGraphicDev)
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
+void CRenderer::Render_Alpha2(LPDIRECT3DDEVICE9 & pGraphicDev)
+{
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	m_RenderGroup[RENDER_ALPHA2].sort(Compare_Z);
+
+	for (auto& iter : m_RenderGroup[RENDER_ALPHA2])
+		iter->Render_Object();
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+}
+
 void Engine::CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 {
 	for (auto& iter : m_RenderGroup[RENDER_UI])
@@ -205,6 +219,7 @@ void Engine::CRenderer::Render_GameObject(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	Render_Blend(pGraphicDev);
 
+	Render_Alpha2(pGraphicDev);
 	Render_Alpha(pGraphicDev);
 	Render_UI(pGraphicDev);
 

@@ -18,10 +18,13 @@ protected:
 	virtual HRESULT		SetUp_ConstantTable(LPD3DXEFFECT& pEffect);
 
 public:
+	//void		GameEndFadeOut(const _float& fTimeDelta);
+	//void		Set_GameEndFadeOut() { m_bGameEndOut = true; }
 	void		AhglanFadeOut(const _float& fTimeDelta);
 	void		Set_AhglanFadeOut() { m_bAhglanFadeOut = true; }
 
 private:
+	//_bool		m_bGameEndOut = false;
 	_bool		m_bAhglanFadeOut = false;
 	
 	_uint		m_iFadeCount = 0;

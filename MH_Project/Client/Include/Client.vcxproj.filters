@@ -319,6 +319,21 @@
     <Filter Include="02.GameObject\09.UI\04.StageUI\05.Start_Dissolve">
       <UniqueIdentifier>{757942a0-f2d6-48e8-8cab-45c4d2224342}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\12.Effect\04.Distortion">
+      <UniqueIdentifier>{9fb5bc92-11d3-4428-8364-b10f0e58bb30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI\02.AhglanStageUI\00.StageUI">
+      <UniqueIdentifier>{4b327d52-b29e-4653-9f7c-40a52374b7d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\04.StageUI\02.AhglanStageUI\01.BackUI">
+      <UniqueIdentifier>{ebcf664e-5a1b-430a-b82a-2274fa28349a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.UI\05.End_Scene">
+      <UniqueIdentifier>{a2a09294-3f4b-4dc2-b94d-ca819078a3e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\03.DataMgr">
+      <UniqueIdentifier>{a8914a62-423e-4071-b5be-642f87517c31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -413,9 +428,6 @@
     </ClInclude>
     <ClInclude Include="..\Codes\Boss_NamingScene.h">
       <Filter>02.GameObject\09.UI\04.StageUI\01.Boss_NamingScene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Codes\Ahglan_StageUI.h">
-      <Filter>02.GameObject\09.UI\04.StageUI\02.AhglanStageUI</Filter>
     </ClInclude>
     <ClInclude Include="..\Codes\Player_Steminabar_BackUI.h">
       <Filter>02.GameObject\09.UI\00.PlayerUI\01.Steminabar\00.Back</Filter>
@@ -579,6 +591,21 @@
     <ClInclude Include="..\Codes\Start_Dissolve.h">
       <Filter>02.GameObject\09.UI\04.StageUI\05.Start_Dissolve</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Efx_Distortion.h">
+      <Filter>02.GameObject\12.Effect\04.Distortion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Ahglan_StageUI.h">
+      <Filter>02.GameObject\09.UI\04.StageUI\02.AhglanStageUI\00.StageUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\Ahglan_Stage_Back_UI.h">
+      <Filter>02.GameObject\09.UI\04.StageUI\02.AhglanStageUI\01.BackUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\End_Scene.h">
+      <Filter>02.GameObject\09.UI\05.End_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\DataMgr.h">
+      <Filter>97.Manager\03.DataMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -658,9 +685,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Boss_NamingScene.cpp">
       <Filter>02.GameObject\09.UI\04.StageUI\01.Boss_NamingScene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Ahglan_StageUI.cpp">
-      <Filter>02.GameObject\09.UI\04.StageUI\02.AhglanStageUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Player_Steminabar_BackUI.cpp">
       <Filter>02.GameObject\09.UI\00.PlayerUI\01.Steminabar\00.Back</Filter>
@@ -829,6 +853,21 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Start_Dissolve.cpp">
       <Filter>02.GameObject\09.UI\04.StageUI\05.Start_Dissolve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Efx_Distortion.cpp">
+      <Filter>02.GameObject\12.Effect\04.Distortion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Ahglan_StageUI.cpp">
+      <Filter>02.GameObject\09.UI\04.StageUI\02.AhglanStageUI\00.StageUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Ahglan_Stage_Back_UI.cpp">
+      <Filter>02.GameObject\09.UI\04.StageUI\02.AhglanStageUI\01.BackUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\End_Scene.cpp">
+      <Filter>02.GameObject\09.UI\05.End_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DataMgr.cpp">
+      <Filter>97.Manager\03.DataMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

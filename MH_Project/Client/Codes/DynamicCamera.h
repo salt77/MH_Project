@@ -90,6 +90,7 @@ private:
 	_bool		m_bSoundGolemEntry = false;
 	_bool		m_bCollisionCam = false;
 	_bool		m_bHighlightSkillShot = false;
+	_bool		m_bGameEnd = false;
 
 	_ulong		m_dwHighlightStart = GetTickCount();
 	_ulong		m_dwHighlightDelay = 0;

@@ -38,7 +38,7 @@ _int CStageMesh_1::Update_Object(const _float& fTimeDelta)
 
 	//m_bDraw = m_pOptimizationCom->Isin_Frustum_ForObject(&vPos, 0.f);
 
-	Add_RenderGroup(RENDER_NONALPHA, this);
+	Add_RenderGroup(RENDER_ALPHA2, this);
 
 	return iExit;
 }

@@ -132,7 +132,7 @@ for (; iter != m_mapBoxColliderCom.end(); ++iter)			\
 #define PLAYER_SMASH4POWER	6500
 #define PLAYER_SMASHPOWER2	9000
 
-#define STAGE_BALISTA_POWER	25000
+#define STAGE_BALISTA_POWER	40000
 
 #define PLAYER_SP_FEVER		100
 #define PLAYER_SP_STAND		300

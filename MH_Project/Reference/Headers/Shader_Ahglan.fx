@@ -99,6 +99,7 @@ PS_OUT		PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	float4	vClipAmount = tex2D(DissolveSampler, In.vTexUV).r;
+	float	fAmountValue = vClipAmount - g_fDissolveValue;
 	clip(vClipAmount - g_fDissolveValue);
 
 	Out.vColor = tex2D(BaseSampler, In.vTexUV);
@@ -121,12 +122,62 @@ PS_OUT		PS_MAIN(PS_IN In)
 	Out.vNormal = vector(worldNormal.xyz, 1.f);
 	Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w * 0.03f, 0.f, 0.f);
 
+	if (0.f < g_fDissolveValue)
+	{
+		if (0.f <= fAmountValue + 0.05f &&
+			0.f > fAmountValue - 0.05f)
+		{
+			Out.vColor = float4(1.f, 0.f, 0.f, 1.f);
+		}
+	}
+
+	return Out;
+}
+
+PS_OUT		PS_MONSTER(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	float4	vClipAmount = tex2D(DissolveSampler, In.vTexUV).r;
+	float	fAmountValue = vClipAmount - g_fDissolveValue;
+	clip(vClipAmount - g_fDissolveValue);
+
+	Out.vColor = tex2D(BaseSampler, In.vTexUV);
+	Out.vNormal = tex2D(NormalSampler, In.vTexUV);
+
+	float4 tempNormal = Out.vNormal;
+	float4 normalVec = 2 * tempNormal - 1.f;
+	normalVec = normalize(normalVec);
+
+	float3x3 TBN = float3x3(normalize(In.vTangent), normalize(In.vBiNormal), normalize(In.vNormal));
+	TBN = transpose(TBN);
+	float3	worldNormal = mul(TBN, normalVec);
+
+
+	float3	TempLightDir = g_vLightDir.xyz;
+
+	float3 bright = saturate(dot(-TempLightDir, worldNormal)) + 0.55f;
+	bright = saturate(bright);
+
+	Out.vColor.rgb = bright * Out.vColor.rgb;
+	Out.vNormal = vector(worldNormal.xyz, 1.f);
+	Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w * 0.03f, 0.f, 0.f);
+
+	if (0.f < g_fDissolveValue)
+	{
+		if (0.f <= fAmountValue + 0.05f &&
+			0.f > fAmountValue - 0.05f)
+		{
+			Out.vColor = float4(1.f, 0.f, 0.f, 1.f);
+		}
+	}
+
 	return Out;
 }
 
 technique Default_Device
 {
-	pass
+	pass Ahglan
 	{
 		alphatestenable = true;
 		alphafunc = greater;
@@ -135,5 +186,16 @@ technique Default_Device
 
 		vertexshader = compile vs_3_0 VS_MAIN();
 		pixelshader = compile ps_3_0 PS_MAIN();
+	}
+
+	pass Monster
+	{
+		alphatestenable = true;
+		alphafunc = greater;
+		alpharef = 0xc0;
+		cullmode = none;
+
+		vertexshader = compile vs_3_0 VS_MAIN();
+		pixelshader = compile ps_3_0 PS_MONSTER();
 	}
 };

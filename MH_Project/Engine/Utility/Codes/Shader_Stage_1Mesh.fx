@@ -110,7 +110,7 @@ PS_OUT		PS_MAIN(PS_IN In)
 	bright = saturate(bright);
 	//bright = normalize(bright);
 
-	Out.vColor.rgb = bright * Out.vColor.rgb * 1.25f/* * 0.7f*/;
+	Out.vColor.rgb = bright * Out.vColor.rgb * 1.15f/* * 0.7f*/;
 	//Out.vNormal.rgb = bright * worldNormal.rgb;//vector(worldNormal, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w,
 						In.vProjPos.w * 0.03f,

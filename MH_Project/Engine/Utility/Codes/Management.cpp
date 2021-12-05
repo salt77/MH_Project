@@ -164,6 +164,11 @@ HRESULT CManagement::Ready_Prototype_Shader(LPDIRECT3DDEVICE9 & pGraphicDev)
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Buff_UI", pShader), E_FAIL);
 
+	// Shader_Buff_UI
+	pShader = CShader::Create(pGraphicDev, L"../../Reference/Headers/Shader_Distortion.fx");
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Prototype(L"Proto_Shader_Distortion", pShader), E_FAIL);
+
 	return S_OK;
 }
 

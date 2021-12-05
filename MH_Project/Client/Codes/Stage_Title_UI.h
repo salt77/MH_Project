@@ -38,6 +38,8 @@ private:
 
 	_ulong				m_dwAlphaMaxTime = GetTickCount();
 	_ulong				m_dwAlphaMaxDelay = 5000;
+	_ulong				m_dwSurviveTime = GetTickCount();
+	_ulong				m_dwSurviveDelay = 1000;
 
 	_float				m_fAlphaInterpol = 0.5f;
 

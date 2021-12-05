@@ -140,7 +140,7 @@ void CCloyan::Render_Object()
 
 		pEffect->Begin(&iMaxPass, NULL);		// 1인자 : 현재 쉐이더 파일이 반환하는 pass의 최대 개수
 												// 2인자 : 시작하는 방식을 묻는 FLAG
-		pEffect->BeginPass(0);
+		pEffect->BeginPass(1);
 
 		m_pMeshCom->Render_Meshes(pEffect);
 
@@ -415,7 +415,7 @@ void CCloyan::Animation_Control()
 		case CCloyan::CLOYAN_DYING:
 			m_bDissolveOn = true;
 			m_bCanAction = false;
-			m_pMeshCom->Set_TrackSpeed(1.f);
+			m_pMeshCom->Set_TrackSpeed(0.5f);
 			m_pMeshCom->Set_AnimationIndex(m_iAniIndex);
 			m_lfAniEnd = 0.7f;
 			m_eCurAction = CL_DEAD;

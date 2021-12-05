@@ -29,7 +29,7 @@ CAhglan::~CAhglan()
 }
 
 
-HRESULT CAhglan::Ready_Object(void)
+HRESULT CAhglan::Ready_Object()
 {
 	FAILED_CHECK_RETURN(CGameObject::Ready_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -40,7 +40,7 @@ HRESULT CAhglan::Ready_Object(void)
 
 	m_pTransformCom->Update_Component(0.f);
 
-	m_tInfo.iHp = 1150000;
+	m_tInfo.iHp = 950000;
 	m_tInfo.iMaxHp = m_tInfo.iHp;
 
 	m_bBoss = true;
@@ -76,9 +76,9 @@ _int CAhglan::Update_Object(const _float & fTimeDelta)
 		return iExit;
 
 	//// 디버그용
-	if (Key_Down('L'))
+	if (Key_Down('U'))
 	{
-		Set_Damage(500000);
+		m_bColRender = !m_bColRender;
 	}
 
 	m_fTimeDelta = fTimeDelta;
@@ -130,24 +130,28 @@ _int CAhglan::LateUpdate_Object(const _float & fTimeDelta)
 
 void CAhglan::Render_Object(void)
 {
-	/*if (!m_mapColliderCom.empty())
+	if (m_bColRender)
 	{
-		map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
-
-		for (; iter != m_mapColliderCom.end(); ++iter)
+		if (!m_mapColliderCom.empty())
 		{
-			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+			map<const wstring, CCollider*>::iterator	iter = m_mapColliderCom.begin();
+
+			for (; iter != m_mapColliderCom.end(); ++iter)
+			{
+				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+			}
+		}
+		if (!m_mapBoxColliderCom.empty())
+		{
+			map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
+
+			for (; iter != m_mapBoxColliderCom.end(); ++iter)
+			{
+				iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
+			}
 		}
 	}
-	if (!m_mapBoxColliderCom.empty())
-	{
-		map<const wstring, CBoxCollider*>::iterator		iter = m_mapBoxColliderCom.begin();
-
-		for (; iter != m_mapBoxColliderCom.end(); ++iter)
-		{
-			iter->second->Render_Collider(COL_FALSE, m_pTransformCom->Get_WorldMatrix());
-		}
-	}*/
+	
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
@@ -1186,7 +1190,9 @@ void CAhglan::Collision_Control()
 		{
 			if (L"Hit_BodyAtk" == iter_Hit->first ||
 				L"Hit_LHand" == iter_Hit->first ||
-				L"Hit_RHand" == iter_Hit->first)
+				L"Hit_RHand" == iter_Hit->first ||
+				L"Hit_LFoot" == iter_Hit->first ||
+				L"Hit_RFoot" == iter_Hit->first)
 			{
 				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.3f, m_lfAniEnd * 0.4f);
 			}
@@ -1198,7 +1204,9 @@ void CAhglan::Collision_Control()
 		{
 			if (L"Hit_BodyAtk" == iter_Hit->first ||
 				L"Hit_LHand" == iter_Hit->first ||
-				L"Hit_RHand" == iter_Hit->first)
+				L"Hit_RHand" == iter_Hit->first || 
+				L"Hit_LFoot" == iter_Hit->first || 
+				L"Hit_RFoot" == iter_Hit->first)
 			{
 				HITBOX_CONTROLL_SPHERE(m_lfAniEnd * 0.4f, m_lfAniEnd * 0.5f);
 			}

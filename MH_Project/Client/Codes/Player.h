@@ -61,6 +61,8 @@ public:
 	}
 	void			Set_PushState(_bool bValue) { m_bPush = bValue; }
 	virtual	void	Set_Damage(_int iDamage, const _matrix* pMatDamageFontPos, _bool bFront = false);
+	void			Set_ColRender() { m_bColRender = !m_bColRender; }
+	void			Set_NaviMeshRender() { m_bNaviMeshRender = !m_bNaviMeshRender; }
 
 private:
 	// 기본 함수들
@@ -98,6 +100,9 @@ public:
 	HRESULT			Add_NaviMesh();
 
 private:
+	_bool			m_bColRender = false;
+	_bool			m_bNaviMeshRender = false;
+
 	_bool			m_bIsPlayer = true;
 	_bool			m_bCanAction = true;
 	_bool			m_bSkillMove = false;
@@ -120,6 +125,7 @@ private:
 	_float			m_fSkillMoveStartTime = 0.f;
 	_float			m_fSkillMoveEndTime = 0.f;
 	_float			m_fCriticalPotential = 3.f;
+	_float			m_fOriginCriticalPotectial = 3.f;
 
 	_double			m_lfAniEnd = 0.f;
 

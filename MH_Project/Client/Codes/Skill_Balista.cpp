@@ -27,7 +27,7 @@ HRESULT CSkill_Balista::Ready_Object(_float fX, _float fY, _float fSizeX, _float
 
 	m_fValueRatio = 0.8f;
 	m_fCoolDownValue = 0.f;
-	m_fCoolDownDelay = 0.005f;
+	m_fCoolDownDelay = 0.02f;
 
 	m_bCanUse = false;
 

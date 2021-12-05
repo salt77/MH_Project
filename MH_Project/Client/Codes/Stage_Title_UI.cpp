@@ -166,25 +166,28 @@ HRESULT CStage_Title_UI::SetUp_ConstantTable(LPD3DXEFFECT & pEffect)
 
 void CStage_Title_UI::Alpha_Interpolation(const _float& fTimeDelta)
 {
-	if (!m_bAlphaMax)
+	if (m_dwSurviveTime + m_dwSurviveDelay < GetTickCount())
 	{
-		m_fValueRatio += m_fAlphaInterpol * fTimeDelta;
-
-		if (1.f <= m_fValueRatio)
+		if (!m_bAlphaMax)
 		{
-			m_bAlphaMax = true;
-			m_dwAlphaMaxTime = GetTickCount();
-		}
-	}
-	else
-	{
-		if (m_dwAlphaMaxTime + m_dwAlphaMaxDelay < GetTickCount())
-		{
-			m_fValueRatio -= m_fAlphaInterpol * fTimeDelta;
+			m_fValueRatio += m_fAlphaInterpol * fTimeDelta;
 
-			if (0.f >= m_fValueRatio)
+			if (1.f <= m_fValueRatio)
 			{
-				m_bDead = true;
+				m_bAlphaMax = true;
+				m_dwAlphaMaxTime = GetTickCount();
+			}
+		}
+		else
+		{
+			if (m_dwAlphaMaxTime + m_dwAlphaMaxDelay < GetTickCount())
+			{
+				m_fValueRatio -= m_fAlphaInterpol * fTimeDelta;
+
+				if (0.f >= m_fValueRatio)
+				{
+					m_bDead = true;
+				}
 			}
 		}
 	}

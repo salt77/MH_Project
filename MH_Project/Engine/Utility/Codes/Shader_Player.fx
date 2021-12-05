@@ -117,7 +117,7 @@ PS_OUT		PS_MAIN(PS_IN In)
 		TempLightDir.x *= 2.f;
 		TempLightDir.y *= -1.f;
 		TempLightDir.z *= 2.f;
-		bright = saturate(dot(TempLightDir, worldNormal)) + 0.5f;
+		bright = saturate(dot(TempLightDir, worldNormal)) + 0.4f;
 		//bright = saturate(bright);
 		//bright = normalize(bright);
 	}

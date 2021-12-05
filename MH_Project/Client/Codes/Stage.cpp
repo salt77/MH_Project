@@ -2,6 +2,7 @@
 #include "Stage.h"
 #include "Ahglan_FontName.h"
 #include "Ahglan_StageUI.h"
+#include "Ahglan_Stage_Back_UI.h"
 #include "DamageFont.h"
 #include "CollisionMgr.h"
 #include "Trail_Sword.h"
@@ -77,16 +78,16 @@ _int CStage::LateUpdate_Scene(const _float & fTimeDelta)
 void CStage::Render_Scene(void)
 {
 	// DEBUG 용
-	m_dwRenderCnt++;
+	//m_dwRenderCnt++;
 
-	if (m_fTime >= 1.f)
-	{
-		wsprintf(m_szFPS, L"FPS : %d", m_dwRenderCnt);
-		m_dwRenderCnt = 0;
-		m_fTime = 0.f;
-	}
+	//if (m_fTime >= 1.f)
+	//{
+	//	wsprintf(m_szFPS, L"FPS : %d", m_dwRenderCnt);
+	//	m_dwRenderCnt = 0;
+	//	m_fTime = 0.f;
+	//}
 
-	Render_Font(L"Font_DFP", m_szFPS, &_vec2(850.f, 10.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
+	//Render_Font(L"Font_DFP", m_szFPS, &_vec2(850.f, 10.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
 }
 
 HRESULT CStage::Ready_Layer_Environment(const wstring pLayerTag)
@@ -193,13 +194,17 @@ HRESULT CStage::Ready_Layer_UI(const wstring pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"FadeInOut_UI", pGameObject), E_FAIL);
 
 	// Quest Target에 붙는 UI
-	pGameObject = CAhglan_FontName::Create(m_pGraphicDev, 150.f, 100.f, 110.f, 55.f);
+	pGameObject = CAhglan_Stage_Back_UI::Create(m_pGraphicDev, 85.f, 50.f, 300.f, 200.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"1.Ahglan_FontName", pGameObject), E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"0.Ahglan_Quest_Back_UI", pGameObject), E_FAIL);
 
-	pGameObject = CAhglan_StageUI::Create(m_pGraphicDev, 75.f, 50.f, 200.f, 100.f);
+	pGameObject = CAhglan_StageUI::Create(m_pGraphicDev, 105.f, 60.f, 195.f, 90.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"0.Ahglan_QuestTarget", pGameObject), E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"1.Ahglan_QuestTarget", pGameObject), E_FAIL);
+
+	pGameObject = CAhglan_FontName::Create(m_pGraphicDev, 60.f, 25.f, 120.f, 60.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"2.Ahglan_FontName", pGameObject), E_FAIL);
 
 	// Stage_Title 
 	pGameObject = CStage_Title_UI::Create(m_pGraphicDev, 200.f, WINCY - 235.f, 300.f, 150.f);
